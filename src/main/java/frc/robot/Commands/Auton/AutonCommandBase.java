@@ -4,6 +4,8 @@ package frc.robot.Commands.Auton;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -36,5 +38,9 @@ public class AutonCommandBase extends SequentialCommandGroup {
     protected PathPlannerPath getPath(String pathName){
         pathName+=robotContainer.getSpot().getName();
         return getFlip()?PathPlannerPath.fromPathFile(pathName).flipPath():PathPlannerPath.fromPathFile(pathName);
+    }
+
+    protected Double getPathTime(String pathName){
+        return getPath(pathName).getTrajectory(new ChassisSpeeds(0, 0, 0), Rotation2d.fromDegrees(0)).getTotalTimeSeconds();
     }
 }

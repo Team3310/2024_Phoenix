@@ -239,6 +239,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         return pathFollower.pathDone();
     }
 
+    public double getPathTime(){
+        return pathFollower.getPathTime();
+    }
+
     // public void setJoystick(CommandXboxController joystick){
     //     this.joystick = joystick;
     // }

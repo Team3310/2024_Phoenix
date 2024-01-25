@@ -173,7 +173,11 @@ public class FollowPathCommand{
     PPLibTelemetry.setCurrentPath(replanned);
   }
 
-public boolean pathDone() {
-    return timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds());
-}
+  public boolean pathDone() {
+      return timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds());
+  }
+
+  public double getPathTime() {
+      return timer.get();
+  }
 }
