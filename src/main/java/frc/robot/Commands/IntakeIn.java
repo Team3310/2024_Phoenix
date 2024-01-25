@@ -1,5 +1,6 @@
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Subsystems.Intake;
@@ -19,6 +20,7 @@ public class IntakeIn extends Command{
 
     @Override
     public void execute() {
+        SmartDashboard.putString("ran command", getName());
     }
 
     @Override
