@@ -1,19 +1,19 @@
 package frc.robot.Commands.Auton.DynamicAutoUtil;
 
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Drivetrain;
 
 public class DynamicPathCommand extends Command{
     private Drivetrain drivetrain;
-    private PathPlannerPath path1;
-    private PathPlannerPath path2;
-    private boolean resetStartPose;
+    private PathPlannerPath path1, path2;
     private final DecisionPoint decisionPoint;
-    private boolean changed;
+    private DecisionPoint decisionPoint2;
+    private boolean changed, end, resetStartPose;
 
     public DynamicPathCommand(Drivetrain drivetrain, PathPlannerPath path1, PathPlannerPath path2, boolean resetStartPose, DecisionPoint decisionPoint){
         this.drivetrain = drivetrain;
@@ -21,7 +21,9 @@ public class DynamicPathCommand extends Command{
         this.path2 = path2;
         this.resetStartPose = resetStartPose;
         this.decisionPoint = decisionPoint;
+        this.decisionPoint2 = DecisionPoint.NULL;
         changed = false;
+        end = false;
     }
 
     @Override
@@ -43,10 +45,42 @@ public class DynamicPathCommand extends Command{
                     break;
                 case TIME:
                     if(drivetrain.getPathTime()>decisionPoint.getStartPoint() && drivetrain.getPathTime()<decisionPoint.getEndPoint())
+                    {
+                        drivetrain.setPath(path2, false);
+                        changed = true;
+                    }
+                    break;
+                case CUSTOM:
+                    if(decisionPoint.getSupplier().getAsBoolean()){
+                        drivetrain.setPath(path2, false);
+                        changed = true;
+                    }        
+                    break;    
+                default:
+                    break;
+            }
+        }
+
+        if(changed){
+            switch (decisionPoint2) {
+                case PERCENTAGE:
+                    if(drivetrain.getPose().getX()<path2.getPoint((int)(path2.getAllPathPoints().size()*decisionPoint2.getEndPoint())).position.getX() 
+                    && drivetrain.getPose().getX()>path2.getPoint((int)(path2.getAllPathPoints().size()*decisionPoint2.getStartPoint())).position.getX())
                         {
-                            drivetrain.setPath(path2, false);
-                            changed = true;
+                            end = true;
                         }
+                    break;
+                case TIME:
+                    if(drivetrain.getPathTime()>decisionPoint2.getStartPoint() && drivetrain.getPathTime()<decisionPoint2.getEndPoint())
+                    {
+                        end = true;
+                    }
+                    break;
+                case CUSTOM:
+                    if(decisionPoint2.getSupplier().getAsBoolean()){
+                        end = true;
+                    }        
+                    break;
                 default:
                     break;
             }
@@ -56,7 +90,7 @@ public class DynamicPathCommand extends Command{
     @Override
     public boolean isFinished(){
         SmartDashboard.putBoolean("changed", changed);
-        return drivetrain.pathDone();
+        return drivetrain.pathDone() || end;
     }
 
     @Override
@@ -68,13 +102,21 @@ public class DynamicPathCommand extends Command{
         return this.changed;
     }
 
+    public DynamicPathCommand setSecondStop(DecisionPoint decisionPoint){
+        this.decisionPoint2 = decisionPoint;
+        return this;
+    }
+
     public enum DecisionPoint{
         PERCENTAGE,
         TIME,
+        CUSTOM,
+        NULL
         ;
 
         private double startPoint;
         private double endPoint;
+        private BooleanSupplier supplier;
 
         public double getStartPoint(){
             return startPoint;
@@ -92,6 +134,15 @@ public class DynamicPathCommand extends Command{
         public DecisionPoint setEndPoint(double end){
             this.endPoint = end;
             return this;
+        }
+
+        public DecisionPoint setSupplier(BooleanSupplier supplier){
+            this.supplier = supplier;
+            return this;
+        }
+
+        public BooleanSupplier getSupplier(){
+            return this.supplier;
         }
     }
 }

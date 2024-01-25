@@ -22,5 +22,4 @@ public class DynamicAutonGenerator extends SequentialCommandGroup{
         );
         return this;
     }
-    
 }
