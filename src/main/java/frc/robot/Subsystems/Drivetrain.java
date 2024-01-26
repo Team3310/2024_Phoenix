@@ -117,6 +117,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         pathFollower.initialize(this, resetPose);
     }
 
+    public void stopPath() {
+        pathFollower.stopPath();
+    }
+
     private void configurePathPlanner() {
         double driveBaseRadius = 0;
         for (var moduleLocation : m_moduleLocations) {
@@ -250,7 +254,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public enum DriveMode{
         JOYSTICK,
         LIMELIGHT,
-        AUTON
+        AUTON,
         ;
     }
 

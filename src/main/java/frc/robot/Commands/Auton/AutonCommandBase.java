@@ -1,7 +1,5 @@
 package frc.robot.Commands.Auton;
 
-
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Rotation2d;
