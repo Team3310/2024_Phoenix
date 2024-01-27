@@ -10,8 +10,10 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.BeltSideSpit;
+import frc.robot.Commands.FlickerCommand;
 import frc.robot.Commands.IntakeIn;
 import frc.robot.Commands.IntakeSlurp;
 import frc.robot.Commands.IntakeUnder;
@@ -19,6 +21,7 @@ import frc.robot.Commands.IntakeUp;
 import frc.robot.Commands.SetDriveMode;
 import frc.robot.Commands.StopIntake;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Flicker;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.generated.TunerConstants;
@@ -39,6 +42,7 @@ public class RobotContainer {
 
   public final Drivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
   public final Intake intake = Intake.getInstance();
+  public final Flicker flicker = Flicker.getInstance();
 
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -59,6 +63,11 @@ public class RobotContainer {
 
   private void configureBindings() {
     // drivetrain.setJoystick(joystick);
+    // flicker.setDefaultCommand(
+    //   new FlickerCommand(flicker, operatorController)
+    // );
+
+
 
     // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     // joystick.b().whileTrue(drivetrain
@@ -68,6 +77,11 @@ public class RobotContainer {
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     driverController.a().onTrue(new SetDriveMode(DriveMode.LIMELIGHT));
     driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
+    driverController.y().onTrue(new SetDriveMode(DriveMode.APRIL_TAG));
+
+    operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
+    operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));
+
 
     // if (Utils.isSimulation()) {
     //   drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
