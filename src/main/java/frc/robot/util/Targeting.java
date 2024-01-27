@@ -97,7 +97,7 @@ public class Targeting{
     }
 
     public double getAz(){
-        return -targetAz;
+        return targetAz;
     }
 
     public double getEl(){
