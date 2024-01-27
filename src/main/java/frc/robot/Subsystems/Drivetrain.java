@@ -135,6 +135,20 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    public static double rolloverConversion_radians(double angleRadians){
+        //Converts input angle to keep within range -pi to pi
+        double output = 0;
+        if(angleRadians > Math.PI){
+            output =  (-(angleRadians % Math.PI) + Math.PI);
+        }else if (angleRadians < -Math.PI){
+            output =  ((angleRadians % Math.PI) + Math.PI);
+        }else{
+            System.err.println("Conversion Error");
+        }
+        return output;
+
+    }
+
     public void setPath(PathPlannerPath path, boolean resetPose){
         pathFollower.setPath(path);
         pathFollower.initialize(this, resetPose);
@@ -211,8 +225,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             Double request = limelightController.calculate(offset, 0.02) * Constants.MaxAngularRate;
             SmartDashboard.putNumber("PID Turn Rate", request);
 
-            // System.out.println(joystick.getLeftX());
-
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed, 
                 getDriveY() * Constants.MaxSpeed, 
@@ -235,12 +247,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public void aprilTagTrack() {
         targeting.update();
-        Double offset = targeting.getAz()-(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());//-(getPose().getRotation().getRadians()>Math.PI?(((getPose().getRotation().getRadians()+Math.PI)%(2*Math.PI))-Math.PI):getPose().getRotation().getRadians());
+        Double offset = targeting.getAz()-(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
         SmartDashboard.putNumber("PID Turn Rate", request/Constants.MaxAngularRate);
         SmartDashboard.putNumber("target az offset", offset);
-
-        // System.out.println(joystick.getLeftX());
 
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
             getDriveX() * Constants.MaxSpeed, 
@@ -259,7 +269,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void joystickDrive(){
-        // System.out.println(joystick.getLeftX());
+
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
             getDriveX() * Constants.MaxSpeed, 
             getDriveY() * Constants.MaxSpeed, 
@@ -310,18 +320,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void periodic(){
-        // limelight.updateTxFilter();
-
-        SmartDashboard.putBoolean("has target", limelight.hasTarget());
-        SmartDashboard.putString("drive mode", mControlMode.toString());
-        // SmartDashboard.putNumber("joystick x", joystick.getLeftX());
-
-        SmartDashboard.putNumber("x pose", getPose().getX());
-
         targeting.update();
-        SmartDashboard.putNumber("target az", targeting.getAz());
-        SmartDashboard.putNumber("robot pose", getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
-        // SmartDashboard.putNumber("limelight offset", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0));
+
+        //Troubeshooting if Swerve Robot Azimuth Output matches Targeting Class Azimuth Output
+        SmartDashboard.putString("", mControlMode.toString());
+        SmartDashboard.putNumber("Targeting Az Output:", targeting.getAz());
+        SmartDashboard.putNumber("Pose Az - Offset Output:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
+        SmartDashboard.putNumber("Pose Az - Offset Output (CONVERTED):", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
     }
 
 
