@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
-import frc.robot.Commands.IntakeIn;
-import frc.robot.Commands.StopIntake;
+import frc.robot.Commands.Intake.IntakeIn;
+import frc.robot.Commands.Intake.StopIntake;
 
 public class Test extends AutonCommandBase{
     public Test(RobotContainer robotContainer){

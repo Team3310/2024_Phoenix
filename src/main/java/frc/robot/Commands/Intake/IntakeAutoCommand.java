@@ -1,21 +1,20 @@
-package frc.robot.Commands;
+package frc.robot.Commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Subsystems.Intake;
 
-public class IntakeUp extends Command{
+public class IntakeAutoCommand extends Command{
     private Intake intake;
 
-    public IntakeUp(){
+    public IntakeAutoCommand(){
         this.intake = Intake.getInstance();
-    } 
+    }
 
     @Override
     public void initialize() {
-        intake.setFrontIntakeRPM(Constants.UP_INTAKE_RPM);
-        intake.setBottomIntakeRPM(Constants.UP_INTAKE_RPM);
-        intake.setTopIntakeRPM(-Constants.UP_INTAKE_RPM);
+        intake.setFrontIntakeRPM(Constants.IN_INTAKE_RPM);
+        intake.setBackIntakeRPM(Constants.IN_INTAKE_RPM);
     }
 
     @Override
@@ -24,10 +23,11 @@ public class IntakeUp extends Command{
 
     @Override
     public boolean isFinished(){
-        return true;
+        return intake.getIndexerSensor();
     }
 
     @Override
     public void end(boolean interrupted) {
+        intake.stopIntake();
     }
 }

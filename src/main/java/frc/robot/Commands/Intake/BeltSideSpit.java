@@ -1,20 +1,21 @@
-package frc.robot.Commands;
+package frc.robot.Commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Subsystems.Intake;
 
-public class SetFrontIntakeRPM extends Command{
+public class BeltSideSpit extends Command{
     private Intake intake;
-    private double rpm;
+    private boolean right;
 
-    public SetFrontIntakeRPM(double rpm){
+    public BeltSideSpit(boolean right){
         this.intake = Intake.getInstance();
-        this.rpm = rpm;
+        this.right = right;
     } 
 
     @Override
     public void initialize() {
-        intake.setFrontIntakeRPM(rpm);
+        intake.setBeltIntakeRPM((right?1000:-1000));
     }
 
     @Override

@@ -33,12 +33,10 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.Limelight;
-import frc.robot.util.Targeting;
 import frc.robot.util.Control.PidConstants;
 import frc.robot.util.Control.PidController;
 import frc.robot.util.Math.Rotation2;
 import frc.robot.util.PathFollowing.FollowPathCommand;
-import frc.robot.util.Targeting.Target;
 import frc.robot.util.UpdateManager;
 
 /**
@@ -49,15 +47,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    private DriveMode mControlMode = DriveMode.APRIL_TAG;
+    private DriveMode mControlMode = DriveMode.LIMELIGHT;
 
     private PidController limelightController = new PidController(new PidConstants(1.0, 0.002, 0.0));
-    private PidController aprilTagController = new PidController(new PidConstants(0.05, 0.002, 0.0));
-
-
+    
     private Limelight limelight = Limelight.getInstance();
-    private Targeting targeting = new Targeting();
-
+    
     private static Function<PathPlannerPath, Command> pathFollowingCommandBuilder;
 
     private FollowPathCommand pathFollower;
@@ -77,13 +72,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         limelightController.setInputRange(-Math.toRadians(45.0), Math.toRadians(45.0));
         limelightController.setOutputRange(-1.0, 1.0);
         limelightController.setSetpoint(0.0);
-
-        aprilTagController.setContinuous(true);
-        aprilTagController.setInputRange(-Math.PI, Math.PI);
-        aprilTagController.setOutputRange(-1.0, 1.0);
-        aprilTagController.setSetpoint(0.0);
-
-        targeting.setTarget(Target.BluSpeaker);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
@@ -98,13 +86,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         limelightController.setInputRange(0.0, Math.PI*2);
         limelightController.setOutputRange(-1.0, 1.0);
         limelightController.setSetpoint(0.0);
-
-        aprilTagController.setContinuous(true);
-        aprilTagController.setInputRange(-Math.toRadians(180), Math.toRadians(180));
-        aprilTagController.setOutputRange(-1.0, 1.0);
-        aprilTagController.setSetpoint(0.0);
-
-        targeting.setTarget(Target.BluSpeaker);
 
         limelight.getBotPose();
 
@@ -232,32 +213,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             joystickDrive();
         }
     }
-
-    public void aprilTagTrack() {
-        targeting.update();
-        Double offset = targeting.getAz()-(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());//-(getPose().getRotation().getRadians()>Math.PI?(((getPose().getRotation().getRadians()+Math.PI)%(2*Math.PI))-Math.PI):getPose().getRotation().getRadians());
-        Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
-        SmartDashboard.putNumber("PID Turn Rate", request/Constants.MaxAngularRate);
-        SmartDashboard.putNumber("target az offset", offset);
-
-        // System.out.println(joystick.getLeftX());
-
-        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
-            getDriveX() * Constants.MaxSpeed, 
-            getDriveY() * Constants.MaxSpeed, 
-            request,
-            m_odometry.getEstimatedPosition()
-                    .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
-        ),0.2);
-        
-        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
-
-        for(int i=0; i<this.Modules.length; i++){
-            this.Modules[i].apply(states[i], 
-            SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
-        }
-    }
-
+    
     public void joystickDrive(){
         // System.out.println(joystick.getLeftX());
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -304,7 +260,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         JOYSTICK,
         LIMELIGHT,
         AUTON,
-        APRIL_TAG,
         ;
     }
 
@@ -317,10 +272,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // SmartDashboard.putNumber("joystick x", joystick.getLeftX());
 
         SmartDashboard.putNumber("x pose", getPose().getX());
-
-        targeting.update();
-        SmartDashboard.putNumber("target az", targeting.getAz());
-        SmartDashboard.putNumber("robot pose", getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
         // SmartDashboard.putNumber("limelight offset", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0));
     }
 
@@ -329,8 +280,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public void update(double time, double dt) {
         // System.out.println("ah");
         switch(mControlMode){
-            case APRIL_TAG:
-                aprilTagTrack(); break;
             case LIMELIGHT:
                 limelightDrive(); break;
             case JOYSTICK:

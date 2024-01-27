@@ -2,7 +2,7 @@ package frc.robot.Commands.Auton;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.RobotContainer;
-import frc.robot.Commands.IntakeAutoCommand;
+import frc.robot.Commands.Intake.IntakeAutoCommand;
 
 public class ThreeNoteCenterAmp extends AutonCommandBase{
     public ThreeNoteCenterAmp(RobotContainer robotContainer){

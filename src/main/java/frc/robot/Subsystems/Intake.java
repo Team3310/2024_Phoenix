@@ -7,16 +7,17 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.generated.TunerConstants;
 
 public class Intake extends SubsystemBase{
     private static Intake instance;
+    
+    private final TalonFX frontIntake = new TalonFX(Constants.FRONT_INTAKE_ID, TunerConstants.kCANbusName);
+    private final TalonFX topIntake = new TalonFX(Constants.TOP_INTAKE_ID, TunerConstants.kCANbusName);
+    private final TalonFX bottomIntake = new TalonFX(Constants.BOTTOM_INTAKE_ID, TunerConstants.kCANbusName);
 
-    private final double gearRatio = 12.0/30.0;
-    private final TalonFX frontIntake = new TalonFX(0, TunerConstants.kCANbusName);
-    private final TalonFX topIntake = new TalonFX(3, TunerConstants.kCANbusName);
-    private final TalonFX bottomIntake = new TalonFX(5, TunerConstants.kCANbusName);
-    private final TalonFX beltMotor = new TalonFX(5, TunerConstants.kCANbusName); //TODO change id
+    // private final TalonFX beltMotor = new TalonFX(5, TunerConstants.kCANbusName); //TODO change id
 
 
     private DigitalInput indexerSensor = new DigitalInput(0);
@@ -55,10 +56,7 @@ public class Intake extends SubsystemBase{
     }
 
     public void setFrontIntakeRPM(double rpm){
-        rpm/=gearRatio; //tube to motor
-        rpm/=60.0; //rpm to rps
-        // SmartDashboard.putNumber("rps at motor", rpm);
-        frontIntake.setControl(control.withVelocity(rpm));
+        frontIntake.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)));
     }
 
     public void setBackIntakeRPM(double rpm){
@@ -67,26 +65,20 @@ public class Intake extends SubsystemBase{
     }
 
     public void setBottomIntakeRPM(double rpm){
-        rpm/=gearRatio; //tube to motor
-        rpm/=60.0; //rpm to rps          
-        bottomIntake.setControl(control.withVelocity(rpm));
+        bottomIntake.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)));
     }
 
     public void setTopIntakeRPM(double rpm){
-        rpm/=gearRatio; //tube to motor
-        rpm/=60.0; //rpm to rps
-        topIntake.setControl(control.withVelocity(rpm));
+        topIntake.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)));
     }
 
     public void setBeltIntakeRPM(double rpm){
-        rpm/=gearRatio; //tube to motor
-        rpm/=60.0; //rpm to rps
-        beltMotor.setControl(control.withVelocity(rpm));
+        // beltMotor.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)));
     }
 
     public void stopIntake(){
-        setBackIntakeRPM(0);
-        setFrontIntakeRPM(0);
+        setBackIntakeRPM(0.0);
+        setFrontIntakeRPM(0.0);
         setBeltIntakeRPM(0.0);
     }
 
@@ -99,15 +91,23 @@ public class Intake extends SubsystemBase{
     }
 
     public double getFrontIntakeRPM(){
-        return frontIntake.getVelocity().getValueAsDouble()*60*gearRatio;
+        return getMotorRPSToRPM(frontIntake.getVelocity().getValueAsDouble());
     }
 
     public double getTopIntakeRPM(){
-        return topIntake.getVelocity().getValueAsDouble()*60*gearRatio;
+        return getMotorRPSToRPM(topIntake.getVelocity().getValueAsDouble());
     }
 
     public double getBottomIntakeRPM(){
-        return bottomIntake.getVelocity().getValueAsDouble()*60*gearRatio;
+        return getMotorRPSToRPM(bottomIntake.getVelocity().getValueAsDouble());
+    }
+
+    private double getRPMtoMotorRPS(double rpm){
+        return rpm/Constants.INTAKE_GEAR_RATIO/60.0;
+    }
+
+    private double getMotorRPSToRPM(double rps){
+        return rps*Constants.INTAKE_GEAR_RATIO*60.0;
     }
 
     @Override

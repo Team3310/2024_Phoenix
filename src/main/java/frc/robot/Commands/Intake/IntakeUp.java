@@ -1,20 +1,21 @@
-package frc.robot.Commands;
+package frc.robot.Commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Subsystems.Intake;
 
-public class IntakeSlurp extends Command{
+public class IntakeUp extends Command{
     private Intake intake;
 
-    public IntakeSlurp(){
+    public IntakeUp(){
         this.intake = Intake.getInstance();
     } 
 
     @Override
     public void initialize() {
-        intake.setFrontIntakeRPM(0);
-        intake.setBackIntakeRPM(Constants.SLURP_INTAKE_RPM);
+        intake.setFrontIntakeRPM(Constants.UP_INTAKE_RPM);
+        intake.setBottomIntakeRPM(Constants.UP_INTAKE_RPM);
+        intake.setTopIntakeRPM(-Constants.UP_INTAKE_RPM);
     }
 
     @Override
