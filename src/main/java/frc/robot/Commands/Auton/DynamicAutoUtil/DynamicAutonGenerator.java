@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class DynamicAutonGenerator extends SequentialCommandGroup{
-    public DynamicAutonGenerator addSection(DynamicPathCommand pathCommand, Command firstCommand, Command secondCommand, CompositionType type){
+    public DynamicAutonGenerator addDynamicSection(DynamicPathCommand pathCommand, Command firstCommand, Command secondCommand, CompositionType type){
         switch (type) {
             case PARALLEL:
                 this.addCommands(
@@ -47,6 +47,11 @@ public class DynamicAutonGenerator extends SequentialCommandGroup{
                 );
                 break;
         }
+        return this;
+    }
+
+    public DynamicAutonGenerator addSection(Command... command){
+        this.addCommands(command);
         return this;
     }
 
