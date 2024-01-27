@@ -1,7 +1,10 @@
 package frc.robot.util;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.generated.TunerConstants;
 //CHANGE!
 public class Targeting{
     //Cartesian Coordinates of Targets 
@@ -17,14 +20,17 @@ public class Targeting{
     private double targetAz = 0; //Az (Radians)
     private double targetEl = 0; //El (Radians)
     private Target target = Target.None;
+    private double step = 0;
 
     public void updateBotPos(){
         //update the botPos array by calling the limelight
         //Robot transform in field-space. Translation (X,Y,Z) Rotation(Roll,Pitch,Yaw), total latency (cl+tl)
         try {
             botPos = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+            SmartDashboard.putNumber("bot pose limelight", botPos[0]);
         } catch (Exception e) {
             System.err.println("Targeting Error: updateBotPos failed to get Limelight Data");
+            SmartDashboard.putNumber("bot pose limelight", 99999);
             //botPos = new double[]{0, 0, 0, 0, 0, 0};
         }
     }
@@ -44,6 +50,10 @@ public class Targeting{
         //90 degrees is in the fields Z Positive Direction
         //-90 degrees is in the fields Z Negative Direction
         //Range  is from pi/2 to -pi/2 (180 to -180)
+
+        if(botPos[0]==0){
+            return;
+        }
         
         //Compute the X, Y, and Z distances between coordinates
         double delta_X = targetPos[0] - botPos[0];
@@ -71,6 +81,69 @@ public class Targeting{
             SmartDashboard.putBoolean("update az failed", true);
         }
 
+        if(step==100){
+            TunerConstants.DriveTrain.seedFieldRelative(new Pose2d(botPos[0], botPos[1], TunerConstants.DriveTrain.getPose().getRotation()));
+            step = 0;
+        }
+        step++;
+
+        //Elevation Trig
+        double distance_XY = Math.hypot(delta_X, delta_Y);
+        if (distance_XY != 0){ 
+            targetEl = Math.atan(delta_Z / distance_XY);
+        }else {
+            targetEl = 0;
+        }
+    }
+
+    public void updateTargetAzElOdo(Pose2d pose){
+        //AZIMUTH
+        //-----------------------------------------------------------------------------------------------------------------------
+        //0 degrees is in the fields Y Positive Direction
+        //pi/2 (90 degrees) is in the fields X Positive Direction
+        //pi (180 degrees) is in the fields Y Negative Direction
+        //-pi/2 (-90 degrees) is in the fields X Negative Direction
+        //Range is from pi to ~-pi (180 to -179.999)
+
+        //ELEVATION
+        //-----------------------------------------------------------------------------------------------------------------------
+        //0 degrees is along the XY plane
+        //90 degrees is in the fields Z Positive Direction
+        //-90 degrees is in the fields Z Negative Direction
+        //Range  is from pi/2 to -pi/2 (180 to -180)
+        
+        //Compute the X, Y, and Z distances between coordinates
+        double delta_X = targetPos[0] - pose.getX();
+        double delta_Y = targetPos[1] - pose.getY();
+        double delta_Z = targetPos[2] - 0.0;
+
+        //Azimuth Trig
+        if (delta_Y > 0){                                                //(pi/2 to -pi/2), (90 deg to -90 deg))
+            targetAz = Math.atan(delta_X / delta_Y);
+            SmartDashboard.putBoolean("update az failed", false);                   
+        }else if ((delta_X > 0) && (delta_Y <= 0)){   
+            SmartDashboard.putBoolean("update az failed", false);                   //[pi/2 to pi)
+            targetAz = -(Math.atan(delta_Y / delta_X)) + (Math.PI / 2);
+        }else if ((delta_X < 0) && (delta_Y <= 0)){                      //[-pi/2 to -pi)
+            targetAz = -(Math.atan(delta_Y / delta_X)) - (Math.PI / 2);
+            SmartDashboard.putBoolean("update az failed", false);
+        }else if ((delta_X == 0) && (delta_Y < 0)){                        //Edge case: pointing along Y-Axis, Y-: pi (180 deg)                         
+            targetAz = Math.PI;
+            SmartDashboard.putBoolean("update az failed", false);
+        }else if ((delta_X == 0) && (delta_Y == 0)){                     //This should never occur in a realistic scenario, will not update AZ.
+            System.err.println("Targeting Error: delta_X, delta_Y BOTH ZERO, impossible target");
+            SmartDashboard.putBoolean("update az failed", true);
+        }else{                                                           //No cases ran, should never occur
+            System.err.println("Targeting Error: Az Trig, no calculation completed");
+            SmartDashboard.putBoolean("update az failed", true);
+        }
+
+        // if(step==100){
+        //     TunerConstants.DriveTrain.seedFieldRelative(new Pose2d(botPos[0], botPos[1], TunerConstants.DriveTrain.getPose().getRotation()));
+        //     step = 0;
+        // }
+        // step++;
+
         //Elevation Trig
         double distance_XY = Math.hypot(delta_X, delta_Y);
         if (distance_XY != 0){ 
@@ -97,7 +170,7 @@ public class Targeting{
     }
 
     public double getAz(){
-        return targetAz;
+        return -targetAz;
     }
 
     public double getEl(){
@@ -109,9 +182,13 @@ public class Targeting{
     }
 
     public void update(){
-            updateBotPos();
-            updateTargetAzEl();   
-        }
+        updateBotPos();
+        updateTargetAzEl();   
+    }
+
+    public void updateWithOdo(Pose2d pose){
+        updateTargetAzElOdo(pose);   
+    }
 
         public enum Target{
             BluSpeaker,

@@ -52,11 +52,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private DriveMode mControlMode = DriveMode.APRIL_TAG;
 
     private PidController limelightController = new PidController(new PidConstants(1.0, 0.002, 0.0));
-    private PidController aprilTagController = new PidController(new PidConstants(0.05, 0.002, 0.0));
+    private PidController aprilTagController = new PidController(new PidConstants(1.0, 0.0, 0.0));
 
 
     private Limelight limelight = Limelight.getInstance();
     private Targeting targeting = new Targeting();
+
+    private boolean withOdo = false;
 
     private static Function<PathPlannerPath, Command> pathFollowingCommandBuilder;
 
@@ -83,7 +85,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aprilTagController.setOutputRange(-1.0, 1.0);
         aprilTagController.setSetpoint(0.0);
 
-        targeting.setTarget(Target.BluSpeaker);
+        targeting.setTarget(Target.RedSpeaker);
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
@@ -100,11 +102,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         limelightController.setSetpoint(0.0);
 
         aprilTagController.setContinuous(true);
-        aprilTagController.setInputRange(-Math.toRadians(180), Math.toRadians(180));
+        aprilTagController.setInputRange(-Math.PI, Math.PI);
         aprilTagController.setOutputRange(-1.0, 1.0);
         aprilTagController.setSetpoint(0.0);
 
-        targeting.setTarget(Target.BluSpeaker);
+        targeting.setTarget(Target.RedSpeaker);
 
         limelight.getBotPose();
 
@@ -137,16 +139,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public static double rolloverConversion_radians(double angleRadians){
         //Converts input angle to keep within range -pi to pi
-        double output = 0;
         if(angleRadians > Math.PI){
-            output =  (-(angleRadians % Math.PI) + Math.PI);
+            return (angleRadians %Math.PI - Math.PI);
         }else if (angleRadians < -Math.PI){
-            output =  ((angleRadians % Math.PI) + Math.PI);
+            return (angleRadians % Math.PI - Math.PI);
         }else{
-            System.err.println("Conversion Error");
+            // System.err.println("Conversion Error");
+            return angleRadians;
         }
-        return output;
-
     }
 
     public void setPath(PathPlannerPath path, boolean resetPose){
@@ -201,6 +201,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void setDriveMode(DriveMode mode){
+        limelightController.integralAccum = 0;
+        aprilTagController.integralAccum = 0;
         mControlMode = mode;
     }
 
@@ -245,9 +247,51 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    public void setSnapToTarget(boolean snap){
+        mControlMode = DriveMode.APRIL_TAG;
+        withOdo = snap;
+    }
+
+    public Pose2d getOdoPose(){
+        return this.m_odometry.getEstimatedPosition();
+    }
+
+    public void snapToTarget(){
+        targeting.updateWithOdo(getOdoPose());
+        Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians())-targeting.getAz();
+        offset = rolloverConversion_radians(offset);
+        Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
+        SmartDashboard.putNumber("PID Turn Rate", request/Constants.MaxAngularRate);
+        SmartDashboard.putNumber("target az offset", offset);
+
+        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+            getDriveX() * Constants.MaxSpeed, 
+            getDriveY() * Constants.MaxSpeed, 
+            request,
+            m_odometry.getEstimatedPosition()
+                    .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
+        ),0.2);
+        
+        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+
+        for(int i=0; i<this.Modules.length; i++){
+            this.Modules[i].apply(states[i], 
+            SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+        }
+
+        if(limelight.hasTarget()){
+            withOdo=false;
+        }
+    }
+
     public void aprilTagTrack() {
+        if(withOdo){
+            snapToTarget();
+            return;
+        }
         targeting.update();
-        Double offset = targeting.getAz()-(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
+        Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians())-targeting.getAz();
+        offset = rolloverConversion_radians(offset);
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
         SmartDashboard.putNumber("PID Turn Rate", request/Constants.MaxAngularRate);
         SmartDashboard.putNumber("target az offset", offset);
@@ -320,10 +364,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void periodic(){
-        targeting.update();
+        // targeting.update();
 
         //Troubeshooting if Swerve Robot Azimuth Output matches Targeting Class Azimuth Output
         SmartDashboard.putString("", mControlMode.toString());
+        SmartDashboard.putString("Pose XY", "("+getOdoPose().getX()+","+getOdoPose().getY()+")");
         SmartDashboard.putNumber("Targeting Az Output:", targeting.getAz());
         SmartDashboard.putNumber("Pose Az - Offset Output:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
         SmartDashboard.putNumber("Pose Az - Offset Output (CONVERTED):", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
@@ -355,5 +400,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
     public boolean hasTarget() {
         return limelight.hasTarget();
+    }
+    public Rotation2d getRotation() {
+        return Rotation2d.fromRadians(rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
     }
 }
