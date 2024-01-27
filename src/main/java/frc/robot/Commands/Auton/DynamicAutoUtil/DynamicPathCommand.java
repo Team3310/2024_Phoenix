@@ -6,6 +6,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.util.SideChooser.SideMode;
@@ -42,9 +43,7 @@ public class DynamicPathCommand extends Command{
 
     @Override
     public void execute() {
-        SmartDashboard.putBoolean("changed", changed);
         if(!changed){
-            SmartDashboard.putString("change type", decisionPoint.toString());
             switch (decisionPoint) {
                 case PERCENTAGE:
                     SmartDashboard.putNumber("x lower", path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getStartPoint())).position.getX());
@@ -58,6 +57,15 @@ public class DynamicPathCommand extends Command{
                             changed = true;
                         }
                     break;
+                case LIMELIGHT:
+                    SmartDashboard.putNumber("distance", path1.getPoint(path1.getAllPathPoints().size()-1).position.getDistance(drivetrain.getPose().getTranslation()));
+                    if(path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getEndPoint())).position.getDistance(drivetrain.getPose().getTranslation())<decisionPoint.getEndPoint() 
+                    && path1.getPoint(path1.getAllPathPoints().size()-1).position.getDistance(drivetrain.getPose().getTranslation())<Constants.MAX_NOTE_DISTANCE 
+                    && decisionPoint2.getSupplier().getAsBoolean())
+                        {
+                            end = true;
+                        }
+                    break;    
                 case TIME:
                     if(drivetrain.getPathTime()>decisionPoint.getStartPoint() && drivetrain.getPathTime()<decisionPoint.getEndPoint() && decisionPoint.getSupplier().getAsBoolean())
                     {
@@ -79,8 +87,16 @@ public class DynamicPathCommand extends Command{
         if(changed){
             switch (decisionPoint2) {
                 case PERCENTAGE:
-                    if(drivetrain.getPose().getX()<path2.getPoint((int)(path2.getAllPathPoints().size()*decisionPoint2.getEndPoint())).position.getX() 
-                    && drivetrain.getPose().getX()>path2.getPoint((int)(path2.getAllPathPoints().size()*decisionPoint2.getStartPoint())).position.getX()
+                    if(drivetrain.getPose().getX()<path2.getPoint((int)((path2.getAllPathPoints().size()-1)*decisionPoint2.getEndPoint())).position.getX() 
+                    && drivetrain.getPose().getX()>path2.getPoint((int)((path2.getAllPathPoints().size()-1)*decisionPoint2.getStartPoint())).position.getX()
+                    && decisionPoint2.getSupplier().getAsBoolean())
+                        {
+                            end = true;
+                        }
+                    break;
+                case LIMELIGHT:
+                    if(path2.getPoint((int)((path2.getAllPathPoints().size()-1)*decisionPoint2.getEndPoint())).position.getDistance(drivetrain.getPose().getTranslation())<decisionPoint2.getEndPoint() 
+                    && path2.getPoint(path2.getAllPathPoints().size()-1).position.getDistance(drivetrain.getPose().getTranslation())<Constants.MAX_NOTE_DISTANCE 
                     && decisionPoint2.getSupplier().getAsBoolean())
                         {
                             end = true;
@@ -127,6 +143,7 @@ public class DynamicPathCommand extends Command{
 
     public enum DecisionPoint{
         PERCENTAGE,
+        LIMELIGHT,
         TIME,
         CUSTOM,
         NULL

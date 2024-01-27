@@ -25,7 +25,7 @@ public class TestAuton extends AutonCommandBase{
         auton.addSection(
             new DynamicPathCommand(robotContainer.getDrivetrain(), 
                 getPath("Test2"), getPath("Test3"), true, 
-                DecisionPoint.PERCENTAGE.setStartPoint(0.6).setEndPoint(0.9)
+                DecisionPoint.LIMELIGHT.setEndPoint(0.50)
             ).setSecondStop(DecisionPoint.NULL), 
             new SequentialCommandGroup(
                 new IntakeIn()
