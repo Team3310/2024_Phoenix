@@ -78,6 +78,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+
+        // this.m_pigeon2.setYaw(0);
+
         limelightController.setContinuous(true);
         limelightController.setInputRange(0.0, Math.PI*2);
         limelightController.setOutputRange(-1.0, 1.0);

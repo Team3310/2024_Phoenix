@@ -4,8 +4,11 @@ import java.util.function.BooleanSupplier;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.util.SideChooser.SideMode;
 
 public class DynamicPathCommand extends Command{
     private Drivetrain drivetrain;
@@ -19,10 +22,17 @@ public class DynamicPathCommand extends Command{
         this.path1 = path1;
         this.path2 = path2;
         this.resetStartPose = resetStartPose;
-        this.decisionPoint = decisionPoint;
         this.decisionPoint2 = DecisionPoint.NULL;
         changed = false;
         end = false;
+        if(RobotContainer.getInstance().getSideChooser().getSelected()==SideMode.RED){
+            double start = decisionPoint.getEndPoint();
+            decisionPoint.setEndPoint(decisionPoint.getStartPoint()).setStartPoint(start);
+        }
+        if(decisionPoint.getSupplier()==null){
+            decisionPoint.setSupplier(()->(!drivetrain.hasTarget()));
+        }
+        this.decisionPoint = decisionPoint;
     }
 
     @Override
@@ -32,18 +42,24 @@ public class DynamicPathCommand extends Command{
 
     @Override
     public void execute() {
-        if(!drivetrain.hasTarget() && !changed){
+        SmartDashboard.putBoolean("changed", changed);
+        if(!changed){
+            SmartDashboard.putString("change type", decisionPoint.toString());
             switch (decisionPoint) {
                 case PERCENTAGE:
-                    if(drivetrain.getPose().getX()<path1.getPoint((int)(path1.getAllPathPoints().size()*decisionPoint.getEndPoint())).position.getX() 
-                    && drivetrain.getPose().getX()>path1.getPoint((int)(path1.getAllPathPoints().size()*decisionPoint.getStartPoint())).position.getX())
+                    SmartDashboard.putNumber("x lower", path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getStartPoint())).position.getX());
+                    SmartDashboard.putNumber("x higher", path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getEndPoint())).position.getX());
+
+                    if(drivetrain.getPose().getX()<path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getEndPoint())).position.getX() 
+                    && drivetrain.getPose().getX()>path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getStartPoint())).position.getX()
+                    && decisionPoint.getSupplier().getAsBoolean())
                         {
                             drivetrain.setPath(path2, false);
                             changed = true;
                         }
                     break;
                 case TIME:
-                    if(drivetrain.getPathTime()>decisionPoint.getStartPoint() && drivetrain.getPathTime()<decisionPoint.getEndPoint())
+                    if(drivetrain.getPathTime()>decisionPoint.getStartPoint() && drivetrain.getPathTime()<decisionPoint.getEndPoint() && decisionPoint.getSupplier().getAsBoolean())
                     {
                         drivetrain.setPath(path2, false);
                         changed = true;
@@ -64,13 +80,14 @@ public class DynamicPathCommand extends Command{
             switch (decisionPoint2) {
                 case PERCENTAGE:
                     if(drivetrain.getPose().getX()<path2.getPoint((int)(path2.getAllPathPoints().size()*decisionPoint2.getEndPoint())).position.getX() 
-                    && drivetrain.getPose().getX()>path2.getPoint((int)(path2.getAllPathPoints().size()*decisionPoint2.getStartPoint())).position.getX())
+                    && drivetrain.getPose().getX()>path2.getPoint((int)(path2.getAllPathPoints().size()*decisionPoint2.getStartPoint())).position.getX()
+                    && decisionPoint2.getSupplier().getAsBoolean())
                         {
                             end = true;
                         }
                     break;
                 case TIME:
-                    if(drivetrain.getPathTime()>decisionPoint2.getStartPoint() && drivetrain.getPathTime()<decisionPoint2.getEndPoint())
+                    if(drivetrain.getPathTime()>decisionPoint2.getStartPoint() && drivetrain.getPathTime()<decisionPoint2.getEndPoint() && decisionPoint2.getSupplier().getAsBoolean())
                     {
                         end = true;
                     }

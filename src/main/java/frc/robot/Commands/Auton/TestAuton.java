@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
+import frc.robot.Commands.IntakeIn;
+import frc.robot.Commands.IntakeUp;
+import frc.robot.Commands.StopIntake;
 import frc.robot.Commands.Auton.DynamicAutoUtil.DynamicAutonGenerator;
 import frc.robot.Commands.Auton.DynamicAutoUtil.DynamicPathCommand;
 import frc.robot.Commands.Auton.DynamicAutoUtil.DynamicAutonGenerator.CompositionType;
@@ -22,30 +25,15 @@ public class TestAuton extends AutonCommandBase{
         auton.addSection(
             new DynamicPathCommand(robotContainer.getDrivetrain(), 
                 getPath("Test2"), getPath("Test3"), true, 
-                DecisionPoint.TIME.setStartPoint(1.75).setEndPoint(getPathTime("Test2"))
-            ).setSecondStop(DecisionPoint.TIME.setStartPoint(1.25).setEndPoint(2.5)), 
+                DecisionPoint.PERCENTAGE.setStartPoint(0.6).setEndPoint(0.9)
+            ).setSecondStop(DecisionPoint.NULL), 
             new SequentialCommandGroup(
-                new InstantCommand(()->SmartDashboard.putNumber("index", 0)),
-                new WaitCommand(0.5),
-                new InstantCommand(()->SmartDashboard.putNumber("index", 0.5)),
-                new WaitCommand(0.5),
-                new InstantCommand(()->SmartDashboard.putNumber("index", 1.0)),
-                new WaitCommand(0.5),
-                new InstantCommand(()->SmartDashboard.putNumber("index", 1.5)),
-                new WaitCommand(0.5),
-                new InstantCommand(()->SmartDashboard.putNumber("index", 2.0)),
-                new WaitCommand(0.5),
-                new InstantCommand(()->SmartDashboard.putNumber("index", 2.5))
+                new IntakeIn()
             ),
             new SequentialCommandGroup(
-                new InstantCommand(()->SmartDashboard.putNumber("index2", 0)),
-                new WaitCommand(0.5),
-                new InstantCommand(()->SmartDashboard.putNumber("index2", 0.5)),
-                new WaitCommand(0.5),
-                new InstantCommand(()->SmartDashboard.putNumber("index2", 1.0)),
-                new InstantCommand(()->SmartDashboard.putNumber("index2", 999))
+                new IntakeUp()
             ),
-            CompositionType.PARALLEL_RACE
+            CompositionType.PARALLEL_DEADLINE
         );
 
         this.addCommands(
