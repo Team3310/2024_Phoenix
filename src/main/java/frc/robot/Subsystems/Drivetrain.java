@@ -56,7 +56,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
 
     private Limelight limelight = Limelight.getInstance();
-    private Targeting targeting = new Targeting();
+    private Targeting cameraOneTargeting = new Targeting("cameraOne", false);
+    // private Targeting CameraTwoTargeting = new Targeting("cameraTwo", false);
+    // private Targeting OdometryTargeting = new Targeting(true);
 
     private static Function<PathPlannerPath, Command> pathFollowingCommandBuilder;
 
@@ -83,7 +85,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aprilTagController.setOutputRange(-1.0, 1.0);
         aprilTagController.setSetpoint(0.0);
 
-        targeting.setTarget(Target.BluSpeaker);
+        Targeting.setTarget(Target.BluSpeaker);
+
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
@@ -104,7 +107,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aprilTagController.setOutputRange(-1.0, 1.0);
         aprilTagController.setSetpoint(0.0);
 
-        targeting.setTarget(Target.BluSpeaker);
+        Targeting.setTarget(Target.BluSpeaker);
 
         limelight.getBotPose();
 
@@ -246,11 +249,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void aprilTagTrack() {
-        targeting.update();
-        Double offset = targeting.getAz()-(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
+        Targeting.updateAll();
+        Double offset = Targeting.getMovingAverageAz()-(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
-        SmartDashboard.putNumber("PID Turn Rate", request/Constants.MaxAngularRate);
-        SmartDashboard.putNumber("target az offset", offset);
+        SmartDashboard.putNumber("PID OUTPUT", request/Constants.MaxAngularRate);
+        SmartDashboard.putNumber("PID AZ ERROR (Radians)", offset);
 
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
             getDriveX() * Constants.MaxSpeed, 
@@ -306,10 +309,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         return pathFollower.getPathTime();
     }
 
-    // public void setJoystick(CommandXboxController joystick){
-    //     this.joystick = joystick;
-    // }
-
     public enum DriveMode{
         JOYSTICK,
         LIMELIGHT,
@@ -320,19 +319,19 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void periodic(){
-        targeting.update();
+        //Might not need to call Targeting.updateAll() in periodic, it is also called in aprilTagTrack()
+        Targeting.updateAll();
 
-        //Troubeshooting if Swerve Robot Azimuth Output matches Targeting Class Azimuth Output
+        //Targeting System Debug
         SmartDashboard.putString("", mControlMode.toString());
-        SmartDashboard.putNumber("Targeting Az Output:", targeting.getAz());
-        SmartDashboard.putNumber("Pose Az - Offset Output:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
-        SmartDashboard.putNumber("Pose Az - Offset Output (CONVERTED):", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
+        SmartDashboard.putNumber("cameraOneTargeting.getAz():", cameraOneTargeting.getAz());
+        SmartDashboard.putNumber("Targeting.getMovingAverageAz():", Targeting.getMovingAverageAz());
+        SmartDashboard.putNumber("getPose():", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
+        SmartDashboard.putNumber("getPose() [CONVERTED]:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
     }
-
 
     @Override
     public void update(double time, double dt) {
-        // System.out.println("ah");
         switch(mControlMode){
             case APRIL_TAG:
                 aprilTagTrack(); break;
