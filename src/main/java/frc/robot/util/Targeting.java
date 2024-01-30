@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -28,10 +29,10 @@ public class Targeting{
 
     //STATIC 
     private static int numberOfTargetingObjects = 0;
-    private static List<Targeting> TargetingObjectList;
+    private static ArrayList<Targeting> TargetingObjectList = new ArrayList<Targeting>();
     private static final int movingAveragePeriod = 5;
-    private static List<Double> movingAverageAzList;
-    private static List<Double> movingAverageElList;
+    private static ArrayList<Double> movingAverageAzList = new ArrayList<Double>();
+    private static ArrayList<Double> movingAverageElList = new ArrayList<Double>();
     private static double movingAverageAz;
     private static double movingAverageEl;
     private static double[] targetPos = new double[3]; //Translation (X, Y, Z)
@@ -139,7 +140,7 @@ public class Targeting{
     private double targetAz = 0; //Az (Radians)
     private double targetEl = 0; //El (Radians)
     private boolean latestUpdateSuccesfull = false;
-    private String limelightHostname;
+    private String limelightHostname = "";
     private boolean isOdometry = false;
 
     //Update botPos array for Targeting Object

@@ -56,8 +56,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
 
     private Limelight limelight = Limelight.getInstance();
-    private Targeting cameraOneTargeting = new Targeting("cameraOne", false);
-    // private Targeting CameraTwoTargeting = new Targeting("cameraTwo", false);
+    private Targeting cameraOneTargeting = new Targeting("front", false);
+    private Targeting CameraTwoTargeting = new Targeting("back", false);
     // private Targeting OdometryTargeting = new Targeting(true);
 
     private static Function<PathPlannerPath, Command> pathFollowingCommandBuilder;
@@ -85,7 +85,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aprilTagController.setOutputRange(-1.0, 1.0);
         aprilTagController.setSetpoint(0.0);
 
-        Targeting.setTarget(Target.BluSpeaker);
+        Targeting.setTarget(Target.RedSpeaker);
 
         configurePathPlanner();
         if (Utils.isSimulation()) {
@@ -107,7 +107,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aprilTagController.setOutputRange(-1.0, 1.0);
         aprilTagController.setSetpoint(0.0);
 
-        Targeting.setTarget(Target.BluSpeaker);
+        Targeting.setTarget(Target.RedSpeaker);
 
         limelight.getBotPose();
 
@@ -250,7 +250,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public void aprilTagTrack() {
         Targeting.updateAll();
-        Double offset = Targeting.getMovingAverageAz()-(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
+        Double offset = (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians())-Targeting.getMovingAverageAz();
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
         SmartDashboard.putNumber("PID OUTPUT", request/Constants.MaxAngularRate);
         SmartDashboard.putNumber("PID AZ ERROR (Radians)", offset);
