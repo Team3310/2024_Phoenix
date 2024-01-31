@@ -41,8 +41,8 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   public final Drivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
-  public final Intake intake = Intake.getInstance();
-  public final Flicker flicker = Flicker.getInstance();
+  // public final Intake intake = Intake.getInstance();
+  // public final Flicker flicker = Flicker.getInstance();
 
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -80,8 +80,8 @@ public class RobotContainer {
     driverController.y().onTrue(new InstantCommand(()->drivetrain.setSnapToTarget(false)));
     driverController.x().onTrue(new InstantCommand(()->drivetrain.setSnapToTarget(true)));
 
-    operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
-    operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));
+    // operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
+    // operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));
 
 
     // if (Utils.isSimulation()) {

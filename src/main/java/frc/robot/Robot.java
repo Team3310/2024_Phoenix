@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    updateManager.startLoop(0.005);
+    updateManager.startLoop(0.02);
   }
 
   @Override

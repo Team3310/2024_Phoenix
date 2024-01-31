@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -7,38 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.generated.TunerConstants;
 
 public class Targeting{
-    
-    //Targeting Constructor, Limelight 
-    public Targeting(String limelightHostname, boolean isOdometry){
-        numberOfTargetingObjects++;
-        this.limelightHostname = "-" + limelightHostname;
-        this.isOdometry = isOdometry;
-        TargetingObjectList.add(this);
-    }
-
-    //Targeting Constructor, Odometry
-    public Targeting(boolean isOdometry){
-        numberOfTargetingObjects++;
-        this.isOdometry = isOdometry;
-        TargetingObjectList.add(this);
-        if (!isOdometry){
-            System.err.println("TARGETING ERROR: ODOMETRY CONSTRUCTOR USED WITH isOdometry SET TO FALSE");
-        }
-    }
-
-    //STATIC 
-    private static int numberOfTargetingObjects = 0;
-    private static List<Targeting> TargetingObjectList;
-
-    private static final int movingAveragePeriod = 5;
-    private static List<Double> movingAverageAzList;
-    private static List<Double> movingAverageElList;
-    private static double movingAverageAz;
-    private static double movingAverageEl;
-
-    private static double[] targetPos = new double[3]; //Translation (X, Y, Z)
-    private static Target target = Target.NONE;
-    
     //Cartesian Coordinates of Targets 
     //Origin is CENTER OF FIELD
     //X, Y, Z (Inches)
@@ -48,25 +17,61 @@ public class Targeting{
     private static final double[] blueAmp =         { 6.4445134, 4.0985948, 0.8891270};
     private static final double[] centerOfField =   { 0.0000000, 0.0000000, 0.0000000};
 
-    public static enum Target{
+    public enum Target{
         BLUESPEAKER(blueSpeaker),
         BLUAMP(blueAmp),
         REDSPEAKER(redSpeaker),
         REDAMP(redAmp),
         NONE(centerOfField);
 
+        private final double[] pos;
+
         private Target(double[] toTargetPos){
-            targetPos = toTargetPos;
+            this.pos = toTargetPos;
         }
 
         public double[] getPos(){
-            return targetPos;
+            return pos;
         }
     }
     
+    //Targeting Constructor, Limelight 
+    public Targeting(String limelightHostname, boolean isOdometry){
+        numberOfTargetingObjects++;
+        this.limelightHostname = "-" + limelightHostname;
+        this.limelight = new Limelight(limelightHostname);
+        this.isOdometry = isOdometry;
+        TargetingObjectList.add(this);
+    }
+
+    //Targeting Constructor, Odometry
+    public Targeting(boolean isOdometry){
+        numberOfTargetingObjects++;
+        this.isOdometry = isOdometry;
+        this.limelight = new Limelight();
+        TargetingObjectList.add(this);
+        if (!isOdometry){
+            System.err.println("TARGETING ERROR: ODOMETRY CONSTRUCTOR USED WITH isOdometry SET TO FALSE");
+        }
+    }
+
+    //STATIC 
+    private static int numberOfTargetingObjects = 0;
+    private static List<Targeting> TargetingObjectList = new ArrayList<Targeting>();
+
+    private static final int movingAveragePeriod = 5;
+    private static List<Double> movingAverageAzList = new ArrayList<Double>();
+    private static List<Double> movingAverageElList = new ArrayList<Double>();
+    private static double movingAverageAz;
+    private static double movingAverageEl;
+
+    private static double[] targetPos = centerOfField; //Translation (X, Y, Z)
+    private static Target target = Target.NONE;
+    
+    
     public static void setTarget(Target toTarget){
-        targetPos = toTarget.getPos();
         target = toTarget;
+        targetPos = target.getPos();
     }
     
     public static Target getTarget(){
@@ -93,7 +98,7 @@ public class Targeting{
 
         //Get an Average Az/El across all TargetingObjects
         for (Targeting TargetingObject : TargetingObjectList){
-            if (TargetingObject.latestUpdateSuccesfull){
+            if (true/*TargetingObject.latestUpdateSuccesfull*/){
                 averageAz += TargetingObject.getAz();
                 averageEl += TargetingObject.getEl();
                 count++;
@@ -128,12 +133,13 @@ public class Targeting{
     }
 
     //NON-STATIC
-    private double[] botPos = new double[6]; //Translation (X,Y,Z) Rotation(Roll,Pitch,Yaw)
+    private double[] botPos = centerOfField; //Translation (X,Y,Z) Rotation(Roll,Pitch,Yaw)
     private double targetAz = 0; //Az (Radians)
     private double targetEl = 0; //El (Radians)
     private boolean latestUpdateSuccesfull = false;
     private String limelightHostname;
     private boolean isOdometry = false;
+    private final Limelight limelight;
 
     //Update botPos array for Targeting Object
     public void updateBotPos(){
@@ -147,10 +153,11 @@ public class Targeting{
         }else{ 
             try {
                 //Update botPos via Limelight
-                botPos = NetworkTableInstance.getDefault().getTable("limelight" + limelightHostname).getEntry("botpose").getDoubleArray(new double[6]);
-                
+                // botPos = NetworkTableInstance.getDefault().getTable("limelight" + limelightHostname).getEntry("botpose").getDoubleArray(new double[6]);
+                botPos = limelight.getBotPose();
                 //Limelight should return a size 6 array, if it doesn't, make an zeroed array
-                if (botPos.length != 6){
+                if (botPos.length < 3){
+                    System.err.println(botPos.length);
                     System.err.println("Targeting Error: " + limelightHostname);
                     System.err.println("Targeting Error: updateBotPos failed, Limelight gave BAD data, zeroed botPos");
                     botPos = new double[]{0, 0, 0, 0, 0, 0};
@@ -159,6 +166,7 @@ public class Targeting{
             } catch (Exception e) {
                 System.err.println("Targeting Error: " + limelightHostname);
                 System.err.println("Targeting Error: updateBotPos failed to get Limelight Data");
+                botPos = new double[]{0, 0, 0, 0, 0, 0};
             }
         }
     }
@@ -185,9 +193,14 @@ public class Targeting{
         double delta_Y = targetPos[1] - botPos[1];
         double delta_Z = targetPos[2] - botPos[2];
 
+        SmartDashboard.putString("delta x,y,z", delta_X+","+delta_Y+","+delta_Z);
+        SmartDashboard.putString("bot x,y,z", botPos[0]+","+botPos[1]+","+botPos[2]);
+        SmartDashboard.putString("target x,y,z", targetPos[0]+","+targetPos[1]+","+targetPos[2]);
+
         //If Limelight cannot see any targets... don't calculate, and change latestUpdateSuccesfull to FALSE
         latestUpdateSuccesfull = true;
         if (!this.hasTarget()){
+            System.err.println("No Target");
             latestUpdateSuccesfull = false;
             return;
         }
@@ -207,6 +220,8 @@ public class Targeting{
             latestUpdateSuccesfull = false;
         }
 
+        SmartDashboard.putNumber("target azi in method", targetAz);
+
         //Elevation Trig
         double distance_XY = Math.hypot(delta_X, delta_Y);
         if (distance_XY != 0){ 
@@ -221,7 +236,7 @@ public class Targeting{
         if(isOdometry){
             return true;
         }else{
-            return NetworkTableInstance.getDefault().getTable("limelight" + limelightHostname).getEntry("tv").getBoolean(false);
+            return limelight.hasTarget();
         }
     }
 

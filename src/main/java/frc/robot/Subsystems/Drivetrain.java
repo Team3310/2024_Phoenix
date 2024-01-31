@@ -291,7 +291,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             return;
         }
         Targeting.updateAll();
-        Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians())-Targeting.getMovingAverageAz();
+        Double offset = Targeting.getMovingAverageAz()-rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
         offset = rolloverConversion_radians(offset);
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
         SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
@@ -366,10 +366,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     @Override
     public void periodic(){
         // targeting.update();
-
+        frontCamera.update();
         //Troubeshooting if Swerve Robot Azimuth Output matches Targeting Class Azimuth Output
         SmartDashboard.putString("", mControlMode.toString());
+        SmartDashboard.putNumber("Targeting az", frontCamera.getAz());
         SmartDashboard.putNumber("Targeting.getMovingAverageAz()", Targeting.getMovingAverageAz());
+        SmartDashboard.putString("target:",Targeting.getTarget().toString());
         SmartDashboard.putNumber("Bot Azimuth:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
         SmartDashboard.putNumber("Bot Azimuth [CONVERTED]:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
     }
