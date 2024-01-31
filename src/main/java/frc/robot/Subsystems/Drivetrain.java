@@ -57,6 +57,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     private Limelight limelight = Limelight.getInstance();
     private Targeting frontCamera = new Targeting("front", false);
+    private Targeting backCamera = new Targeting("back", false);
+
 
     private boolean withOdo = false;
 
@@ -367,9 +369,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public void periodic(){
         // targeting.update();
         frontCamera.update();
+        backCamera.update();
         //Troubeshooting if Swerve Robot Azimuth Output matches Targeting Class Azimuth Output
         SmartDashboard.putString("", mControlMode.toString());
         SmartDashboard.putNumber("Targeting az", frontCamera.getAz());
+        SmartDashboard.putNumber("Targeting az back", backCamera.getAz());
         SmartDashboard.putNumber("Targeting.getMovingAverageAz()", Targeting.getMovingAverageAz());
         SmartDashboard.putString("target:",Targeting.getTarget().toString());
         SmartDashboard.putNumber("Bot Azimuth:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
