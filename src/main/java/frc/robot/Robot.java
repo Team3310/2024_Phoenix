@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     updateManager.startLoop(0.005);
 
-    m_robotContainer.shooter.setHoodZero(Constants.HOOD_START_DEGREES);
+    m_robotContainer.hood.setHoodZero(Constants.HOOD_START_DEGREES);
   }
 
   @Override

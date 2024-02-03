@@ -27,14 +27,11 @@ public class Shooter extends SubsystemBase{
     // private TalonFX shooterBottomLeftSlave;
     private TalonFX shooterKicker;
 
-    private TalonFX hood;
-
     /* Be able to switch which control request to use based on a button press */
     /* Start at velocity 0, enable FOC, no feed forward, use slot 0 */
     private final VelocityVoltage m_voltageVelocityRight = new VelocityVoltage(0, 0, true, 0, 0, false, false, false);
     private final VelocityVoltage m_voltageVelocityLeft = new VelocityVoltage(0, 0, true, 0, 0, false, false, false);
     private final VelocityVoltage m_voltageVelocityKicker = new VelocityVoltage(0, 0, true, 0, 0, false, false, false);
-    private final MotionMagicDutyCycle hoodControl = new MotionMagicDutyCycle(0);
     /* Start at velocity 0, no feed forward, use slot 1 */
     private final VelocityTorqueCurrentFOC m_torqueVelocity = new VelocityTorqueCurrentFOC(0, 0, 0, 1, false, false, false);
 
@@ -43,7 +40,6 @@ public class Shooter extends SubsystemBase{
     private DigitalInput sensor;
 
     private final double shooterRpmToMotorRPS = Constants.SHOOTER_GEAR_RATIO/60;
-    private final double hoodDegreesToMotorRevs = Constants.HOOD_GEAR_RATIO/360;
 
     public static Shooter getInstance(){
         if(instance == null){
@@ -113,51 +109,6 @@ public class Shooter extends SubsystemBase{
         if(!status.isOK()) {
             System.out.println("Could not apply kicker configs, error code: " + status.toString());
         }
-
-        hood = new TalonFX(Constants.HOOD_ID);
-
-        configs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.HOOD_MAX_DEGREES;
-        configs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.HOOD_MIN_DEGREES;
-        configs.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-        configs.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-
-        configs.Slot0.kP = 0.5;
-        configs.Slot0.kI = 0.008;
-        configs.Slot0.kD = 0.0;
-        configs.Slot0.kV = 0.045;
-
-        configs.MotionMagic.MotionMagicAcceleration = 5.86;
-        configs.MotionMagic.MotionMagicCruiseVelocity = 2.93;
-        configs.MotionMagic.MotionMagicExpo_kA = 0.0;
-        configs.MotionMagic.MotionMagicExpo_kV = 0.0;
-        configs.MotionMagic.MotionMagicJerk = 0.0;
-
-        hood.getConfigurator().apply(configs.Slot0);
-    }
-
-    public void setHoodAngle(double degrees){
-        hood.setControl(hoodControl.withPosition(getHoodDegreesToRevs(degrees)));
-    }
-
-    private double getHoodDegreesToRevs(double degrees){
-        if(degrees>Constants.HOOD_MAX_DEGREES){
-            return Constants.HOOD_MAX_DEGREES;
-        }else if(degrees<Constants.HOOD_MIN_DEGREES){
-            return Constants.HOOD_MIN_DEGREES;
-        }
-        return degrees/hoodDegreesToMotorRevs;
-    }
-
-    private double getHoodDegreesFromRevs(double revs){
-        return revs / hoodDegreesToMotorRevs;
-    }
-
-    public double getHoodDegrees(){
-        return getHoodDegreesFromRevs(hood.getPosition().getValue());
-    }
-
-    public void setHoodZero(double angle){
-        hood.setPosition(getHoodDegreesToRevs(angle));
     }
 
     public boolean isNoteLoaded() {
@@ -208,6 +159,5 @@ public class Shooter extends SubsystemBase{
         SmartDashboard.putNumber("Shooter Left RPM", getLeftMainRPM());
         SmartDashboard.putNumber("Kicker RPM", getKickerRPM());
         SmartDashboard.putBoolean("isNoteLoaded", isNoteLoaded());
-        SmartDashboard.putNumber("Hood Angle", getHoodDegrees());
     }
 }

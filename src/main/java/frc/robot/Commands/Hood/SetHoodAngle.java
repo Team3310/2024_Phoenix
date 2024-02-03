@@ -1,14 +1,14 @@
-package frc.robot.Commands.Shooter;
+package frc.robot.Commands.Hood;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Shooter;
+import frc.robot.Subsystems.Hood;
 
 public class SetHoodAngle extends Command{
-    private Shooter shooter;
+    private Hood hood;
     private double angle;
 
-    public SetHoodAngle(Shooter shooter, double angle){
-        this.shooter = shooter;
+    public SetHoodAngle(Hood hood, double angle){
+        this.hood = hood;
         this.angle = angle;
     }
 
@@ -19,7 +19,7 @@ public class SetHoodAngle extends Command{
 
     @Override
     public void execute(){
-        shooter.setHoodAngle(angle);
+        hood.setHoodAngle(angle);
     }
 
     @Override

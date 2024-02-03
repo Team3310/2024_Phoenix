@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Hood.SetHoodAngle;
 import frc.robot.Commands.Intake.BeltSideSpit;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeSlurp;
@@ -22,11 +23,11 @@ import frc.robot.Commands.Intake.IntakeUp;
 import frc.robot.Commands.Intake.StopIntake;
 import frc.robot.Commands.Shooter.FeederLoadCommand;
 import frc.robot.Commands.Shooter.FeederShootCommand;
-import frc.robot.Commands.Shooter.SetHoodAngle;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
 import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Commands.Shooter.SetShooterKickerRPM;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Hood;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
@@ -49,6 +50,7 @@ public class RobotContainer {
   public final Drivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
   public final Intake intake = Intake.getInstance();
   public final Shooter shooter = Shooter.getInstance();
+  public final Hood hood = Hood.getInstance();
   // public final Flicker flicker = Flicker.getInstance();
 
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -133,16 +135,16 @@ public class RobotContainer {
     SmartDashboard.putData("Kicker RPM 5000", new SetShooterKickerRPM(shooter, 5000));
     SmartDashboard.putData("Kicker RPM 6000", new SetShooterKickerRPM(shooter, 6000));
 
-    SmartDashboard.putData("Hood Angle 0", new SetHoodAngle(shooter, 0));
-    SmartDashboard.putData("Hood Angle 5", new SetHoodAngle(shooter, 5));
-    SmartDashboard.putData("Hood Angle 10", new SetHoodAngle(shooter, 10));
-    SmartDashboard.putData("Hood Angle 15", new SetHoodAngle(shooter, 15));
-    SmartDashboard.putData("Hood Angle 20", new SetHoodAngle(shooter, 20));
-    SmartDashboard.putData("Hood Angle 25", new SetHoodAngle(shooter, 25));
-    SmartDashboard.putData("Hood Angle 30", new SetHoodAngle(shooter, 30));
-    SmartDashboard.putData("Hood Angle 35", new SetHoodAngle(shooter, 35));
-    SmartDashboard.putData("Hood Angle 40", new SetHoodAngle(shooter, 40));
-    SmartDashboard.putData("Hood Angle 45", new SetHoodAngle(shooter, 45));
+    SmartDashboard.putData("Hood Angle 0", new SetHoodAngle(hood, 0));
+    SmartDashboard.putData("Hood Angle 5", new SetHoodAngle(hood, 5));
+    SmartDashboard.putData("Hood Angle 10", new SetHoodAngle(hood, 10));
+    SmartDashboard.putData("Hood Angle 15", new SetHoodAngle(hood, 15));
+    SmartDashboard.putData("Hood Angle 20", new SetHoodAngle(hood, 20));
+    SmartDashboard.putData("Hood Angle 25", new SetHoodAngle(hood, 25));
+    SmartDashboard.putData("Hood Angle 30", new SetHoodAngle(hood, 30));
+    SmartDashboard.putData("Hood Angle 35", new SetHoodAngle(hood, 35));
+    SmartDashboard.putData("Hood Angle 40", new SetHoodAngle(hood, 40));
+    SmartDashboard.putData("Hood Angle 45", new SetHoodAngle(hood, 45));
 
     SmartDashboard.putData("Kicker Load", new FeederLoadCommand(shooter));
     SmartDashboard.putData("Kicker Shoot", new FeederShootCommand(shooter));
