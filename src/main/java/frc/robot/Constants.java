@@ -21,16 +21,16 @@ public class Constants {
         public static final int SHOOTER_RIGHT_MASTER_ID = 40;
         public static final int SHOOTER_RIGHT_SLAVE_ID = 1000;
 
-        public static final int SHOOTER_LEFT_MASTER_ID = 50;
+        public static final int SHOOTER_LEFT_MASTER_ID = 41;
         public static final int SHOOTER_LEFT_SLAVE_ID = 1001;
 
-        public static final int SHOOTER_KICKER_ID = 60;
+        public static final int SHOOTER_KICKER_ID = 42;
     //#endregion    
 
     //#region Hood
-        public static final double HOOD_GEAR_RATIO = 1.0;
+        public static final double HOOD_GEAR_RATIO = (60.0/16.0)*(66.0/20.0)*(72.0/16.0);
 
-        public static final int HOOD_ID = 52;
+        public static final int HOOD_ID = 50;
 
         public static final double HOOD_MAX_DEGREES = 90.0;
         public static final double HOOD_MIN_DEGREES = 15.0;
