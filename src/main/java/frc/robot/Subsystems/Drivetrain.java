@@ -55,9 +55,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private PidController aprilTagController = new PidController(new PidConstants(1.0, 0.0, 0.0));
 
 
-    private Limelight limelight = Limelight.getInstance();
+    private Limelight noteCamera = new Limelight("note");
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting backCamera = new Targeting("back", false);
+    private Targeting leftCamera = new Targeting("left", false);
+    private Targeting rightCamera = new Targeting("right", false);
 
 
     private boolean withOdo = false;
@@ -111,7 +113,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         Targeting.setTarget(Target.REDSPEAKER);
 
-        limelight.getBotPose();
+        noteCamera.getBotPose();
 
         double driveBaseRadius = 0;
         for (var moduleLocation : m_moduleLocations) {
@@ -225,8 +227,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void limelightDrive() {
-        if(limelight.hasTarget()){
-            Double offset = Math.toRadians(limelight.getTargetHorizOffset());
+        if(noteCamera.hasTarget()){
+            Double offset = Math.toRadians(noteCamera.getTargetHorizOffset());
             Double request = limelightController.calculate(offset, 0.02) * Constants.MaxAngularRate;
             SmartDashboard.putNumber("PID Turn Rate", request);
 
@@ -282,7 +284,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
         }
 
-        if(limelight.hasTarget()){
+        if(noteCamera.hasTarget()){
             withOdo=false;
         }
     }
@@ -370,6 +372,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // targeting.update();
         frontCamera.update();
         backCamera.update();
+        leftCamera.update();
+        rightCamera.update();
         //Troubeshooting if Swerve Robot Azimuth Output matches Targeting Class Azimuth Output
         SmartDashboard.putString("", mControlMode.toString());
         SmartDashboard.putNumber("Targeting az", frontCamera.getAz());
@@ -378,6 +382,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         SmartDashboard.putString("target:",Targeting.getTarget().toString());
         SmartDashboard.putNumber("Bot Azimuth:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
         SmartDashboard.putNumber("Bot Azimuth [CONVERTED]:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
+        SmartDashboard.putString("bot pose (x,y)", getPose().getX()+","+getPose().getY());
     }
 
 
@@ -405,7 +410,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         return m_odometry.getEstimatedPosition();
     }
     public boolean hasTarget() {
-        return limelight.hasTarget();
+        return noteCamera.hasTarget();
     }
     public Rotation2d getRotation() {
         return Rotation2d.fromRadians(rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));

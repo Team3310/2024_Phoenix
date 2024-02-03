@@ -3,8 +3,10 @@ package frc.robot.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Subsystems.Drivetrain;
 import frc.robot.generated.TunerConstants;
 
 public class Targeting{
@@ -67,6 +69,7 @@ public class Targeting{
 
     private static double[] targetPos = centerOfField; //Translation (X, Y, Z)
     private static Target target = Target.NONE;
+    private static int updateCount = 0;
     
     
     public static void setTarget(Target toTarget){
@@ -96,12 +99,21 @@ public class Targeting{
         double averageEl = 0;
         int count = 0;
 
+        double averageX = 0;
+        double averageY = 0;
+        int updateNum = 0;
+
         //Get an Average Az/El across all TargetingObjects
         for (Targeting TargetingObject : TargetingObjectList){
-            if (true/*TargetingObject.latestUpdateSuccesfull*/){
+            if (TargetingObject.latestUpdateSuccesfull){
                 averageAz += TargetingObject.getAz();
                 averageEl += TargetingObject.getEl();
                 count++;
+                if(updateCount>100 && !TargetingObject.isOdometry){
+                    averageX+=TargetingObject.getBotPose()[0];
+                    averageY+=TargetingObject.getBotPose()[1];
+                    updateNum++;
+                }
             }
         }
         //Only continue, if at least one Targeting Object succesfully updated
@@ -129,6 +141,16 @@ public class Targeting{
             }
             movingAverageAz = sumAz / movingAverageAzList.size();
             movingAverageEl = sumEl / movingAverageElList.size();
+
+            if(updateCount>100){
+                averageX/=updateNum;
+                averageY/=updateNum;
+                Drivetrain drive = TunerConstants.DriveTrain;
+                drive.seedFieldRelative(new Pose2d(averageX, averageY, drive.getPose().getRotation()));
+                updateCount = 0;
+            }
+
+            updateCount++;
         }
     }
 
@@ -157,15 +179,15 @@ public class Targeting{
                 botPos = limelight.getBotPose();
                 //Limelight should return a size 6 array, if it doesn't, make an zeroed array
                 if (botPos.length < 3){
-                    System.err.println(botPos.length);
-                    System.err.println("Targeting Error: " + limelightHostname);
-                    System.err.println("Targeting Error: updateBotPos failed, Limelight gave BAD data, zeroed botPos");
+                    // System.err.println(botPos.length);
+                    // System.err.println("Targeting Error: " + limelightHostname);
+                    // System.err.println("Targeting Error: updateBotPos failed, Limelight gave BAD data, zeroed botPos");
                     botPos = new double[]{0, 0, 0, 0, 0, 0};
                 }
             
             } catch (Exception e) {
-                System.err.println("Targeting Error: " + limelightHostname);
-                System.err.println("Targeting Error: updateBotPos failed to get Limelight Data");
+                // System.err.println("Targeting Error: " + limelightHostname);
+                // System.err.println("Targeting Error: updateBotPos failed to get Limelight Data");
                 botPos = new double[]{0, 0, 0, 0, 0, 0};
             }
         }
@@ -200,7 +222,7 @@ public class Targeting{
         //If Limelight cannot see any targets... don't calculate, and change latestUpdateSuccesfull to FALSE
         latestUpdateSuccesfull = true;
         if (!this.hasTarget()){
-            System.err.println("No Target");
+            // System.err.println("No Target"+": "+this.toString());
             latestUpdateSuccesfull = false;
             return;
         }
@@ -229,6 +251,10 @@ public class Targeting{
         }else {
             latestUpdateSuccesfull = false;   
         }
+    }
+
+    public double[] getBotPose(){
+        return botPos;
     }
 
     //Returns if Limelight has view of an AprilTag, if Targeting Object is an Odometry object, will always return True
