@@ -135,16 +135,16 @@ public class RobotContainer {
     SmartDashboard.putData("Kicker RPM 5000", new SetShooterKickerRPM(shooter, 5000));
     SmartDashboard.putData("Kicker RPM 6000", new SetShooterKickerRPM(shooter, 6000));
 
-    SmartDashboard.putData("Hood Angle 0", new SetHoodAngle(hood, 0));
-    SmartDashboard.putData("Hood Angle 5", new SetHoodAngle(hood, 5));
-    SmartDashboard.putData("Hood Angle 10", new SetHoodAngle(hood, 10));
     SmartDashboard.putData("Hood Angle 15", new SetHoodAngle(hood, 15));
     SmartDashboard.putData("Hood Angle 20", new SetHoodAngle(hood, 20));
+    SmartDashboard.putData("Hood Angle 22", new SetHoodAngle(hood, 22));
     SmartDashboard.putData("Hood Angle 25", new SetHoodAngle(hood, 25));
     SmartDashboard.putData("Hood Angle 30", new SetHoodAngle(hood, 30));
     SmartDashboard.putData("Hood Angle 35", new SetHoodAngle(hood, 35));
     SmartDashboard.putData("Hood Angle 40", new SetHoodAngle(hood, 40));
     SmartDashboard.putData("Hood Angle 45", new SetHoodAngle(hood, 45));
+    SmartDashboard.putData("Hood Angle 70", new SetHoodAngle(hood, 70));
+    SmartDashboard.putData("Zero Hood", new InstantCommand(()->hood.setHoodZero(90)));
 
     SmartDashboard.putData("Kicker Load", new FeederLoadCommand(shooter));
     SmartDashboard.putData("Kicker Shoot", new FeederShootCommand(shooter));

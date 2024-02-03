@@ -13,12 +13,12 @@ public class SetShooterKickerRPM extends Command{
     }
 
     @Override
-    public void initialize(){
+    public void execute(){
 
     }
 
     @Override
-    public void execute(){
+    public void initialize(){
         if(rpm==0.0){
             shooter.setKickerOff();
         }else{

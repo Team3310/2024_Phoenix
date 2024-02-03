@@ -32,8 +32,8 @@ public class Constants {
 
         public static final int HOOD_ID = 50;
 
-        public static final double HOOD_MAX_DEGREES = 90.0;
-        public static final double HOOD_MIN_DEGREES = 15.0;
+        public static final double HOOD_MAX_DEGREES = 75.0;
+        public static final double HOOD_MIN_DEGREES = 20.0;
         public static final double HOOD_START_DEGREES = 20.0;
     //#endregion    
 

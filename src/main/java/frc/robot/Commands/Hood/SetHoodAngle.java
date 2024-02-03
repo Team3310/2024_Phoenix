@@ -14,12 +14,12 @@ public class SetHoodAngle extends Command{
 
     @Override
     public void initialize(){
-
+        hood.setHoodAngle(angle);
     }
 
     @Override
     public void execute(){
-        hood.setHoodAngle(angle);
+       
     }
 
     @Override

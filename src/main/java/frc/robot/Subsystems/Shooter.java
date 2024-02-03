@@ -12,6 +12,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -102,6 +103,7 @@ public class Shooter extends SubsystemBase{
         }
         // shooterBottomLeftSlave.setControl(new Follower(shooterTopLeftMaster.getDeviceID(), true));
 
+
         for (int i = 0; i < 5; ++i) {
             status = shooterKicker.getConfigurator().apply(configs);
             if (status.isOK()) break;
@@ -109,6 +111,8 @@ public class Shooter extends SubsystemBase{
         if(!status.isOK()) {
             System.out.println("Could not apply kicker configs, error code: " + status.toString());
         }
+
+        shooterKicker.setInverted(true);
     }
 
     public boolean isNoteLoaded() {
