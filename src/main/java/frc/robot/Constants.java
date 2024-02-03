@@ -18,10 +18,13 @@ public class Constants {
     //#region Shooter
         public static final double SHOOTER_GEAR_RATIO = 1.0;
 
-        public static final int SHOOTER_MASTER_ID = 50;
-        public static final int SHOOTER_SLAVE_ID = 51;
+        public static final int SHOOTER_RIGHT_MASTER_ID = 40;
+        public static final int SHOOTER_RIGHT_SLAVE_ID = 1000;
 
+        public static final int SHOOTER_LEFT_MASTER_ID = 50;
+        public static final int SHOOTER_LEFT_SLAVE_ID = 1001;
 
+        public static final int SHOOTER_KICKER_ID = 60;
     //#endregion    
 
     //#region Hood
@@ -29,8 +32,9 @@ public class Constants {
 
         public static final int HOOD_ID = 52;
 
-        public static final double HOOD_MAX_DEGREES = 45.0;
-        public static final double HOOD_MIN_DEGREES = 0.0;
+        public static final double HOOD_MAX_DEGREES = 90.0;
+        public static final double HOOD_MIN_DEGREES = 15.0;
+        public static final double HOOD_START_DEGREES = 20.0;
     //#endregion    
 
     //#region Elevator

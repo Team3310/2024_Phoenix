@@ -17,12 +17,15 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer = new RobotContainer();
 
   private UpdateManager updateManager = new UpdateManager(
-            TunerConstants.DriveTrain
-    );;
+    TunerConstants.DriveTrain
+  );
+
 
   @Override
   public void robotInit() {
     updateManager.startLoop(0.005);
+
+    m_robotContainer.shooter.setHoodZero(Constants.HOOD_START_DEGREES);
   }
 
   @Override

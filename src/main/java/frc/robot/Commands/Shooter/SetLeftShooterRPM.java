@@ -3,25 +3,27 @@ package frc.robot.Commands.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Shooter;
 
-public class ShootCommand extends Command{
+public class SetLeftShooterRPM extends Command{
     private Shooter shooter;
-    private double rpm, angle;
+    private double rpm;
 
-    public ShootCommand(double rpm, double angle){
-        this.shooter = Shooter.getInstance();
+    public SetLeftShooterRPM(Shooter shooter, double rpm){
+        this.shooter = shooter;
         this.rpm = rpm;
-        this.angle = angle;
     }
 
     @Override
     public void initialize(){
-        shooter.setShooterRpm(rpm);
-        shooter.setHoodAngle(angle);
+
     }
 
     @Override
     public void execute(){
-
+        if(rpm==0.0){
+            shooter.setLeftMainOff();
+        }else{
+            shooter.setLeftMainRPM(rpm);
+        }
     }
 
     @Override
@@ -31,6 +33,6 @@ public class ShootCommand extends Command{
 
     @Override
     public void end(boolean interrupted){
-        
+
     }
 }

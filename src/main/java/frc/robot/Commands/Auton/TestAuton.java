@@ -16,7 +16,6 @@ import frc.robot.Commands.Auton.DynamicAutoUtil.DynamicPathCommand.DecisionPoint
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeUp;
 import frc.robot.Commands.Intake.StopIntake;
-import frc.robot.Commands.Shooter.ShootCommand;
 
 public class TestAuton extends AutonCommandBase{
     boolean skipped;
@@ -40,7 +39,7 @@ public class TestAuton extends AutonCommandBase{
         ).addSection(
             follow("Test4"),
             new ParallelRaceGroup(
-                new ShootCommand(2000.0, 15.0),
+                // new ShootCommand(2000.0, 15.0),
                 new WaitCommand(0.5)
             )
         );
