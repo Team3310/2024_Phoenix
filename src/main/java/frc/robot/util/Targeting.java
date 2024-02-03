@@ -98,7 +98,7 @@ public class Targeting{
 
         //Get an Average Az/El across all TargetingObjects
         for (Targeting TargetingObject : TargetingObjectList){
-            if (true/*TargetingObject.latestUpdateSuccesfull*/){
+            if (TargetingObject.latestUpdateSuccesfull){
                 averageAz += TargetingObject.getAz();
                 averageEl += TargetingObject.getEl();
                 count++;
@@ -153,8 +153,11 @@ public class Targeting{
         }else{ 
             try {
                 //Update botPos via Limelight
-                // botPos = NetworkTableInstance.getDefault().getTable("limelight" + limelightHostname).getEntry("botpose").getDoubleArray(new double[6]);
-                botPos = limelight.getBotPose();
+                botPos = NetworkTableInstance.getDefault().getTable("limelight" + this.limelightHostname).getEntry("botpose").getDoubleArray(new double[6]);
+                // botPos = limelight.getBotPose();
+                SmartDashboard.putNumber(limelightHostname + " Length:", botPos.length);
+                SmartDashboard.putString(limelightHostname + " X,Y,Z:", botPos[0] + "," + botPos[1] + "," + botPos[2]);
+                
                 //Limelight should return a size 6 array, if it doesn't, make an zeroed array
                 if (botPos.length < 3){
                     System.err.println(botPos.length);
@@ -189,45 +192,45 @@ public class Targeting{
         //Range  is from pi/2 to -pi/2 (180 to -180)
         
         //Compute the X, Y, and Z distances between coordinates
-        double delta_X = targetPos[0] - botPos[0];
-        double delta_Y = targetPos[1] - botPos[1];
-        double delta_Z = targetPos[2] - botPos[2];
+        double delta_X = targetPos[0] - this.botPos[0];
+        double delta_Y = targetPos[1] - this.botPos[1];
+        double delta_Z = targetPos[2] - this.botPos[2];
 
-        SmartDashboard.putString("delta x,y,z", delta_X+","+delta_Y+","+delta_Z);
-        SmartDashboard.putString("bot x,y,z", botPos[0]+","+botPos[1]+","+botPos[2]);
-        SmartDashboard.putString("target x,y,z", targetPos[0]+","+targetPos[1]+","+targetPos[2]);
+        // SmartDashboard.putString("delta x,y,z", delta_X+","+delta_Y+","+delta_Z);
+        // SmartDashboard.putString("bot x,y,z", botPos[0]+","+botPos[1]+","+botPos[2]);
+        // SmartDashboard.putString("target x,y,z", targetPos[0]+","+targetPos[1]+","+targetPos[2]);
 
         //If Limelight cannot see any targets... don't calculate, and change latestUpdateSuccesfull to FALSE
         latestUpdateSuccesfull = true;
         if (!this.hasTarget()){
-            System.err.println("No Target");
-            latestUpdateSuccesfull = false;
+            // System.err.println("No Target");
+            this.latestUpdateSuccesfull = false;
             return;
         }
 
         //Azimuth Trig
         if (delta_Y > 0){                                                //(pi/2 to -pi/2), (90 deg to -90 deg))
-            targetAz = Math.atan(delta_X / delta_Y);              
+            this.targetAz = Math.atan(delta_X / delta_Y);              
         }else if ((delta_X > 0) && (delta_Y <= 0)){                      //[pi/2 to pi)
-            targetAz = -(Math.atan(delta_Y / delta_X)) + (Math.PI / 2); 
+            this.targetAz = -(Math.atan(delta_Y / delta_X)) + (Math.PI / 2); 
         }else if ((delta_X < 0) && (delta_Y <= 0)){                      //[-pi/2 to -pi)
-            targetAz = -(Math.atan(delta_Y / delta_X)) - (Math.PI / 2); 
+            this.targetAz = -(Math.atan(delta_Y / delta_X)) - (Math.PI / 2); 
         }else if ((delta_X == 0) && (delta_Y < 0)){                        //Edge case: pointing along Y-Axis, Y-: pi (180 deg)                         
-            targetAz = Math.PI;  
+            this.targetAz = Math.PI;  
         }else if ((delta_X == 0) && (delta_Y == 0)){                     //This should never occur in a realistic scenario, will not update AZ.
-            latestUpdateSuccesfull = false;
+            this.latestUpdateSuccesfull = false;
         }else{                                                           //No cases ran, should never occur
-            latestUpdateSuccesfull = false;
+            this.latestUpdateSuccesfull = false;
         }
 
-        SmartDashboard.putNumber("target azi in method", targetAz);
+        // SmartDashboard.putNumber("target azi in method", targetAz);
 
         //Elevation Trig
         double distance_XY = Math.hypot(delta_X, delta_Y);
         if (distance_XY != 0){ 
-            targetEl = Math.atan(delta_Z / distance_XY);
+            this.targetEl = Math.atan(delta_Z / distance_XY);
         }else {
-            latestUpdateSuccesfull = false;   
+            this.latestUpdateSuccesfull = false;   
         }
     }
 
@@ -243,11 +246,11 @@ public class Targeting{
     //Get Targeting Object targetAz
     public double getAz(){
         //Flipped sign, exists in MAIN, so keeping.
-        return -targetAz;
+        return -this.targetAz;
     }
     //Get Targeting Object targetEl
     public double getEl(){
-        return targetEl;
+        return this.targetEl;
     }
 
     //Update Targeting Object

@@ -58,7 +58,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private Limelight limelight = Limelight.getInstance();
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting backCamera = new Targeting("back", false);
-
+    private Targeting leftCamera = new Targeting("left", false);
+    private Targeting rightCamera = new Targeting("right", false);
+    // private Targeting noteCamera = new Targeting("note", false);
 
     private boolean withOdo = false;
 
@@ -228,7 +230,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         if(limelight.hasTarget()){
             Double offset = Math.toRadians(limelight.getTargetHorizOffset());
             Double request = limelightController.calculate(offset, 0.02) * Constants.MaxAngularRate;
-            SmartDashboard.putNumber("PID Turn Rate", request);
+            // SmartDashboard.putNumber("PID Turn Rate", request);
 
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed, 
@@ -264,8 +266,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians())-Targeting.getMovingAverageAz();
         offset = rolloverConversion_radians(offset);
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
-        SmartDashboard.putNumber("PID Turn Rate", request/Constants.MaxAngularRate);
-        SmartDashboard.putNumber("target az offset", offset);
+        // SmartDashboard.putNumber("PID Turn Rate", request/Constants.MaxAngularRate);
+        // SmartDashboard.putNumber("target az offset", offset);
 
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
             getDriveX() * Constants.MaxSpeed, 
@@ -293,6 +295,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             return;
         }
         Targeting.updateAll();
+        // frontCamera.update();
+        // backCamera.update();
+        // leftCamera.update();
+        // rightCamera.update();
+        // noteCamera.update();
+
         Double offset = Targeting.getMovingAverageAz()-rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
         offset = rolloverConversion_radians(offset);
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
@@ -367,17 +375,24 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void periodic(){
-        // targeting.update();
-        frontCamera.update();
-        backCamera.update();
+        //Targeting.updateAll();
+        // frontCamera.update();
+        // backCamera.update();
+        // leftCamera.update();
+        // rightCamera.update();
+
+
         //Troubeshooting if Swerve Robot Azimuth Output matches Targeting Class Azimuth Output
         SmartDashboard.putString("", mControlMode.toString());
-        SmartDashboard.putNumber("Targeting az", frontCamera.getAz());
-        SmartDashboard.putNumber("Targeting az back", backCamera.getAz());
+        SmartDashboard.putNumber("frontCamera.getAz():", frontCamera.getAz());
+        SmartDashboard.putNumber("backCamera.getAz():", backCamera.getAz());
+        SmartDashboard.putNumber("leftCamera.getAz():", leftCamera.getAz());
+        SmartDashboard.putNumber("rightCamera.getAz():", rightCamera.getAz());
+        // SmartDashboard.putNumber("noteCamera.getAz():", noteCamera.getAz());
         SmartDashboard.putNumber("Targeting.getMovingAverageAz()", Targeting.getMovingAverageAz());
-        SmartDashboard.putString("target:",Targeting.getTarget().toString());
-        SmartDashboard.putNumber("Bot Azimuth:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
-        SmartDashboard.putNumber("Bot Azimuth [CONVERTED]:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
+        SmartDashboard.putString("Set Target:",Targeting.getTarget().toString());
+        //SmartDashboard.putNumber("Bot Azimuth:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
+        SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
     }
 
 
