@@ -19,8 +19,8 @@ public class Intake extends SubsystemBase{
     // private final TalonFX beltMotor = new TalonFX(5, TunerConstants.kCANbusName); //TODO change id
 
 
-    private DigitalInput indexerSensor = new DigitalInput(0);
-    private DigitalInput upSensor = new DigitalInput(1);
+    // private DigitalInput indexerSensor = new DigitalInput(0);
+    // private DigitalInput upSensor = new DigitalInput(1);
 
     private VelocityVoltage control = new VelocityVoltage(0, 0, true, 0, 0, false, false, false);
 
@@ -81,13 +81,13 @@ public class Intake extends SubsystemBase{
         setBeltIntakeRPM(0.0);
     }
 
-    public boolean getUpSensor(){
-        return upSensor.get();
-    }
+    // public boolean getUpSensor(){
+    //     return upSensor.get();
+    // }
 
-    public boolean getIndexerSensor(){
-        return indexerSensor.get();
-    }
+    // public boolean getIndexerSensor(){
+    //     return indexerSensor.get();
+    // }
 
     public double getFrontIntakeRPM(){
         return getMotorRPSToRPM(frontIntake.getVelocity().getValueAsDouble());

@@ -17,7 +17,7 @@ public class Hood extends SubsystemBase{
 
     private final MotionMagicDutyCycle hoodControl = new MotionMagicDutyCycle(0);
     
-    private static final String canBusName = "rio";
+    private static final String canBusName = "Drivetrain";
 
     private final double hoodDegreesToMotorRevs = Constants.HOOD_GEAR_RATIO/360;
 

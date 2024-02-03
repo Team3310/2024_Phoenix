@@ -23,7 +23,8 @@ public class IntakeAutoCommand extends Command{
 
     @Override
     public boolean isFinished(){
-        return intake.getIndexerSensor();
+        // return intake.getIndexerSensor();
+        return true;
     }
 
     @Override
