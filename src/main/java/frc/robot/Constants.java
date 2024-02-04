@@ -25,6 +25,8 @@ public class Constants {
         public static final int SHOOTER_LEFT_SLAVE_ID = 1001;
 
         public static final int SHOOTER_KICKER_ID = 42;
+
+        public static final double KICKER_INTAKE_RPM = 2000.0;
     //#endregion    
 
     //#region Hood

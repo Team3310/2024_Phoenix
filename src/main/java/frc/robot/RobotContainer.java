@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Hood.SetHoodAngle;
 import frc.robot.Commands.Intake.BeltSideSpit;
+import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeSlurp;
 import frc.robot.Commands.Intake.IntakeUnder;
@@ -98,7 +99,7 @@ public class RobotContainer {
     driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
   
     operatorController.a().onTrue(/*all under*/ new IntakeUnder());
-    operatorController.b().onTrue(/*in robot*/ new IntakeIn());
+    operatorController.b().onTrue(/*in robot*/ new IntakeAuton());
     operatorController.y().onTrue(/*up*/ new IntakeUp());
     operatorController.x().onTrue(/*stop all*/ new StopIntake());
     operatorController.pov(0).onTrue(new IntakeSlurp());
