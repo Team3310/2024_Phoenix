@@ -8,7 +8,7 @@ public class TwoNote extends AutonCommandBase{
     public TwoNote(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose("2");
+        resetRobotPose(getPath("2"));
 
         this.addCommands(
             new ParallelDeadlineGroup(

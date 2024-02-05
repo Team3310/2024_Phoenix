@@ -7,6 +7,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.FourNote;
 import frc.robot.Commands.Auton.Test;
 import frc.robot.Commands.Auton.TestAuton;
+import frc.robot.Commands.Auton.TestOneNote;
 import frc.robot.Commands.Auton.ThreeNote;
 import frc.robot.Commands.Auton.TwoNote;
 import frc.robot.Commands.Auton.TwoNoteAnywhere;
@@ -22,6 +23,7 @@ public class AutonomousChooser {
         autonomousModeChooser.addOption("4 Note", AutonomousMode.FOUR_NOTE);
         autonomousModeChooser.addOption("2 Note", AutonomousMode.TWO_NOTE);
         autonomousModeChooser.addOption("2 Note Anywhere", AutonomousMode.TWO_NOTE_ANYWHERE);
+        autonomousModeChooser.addOption("1 Note Test", AutonomousMode.ONE_NOTE_TEST);
     }
 
     public SendableChooser<AutonomousMode> getAutonomousModeChooser() {
@@ -40,7 +42,9 @@ public class AutonomousChooser {
             case TWO_NOTE_ANYWHERE:
                 return new TwoNoteAnywhere(container);
             case TEST_LIMELIGHT:
-                return new TestAuton(container);       
+                return new TestAuton(container);  
+            case ONE_NOTE_TEST:
+                return new TestOneNote(container);         
             case TEST:
                 //fall through
             default:
@@ -55,6 +59,7 @@ public class AutonomousChooser {
         FOUR_NOTE,
         TWO_NOTE_ANYWHERE,
         TEST_LIMELIGHT,
+        ONE_NOTE_TEST,
         ;
     }
 }

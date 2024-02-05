@@ -82,8 +82,8 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    driverController.a().onTrue(new SetDriveMode(DriveMode.LIMELIGHT));
-    driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
+    driverController.a().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
+    // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
 
     // operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
     // operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));
@@ -99,7 +99,10 @@ public class RobotContainer {
     driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
   
     operatorController.a().onTrue(/*all under*/ new IntakeUnder());
-    operatorController.b().onTrue(/*in robot*/ new IntakeAuton());
+    driverController.b().onTrue(/*in robot*/ new IntakeAuton());
+    driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(6000); shooter.setRightMainRPM(3000);}));
+    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0);}));
+    driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
     operatorController.y().onTrue(/*up*/ new IntakeUp());
     operatorController.x().onTrue(/*stop all*/ new StopIntake());
     operatorController.pov(0).onTrue(new IntakeSlurp());

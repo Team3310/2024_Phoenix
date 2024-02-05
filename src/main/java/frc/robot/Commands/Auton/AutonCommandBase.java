@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.SideChooser.SideMode;
+import frc.robot.util.SpotChooser.SpotMode;
 
 public class AutonCommandBase extends SequentialCommandGroup {
     protected RobotContainer robotContainer;
@@ -22,10 +23,11 @@ public class AutonCommandBase extends SequentialCommandGroup {
         return new InstantCommand(()->robotContainer.getDrivetrain().setPath(getPath(pathName), false));
     }
 
-    protected void resetRobotPose(String pathName) {
+    protected void resetRobotPose(PathPlannerPath path) {
         this.addCommands(new InstantCommand(()->TunerConstants.DriveTrain.
             seedFieldRelative(
-                getPath(pathName).getStartingDifferentialPose()
+                path.getStartingDifferentialPose(),
+                path.getStartingDifferentialPose().getRotation()
             )));
     }
 
@@ -35,7 +37,11 @@ public class AutonCommandBase extends SequentialCommandGroup {
 
     protected PathPlannerPath getPath(String pathName){
         pathName+=robotContainer.getSpot().getName();
-        return getFlip()?PathPlannerPath.fromPathFile(pathName).flipPath():PathPlannerPath.fromPathFile(pathName);
+        PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+        if(robotContainer.getSide()==SideMode.RED){
+            path.flipPath();
+        }
+        return path;
     }
 
     protected Double getPathTime(String pathName){

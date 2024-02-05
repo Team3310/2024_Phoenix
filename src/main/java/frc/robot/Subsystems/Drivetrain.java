@@ -19,6 +19,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Notifier;
@@ -164,7 +165,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void setDriveMode(DriveMode mode){
-        mControlMode = mode;
+                mControlMode = mode;
     }
 
     private void startSimThread() {
@@ -188,8 +189,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             Double request = limelightController.calculate(offset, 0.02) * Constants.MaxAngularRate;
             SmartDashboard.putNumber("PID Turn Rate", request);
 
-            // System.out.println(joystick.getLeftX());
-
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed, 
                 getDriveY() * Constants.MaxSpeed, 
@@ -209,9 +208,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             joystickDrive();
         }
     }
-    
+
     public void joystickDrive(){
-        // System.out.println(joystick.getLeftX());
+// System.out.println(joystick.getLeftX());
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
             getDriveX() * Constants.MaxSpeed, 
             getDriveY() * Constants.MaxSpeed, 
@@ -256,7 +255,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         JOYSTICK,
         LIMELIGHT,
         AUTON,
-        ;
+                ;
     }
 
     @Override
@@ -276,12 +275,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public void update(double time, double dt) {
         // System.out.println("ah");
         switch(mControlMode){
-            case LIMELIGHT:
+                        case LIMELIGHT:
                 limelightDrive(); break;
             case JOYSTICK:
                 joystickDrive(); break;
             case AUTON:
-                var states = m_kinematics.toSwerveModuleStates(pathFollower.update(), new Translation2d());
+                var states = m_kinematics.toSwerveModuleStates(pathFollower.update(), getPose().getTranslation());
 
                 for(int i=0; i<this.Modules.length; i++){
                     this.Modules[i].apply(states[i], 
@@ -290,11 +289,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         }
     }
-    
+
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
     }
     public boolean hasTarget() {
         return limelight.hasTarget();
+    }
+    public void seedFieldRelative(Pose2d startingDifferentialPose, Rotation2d rotation) {
+        seedFieldRelative(startingDifferentialPose);
+        this.m_fieldRelativeOffset=rotation;
     }
 }

@@ -113,6 +113,7 @@ public class Shooter extends SubsystemBase{
         }
 
         shooterKicker.setInverted(true);
+        shooterTopLeftMaster.setInverted(true);
     }
 
     public boolean isNoteLoaded() {

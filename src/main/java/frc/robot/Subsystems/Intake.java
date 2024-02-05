@@ -1,6 +1,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -22,7 +23,7 @@ public class Intake extends SubsystemBase{
     // private DigitalInput indexerSensor = new DigitalInput(0);
     // private DigitalInput upSensor = new DigitalInput(1);
 
-    private VelocityVoltage control = new VelocityVoltage(0, 0, true, 0, 0, false, false, false);
+    private VelocityVoltage control = new VelocityVoltage(0);
 
     private final double kF = 0.11;
     private final double kP = 0.15;
@@ -55,7 +56,7 @@ public class Intake extends SubsystemBase{
     }
 
     public void setFrontIntakeRPM(double rpm){
-        frontIntake.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)));
+        frontIntake.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)).withSlot(0));
     }
 
     public void setBackIntakeRPM(double rpm){
@@ -64,11 +65,11 @@ public class Intake extends SubsystemBase{
     }
 
     public void setBottomIntakeRPM(double rpm){
-        bottomIntake.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)));
+        bottomIntake.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)).withSlot(0));
     }
 
     public void setTopIntakeRPM(double rpm){
-        topIntake.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)));
+        topIntake.setControl(control.withVelocity(getRPMtoMotorRPS(rpm)).withSlot(0));
     }
 
     public void setBeltIntakeRPM(double rpm){
