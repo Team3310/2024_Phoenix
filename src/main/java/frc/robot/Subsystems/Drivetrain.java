@@ -60,6 +60,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private Targeting backCamera = new Targeting("back", false);
     private Targeting leftCamera = new Targeting("left", false);
     private Targeting rightCamera = new Targeting("right", false);
+    // private Targeting odometryTargeting = new Targeting(true);
     // private Targeting noteCamera = new Targeting("note", false);
 
     private boolean withOdo = false;
@@ -262,8 +263,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void snapToTarget(){
-        Targeting.updateAll();
-        Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians())-Targeting.getMovingAverageAz();
+        Targeting.updateAll_averageElAz();
+        Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians())-Targeting.getTargetAz_averageAzEl();
         offset = rolloverConversion_radians(offset);
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
         // SmartDashboard.putNumber("PID Turn Rate", request/Constants.MaxAngularRate);
@@ -294,14 +295,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             snapToTarget();
             return;
         }
-        Targeting.updateAll();
-        // frontCamera.update();
-        // backCamera.update();
-        // leftCamera.update();
-        // rightCamera.update();
-        // noteCamera.update();
+        Targeting.updateAll_averageBotPos();
 
-        Double offset = Targeting.getMovingAverageAz()-rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
+        Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()) - Targeting.getTargetAz_averageBotPos();
         offset = rolloverConversion_radians(offset);
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
         SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
@@ -375,21 +371,24 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void periodic(){
-        //Targeting.updateAll();
-        // frontCamera.update();
-        // backCamera.update();
-        // leftCamera.update();
-        // rightCamera.update();
-
+        Targeting.updateAll_averageBotPos();
 
         //Troubeshooting if Swerve Robot Azimuth Output matches Targeting Class Azimuth Output
         SmartDashboard.putString("", mControlMode.toString());
-        SmartDashboard.putNumber("frontCamera.getAz():", frontCamera.getAz());
-        SmartDashboard.putNumber("backCamera.getAz():", backCamera.getAz());
-        SmartDashboard.putNumber("leftCamera.getAz():", leftCamera.getAz());
-        SmartDashboard.putNumber("rightCamera.getAz():", rightCamera.getAz());
+        // SmartDashboard.putNumber("frontCamera.getAz():", frontCamera.getAz());
+        // SmartDashboard.putNumber("backCamera.getAz():", backCamera.getAz());
+        // SmartDashboard.putNumber("leftCamera.getAz():", leftCamera.getAz());
+        // SmartDashboard.putNumber("rightCamera.getAz():", rightCamera.getAz());
+        // SmartDashboard.putString("averageBotPos: ", Targeting.averageBotPos[0] + "," + Targeting.averageBotPos[1] + "," + Targeting.averageBotPos[2]);
+        // SmartDashboard.putNumber("Targeting.averageBotPos[0]:", Targeting.averageBotPos[0]);
+        // SmartDashboard.putNumber("Targeting.averageBotPos[1]:", Targeting.averageBotPos[1]);
+
+        SmartDashboard.putNumber("Targeting.movingAverage_averageBotPos[0]:", Targeting.movingAverage_averageBotPos[0]);
+        SmartDashboard.putNumber("Targeting.movingAverage_averageBotPos[1]:", Targeting.movingAverage_averageBotPos[1]);
+
+        SmartDashboard.putNumber("Targeting.getTargetAzv2()", Targeting.getTargetAz_averageBotPos());
         // SmartDashboard.putNumber("noteCamera.getAz():", noteCamera.getAz());
-        SmartDashboard.putNumber("Targeting.getMovingAverageAz()", Targeting.getMovingAverageAz());
+        // SmartDashboard.putNumber("Targeting.getMovingAverageAz()", Targeting.getMovingAverageAz());
         SmartDashboard.putString("Set Target:",Targeting.getTarget().toString());
         //SmartDashboard.putNumber("Bot Azimuth:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
         SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
