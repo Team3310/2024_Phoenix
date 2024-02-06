@@ -12,8 +12,8 @@ import frc.robot.Constants;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Hood extends SubsystemBase{
-    private static Hood instance;
+public class Lift extends SubsystemBase{
+    private static Lift instance;
 
     // Motor Controllers
     private TalonFX hood;
@@ -24,14 +24,14 @@ public class Hood extends SubsystemBase{
 
     private final double hoodRevsToMotorRevs = Constants.HOOD_GEAR_RATIO;
 
-    public static Hood getInstance(){
+    public static Lift getInstance(){
         if(instance == null){
-            instance = new Hood();
+            instance = new Lift();
         }
         return instance;
     }
 
-    private Hood(){
+    private Lift(){
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
         hood = new TalonFX(Constants.HOOD_ID, canBusName);
@@ -53,6 +53,9 @@ public class Hood extends SubsystemBase{
         configs.MotionMagic.MotionMagicCruiseVelocity = 20.0;
         configs.MotionMagic.MotionMagicAcceleration = 40.0;
         configs.MotionMagic.MotionMagicJerk = 100.0;
+
+        configs.CurrentLimits.StatorCurrentLimit = 30;
+        configs.CurrentLimits.StatorCurrentLimitEnable = true;
 
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for(int i = 0; i < 5; ++i) {

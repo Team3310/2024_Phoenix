@@ -10,12 +10,16 @@ public class IntakeIn extends Command{
 
     public IntakeIn(){
         this.intake = Intake.getInstance();
+
+        addRequirements(intake);
     } 
 
     @Override
     public void initialize() {
         intake.setFrontIntakeRPM(Constants.IN_INTAKE_RPM);
         intake.setBackIntakeRPM(Constants.IN_INTAKE_RPM);
+
+        addRequirements(intake);
     }
 
     @Override

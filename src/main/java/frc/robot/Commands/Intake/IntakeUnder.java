@@ -9,6 +9,8 @@ public class IntakeUnder extends Command{
 
     public IntakeUnder(){
         this.intake = Intake.getInstance();
+
+        addRequirements(intake);
     } 
 
     @Override

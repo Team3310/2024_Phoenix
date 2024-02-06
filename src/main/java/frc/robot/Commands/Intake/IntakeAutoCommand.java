@@ -9,6 +9,8 @@ public class IntakeAutoCommand extends Command{
 
     public IntakeAutoCommand(){
         this.intake = Intake.getInstance();
+
+        addRequirements(intake);
     }
 
     @Override

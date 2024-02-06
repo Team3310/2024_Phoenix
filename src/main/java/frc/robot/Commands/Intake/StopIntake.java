@@ -8,6 +8,8 @@ public class StopIntake extends Command{
 
     public StopIntake(){
         this.intake = Intake.getInstance();
+
+        addRequirements(intake);
     } 
 
     @Override

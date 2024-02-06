@@ -1,20 +1,20 @@
-package frc.robot.Commands.Hood;
+package frc.robot.Commands.Lift;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Hood;
+import frc.robot.Subsystems.Lift;
 
-public class SetHoodAngle extends Command{
-    private Hood hood;
+public class SetLiftAngle extends Command{
+    private Lift lift;
     private double angle;
 
-    public SetHoodAngle(Hood hood, double angle){
-        this.hood = hood;
+    public SetLiftAngle(Lift hood, double angle){
+        this.lift = hood;
         this.angle = angle;
     }
 
     @Override
     public void initialize(){
-        hood.setHoodAngle(angle);
+        lift.setHoodAngle(angle);
     }
 
     @Override

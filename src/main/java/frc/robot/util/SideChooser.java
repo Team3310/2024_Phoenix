@@ -28,6 +28,7 @@ public class SideChooser {
 
         String side;
 
+        @Override
         public String toString(){
             return side;
         }

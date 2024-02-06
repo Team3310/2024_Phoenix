@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -24,11 +25,17 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected void resetRobotPose(PathPlannerPath path) {
+        SmartDashboard.putString("bot starting pose", path.getStartingDifferentialPose().getTranslation().toString());
+        SmartDashboard.putNumber("starting rotation", path.getStartingDifferentialPose().getRotation().getDegrees());
+        
         this.addCommands(new InstantCommand(()->TunerConstants.DriveTrain.
             seedFieldRelative(
                 path.getStartingDifferentialPose(),
                 path.getStartingDifferentialPose().getRotation()
-            )));
+        )));
+
+        SmartDashboard.putString("robot pose after reset", TunerConstants.DriveTrain.getPose().getTranslation().toString());
+        SmartDashboard.putString("robot angle after reset", TunerConstants.DriveTrain.getPose().getRotation().toString());        
     }
 
     protected boolean getFlip(){
@@ -36,11 +43,9 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected PathPlannerPath getPath(String pathName){
-        pathName+=robotContainer.getSpot().getName();
+        pathName+=robotContainer.getSide().toString();
+        SmartDashboard.putString("pathName", pathName);
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
-        if(robotContainer.getSide()==SideMode.RED){
-            path.flipPath();
-        }
         return path;
     }
 

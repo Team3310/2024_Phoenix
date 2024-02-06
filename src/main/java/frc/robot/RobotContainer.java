@@ -14,21 +14,21 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Drive.SetDriveMode;
-import frc.robot.Commands.Hood.SetHoodAngle;
-import frc.robot.Commands.Intake.BeltSideSpit;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeSlurp;
+import frc.robot.Commands.Intake.IntakeSpit;
 import frc.robot.Commands.Intake.IntakeUnder;
 import frc.robot.Commands.Intake.IntakeUp;
 import frc.robot.Commands.Intake.StopIntake;
+import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederLoadCommand;
 import frc.robot.Commands.Shooter.FeederShootCommand;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
 import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Commands.Shooter.SetShooterKickerRPM;
 import frc.robot.Subsystems.Drivetrain;
-import frc.robot.Subsystems.Hood;
+import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
@@ -51,7 +51,7 @@ public class RobotContainer {
   public final Drivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
   public final Intake intake = Intake.getInstance();
   public final Shooter shooter = Shooter.getInstance();
-  public final Hood hood = Hood.getInstance();
+  public final Lift lift = Lift.getInstance();
   // public final Flicker flicker = Flicker.getInstance();
 
   // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -82,7 +82,7 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    driverController.a().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
+    // driverController.a().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
     // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
 
     // operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
@@ -99,15 +99,18 @@ public class RobotContainer {
     driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
   
     operatorController.a().onTrue(/*all under*/ new IntakeUnder());
-    driverController.b().onTrue(/*in robot*/ new IntakeAuton());
-    driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(6000); shooter.setRightMainRPM(3000);}));
-    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0);}));
+    driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
+    driverController.leftTrigger(0.5).onTrue(new IntakeSpit());
+    driverController.leftTrigger(0.5).onFalse(new StopIntake());
+    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
+    driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
+    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
+    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
     driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
-    operatorController.y().onTrue(/*up*/ new IntakeUp());
-    operatorController.x().onTrue(/*stop all*/ new StopIntake());
+
+    // operatorController.y().onTrue(/*up*/ new IntakeUp());
+    // operatorController.x().onTrue(/*stop all*/ new StopIntake());
     operatorController.pov(0).onTrue(new IntakeSlurp());
-    operatorController.pov(90).onTrue(new BeltSideSpit(false));
-    operatorController.pov(270).onTrue(new BeltSideSpit(true));
 
     SmartDashboard.putData("Right Side RPM 0", new SetRightShooterRPM(shooter, 0.0));
     SmartDashboard.putData("Right Side RPM 50", new SetRightShooterRPM(shooter, 0.0));
@@ -139,16 +142,18 @@ public class RobotContainer {
     SmartDashboard.putData("Kicker RPM 5000", new SetShooterKickerRPM(shooter, 5000));
     SmartDashboard.putData("Kicker RPM 6000", new SetShooterKickerRPM(shooter, 6000));
 
-    SmartDashboard.putData("Hood Angle 15", new SetHoodAngle(hood, 15));
-    SmartDashboard.putData("Hood Angle 20", new SetHoodAngle(hood, 20));
-    SmartDashboard.putData("Hood Angle 22", new SetHoodAngle(hood, 22));
-    SmartDashboard.putData("Hood Angle 25", new SetHoodAngle(hood, 25));
-    SmartDashboard.putData("Hood Angle 30", new SetHoodAngle(hood, 30));
-    SmartDashboard.putData("Hood Angle 35", new SetHoodAngle(hood, 35));
-    SmartDashboard.putData("Hood Angle 40", new SetHoodAngle(hood, 40));
-    SmartDashboard.putData("Hood Angle 45", new SetHoodAngle(hood, 45));
-    SmartDashboard.putData("Hood Angle 70", new SetHoodAngle(hood, 70));
-    SmartDashboard.putData("Zero Hood", new InstantCommand(()->hood.setHoodZero(90)));
+    SmartDashboard.putData("Hood Angle 15", new SetLiftAngle(lift, 15));
+    SmartDashboard.putData("Hood Angle 20", new SetLiftAngle(lift, 20));
+    SmartDashboard.putData("Hood Angle 22", new SetLiftAngle(lift, 22));
+    SmartDashboard.putData("Hood Angle 25", new SetLiftAngle(lift, 25));
+    SmartDashboard.putData("Hood Angle 30", new SetLiftAngle(lift, 30));
+    SmartDashboard.putData("Hood Angle 35", new SetLiftAngle(lift, 35));
+    SmartDashboard.putData("Hood Angle 40", new SetLiftAngle(lift, 40));
+    SmartDashboard.putData("Hood Angle 45", new SetLiftAngle(lift, 45));
+    SmartDashboard.putData("Hood Angle 50", new SetLiftAngle(lift, 50));
+    SmartDashboard.putData("Hood Angle 60", new SetLiftAngle(lift, 60));
+    SmartDashboard.putData("Hood Angle 70", new SetLiftAngle(lift, 70));
+    SmartDashboard.putData("Zero Hood", new InstantCommand(()->lift.setHoodZero(90)));
 
     SmartDashboard.putData("Kicker Load", new FeederLoadCommand(shooter));
     SmartDashboard.putData("Kicker Shoot", new FeederShootCommand(shooter));

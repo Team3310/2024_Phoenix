@@ -9,6 +9,8 @@ public class IntakeSlurp extends Command{
 
     public IntakeSlurp(){
         this.intake = Intake.getInstance();
+
+        addRequirements(intake);
     } 
 
     @Override

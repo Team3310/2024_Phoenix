@@ -9,20 +9,23 @@ public class IntakeSpit extends Command{
 
     public IntakeSpit(){
         this.intake = Intake.getInstance();
+
+        addRequirements(intake);
     } 
 
     @Override
     public void initialize() {
         intake.setFrontIntakeRPM(-Constants.SPIT_RPM);
+        intake.setBackIntakeRPM(-Constants.SPIT_RPM);
 
         // if(intake.getIndexerSensor()){
         //     intake.setBackIntakeRPM(-Constants.SPIT_RPM);
         // }else if(intake.getUpSensor()){
         //     intake.setBottomIntakeRPM(-Constants.SPIT_RPM);
         //     intake.setTopIntakeRPM(Constants.SPIT_RPM);
-        if(false){}else{
-            intake.setBackIntakeRPM(-Constants.SPIT_RPM);
-        }
+        // if(false){}else{
+        //     intake.setBackIntakeRPM(-Constants.SPIT_RPM);
+        // }
     }
 
     @Override

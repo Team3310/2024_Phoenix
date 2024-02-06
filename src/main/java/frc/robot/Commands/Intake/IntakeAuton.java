@@ -2,16 +2,21 @@ package frc.robot.Commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 
-public class IntakeAuton extends Command{
+public class IntakeAuton extends Command {
     private Intake intake;
     private Shooter shooter;
+    private Lift lift;
 
     public IntakeAuton(){
         this.intake = Intake.getInstance();
         this.shooter = Shooter.getInstance();
+        this.lift = Lift.getInstance();
+
+        addRequirements(intake, shooter, lift);
     } 
 
     @Override
@@ -19,6 +24,7 @@ public class IntakeAuton extends Command{
         intake.setFrontIntakeRPM(Constants.IN_INTAKE_RPM);
         intake.setBackIntakeRPM(Constants.IN_INTAKE_RPM);
         shooter.setKickerRPM(Constants.KICKER_INTAKE_RPM);
+        lift.setHoodAngle(25.0);
     }
 
     @Override

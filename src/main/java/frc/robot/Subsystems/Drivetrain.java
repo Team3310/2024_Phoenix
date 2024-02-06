@@ -297,7 +297,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         return limelight.hasTarget();
     }
     public void seedFieldRelative(Pose2d startingDifferentialPose, Rotation2d rotation) {
-        seedFieldRelative(startingDifferentialPose);
-        this.m_fieldRelativeOffset=rotation;
+        m_odometry.resetPosition(rotation, m_modulePositions, startingDifferentialPose);
+        m_cachedState.Pose = startingDifferentialPose;
     }
 }
