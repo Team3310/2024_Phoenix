@@ -1,6 +1,7 @@
 package frc.robot.Commands.Auton;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Intake.IntakeAuton;
@@ -18,16 +19,14 @@ public class TestOneNote extends AutonCommandBase{
         resetRobotPose(getPath("One"));
 
         this.addCommands(
-            new ParallelCommandGroup(
+            new ParallelDeadlineGroup(
                 follow("One"), 
-                new IntakeAuton()
-            ),
-            new ParallelCommandGroup(
-                new SetLiftAngle(Lift.getInstance(), 30.0),
+                new IntakeAuton(),
                 new SetLeftShooterRPM(Shooter.getInstance(), 6000),
                 new SetRightShooterRPM(Shooter.getInstance(), 3000)
             ),
-            new WaitCommand(1.0),
+            new SetLiftAngle(Lift.getInstance(), 30.0),
+            new WaitCommand(0.5),
             new SetShooterKickerRPM(Shooter.getInstance(), 1500)
         );
     }

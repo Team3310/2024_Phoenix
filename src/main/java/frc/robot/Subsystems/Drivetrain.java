@@ -280,7 +280,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             case JOYSTICK:
                 joystickDrive(); break;
             case AUTON:
-                var states = m_kinematics.toSwerveModuleStates(pathFollower.update(), getPose().getTranslation());
+                var states = m_kinematics.toSwerveModuleStates(pathFollower.update(), new Translation2d());
                 if(!pathDone()){
                     for(int i=0; i<this.Modules.length; i++){
                         this.Modules[i].apply(states[i], 
