@@ -2,6 +2,7 @@ package frc.robot.Commands.Auton;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,21 +22,16 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected Command follow(String pathName) {
-        return new InstantCommand(()->robotContainer.getDrivetrain().setPath(getPath(pathName), false));
+        return new FollowPathCommand(getPath(pathName));
     }
 
     protected void resetRobotPose(PathPlannerPath path) {
-        SmartDashboard.putString("bot starting pose", path.getStartingDifferentialPose().getTranslation().toString());
-        SmartDashboard.putNumber("starting rotation", path.getStartingDifferentialPose().getRotation().getDegrees());
+        Pose2d start = path.getStartingDifferentialPose();
+        SmartDashboard.putString("bot starting pose", start.toString());
         
-        this.addCommands(new InstantCommand(()->TunerConstants.DriveTrain.
-            seedFieldRelative(
-                path.getStartingDifferentialPose(),
-                path.getStartingDifferentialPose().getRotation()
-        )));
+        TunerConstants.DriveTrain.seedFieldRelative(path.getStartingDifferentialPose()); 
 
-        SmartDashboard.putString("robot pose after reset", TunerConstants.DriveTrain.getPose().getTranslation().toString());
-        SmartDashboard.putString("robot angle after reset", TunerConstants.DriveTrain.getPose().getRotation().toString());        
+        SmartDashboard.putString("robot pose after reset", TunerConstants.DriveTrain.getPose().toString());       
     }
 
     protected boolean getFlip(){

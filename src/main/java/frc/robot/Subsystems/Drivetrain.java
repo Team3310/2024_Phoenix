@@ -281,23 +281,20 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 joystickDrive(); break;
             case AUTON:
                 var states = m_kinematics.toSwerveModuleStates(pathFollower.update(), getPose().getTranslation());
-
-                for(int i=0; i<this.Modules.length; i++){
-                    this.Modules[i].apply(states[i], 
-                    SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
-                };  break;
-
+                if(!pathDone()){
+                    for(int i=0; i<this.Modules.length; i++){
+                        this.Modules[i].apply(states[i], 
+                        SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+                    };  break;
+                }
         }
     }
 
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
     }
+
     public boolean hasTarget() {
         return limelight.hasTarget();
-    }
-    public void seedFieldRelative(Pose2d startingDifferentialPose, Rotation2d rotation) {
-        m_odometry.resetPosition(rotation, m_modulePositions, startingDifferentialPose);
-        m_cachedState.Pose = startingDifferentialPose;
     }
 }
