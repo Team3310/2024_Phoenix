@@ -75,10 +75,8 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper pressc
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    driverController.a().onTrue(new SetDriveMode(DriveMode.SNAPTOTARGET));
     driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
     driverController.y().onTrue(new SetDriveMode(DriveMode.AIMATTARGET));
-    driverController.x().onTrue(new InstantCommand(()->drivetrain.setSnapToTarget(true)));
 
     // operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
     // operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));

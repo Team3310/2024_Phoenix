@@ -260,11 +260,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-    public void setSnapToTarget(boolean snap){
-        mControlMode = DriveMode.APRIL_TAG;
-        withOdo = snap;
-    }
-
     public Pose2d getOdoPose(){
         return this.m_odometry.getEstimatedPosition();
     }
@@ -403,8 +398,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
             aimAtSpeakerState = "LIME MODE";
             Double request = -limelightController.calculate(offset, 0.02) * Constants.MaxAngularRate;
-            SmartDashboard.putNumber("offset", offset);
-            SmartDashboard.putNumber("PID Output", request);
 
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed, 
@@ -442,10 +435,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public double getPathTime(){
         return pathFollower.getPathTime();
     }
-
-    // public void setJoystick(CommandXboxController joystick){
-    //     this.joystick = joystick;
-    // }
 
     public enum DriveMode{
         JOYSTICK,
@@ -511,24 +500,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         }
     }
+    
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
     }
 
-    public LimelightHelpers.LimelightResults llesults;
-
-    public boolean frontCameraHasTarget() {
-        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
-        for(var aprilTagResults : llresults.targetingResults.targets_Fiducials){
-            //THIS CONDITION WILL NEED TO UPDATE DEPENDING IN THE TARGET
-            if (aprilTagResults.fiducialID == 4){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Rotation2d getRotation() {
         return Rotation2d.fromRadians(rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
+    }
+
+    public boolean hasTarget() {
+        return limelight.hasTarget();
     }
 }
