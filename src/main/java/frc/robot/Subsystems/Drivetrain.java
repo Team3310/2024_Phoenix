@@ -376,14 +376,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public String aimAtSpeakerState = "INIT";
     public boolean justChanged = false;
     public void aimAtTarget(){
-        
-        // if(counter == 500){
-        //     frontCamera.updateBotPos();
-        //     seedFieldRelative(new Pose2d(new Translation2d(frontCamera.getBotPosX(), frontCamera.getBotPosY()), new Rotation2d(getPose().getRotation().getRadians())));
-        //     counter = 0;
-        //     updateCounter++;
-        // }
-        // counter++;
 
         LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
 
@@ -429,19 +421,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
             }
         }
-
-
-
-
-
-
-
-        SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
-        SmartDashboard.putString("aimAtSpeakerState:", aimAtSpeakerState);
-        SmartDashboard.putNumber("updateCounter:", updateCounter);
-        SmartDashboard.putNumber("frontCamera.getBotPosX()", frontCamera.getBotPosX());
-        SmartDashboard.putNumber("frontCamera.getBotPosY()", frontCamera.getBotPosY());
-        SmartDashboard.putNumber("Gyro:", getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
     }
 
     private double getDriveX(){
@@ -470,11 +449,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public enum DriveMode{
         JOYSTICK,
-        LIMELIGHT,
         AUTON,
-        APRIL_TAG,
         AIMATTARGET,
-        SNAPTOTARGET
         ;
     }
 
@@ -521,14 +497,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public void update(double time, double dt) {
         // System.out.println("ah");
         switch(mControlMode){
-            case SNAPTOTARGET:
-                snapToTarget(); break;
             case AIMATTARGET:
                 aimAtTarget(); break;
-            case APRIL_TAG:
-                aprilTagTrack(); break;
-            case LIMELIGHT:
-                limelightDrive(); break;
             case JOYSTICK:
                 joystickDrive(); break;
             case AUTON:
@@ -543,9 +513,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
-    }
-    public boolean hasTarget() {
-        return limelight.hasTarget();
     }
 
     public LimelightHelpers.LimelightResults llesults;
