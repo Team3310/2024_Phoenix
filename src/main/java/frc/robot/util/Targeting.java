@@ -18,21 +18,33 @@ public class Targeting{
     private static final double[] blueAmp =         { 6.4445134, 4.0985948, 0.8891270};
     private static final double[] centerOfField =   { 0.0000000, 0.0000000, 0.0000000};
 
+    private static final double blueSpeakerID = 0;
+    private static final double blueAmpID = 0;
+    private static final double redSpeakerID = 4;
+    private static final double redAmpID = 0;
+    private static final double nullID = 0;
+
     public enum Target{
-        BLUESPEAKER(blueSpeaker),
-        BLUAMP(blueAmp),
-        REDSPEAKER(redSpeaker),
-        REDAMP(redAmp),
-        NONE(centerOfField);
+        BLUESPEAKER(blueSpeaker, blueSpeakerID),
+        BLUAMP(blueAmp, blueAmpID),
+        REDSPEAKER(redSpeaker, redSpeakerID),
+        REDAMP(redAmp, redAmpID),
+        NONE(centerOfField, nullID);
 
-        private final double[] pos;
+        private double[] pos;
+        private double id;
 
-        private Target(double[] toTargetPos){
+        private Target(double[] toTargetPos, double toTargetID){
             this.pos = toTargetPos;
+            this.id = toTargetID;
         }
 
         public double[] getPos(){
             return pos;
+        }
+
+        public double getID(){
+            return id;
         }
     }
     
@@ -70,16 +82,22 @@ public class Targeting{
     private static double targetAz_averageBotPos;
     private static double targetEl_averageBotPos;
     private static double[] targetPos = centerOfField;
+    private static double targetID = nullID;
     private static Target target = Target.NONE;
     private static boolean latestCalc_ABP_UpdateSuccesfull = false;
     
     public static void setTarget(Target toTarget){
         target = toTarget;
         targetPos = target.getPos();
+        targetID = target.getID();
     }
 
     public static Target getTarget(){
         return target;
+    }
+
+    public static double getTargetID(){
+        return targetID;
     }
 
     public static double getTargetAz_averageAzEl(){
@@ -334,6 +352,14 @@ public class Targeting{
         return this.targetEl;
     }
 
+    public double getBotPosX(){
+        return botPos[0];
+    }
+
+    public double getBotPosY(){
+        return botPos[1];
+    }
+
     public void update(){
         updateBotPos();
         updateTargetAzEl();   
@@ -341,3 +367,6 @@ public class Targeting{
 }
 
     
+
+
+

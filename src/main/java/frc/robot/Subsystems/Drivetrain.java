@@ -40,6 +40,7 @@ import frc.robot.util.Math.Rotation2;
 import frc.robot.util.PathFollowing.FollowPathCommand;
 import frc.robot.util.Targeting.Target;
 import frc.robot.util.UpdateManager;
+import frc.robot.util.LimelightHelpers;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
@@ -49,18 +50,19 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    private DriveMode mControlMode = DriveMode.APRIL_TAG;
+    private DriveMode mControlMode = DriveMode.JOYSTICK;
 
     private PidController limelightController = new PidController(new PidConstants(1.0, 0.002, 0.0));
     private PidController aprilTagController = new PidController(new PidConstants(1.0, 0.0, 0.0));
-
+    private PidController aimAtSpeaker = new PidController(new PidConstants(1, 0.2, 0));
 
     private Limelight limelight = Limelight.getInstance();
+    private Limelight frontLimelight = new Limelight("front");
     private Targeting frontCamera = new Targeting("front", false);
-    private Targeting backCamera = new Targeting("back", false);
-    private Targeting leftCamera = new Targeting("left", false);
-    private Targeting rightCamera = new Targeting("right", false);
-    // private Targeting odometryTargeting = new Targeting(true);
+    // private Targeting backCamera = new Targeting("back", false);
+    // private Targeting leftCamera = new Targeting("left", false);
+    // private Targeting rightCamera = new Targeting("right", false);
+    private Targeting odometryTargeting = new Targeting(true);
     // private Targeting noteCamera = new Targeting("note", false);
 
     private boolean withOdo = false;
@@ -80,7 +82,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
 
-        limelightController.setContinuous(false);
+        limelightController.setContinuous(true);
         limelightController.setInputRange(-Math.toRadians(45.0), Math.toRadians(45.0));
         limelightController.setOutputRange(-1.0, 1.0);
         limelightController.setSetpoint(0.0);
@@ -89,6 +91,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aprilTagController.setInputRange(-Math.PI, Math.PI);
         aprilTagController.setOutputRange(-1.0, 1.0);
         aprilTagController.setSetpoint(0.0);
+
+        aimAtSpeaker.setContinuous(false);
+        aimAtSpeaker.setInputRange(-Math.toRadians(45.0), Math.toRadians(45.0));
+        aimAtSpeaker.setOutputRange(-1.0, 1.0);
+        aimAtSpeaker.setSetpoint(0.0);
 
         Targeting.setTarget(Target.REDSPEAKER);
 
@@ -228,9 +235,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void limelightDrive() {
-        if(limelight.hasTarget()){
-            Double offset = Math.toRadians(limelight.getTargetHorizOffset());
-            Double request = limelightController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+        if(frontLimelight.hasTarget()){
+            Double offset = Math.toRadians(frontLimelight.getTargetHorizOffset());
+            Double request = -limelightController.calculate(offset, 0.02) * Constants.MaxAngularRate;
             // SmartDashboard.putNumber("PID Turn Rate", request);
 
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -263,17 +270,19 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void snapToTarget(){
-        Targeting.updateAll_averageElAz();
-        Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians())-Targeting.getTargetAz_averageAzEl();
+        Double offset = (rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()) - odometryTargeting.getAz());
         offset = rolloverConversion_radians(offset);
-        Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
-        // SmartDashboard.putNumber("PID Turn Rate", request/Constants.MaxAngularRate);
+        Double request = limelightController.calculate(offset, 0.02)*Constants.MaxAngularRate;
+        SmartDashboard.putNumber("offset", offset);
+        SmartDashboard.putNumber("PID Output", request/Constants.MaxAngularRate);
+        SmartDashboard.putNumber("target", odometryTargeting.getAz());
+        SmartDashboard.putNumber("robot AZI Method", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
         // SmartDashboard.putNumber("target az offset", offset);
 
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
             getDriveX() * Constants.MaxSpeed, 
             getDriveY() * Constants.MaxSpeed, 
-            request,
+            request / 2.0,
             m_odometry.getEstimatedPosition()
                     .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
         ),0.2);
@@ -290,14 +299,39 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    public void odometryTrack(){
+        Double offset = -odometryTargeting.getAz() - rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
+        offset = rolloverConversion_radians(offset);
+        Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
+
+
+        SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
+        SmartDashboard.putNumber("PID Error:", offset);
+
+        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+            getDriveX() * Constants.MaxSpeed, 
+            getDriveY() * Constants.MaxSpeed, 
+            request,
+            m_odometry.getEstimatedPosition()
+                    .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
+        ),0.2);
+        
+        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+
+        for(int i=0; i<this.Modules.length; i++){
+            this.Modules[i].apply(states[i], 
+            SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+        }
+    }
+
     public void aprilTagTrack() {
         if(withOdo){
             snapToTarget();
             return;
         }
-        Targeting.updateAll_averageBotPos();
+        frontCamera.update();
 
-        Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()) - Targeting.getTargetAz_averageBotPos();
+        Double offset = rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()) - frontCamera.getAz();
         offset = rolloverConversion_radians(offset);
         Double request = aprilTagController.calculate(offset, 0.02)*Constants.MaxAngularRate;
         SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
@@ -337,6 +371,79 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    
+    public int updateCounter = 0;
+    public String aimAtSpeakerState = "INIT";
+    public boolean justChanged = false;
+    public void aimAtTarget(){
+        
+        // if(counter == 500){
+        //     frontCamera.updateBotPos();
+        //     seedFieldRelative(new Pose2d(new Translation2d(frontCamera.getBotPosX(), frontCamera.getBotPosY()), new Rotation2d(getPose().getRotation().getRadians())));
+        //     counter = 0;
+        //     updateCounter++;
+        // }
+        // counter++;
+
+        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
+
+        boolean canSeeTarget = false;
+        double offset = 0;
+        for(var aprilTagResults : llresults.targetingResults.targets_Fiducials){
+            if (aprilTagResults.fiducialID == Targeting.getTargetID()){
+                offset = Math.toRadians(aprilTagResults.tx);
+                canSeeTarget = true;
+            }
+        }
+
+        odometryTargeting.update();
+        odometryTargeting.getAz();
+        if(!canSeeTarget){
+            aimAtSpeakerState = "ODO MODE";
+            odometryTrack();
+            if(justChanged){
+                justChanged = false;
+            }
+        }else{
+            if(!justChanged){
+                limelightController.integralAccum=0;
+                justChanged = true;
+            }
+            aimAtSpeakerState = "LIME MODE";
+            Double request = -limelightController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+            SmartDashboard.putNumber("offset", offset);
+            SmartDashboard.putNumber("PID Output", request);
+
+            ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+                getDriveX() * Constants.MaxSpeed, 
+                getDriveY() * Constants.MaxSpeed, 
+                request,
+                m_odometry.getEstimatedPosition()
+                        .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
+            ),0.2);
+            
+            var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+
+            for(int i=0; i<this.Modules.length; i++){
+                this.Modules[i].apply(states[i], 
+                SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+            }
+        }
+
+
+
+
+
+
+
+        SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
+        SmartDashboard.putString("aimAtSpeakerState:", aimAtSpeakerState);
+        SmartDashboard.putNumber("updateCounter:", updateCounter);
+        SmartDashboard.putNumber("frontCamera.getBotPosX()", frontCamera.getBotPosX());
+        SmartDashboard.putNumber("frontCamera.getBotPosY()", frontCamera.getBotPosY());
+        SmartDashboard.putNumber("Gyro:", getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
+    }
+
     private double getDriveX(){
         return ((Math.abs(joystick.getLeftY())>0.1)?-joystick.getLeftY():0.0);
     }
@@ -366,31 +473,46 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         LIMELIGHT,
         AUTON,
         APRIL_TAG,
+        AIMATTARGET,
+        SNAPTOTARGET
         ;
     }
 
+    private boolean odometryBotPosUpdaterMethodFlag = false;
+    private boolean odometryBotPosUpdater(){
+        if(odometryBotPosUpdaterMethodFlag){
+            frontCamera.updateBotPos();
+            if (frontCamera.getBotPosX() != 0 && frontCamera.getBotPosY() != 0){ 
+                seedFieldRelative(new Pose2d(new Translation2d(frontCamera.getBotPosX(), frontCamera.getBotPosY()), new Rotation2d(getPose().getRotation().getRadians())));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int periodicCounter = 0;
     @Override
     public void periodic(){
-        Targeting.updateAll_averageBotPos();
+        odometryTargeting.update();
+        if(periodicCounter == 500){
+            odometryBotPosUpdaterMethodFlag = true;
+        }
+        periodicCounter++;
 
-        //Troubeshooting if Swerve Robot Azimuth Output matches Targeting Class Azimuth Output
+        if(odometryBotPosUpdater()){
+            periodicCounter = 0;
+            odometryBotPosUpdaterMethodFlag = false;
+        }
+
+
+        SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
+
         SmartDashboard.putString("", mControlMode.toString());
-        // SmartDashboard.putNumber("frontCamera.getAz():", frontCamera.getAz());
-        // SmartDashboard.putNumber("backCamera.getAz():", backCamera.getAz());
-        // SmartDashboard.putNumber("leftCamera.getAz():", leftCamera.getAz());
-        // SmartDashboard.putNumber("rightCamera.getAz():", rightCamera.getAz());
-        // SmartDashboard.putString("averageBotPos: ", Targeting.averageBotPos[0] + "," + Targeting.averageBotPos[1] + "," + Targeting.averageBotPos[2]);
-        // SmartDashboard.putNumber("Targeting.averageBotPos[0]:", Targeting.averageBotPos[0]);
-        // SmartDashboard.putNumber("Targeting.averageBotPos[1]:", Targeting.averageBotPos[1]);
 
-        SmartDashboard.putNumber("Targeting.movingAverage_averageBotPos[0]:", Targeting.movingAverage_averageBotPos[0]);
-        SmartDashboard.putNumber("Targeting.movingAverage_averageBotPos[1]:", Targeting.movingAverage_averageBotPos[1]);
+        SmartDashboard.putNumber("getPose().getX()", getPose().getX());
+        SmartDashboard.putNumber("getPose().getY()", getPose().getY());
 
-        SmartDashboard.putNumber("Targeting.getTargetAzv2()", Targeting.getTargetAz_averageBotPos());
-        // SmartDashboard.putNumber("noteCamera.getAz():", noteCamera.getAz());
-        // SmartDashboard.putNumber("Targeting.getMovingAverageAz()", Targeting.getMovingAverageAz());
         SmartDashboard.putString("Set Target:",Targeting.getTarget().toString());
-        //SmartDashboard.putNumber("Bot Azimuth:", (getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
         SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
     }
 
@@ -399,6 +521,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public void update(double time, double dt) {
         // System.out.println("ah");
         switch(mControlMode){
+            case SNAPTOTARGET:
+                snapToTarget(); break;
+            case AIMATTARGET:
+                aimAtTarget(); break;
             case APRIL_TAG:
                 aprilTagTrack(); break;
             case LIMELIGHT:
@@ -421,6 +547,20 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public boolean hasTarget() {
         return limelight.hasTarget();
     }
+
+    public LimelightHelpers.LimelightResults llesults;
+
+    public boolean frontCameraHasTarget() {
+        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
+        for(var aprilTagResults : llresults.targetingResults.targets_Fiducials){
+            //THIS CONDITION WILL NEED TO UPDATE DEPENDING IN THE TARGET
+            if (aprilTagResults.fiducialID == 4){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Rotation2d getRotation() {
         return Rotation2d.fromRadians(rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
     }
