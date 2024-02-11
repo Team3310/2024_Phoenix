@@ -11,14 +11,14 @@ public class Targeting{
     //X, Y, Z (Inches)
     private static final double[] blueSpeaker =     {-7.9387446, 1.4422628, 2.0432395}; 
     private static final double[] blueAmp =         { 6.4445134, 4.0985948, 0.8891270};
-    private static final double[] blueTrap1 =       { 0.0000000, 0.0000000, 0.0000000};
-    private static final double[] blueTrap2 =       { 0.0000000, 0.0000000, 0.0000000};
-    private static final double[] blueTrap3 =       { 0.0000000, 0.0000000, 0.0000000};
+    private static final double[] blueTrap1 =       {-3.6149026, 0.3915918, 1.6414750};
+    private static final double[] blueTrap2 =       {-3.6149026,-0.3935222, 1.6414750};
+    private static final double[] blueTrap3 =       { 2.9354526,-0.0016002, 1.6414750};
     private static final double[] redSpeaker =      { 7.9674974, 1.4422628, 2.0432395};
     private static final double[] redAmp =          {-6.4147446, 4.0985948, 0.8891270};
-    private static final double[] redTrap1 =        { 0.0000000, 0.0000000, 0.0000000};
-    private static final double[] redTrap2 =        { 0.0000000, 0.0000000, 0.0000000};
-    private static final double[] redTrap3 =        { 0.0000000, 0.0000000, 0.0000000};
+    private static final double[] redTrap1 =        { 3.6484814,-0.3935222, 1.6414750};
+    private static final double[] redTrap2 =        { 3.6484814, 0.3915918, 1.6414750};
+    private static final double[] redTrap3 =        { 2.9639514,-0.0016002, 1.6414750};
     private static final double[] centerOfField =   { 0.0000000, 0.0000000, 0.0000000};
     
     private static final double blueSpeakerID =     7;
@@ -32,7 +32,6 @@ public class Targeting{
     private static final double redTrap2ID =        12;
     private static final double redTrap3ID =        13;
     private static final double nullID =            0;
-
 
     public enum Target{
         BLUESPEAKER(blueSpeaker, blueSpeakerID),
