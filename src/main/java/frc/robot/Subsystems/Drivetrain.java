@@ -101,7 +101,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         ReplanningConfig replan = new ReplanningConfig();
 
         HolonomicPathFollowerConfig config = new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                                            new PIDConstants(10, 0, 0),
+                                            new PIDConstants(5.0, 0, 0),
                                             TunerConstants.kSpeedAt12VoltsMps,
                                             driveBaseRadius,
                                             new ReplanningConfig());
@@ -452,7 +452,44 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                         this.Modules[i].apply(states[i], 
                         SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
                     };  break;
+                }else{
+                    rotationHold();
                 }
+        }
+    }
+
+    private void rotationHold() {
+        Double offset = pathFollower.lastAngle().getRadians()-rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
+        offset = rolloverConversion_radians(offset);
+        Double request = rotationController.calculate(offset, 0.02)*Constants.MaxAngularRate;
+        SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
+        SmartDashboard.putNumber("PID Error:", offset);
+
+        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+            getDriveX() * Constants.MaxSpeed, 
+            getDriveY() * Constants.MaxSpeed, 
+            request,
+            m_odometry.getEstimatedPosition()
+                    .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
+        ),0.2);
+        
+        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+
+        for(int i=0; i<this.Modules.length; i++){
+            this.Modules[i].apply(states[i], 
+            SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+        }
+    }
+
+    public static double rolloverConversion_radians(double angleRadians){
+        //Converts input angle to keep within range -pi to pi
+        if(angleRadians > Math.PI){
+            return (angleRadians %Math.PI - Math.PI);
+        }else if (angleRadians < -Math.PI){
+            return (angleRadians % Math.PI - Math.PI);
+        }else{
+            // System.err.println("Conversion Error");
+            return angleRadians;
         }
     }
     

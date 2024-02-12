@@ -16,17 +16,17 @@ public class TestOneNote extends AutonCommandBase{
     public TestOneNote(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose(getPath("One"));
+        resetRobotPose(getPath("OneBlue"));
 
         this.addCommands(
             new ParallelDeadlineGroup(
-                follow("One"), 
+                follow(getPath("OneBlue")), 
                 new IntakeAuton(),
                 new SetLeftShooterRPM(Shooter.getInstance(), 6000),
                 new SetRightShooterRPM(Shooter.getInstance(), 3000)
             ),
-            new SetLiftAngle(Lift.getInstance(), 30.0),
-            new WaitCommand(0.5),
+            new SetLiftAngle(Lift.getInstance(), 27.0),
+            new WaitCommand(2.5),
             new SetShooterKickerRPM(Shooter.getInstance(), 1500)
         );
     }

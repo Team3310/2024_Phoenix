@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Commands.Auton.TestOneNote;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.UpdateManager;
@@ -45,11 +46,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // m_robotContainer.getDrivetrain().setDriveMode(DriveMode.AUTON);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.schedule();
+    // }
+    new TestOneNote(m_robotContainer).schedule();
   }
 
   @Override
