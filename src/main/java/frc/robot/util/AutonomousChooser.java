@@ -19,7 +19,7 @@ public class AutonomousChooser {
     public AutonomousChooser() {
         autonomousModeChooser.setDefaultOption("Test", AutonomousMode.TEST);
         autonomousModeChooser.addOption("3 Note", AutonomousMode.THREE_NOTE);
-            autonomousModeChooser.addOption("Limelight test auto", AutonomousMode.TEST_LIMELIGHT);
+        autonomousModeChooser.addOption("Limelight test auto", AutonomousMode.TEST_LIMELIGHT);
         autonomousModeChooser.addOption("4 Note", AutonomousMode.FOUR_NOTE);
         autonomousModeChooser.addOption("2 Note", AutonomousMode.TWO_NOTE);
         autonomousModeChooser.addOption("2 Note Anywhere", AutonomousMode.TWO_NOTE_ANYWHERE);
