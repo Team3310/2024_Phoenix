@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.RobotContainer;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
+import frc.robot.util.SideChooser.SideMode;
 
 import java.util.*;
 import java.util.function.BooleanSupplier;
@@ -75,7 +77,7 @@ public class FollowPathCommand{
     }
 
     if(resetPose){
-        drivetrain.seedFieldRelative(new Pose2d(path.getStartingDifferentialPose().getX(), path.getStartingDifferentialPose().getY(), drivetrain.getPose().getRotation()));
+        drivetrain.seedFieldRelative(path.getPreviewStartingHolonomicPose());
     }
 
     Pose2d currentPose = poseSupplier.get();
@@ -159,6 +161,10 @@ public class FollowPathCommand{
         targetSpeeds.omegaRadiansPerSecond);
     PPLibTelemetry.setPathInaccuracy(controller.getPositionalError());
 
+    // if(RobotContainer.getInstance().getSide() == SideMode.RED){
+    //   targetSpeeds.vyMetersPerSecond *= -1;
+    // }
+
     return targetSpeeds;
   }
 
@@ -190,4 +196,8 @@ public class FollowPathCommand{
   public void startPath(){
     timer.start();
   }
+
+public Rotation2d lastAngle() {
+    return path.getGoalEndState().getRotation();
+}
 }

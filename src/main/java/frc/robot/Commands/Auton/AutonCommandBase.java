@@ -1,6 +1,8 @@
 package frc.robot.Commands.Auton;
 
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,15 +23,20 @@ public class AutonCommandBase extends SequentialCommandGroup {
         this.robotContainer = robotContainer;
     }
 
+    protected Command follow(PathPlannerPath path) {
+        return new FollowPathCommand(path);
+    }
+
     protected Command follow(String pathName) {
         return new FollowPathCommand(getPath(pathName));
     }
 
     protected void resetRobotPose(PathPlannerPath path) {
-        Pose2d start = path.getStartingDifferentialPose();
+        path.getTrajectory(new ChassisSpeeds(0, 0, 0), path.getStartingDifferentialPose().getRotation()).getInitialDifferentialPose();
+        Pose2d start = path.getPreviewStartingHolonomicPose();
         SmartDashboard.putString("bot starting pose", start.toString());
         
-        TunerConstants.DriveTrain.seedFieldRelative(path.getStartingDifferentialPose()); 
+        TunerConstants.DriveTrain.seedFieldRelative(start); 
 
         SmartDashboard.putString("robot pose after reset", TunerConstants.DriveTrain.getPose().toString());       
     }
@@ -39,9 +46,12 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected PathPlannerPath getPath(String pathName){
-        pathName+=robotContainer.getSide().toString();
         SmartDashboard.putString("pathName", pathName);
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
+        if(robotContainer.getSide() == SideMode.RED){
+            path.preventFlipping = false;
+            path.flipPath();
+        }
         return path;
     }
 

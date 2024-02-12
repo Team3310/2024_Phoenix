@@ -47,6 +47,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private DriveMode mControlMode = DriveMode.LIMELIGHT;
 
     private PidController limelightController = new PidController(new PidConstants(1.0, 0.002, 0.0));
+    private PidController rotationController = new PidController(new PidConstants(0.25, 0.001, 0.0));
     
     private Limelight limelight = Limelight.getInstance();
     
@@ -69,6 +70,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         limelightController.setInputRange(-Math.toRadians(45.0), Math.toRadians(45.0));
         limelightController.setOutputRange(-1.0, 1.0);
         limelightController.setSetpoint(0.0);
+
+        rotationController.setContinuous(true);
+        rotationController.setInputRange(-Math.toRadians(-180), Math.toRadians(180));
+        rotationController.setOutputRange(-1.0, 1.0);
+        rotationController.setSetpoint(0.0);
+
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
@@ -84,6 +91,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         limelightController.setOutputRange(-1.0, 1.0);
         limelightController.setSetpoint(0.0);
 
+        rotationController.setContinuous(true);
+        rotationController.setInputRange(-Math.toRadians(-180), Math.toRadians(180));
+        rotationController.setOutputRange(-1.0, 1.0);
+        rotationController.setSetpoint(0.0);
+
         limelight.getBotPose();
 
         double driveBaseRadius = 0;
@@ -93,7 +105,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         ReplanningConfig replan = new ReplanningConfig();
 
         HolonomicPathFollowerConfig config = new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                                            new PIDConstants(10, 0, 0),
+                                            new PIDConstants(5.0, 0, 0),
                                             TunerConstants.kSpeedAt12VoltsMps,
                                             driveBaseRadius,
                                             new ReplanningConfig());
@@ -275,7 +287,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public void update(double time, double dt) {
         // System.out.println("ah");
         switch(mControlMode){
-                        case LIMELIGHT:
+            case LIMELIGHT:
                 limelightDrive(); break;
             case JOYSTICK:
                 joystickDrive(); break;
@@ -286,7 +298,44 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                         this.Modules[i].apply(states[i], 
                         SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
                     };  break;
+                }else{
+                    rotationHold();
                 }
+        }
+    }
+
+    private void rotationHold() {
+        Double offset = pathFollower.lastAngle().getRadians()-rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
+        offset = rolloverConversion_radians(offset);
+        Double request = rotationController.calculate(offset, 0.02)*Constants.MaxAngularRate;
+        SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
+        SmartDashboard.putNumber("PID Error:", offset);
+
+        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+            getDriveX() * Constants.MaxSpeed, 
+            getDriveY() * Constants.MaxSpeed, 
+            request,
+            m_odometry.getEstimatedPosition()
+                    .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
+        ),0.2);
+        
+        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+
+        for(int i=0; i<this.Modules.length; i++){
+            this.Modules[i].apply(states[i], 
+            SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+        }
+    }
+
+    public static double rolloverConversion_radians(double angleRadians){
+        //Converts input angle to keep within range -pi to pi
+        if(angleRadians > Math.PI){
+            return (angleRadians %Math.PI - Math.PI);
+        }else if (angleRadians < -Math.PI){
+            return (angleRadians % Math.PI - Math.PI);
+        }else{
+            // System.err.println("Conversion Error");
+            return angleRadians;
         }
     }
 
