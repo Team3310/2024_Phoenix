@@ -51,7 +51,8 @@ public class AutonCommandBase extends SequentialCommandGroup {
         if(robotContainer.getSide() == SideMode.RED){
             path.preventFlipping = false;
             path.flipPath();
-        }
+            SmartDashboard.putBoolean("flipped path", true);
+        }else{SmartDashboard.putBoolean("flipped path", false);}
         return path;
     }
 

@@ -28,8 +28,8 @@ import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
-import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.Telemetry;
+import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.DriverReadout;
 import frc.robot.util.Choosers.AutonomousChooser;
@@ -48,7 +48,7 @@ public class RobotContainer {
   public final Shooter shooter;
   public final Lift lift;
 
-  private final Telemetry logger = new Telemetry(TunerConstants.kSpeedAt12VoltsMps);
+  private final Telemetry logger;
 
   private final AutonomousChooser autonomousChooser;
   private final SideChooser sideChooser;
@@ -68,13 +68,13 @@ public class RobotContainer {
     intake = Intake.getInstance();
     drivetrain = TunerConstants.DriveTrain;
 
+    logger = new Telemetry(TunerConstants.kSpeedAt12VoltsMps);
+
     // CommandScheduler.getInstance().registerSubsystem(intake);
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
 
     configureBindings();
     DriverReadout.addChoosers(spotChooser, sideChooser, autonomousChooser);
-
-    drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   //#region controller buttons
@@ -125,6 +125,8 @@ public class RobotContainer {
     // addTestButtons();
     configureDriverController();
     configureOperatorController();
+
+    drivetrain.registerTelemetry(logger::telemeterize);
   }
 
   //#endregion

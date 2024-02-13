@@ -18,7 +18,7 @@ public class SpotChooser extends ChooserBase<SpotChooser.SpotMode>{
         AMP("Amp"),
         CENTER("Center"),
         OUTSIDE("Outside"),
-        TEST("");
+        TEST("Test");
 
         String name;
 

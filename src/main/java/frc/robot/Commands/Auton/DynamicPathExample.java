@@ -15,11 +15,10 @@ import frc.robot.Commands.Auton.DynamicAutoUtil.DynamicAutonGenerator.Compositio
 import frc.robot.Commands.Auton.DynamicAutoUtil.DynamicPathCommand.DecisionPoint;
 import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeUp;
-import frc.robot.Commands.Intake.StopIntake;
 
-public class TestAuton extends AutonCommandBase{
+public class DynamicPathExample extends AutonCommandBase{
     boolean skipped;
-    public TestAuton(RobotContainer robotContainer){
+    public DynamicPathExample(RobotContainer robotContainer){
         super(robotContainer);
 
         // resetRobotPose("Test2");
