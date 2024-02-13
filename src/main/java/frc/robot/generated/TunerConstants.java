@@ -147,7 +147,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackTy
 
 import edu.wpi.first.math.util.Units;
 import frc.robot.Subsystems.Drivetrain;
-
+//ALPHABOT TUNERCONSTANTS
 public class TunerConstants {
     // Both sets of gains need to be tuned to your individual robot.
 
@@ -175,23 +175,21 @@ public class TunerConstants {
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
-    public static final double kSpeedAt12VoltsMps = 4.73;
+    public static final double kSpeedAt12VoltsMps = 6.21;
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
-    private static final double kCoupleRatio = 3.5;
+    private static final double kCoupleRatio = 2.6666666666666666665;
 
-    private static final double kDriveGearRatio = 6.75;
-    private static final double kSteerGearRatio = 13.371428571428572;
+    private static final double kDriveGearRatio = 5.142857142857143;
+    private static final double kSteerGearRatio = 11.314285714285715;
     private static final double kWheelRadiusInches = 2;
 
     private static final boolean kSteerMotorReversed = true;
     private static final boolean kInvertLeftSide = true;
     private static final boolean kInvertRightSide = false;
-    private static final boolean kInvertLeftSide = true;
-    private static final boolean kInvertRightSide = false;
 
-    public static final String kCANbusName = "rio";
+    public static final String kCANbusName = "Drivetrain";
     private static final int kPigeonId = 0;
 
 
@@ -244,8 +242,8 @@ public class TunerConstants {
     private static final double kFrontRightYPosInches = -12.6875;
 
     // Back Left
-    private static final int kBackLeftDriveMotorId = 0;
-    private static final int kBackLeftSteerMotorId = 1;
+    private static final int kBackLeftDriveMotorId = 10;
+    private static final int kBackLeftSteerMotorId = 6;
     private static final int kBackLeftEncoderId = 1;
     private static final double kBackLeftEncoderOffset = 0.125732421875;
 
@@ -263,13 +261,13 @@ public class TunerConstants {
 
 
     private static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
-            kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId, kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches), Units.inchesToMeters(kFrontLeftYPosInches), !kInvertLeftSide);
+            kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId, kFrontLeftEncoderOffset, Units.inchesToMeters(kFrontLeftXPosInches), Units.inchesToMeters(kFrontLeftYPosInches), kInvertLeftSide);
     private static final SwerveModuleConstants FrontRight = ConstantCreator.createModuleConstants(
-            kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId, kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches), Units.inchesToMeters(kFrontRightYPosInches), !kInvertRightSide);
+            kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId, kFrontRightEncoderOffset, Units.inchesToMeters(kFrontRightXPosInches), Units.inchesToMeters(kFrontRightYPosInches), kInvertRightSide);
     private static final SwerveModuleConstants BackLeft = ConstantCreator.createModuleConstants(
             kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset, Units.inchesToMeters(kBackLeftXPosInches), Units.inchesToMeters(kBackLeftYPosInches), kInvertLeftSide);
     private static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
-            kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches), !kInvertRightSide);
+            kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
     public static final Drivetrain DriveTrain = new Drivetrain(DrivetrainConstants, FrontLeft,
             FrontRight, BackLeft, BackRight);

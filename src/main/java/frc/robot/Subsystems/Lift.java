@@ -73,9 +73,9 @@ public class Lift extends SubsystemBase{
 
     private double getHoodDegreesToRevs(double degrees){
         if(degrees>Constants.HOOD_MAX_DEGREES){
-            return Constants.HOOD_MAX_DEGREES;
+            degrees = Constants.HOOD_MAX_DEGREES;
         }else if(degrees<Constants.HOOD_MIN_DEGREES){
-            return Constants.HOOD_MIN_DEGREES;
+            degrees = Constants.HOOD_MIN_DEGREES;
         }
         return (degrees/360.0) * hoodRevsToMotorRevs;
     }

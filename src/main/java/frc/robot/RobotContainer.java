@@ -21,6 +21,7 @@ import frc.robot.Commands.Intake.IntakeSpit;
 import frc.robot.Commands.Intake.IntakeUnder;
 import frc.robot.Commands.Intake.IntakeUp;
 import frc.robot.Commands.Intake.StopIntake;
+import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederLoadCommand;
 import frc.robot.Commands.Shooter.FeederShootCommand;
@@ -82,9 +83,9 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper pressc
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
-    driverController.y().onTrue(new SetDriveMode(DriveMode.AIMATTARGET));
-
+    driverController.povUp().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
+    driverController.povDown().onTrue(new SetDriveMode(DriveMode.AIMATTARGET));
+    driverController.povRight().onTrue(new AimLiftWithOdometry());
     // operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
     // operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));
 
@@ -95,8 +96,8 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
 
-    driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
-    driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
+    // driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
+    // driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
   
     operatorController.a().onTrue(/*all under*/ new IntakeUnder());
     driverController.rightTrigger(0.5).onTrue(new IntakeAuton());

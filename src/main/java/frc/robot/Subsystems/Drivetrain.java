@@ -34,6 +34,7 @@ import frc.robot.util.Limelight;
 import frc.robot.util.Control.PidConstants;
 import frc.robot.util.Control.PidController;
 import frc.robot.util.PathFollowing.FollowPathCommand;
+import frc.robot.util.Targeting.Target;
 import frc.robot.util.UpdateManager;
 import frc.robot.util.LimelightHelpers;
 import frc.robot.util.Targeting;
@@ -119,18 +120,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         configurePathPlanner();
         if (Utils.isSimulation()) {
             startSimThread();
-        }
-    }
-
-    public static double rolloverConversion_radians(double angleRadians){
-        //Converts input angle to keep within range -pi to pi
-        if(angleRadians > Math.PI){
-            return (angleRadians %Math.PI - Math.PI);
-        }else if (angleRadians < -Math.PI){
-            return (angleRadians % Math.PI - Math.PI);
-        }else{
-            // System.err.println("Conversion Error");
-            return angleRadians;
         }
     }
 
@@ -226,7 +215,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         offset = rolloverConversion_radians(offset);
         Double request = aimAtTargetController.calculate(offset, 0.02)*Constants.MaxAngularRate;
 
-
+        
+        // SmartDashboard.putNumber("odometryTargetng", ModuleCount)
         SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
         SmartDashboard.putNumber("PID Error:", offset);
 
@@ -415,6 +405,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     @Override
     public void periodic(){
         odometryTargeting.update();
+        frontCamera.update();
         if(periodicCounter == 500){
             odometryBotPosUpdaterMethodFlag = true;
         }
@@ -425,9 +416,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             odometryBotPosUpdaterMethodFlag = false;
         }
 
-
+        SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
         SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
-
+        SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
+        SmartDashboard.putNumber("limelightTargeting.getEl()", frontCamera.getEl());
         SmartDashboard.putString("", mControlMode.toString());
 
         SmartDashboard.putNumber("getPose().getX()", getPose().getX());
@@ -462,7 +454,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private void rotationHold() {
         Double offset = pathFollower.lastAngle().getRadians()-rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians());
         offset = rolloverConversion_radians(offset);
-        Double request = rotationController.calculate(offset, 0.02)*Constants.MaxAngularRate;
+        Double request = aimAtTargetController.calculate(offset, 0.02)*Constants.MaxAngularRate;
         SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
         SmartDashboard.putNumber("PID Error:", offset);
 
@@ -504,5 +496,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public boolean hasTarget() {
         return limelight.hasTarget();
+    }
+    public Targeting getOdoTargeting() {
+        return odometryTargeting;
+    }
+    public Targeting getLimelightTargeting(){
+        return frontCamera;
+    }
+    public DriveMode getDriveMode() {
+        return mControlMode;
     }
 }
