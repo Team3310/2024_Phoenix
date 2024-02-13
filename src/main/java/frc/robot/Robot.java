@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Commands.Auton.TestOneNote;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
-import frc.robot.generated.TunerConstants;
+import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
 
 public class Robot extends TimedRobot {

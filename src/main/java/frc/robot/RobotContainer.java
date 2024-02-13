@@ -29,7 +29,8 @@ import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
-import frc.robot.generated.TunerConstants;
+import frc.robot.Swerve.Telemetry;
+import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.DriverReadout;
 import frc.robot.util.Choosers.AutonomousChooser;
 import frc.robot.util.Choosers.SideChooser;
@@ -119,7 +120,7 @@ public class RobotContainer {
     // operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
     // operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));
   }
-  
+
   private void configureBindings() {
     // addTestButtons();
     configureDriverController();

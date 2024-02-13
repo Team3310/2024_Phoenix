@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
-import frc.robot.generated.TunerConstants;
+import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Choosers.SpotChooser.SpotMode;
 

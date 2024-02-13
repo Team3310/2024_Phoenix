@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
-import frc.robot.generated.TunerConstants;
+import frc.robot.Swerve.TunerConstants;
 
 public class AimLiftWithOdometry extends Command{
     private Lift lift;

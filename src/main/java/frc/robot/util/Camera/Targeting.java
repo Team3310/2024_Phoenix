@@ -1,9 +1,6 @@
-package frc.robot.util;
+package frc.robot.util.Camera;
 
-//import edu.wpi.first.networktables.NetworkTableInstance;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import frc.robot.Subsystems.Drivetrain;
-import frc.robot.generated.TunerConstants;
+import frc.robot.Swerve.TunerConstants;
 
 public class Targeting{
     //Cartesian Coordinates of Targets 

@@ -29,18 +29,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
-import frc.robot.generated.TunerConstants;
-import frc.robot.util.Limelight;
-import frc.robot.util.LimelightHelpers;
-import frc.robot.util.Targeting;
+import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Control.PidConstants;
 import frc.robot.util.Control.PidController;
 import frc.robot.util.PathFollowing.FollowPathCommand;
-import frc.robot.util.Targeting.Target;
-import frc.robot.util.Targeting.Target;
 import frc.robot.util.UpdateManager;
-import frc.robot.util.LimelightHelpers;
-import frc.robot.util.Targeting;
+import frc.robot.util.Camera.Limelight;
+import frc.robot.util.Camera.LimelightHelpers;
+import frc.robot.util.Camera.Targeting;
+import frc.robot.util.Camera.Targeting.Target;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem

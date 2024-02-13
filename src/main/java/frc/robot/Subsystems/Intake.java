@@ -8,7 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.generated.TunerConstants;
+import frc.robot.Swerve.TunerConstants;
 
 public class Intake extends SubsystemBase{
     private static Intake instance;
