@@ -31,9 +31,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.Limelight;
+import frc.robot.util.LimelightHelpers;
+import frc.robot.util.Targeting;
 import frc.robot.util.Control.PidConstants;
 import frc.robot.util.Control.PidController;
 import frc.robot.util.PathFollowing.FollowPathCommand;
+import frc.robot.util.Targeting.Target;
 import frc.robot.util.Targeting.Target;
 import frc.robot.util.UpdateManager;
 import frc.robot.util.LimelightHelpers;
@@ -54,11 +57,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // private PidController aimAtSpeaker = new PidController(new PidConstants(1, 0.2, 0));
 
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.002, 0.0));
-
+    
     private Limelight limelight = Limelight.getInstance();
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting odometryTargeting = new Targeting(true);
-
+    
     private static Function<PathPlannerPath, Command> pathFollowingCommandBuilder;
 
     private FollowPathCommand pathFollower;
@@ -220,17 +223,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
         SmartDashboard.putNumber("PID Error:", offset);
 
-        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
-            getDriveX() * Constants.MaxSpeed, 
-            getDriveY() * Constants.MaxSpeed, 
-            request,
-            m_odometry.getEstimatedPosition()
-                    .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
-        ),0.2);
-        
-        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+            ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+                getDriveX() * Constants.MaxSpeed, 
+                getDriveY() * Constants.MaxSpeed, 
+                request,
+                m_odometry.getEstimatedPosition()
+                        .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
+            ),0.2);
+            
+            var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
 
-        for(int i=0; i<this.Modules.length; i++){
+for(int i=0; i<this.Modules.length; i++){
             this.Modules[i].apply(states[i], 
             SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
         }
@@ -276,7 +279,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
             }
         }else{
-            joystickDrive();
+                        joystickDrive();
         }
     }
 
@@ -386,10 +389,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         JOYSTICK,
         AUTON,
         AIMATTARGET,
-        ;
+                ;
     }
 
-    private boolean odometryBotPosUpdaterMethodFlag = false;
+private boolean odometryBotPosUpdaterMethodFlag = false;
     private boolean odometryBotPosUpdater(){
         if(odometryBotPosUpdaterMethodFlag){
             frontCamera.updateBotPos();
@@ -421,7 +424,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
         SmartDashboard.putNumber("limelightTargeting.getEl()", frontCamera.getEl());
         SmartDashboard.putString("", mControlMode.toString());
-
+        
         SmartDashboard.putNumber("getPose().getX()", getPose().getX());
         SmartDashboard.putNumber("getPose().getY()", getPose().getY());
 
@@ -472,7 +475,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             this.Modules[i].apply(states[i], 
             SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
         }
-    }
+}
 
     public static double rolloverConversion_radians(double angleRadians){
         //Converts input angle to keep within range -pi to pi
@@ -483,9 +486,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }else{
             // System.err.println("Conversion Error");
             return angleRadians;
-        }
     }
-    
+    }
+
     public Pose2d getPose() {
         return m_odometry.getEstimatedPosition();
     }
