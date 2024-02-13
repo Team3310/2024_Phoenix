@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
-import frc.robot.util.SideChooser.SideMode;
+import frc.robot.util.Choosers.SideChooser.SideMode;
 
 import java.util.*;
 import java.util.function.BooleanSupplier;

@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.generated.TunerConstants;
-import frc.robot.util.SideChooser.SideMode;
-import frc.robot.util.SpotChooser.SpotMode;
+import frc.robot.util.Choosers.SideChooser.SideMode;
+import frc.robot.util.Choosers.SpotChooser.SpotMode;
 
 public class AutonCommandBase extends SequentialCommandGroup {
     protected RobotContainer robotContainer;

@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Intake.IntakeAuton;
-import frc.robot.Commands.Intake.IntakeIn;
 import frc.robot.Commands.Intake.IntakeSlurp;
 import frc.robot.Commands.Intake.IntakeSpit;
 import frc.robot.Commands.Intake.IntakeUnder;
@@ -34,173 +30,146 @@ import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.generated.TunerConstants;
-import frc.robot.util.AutonomousChooser;
 import frc.robot.util.DriverReadout;
-import frc.robot.util.SideChooser;
-import frc.robot.util.SpotChooser;
-import frc.robot.util.SideChooser.SideMode;
-import frc.robot.util.SpotChooser.SpotMode;
+import frc.robot.util.Choosers.AutonomousChooser;
+import frc.robot.util.Choosers.SideChooser;
+import frc.robot.util.Choosers.SpotChooser;
+import frc.robot.util.Choosers.AutonomousChooser.AutonomousMode;
+import frc.robot.util.Choosers.SideChooser.SideMode;
+import frc.robot.util.Choosers.SpotChooser.SpotMode;
 
 public class RobotContainer {
-  private double MaxSpeed = 6; // 6 meters per second desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
-
-  /* Setting up bindings for necessary control of the swerve drive platform */
-  private final CommandXboxController driverController = new CommandXboxController(0); // My joystick
+  private final CommandXboxController driverController = new CommandXboxController(0);
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
-  public final Drivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
-  public final Intake intake = Intake.getInstance();
-  public final Shooter shooter = Shooter.getInstance();
-  public final Lift lift = Lift.getInstance();
-  // public final Flicker flicker = Flicker.getInstance();
+  public final Drivetrain drivetrain;
+  public final Intake intake;
+  public final Shooter shooter;
+  public final Lift lift;
 
-  // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-  // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+  private final Telemetry logger = new Telemetry(TunerConstants.kSpeedAt12VoltsMps);
 
-  private final Telemetry logger = new Telemetry(MaxSpeed);
-
-  private final AutonomousChooser autonomousChooser = new AutonomousChooser();
-  private final SideChooser sideChooser = new SideChooser();
-  private final SpotChooser spotChooser = new SpotChooser();
-
-  private final DriverReadout driverReadout;
+  private final AutonomousChooser autonomousChooser;
+  private final SideChooser sideChooser;
+  private final SpotChooser spotChooser;
 
   private static RobotContainer instance;
-
-  private void configureBindings() {
-    // drivetrain.setJoystick(joystick);
-    // flicker.setDefaultCommand(
-    //   new FlickerCommand(flicker, operatorController)
-    // );
-
-    // addTestButtons();
-
-    // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    // joystick.b().whileTrue(drivetrain
-    //     .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-
-    // reset the field-centric heading on left bumper pressc
-    driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-    driverController.povUp().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
-    driverController.povDown().onTrue(new SetDriveMode(DriveMode.AIMATTARGET));
-    driverController.povRight().onTrue(new AimLiftWithOdometry());
-    // operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
-    // operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));
-
-
-    // if (Utils.isSimulation()) {
-    //   drivetrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    // }
-    drivetrain.registerTelemetry(logger::telemeterize);
-
-
-    // driverController.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
-    // driverController.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
-  
-    operatorController.a().onTrue(/*all under*/ new IntakeUnder());
-    driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
-    driverController.leftTrigger(0.5).onTrue(new IntakeSpit());
-    driverController.leftTrigger(0.5).onFalse(new StopIntake());
-    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
-    driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
-    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
-    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
-    driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
-
-    // operatorController.y().onTrue(/*up*/ new IntakeUp());
-    // operatorController.x().onTrue(/*stop all*/ new StopIntake());
-    operatorController.pov(0).onTrue(new IntakeSlurp());
-
-    
-  }
 
   public RobotContainer() {
     instance = this;
 
-    driverReadout = new DriverReadout(this, true);
+    spotChooser = new SpotChooser();
+    sideChooser = new SideChooser();
+    autonomousChooser = new AutonomousChooser();
+
+    lift = Lift.getInstance();
+    shooter = Shooter.getInstance();
+    intake = Intake.getInstance();
+    drivetrain = TunerConstants.DriveTrain;
 
     // CommandScheduler.getInstance().registerSubsystem(intake);
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
 
     configureBindings();
+    DriverReadout.addChoosers(spotChooser, sideChooser, autonomousChooser);
+
+    drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-  public Command getAutonomousCommand() {
-    /* First put the drivetrain into auto run mode, then run the auto */
-    return autonomousChooser.getCommand(instance);
+  //#region controller buttons
+  public void configureDriverController(){
+    //driving related
+    driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    driverController.povUp().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
+    driverController.povDown().onTrue(new SetDriveMode(DriveMode.AIMATTARGET));
+
+    //intake
+    driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
+    driverController.leftTrigger(0.5).onTrue(new IntakeSpit());
+    driverController.leftTrigger(0.5).onFalse(new StopIntake());
+
+    //shooting
+    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
+    driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
+    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
+    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
+    driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
+    driverController.povRight().onTrue(new AimLiftWithOdometry());
   }
 
-  public AutonomousChooser getAutonomousChooser() {
-    return autonomousChooser;
+  public void configureOperatorController(){
+    //intake
+    operatorController.a().onTrue(new IntakeUnder());
+    operatorController.y().onTrue(new IntakeUp());
+    operatorController.x().onTrue(new StopIntake());
+    operatorController.pov(0).onTrue(new IntakeSlurp());
+
+    //shooting
+    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
+    operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
+    operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
+    operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
+    operatorController.rightBumper().onTrue(new FeederShootCommand(shooter));
+    operatorController.povRight().onTrue(new AimLiftWithOdometry());
+
+    //flicker
+    // flicker.setDefaultCommand(
+    //   new FlickerCommand(flicker, operatorController)
+    // );
+    // operatorController.a().onTrue(new InstantCommand(()->flicker.setPosition(0.0)));
+    // operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));
+  }
+  
+  private void configureBindings() {
+    // addTestButtons();
+    configureDriverController();
+    configureOperatorController();
   }
 
-  public SideMode getSide() {
-    return sideChooser.getSide();
-  }
+  //#endregion
 
-  public static RobotContainer getInstance(){
-    return instance;
-  }
+  //#region smartdashboard buttons
+    public void addTestButtons(){
+      addShooterTestButtons();
+      addLiftTestButtons();
+    }
 
-  public SpotMode getSpot(){
-    return spotChooser.getSpot();
-  }
+    public void addShooterTestButtons(){
+      SmartDashboard.putData("Right Side RPM 0", new SetRightShooterRPM(shooter, 0.0));
+      SmartDashboard.putData("Right Side RPM 50", new SetRightShooterRPM(shooter, 0.0));
+      SmartDashboard.putData("Right Side RPM 500", new SetRightShooterRPM(shooter,500));
+      SmartDashboard.putData("Right Side RPM 1000", new SetRightShooterRPM(shooter,1000));
+      SmartDashboard.putData("Right Side RPM 2000", new SetRightShooterRPM(shooter,2000));
+      SmartDashboard.putData("Right Side RPM 3000", new SetRightShooterRPM(shooter,3000));
+      SmartDashboard.putData("Right Side RPM 4000", new SetRightShooterRPM(shooter,4000));
+      SmartDashboard.putData("Right Side RPM 5000", new SetRightShooterRPM(shooter,5000));
+      SmartDashboard.putData("Right Side RPM 6000", new SetRightShooterRPM(shooter,6000));
 
-  public SendableChooser<SideMode> getSideChooser() {
-    return sideChooser.getSendableChooser();
-  }
+      SmartDashboard.putData("Left Side RPM 0", new SetLeftShooterRPM(shooter, 0.0));
+      SmartDashboard.putData("Left Side RPM 50", new SetLeftShooterRPM(shooter, -50));
+      SmartDashboard.putData("Left Side RPM 500", new SetLeftShooterRPM(shooter, -500));
+      SmartDashboard.putData("Left Side RPM 1000", new SetLeftShooterRPM(shooter, -1000));
+      SmartDashboard.putData("Left Side RPM 2000", new SetLeftShooterRPM(shooter, -2000));
+      SmartDashboard.putData("Left Side RPM 3000", new SetLeftShooterRPM(shooter, -3000));
+      SmartDashboard.putData("Left Side RPM 4000", new SetLeftShooterRPM(shooter, -4000));
+      SmartDashboard.putData("Left Side RPM 5000", new SetLeftShooterRPM(shooter, -5000));
+      SmartDashboard.putData("Left Side RPM 6000", new SetLeftShooterRPM(shooter, -6000));
 
-  public SendableChooser<SpotMode> getSpotChooser() {
-    return spotChooser.getSendableChooser();
-  }
+      SmartDashboard.putData("Kicker RPM 0", new SetShooterKickerRPM(shooter, 0.0));
+      SmartDashboard.putData("Kicker RPM 50", new SetShooterKickerRPM(shooter, 50));
+      SmartDashboard.putData("Kicker RPM 500", new SetShooterKickerRPM(shooter, 500));
+      SmartDashboard.putData("Kicker RPM 1000", new SetShooterKickerRPM(shooter, 1000));
+      SmartDashboard.putData("Kicker RPM 2000", new SetShooterKickerRPM(shooter, 2000));
+      SmartDashboard.putData("Kicker RPM 3000", new SetShooterKickerRPM(shooter, 3000));
+      SmartDashboard.putData("Kicker RPM 4000", new SetShooterKickerRPM(shooter, 4000));
+      SmartDashboard.putData("Kicker RPM 5000", new SetShooterKickerRPM(shooter, 5000));
+      SmartDashboard.putData("Kicker RPM 6000", new SetShooterKickerRPM(shooter, 6000));
 
-  public Drivetrain getDrivetrain(){
-    return drivetrain;
-  }
+      SmartDashboard.putData("Kicker Load", new FeederLoadCommand(shooter));
+      SmartDashboard.putData("Kicker Shoot", new FeederShootCommand(shooter));
+    }
 
-  public void addTestButtons(){
-    addShooterTestButtons();
-    addLiftTestButtons();
-  }
-
-  public void addShooterTestButtons(){
-    SmartDashboard.putData("Right Side RPM 0", new SetRightShooterRPM(shooter, 0.0));
-    SmartDashboard.putData("Right Side RPM 50", new SetRightShooterRPM(shooter, 0.0));
-    SmartDashboard.putData("Right Side RPM 500", new SetRightShooterRPM(shooter,500));
-    SmartDashboard.putData("Right Side RPM 1000", new SetRightShooterRPM(shooter,1000));
-    SmartDashboard.putData("Right Side RPM 2000", new SetRightShooterRPM(shooter,2000));
-    SmartDashboard.putData("Right Side RPM 3000", new SetRightShooterRPM(shooter,3000));
-    SmartDashboard.putData("Right Side RPM 4000", new SetRightShooterRPM(shooter,4000));
-    SmartDashboard.putData("Right Side RPM 5000", new SetRightShooterRPM(shooter,5000));
-    SmartDashboard.putData("Right Side RPM 6000", new SetRightShooterRPM(shooter,6000));
-
-    SmartDashboard.putData("Left Side RPM 0", new SetLeftShooterRPM(shooter, 0.0));
-    SmartDashboard.putData("Left Side RPM 50", new SetLeftShooterRPM(shooter, -50));
-    SmartDashboard.putData("Left Side RPM 500", new SetLeftShooterRPM(shooter, -500));
-    SmartDashboard.putData("Left Side RPM 1000", new SetLeftShooterRPM(shooter, -1000));
-    SmartDashboard.putData("Left Side RPM 2000", new SetLeftShooterRPM(shooter, -2000));
-    SmartDashboard.putData("Left Side RPM 3000", new SetLeftShooterRPM(shooter, -3000));
-    SmartDashboard.putData("Left Side RPM 4000", new SetLeftShooterRPM(shooter, -4000));
-    SmartDashboard.putData("Left Side RPM 5000", new SetLeftShooterRPM(shooter, -5000));
-    SmartDashboard.putData("Left Side RPM 6000", new SetLeftShooterRPM(shooter, -6000));
-
-    SmartDashboard.putData("Kicker RPM 0", new SetShooterKickerRPM(shooter, 0.0));
-    SmartDashboard.putData("Kicker RPM 50", new SetShooterKickerRPM(shooter, 50));
-    SmartDashboard.putData("Kicker RPM 500", new SetShooterKickerRPM(shooter, 500));
-    SmartDashboard.putData("Kicker RPM 1000", new SetShooterKickerRPM(shooter, 1000));
-    SmartDashboard.putData("Kicker RPM 2000", new SetShooterKickerRPM(shooter, 2000));
-    SmartDashboard.putData("Kicker RPM 3000", new SetShooterKickerRPM(shooter, 3000));
-    SmartDashboard.putData("Kicker RPM 4000", new SetShooterKickerRPM(shooter, 4000));
-    SmartDashboard.putData("Kicker RPM 5000", new SetShooterKickerRPM(shooter, 5000));
-    SmartDashboard.putData("Kicker RPM 6000", new SetShooterKickerRPM(shooter, 6000));
-
-    SmartDashboard.putData("Kicker Load", new FeederLoadCommand(shooter));
-    SmartDashboard.putData("Kicker Shoot", new FeederShootCommand(shooter));
-  }
-
-  public void addLiftTestButtons(){
+    public void addLiftTestButtons(){
     SmartDashboard.putData("Hood Angle 15", new SetLiftAngle(lift, 15));
     SmartDashboard.putData("Hood Angle 20", new SetLiftAngle(lift, 20));
     SmartDashboard.putData("Hood Angle 22", new SetLiftAngle(lift, 22));
@@ -214,4 +183,43 @@ public class RobotContainer {
     SmartDashboard.putData("Hood Angle 70", new SetLiftAngle(lift, 70));
     SmartDashboard.putData("Zero Hood", new InstantCommand(()->lift.setHoodZero(90)));
   }
+  //#endregion
+
+  //#region getters
+    public static RobotContainer getInstance(){
+      return instance;
+    }
+    //#region subsystems
+      public Drivetrain getDrivetrain(){
+        return drivetrain;
+      }
+    //#endregion
+    
+    //#region choosers
+      public Command getAutonomousCommand() {
+        /* First put the drivetrain into auto run mode, then run the auto */
+        return autonomousChooser.getCommand();
+      }
+
+      public SideMode getSide() {
+        return sideChooser.getSide();
+      }
+
+      public SpotMode getSpot(){
+        return spotChooser.getSpot();
+      }
+
+      public SendableChooser<SideMode> getSideChooser() {
+        return sideChooser.getSendable();
+      }
+
+      public SendableChooser<SpotMode> getSpotChooser() {
+        return spotChooser.getSendable();
+      }
+
+      public SendableChooser<AutonomousMode> getAutonomousChooser() {
+        return autonomousChooser.getSendable();
+      }
+    //#endregion
+  //#endregion
 }

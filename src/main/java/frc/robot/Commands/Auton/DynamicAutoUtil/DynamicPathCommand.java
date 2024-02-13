@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Subsystems.Drivetrain;
-import frc.robot.util.SideChooser.SideMode;
+import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class DynamicPathCommand extends Command{
     private Drivetrain drivetrain;
