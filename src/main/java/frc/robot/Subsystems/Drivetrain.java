@@ -55,7 +55,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.002, 0.0));
 
-    private Limelight limelight = Limelight.getInstance();
+    private Limelight limelight = new Limelight("front");
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting odometryTargeting = new Targeting(true);
 
@@ -416,6 +416,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             odometryBotPosUpdaterMethodFlag = false;
         }
 
+        SmartDashboard.putString("aimAtSpeakerState",aimAtSpeakerState);
         SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
         SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
         SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
@@ -424,6 +425,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         SmartDashboard.putNumber("getPose().getX()", getPose().getX());
         SmartDashboard.putNumber("getPose().getY()", getPose().getY());
+        SmartDashboard.putNumber("odometryTargeting.getBotPosX()", odometryTargeting.getBotPosX());
+        SmartDashboard.putNumber("odometryTargeting.getBotPosY()", odometryTargeting.getBotPosY());
 
         SmartDashboard.putString("Set Target:",Targeting.getTarget().toString());
         SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
