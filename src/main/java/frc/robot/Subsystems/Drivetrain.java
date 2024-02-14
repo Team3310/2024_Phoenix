@@ -206,7 +206,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public double getBotAz_FieldRelative(){
-        return rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getOdoPose().getRotation().getRadians());
+        //Note from James to Zac, I'm changing this back to the 'old' one to see if it works...
+        return rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getPose().getRotation().getRadians());
+        // return rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getOdoPose().getRotation().getRadians());
     }
 
 
@@ -504,7 +506,9 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
 
 
     public Pose2d getPose() {
-        return new Pose2d(this.m_odometry.getEstimatedPosition().getTranslation(), Rotation2d.fromRadians(getBotAz_FieldRelative()));
+        //Note from James to Zac, I'm changing this back to the 'old' one to see if it works...
+        return m_odometry.getEstimatedPosition();
+        // return new Pose2d(this.m_odometry.getEstimatedPosition().getTranslation(), Rotation2d.fromRadians(getBotAz_FieldRelative()));
     }
 
     public Rotation2d getRotation() {
