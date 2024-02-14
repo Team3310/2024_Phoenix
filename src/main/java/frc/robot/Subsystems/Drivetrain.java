@@ -493,8 +493,7 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
     public static double rolloverConversion_radians(double angleRadians){
         //Converts input angle to keep within range -pi to pi
         if((angleRadians > Math.PI) || (angleRadians < -Math.PI)){
-            return (((angleRadians + Math.PI) % 2*Math.PI)-Math.PI)
-            }
+            return (((angleRadians + Math.PI) % 2*Math.PI)-Math.PI);
         }else{
             return angleRadians;
         }
