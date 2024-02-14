@@ -1077,6 +1077,12 @@ public class PathPlannerPath {
 
     List<Translation2d> newBezier =
         bezierPoints.stream().map(GeometryUtil::flipFieldPosition).collect(Collectors.toList());
+    newBezier.clear();    
+    for (Translation2d point : bezierPoints) {
+      System.out.println("nonflipped:"+point.toString()+"\t flipped:"+GeometryUtil.flipFieldPosition(point).toString());
+      newBezier.add(GeometryUtil.flipFieldPosition(point));
+      System.out.println("added point:"+newBezier.get(newBezier.size()-1).toString());
+    }        
     List<RotationTarget> newRotTargets =
         rotationTargets.stream()
             .map(
@@ -1092,6 +1098,21 @@ public class PathPlannerPath {
             GeometryUtil.flipFieldRotation(goalEndState.getRotation()),
             goalEndState.shouldRotateFast());
     Rotation2d newPreviewRot = GeometryUtil.flipFieldRotation(previewStartingRotation);
+
+    PathPlannerPath newPath = new PathPlannerPath(
+        newBezier,
+        newRotTargets,
+        constraintZones,
+        eventMarkers.stream()
+            .map(e -> new EventMarker(e.getWaypointRelativePos(), e.getCommand()))
+            .collect(Collectors.toList()),
+        globalConstraints,
+        newEndState,
+        reversed,
+        newPreviewRot);
+
+    System.out.println("nf:"+bezierPoints.get(0)+"   f:"+GeometryUtil.flipFieldPosition(bezierPoints.get(0)));    
+    System.out.println(newPath.getPreviewStartingHolonomicPose().getTranslation().toString());    
 
     return new PathPlannerPath(
         newBezier,

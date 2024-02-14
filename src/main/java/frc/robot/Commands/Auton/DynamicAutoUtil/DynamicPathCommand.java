@@ -46,8 +46,8 @@ public class DynamicPathCommand extends Command{
         if(!changed){
             switch (decisionPoint) {
                 case PERCENTAGE:
-                    SmartDashboard.putNumber("x lower", path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getStartPoint())).position.getX());
-                    SmartDashboard.putNumber("x higher", path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getEndPoint())).position.getX());
+                    // SmartDashboard.putNumber("x lower", path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getStartPoint())).position.getX());
+                    // SmartDashboard.putNumber("x higher", path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getEndPoint())).position.getX());
 
                     if(drivetrain.getPose().getX()<path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getEndPoint())).position.getX() 
                     && drivetrain.getPose().getX()>path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getStartPoint())).position.getX()
@@ -58,7 +58,7 @@ public class DynamicPathCommand extends Command{
                         }
                     break;
                 case LIMELIGHT:
-                    SmartDashboard.putNumber("distance", path1.getPoint(path1.getAllPathPoints().size()-1).position.getDistance(drivetrain.getPose().getTranslation()));
+                    // SmartDashboard.putNumber("distance", path1.getPoint(path1.getAllPathPoints().size()-1).position.getDistance(drivetrain.getPose().getTranslation()));
                     if(path1.getPoint((int)((path1.getAllPathPoints().size()-1)*decisionPoint.getEndPoint())).position.getDistance(drivetrain.getPose().getTranslation())<decisionPoint.getEndPoint() 
                     && path1.getPoint(path1.getAllPathPoints().size()-1).position.getDistance(drivetrain.getPose().getTranslation())<Constants.MAX_NOTE_DISTANCE 
                     && decisionPoint2.getSupplier().getAsBoolean())

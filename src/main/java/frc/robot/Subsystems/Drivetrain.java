@@ -4,12 +4,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
+import frc.robot.Swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import frc.robot.Swerve.SwerveRequest;
+import frc.robot.Swerve.SwerveModule.DriveRequestType;
+import frc.robot.Swerve.SwerveModule;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathHolonomic;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Control.PidConstants;
 import frc.robot.util.Control.PidController;
@@ -38,6 +39,7 @@ import frc.robot.util.Camera.Limelight;
 import frc.robot.util.Camera.LimelightHelpers;
 import frc.robot.util.Camera.Targeting;
 import frc.robot.util.Camera.Targeting.Target;
+import frc.robot.util.Choosers.SideChooser.SideMode;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
@@ -48,6 +50,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private DriveMode mControlMode = DriveMode.JOYSTICK;
+    private SideMode sideMode = SideMode.RED;
 
     // private PidController limelightController = new PidController(new PidConstants(1.0, 0.002, 0.0));
     // private PidController aprilTagController = new PidController(new PidConstants(1.0, 0.0, 0.0));
@@ -132,6 +135,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         pathFollower.stopPath();
     }
 
+    public SideMode getSideMode(){
+        return sideMode;
+    }
+
     private void configurePathPlanner() {
         double driveBaseRadius = 0;
         for (var moduleLocation : m_moduleLocations) {
@@ -199,7 +206,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public double getBotAz_FieldRelative(){
-        return rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-this.getOdoPose().getRotation().getRadians());
+        return rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getOdoPose().getRotation().getRadians());
     }
 
 
@@ -217,8 +224,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         
         // SmartDashboard.putNumber("odometryTargetng", ModuleCount)
-        SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
-        SmartDashboard.putNumber("PID Error:", offset);
+        // SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
+        // SmartDashboard.putNumber("PID Error:", offset);
 
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed, 
@@ -276,7 +283,7 @@ for(int i=0; i<this.Modules.length; i++){
                 SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
             }
         }else{
-                        joystickDrive();
+            joystickDrive();
         }
     }
 
@@ -404,19 +411,23 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
     public int periodicCounter = 0;
     @Override
     public void periodic(){
-        if(mControlMode!=DriveMode.AUTON){
-            odometryTargeting.update();
-            frontCamera.update();
-            if(periodicCounter == 500){
-                odometryBotPosUpdaterMethodFlag = true;
-            }
-            periodicCounter++;
+        // if(mControlMode!=DriveMode.AUTON){
+        //     odometryTargeting.update();
+        //     frontCamera.update();
+        //     if(periodicCounter == 500){
+        //         odometryBotPosUpdaterMethodFlag = true;
+        //     }
+        //     periodicCounter++;
 
-            if(odometryBotPosUpdater()){
-                periodicCounter = 0;
-                odometryBotPosUpdaterMethodFlag = false;
-            }
-        }
+        //     if(odometryBotPosUpdater()){
+        //         periodicCounter = 0;
+        //         odometryBotPosUpdaterMethodFlag = false;
+        //     }
+        // }
+
+        sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
+
+        SmartDashboard.putString("side", sideMode.toString());
 
         SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
         SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
@@ -474,7 +485,7 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
             this.Modules[i].apply(states[i], 
             SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
         }
-}
+    }
 
     public static double rolloverConversion_radians(double angleRadians){
         //Converts input angle to keep within range -pi to pi
@@ -485,8 +496,10 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
         }else{
             // System.err.println("Conversion Error");
             return angleRadians;
+        }
     }
-    }
+
+
 
     public Pose2d getPose() {
         return new Pose2d(this.m_odometry.getEstimatedPosition().getTranslation(), Rotation2d.fromRadians(getBotAz_FieldRelative()));

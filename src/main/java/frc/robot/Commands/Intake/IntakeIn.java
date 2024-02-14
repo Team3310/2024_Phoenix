@@ -24,7 +24,7 @@ public class IntakeIn extends Command{
 
     @Override
     public void execute() {
-        SmartDashboard.putString("ran command", getName());
+        // SmartDashboard.putString("ran command", getName());
     }
 
     @Override

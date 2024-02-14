@@ -70,6 +70,7 @@ public class FollowPathCommand{
   }
 
   public void initialize(Drivetrain drivetrain, boolean resetPose) {
+    System.out.println("should flip:"+shouldFlipPath.getAsBoolean()+"::preventFlip:"+originalPath.preventFlipping);
     if (shouldFlipPath.getAsBoolean() && !originalPath.preventFlipping) {
       path = originalPath.flipPath();
     } else {
