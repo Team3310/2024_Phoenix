@@ -109,7 +109,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                                             new ReplanningConfig());
 
         pathFollower = new FollowPathCommand(
-            ()->this.getState().Pose,
+            ()->this.getPose(),
             this::getCurrentRobotChassisSpeeds,
             new PPHolonomicDriveController(
                 config.translationConstants, config.rotationConstants, config.period, config.maxModuleSpeed, config.driveBaseRadius),
@@ -199,7 +199,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public double getBotAz_FieldRelative(){
-        return rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getPose().getRotation().getRadians());
+        return rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-this.getOdoPose().getRotation().getRadians());
     }
 
 
@@ -404,16 +404,18 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
     public int periodicCounter = 0;
     @Override
     public void periodic(){
-        odometryTargeting.update();
-        frontCamera.update();
-        if(periodicCounter == 500){
-            odometryBotPosUpdaterMethodFlag = true;
-        }
-        periodicCounter++;
+        if(mControlMode!=DriveMode.AUTON){
+            odometryTargeting.update();
+            frontCamera.update();
+            if(periodicCounter == 500){
+                odometryBotPosUpdaterMethodFlag = true;
+            }
+            periodicCounter++;
 
-        if(odometryBotPosUpdater()){
-            periodicCounter = 0;
-            odometryBotPosUpdaterMethodFlag = false;
+            if(odometryBotPosUpdater()){
+                periodicCounter = 0;
+                odometryBotPosUpdaterMethodFlag = false;
+            }
         }
 
         SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
@@ -487,7 +489,7 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
     }
 
     public Pose2d getPose() {
-        return m_odometry.getEstimatedPosition();
+        return new Pose2d(this.m_odometry.getEstimatedPosition().getTranslation(), Rotation2d.fromRadians(getBotAz_FieldRelative()));
     }
 
     public Rotation2d getRotation() {

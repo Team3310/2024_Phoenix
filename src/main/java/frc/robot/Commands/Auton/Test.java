@@ -11,7 +11,7 @@ public class Test extends AutonCommandBase{
     public Test(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose(getPath("Test"));
+        resetRobotPose(getPath("test"));
 
         this.addCommands(
             new ParallelDeadlineGroup(

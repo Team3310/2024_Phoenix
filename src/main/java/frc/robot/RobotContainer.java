@@ -59,14 +59,14 @@ public class RobotContainer {
   public RobotContainer() {
     instance = this;
 
-    spotChooser = new SpotChooser();
-    sideChooser = new SideChooser();
-    autonomousChooser = new AutonomousChooser();
-
     lift = Lift.getInstance();
     shooter = Shooter.getInstance();
     intake = Intake.getInstance();
     drivetrain = TunerConstants.DriveTrain;
+
+    spotChooser = new SpotChooser();
+    sideChooser = new SideChooser();
+    autonomousChooser = new AutonomousChooser();
 
     logger = new Telemetry(TunerConstants.kSpeedAt12VoltsMps);
 
