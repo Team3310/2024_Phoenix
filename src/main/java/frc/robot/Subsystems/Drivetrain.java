@@ -238,7 +238,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             
             var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
 
-for(int i=0; i<this.Modules.length; i++){
+        for(int i=0; i<this.Modules.length; i++){
             this.Modules[i].apply(states[i], 
             SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
         }
@@ -305,7 +305,6 @@ for(int i=0; i<this.Modules.length; i++){
             SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
         }
     }
-
 
     //aimAtTarget():
     //Combines both OdometryTrack and AprilTagTrack()
@@ -394,7 +393,7 @@ for(int i=0; i<this.Modules.length; i++){
         JOYSTICK,
         AUTON,
         AIMATTARGET,
-                ;
+        ;
     }
 
 private boolean odometryBotPosUpdaterMethodFlag = false;
@@ -412,18 +411,18 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
     public int periodicCounter = 0;
     @Override
     public void periodic(){
-        // if(mControlMode!=DriveMode.AUTON){
-        //     odometryTargeting.update();
-        //     frontCamera.update();
-        //     if(periodicCounter == 500){
-        //         odometryBotPosUpdaterMethodFlag = true;
-        //     }
-        //     periodicCounter++;
+        if(mControlMode!=DriveMode.AUTON){
+            odometryTargeting.update();
+            frontCamera.update();
+            if(periodicCounter == 500){
+                odometryBotPosUpdaterMethodFlag = true;
+            }
+            periodicCounter++;
 
-        // if(odometryBotPosUpdater()){
-        //     periodicCounter = 0;
-        //     odometryBotPosUpdaterMethodFlag = false;
-        // }
+        if(odometryBotPosUpdater()){
+            periodicCounter = 0;
+            odometryBotPosUpdaterMethodFlag = false;
+        }
 
         sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
 
@@ -443,6 +442,7 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
 
         SmartDashboard.putString("Set Target:",Targeting.getTarget().toString());
         SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
+        }
     }
 
 
