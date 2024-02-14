@@ -211,7 +211,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // return rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getOdoPose().getRotation().getRadians());
     }
 
-
     //odometryTrack():
     //Uses the Odometries X and Y position, relative to the target, and drives the yaw of the drivetrain to face the target.
 
@@ -493,17 +492,13 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
 
     public static double rolloverConversion_radians(double angleRadians){
         //Converts input angle to keep within range -pi to pi
-        if(angleRadians > Math.PI){
-            return (angleRadians %Math.PI - Math.PI);
-        }else if (angleRadians < -Math.PI){
-            return (angleRadians % Math.PI - Math.PI);
+        if((angleRadians > Math.PI) || (angleRadians < -Math.PI)){
+            return (((angleRadians + Math.PI) % 2*Math.PI)-Math.PI)
+            }
         }else{
-            // System.err.println("Conversion Error");
             return angleRadians;
         }
     }
-
-
 
     public Pose2d getPose() {
         //Note from James to Zac, I'm changing this back to the 'old' one to see if it works...
