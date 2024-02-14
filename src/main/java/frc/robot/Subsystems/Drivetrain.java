@@ -494,7 +494,6 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
         //Converts input angle to keep within range -pi to pi
         if((angleRadians > Math.PI) || (angleRadians < -Math.PI)){
             return (((angleRadians + Math.PI) % 2*Math.PI)-Math.PI)
-            }
         }else{
             return angleRadians;
         }
