@@ -57,8 +57,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // private PidController aimAtSpeaker = new PidController(new PidConstants(1, 0.2, 0));
 
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.002, 0.0));
-    
-    private Limelight limelight = Limelight.getInstance();
+
+    private Limelight limelight = new Limelight("front");
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting odometryTargeting = new Targeting(true);
     
@@ -419,16 +419,16 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
         //     }
         //     periodicCounter++;
 
-        //     if(odometryBotPosUpdater()){
-        //         periodicCounter = 0;
-        //         odometryBotPosUpdaterMethodFlag = false;
-        //     }
+        // if(odometryBotPosUpdater()){
+        //     periodicCounter = 0;
+        //     odometryBotPosUpdaterMethodFlag = false;
         // }
 
         sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
 
         SmartDashboard.putString("side", sideMode.toString());
 
+        SmartDashboard.putString("aimAtSpeakerState",aimAtSpeakerState);
         SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
         SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
         SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
@@ -437,6 +437,8 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
         
         SmartDashboard.putNumber("getPose().getX()", getPose().getX());
         SmartDashboard.putNumber("getPose().getY()", getPose().getY());
+        SmartDashboard.putNumber("odometryTargeting.getBotPosX()", odometryTargeting.getBotPosX());
+        SmartDashboard.putNumber("odometryTargeting.getBotPosY()", odometryTargeting.getBotPosY());
 
         SmartDashboard.putString("Set Target:",Targeting.getTarget().toString());
         SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));

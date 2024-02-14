@@ -13,6 +13,8 @@ public class AimLiftWithOdometry extends Command{
     public AimLiftWithOdometry(){
         this.lift = Lift.getInstance();
         this.drive = TunerConstants.DriveTrain;
+
+        addRequirements(lift);
     }
 
     @Override
@@ -20,13 +22,14 @@ public class AimLiftWithOdometry extends Command{
     }
 
     @Override
-    public void execute(){
+    public void execute(){ 
         if(drive.hasTarget()){
-            lift.setHoodAngle(Math.toDegrees(drive.getLimelightTargeting().getEl()));    
+            drive.getLimelightTargeting().update();
+            lift.setHoodAngle(Math.toDegrees(drive.getLimelightTargeting().getEl()));
         }else{
-            lift.setHoodAngle(Math.toDegrees(drive.getOdoTargeting().getEl()));
+        drive.getOdoTargeting().update();  
+        lift.setHoodAngle(Math.toDegrees(drive.getOdoTargeting().getEl()));
         }
-        System.out.println("ran lift");
     }
 
     @Override
