@@ -4,21 +4,21 @@ import frc.robot.Swerve.TunerConstants;
 
 public class Targeting{
     //Cartesian Coordinates of Targets 
-    //Origin is CENTER OF FIELD
+    //Origin is BOTTOM LEFT OF FIELD
     //X, Y, Z (Inches)
     // private static final double[] blueSpeaker =     {-7.9387446, 1.4422628, 2.0432395}; 
-    private static final double[] blueSpeaker =     {-8.5000000, 1.4422628, 2.0432395};
-    private static final double[] blueAmp =         { 6.4445134, 4.0985948, 0.8891270};
-    private static final double[] blueTrap1 =       {-3.6149026, 0.3915918, 1.6414750};
-    private static final double[] blueTrap2 =       {-3.6149026,-0.3935222, 1.6414750};
-    private static final double[] blueTrap3 =       { 2.9354526,-0.0016002, 1.6414750};
+    private static final double[] blueSpeaker =     { 0.3175000, 5.5478680, 2.0432395};
+    private static final double[] blueAmp =         {14.7007580, 8.2042000, 0.8891270};
+    private static final double[] blueTrap1 =       { 4.6413420, 4.4983400, 1.6414750};
+    private static final double[] blueTrap2 =       { 4.6413420, 3.7132260, 1.6414750};
+    private static final double[] blueTrap3 =       { 5.3207920, 4.1051480, 1.6414750};
     // private static final double[] redSpeaker =      { 7.9674974, 1.4422628, 2.0432395};
-    private static final double[] redSpeaker =      { 8.5000000, 1.4422628, 2.0432395};
-    private static final double[] redAmp =          {-6.4147446, 4.0985948, 0.8891270};
-    private static final double[] redTrap1 =        { 3.6484814,-0.3935222, 1.6414750};
-    private static final double[] redTrap2 =        { 3.6484814, 0.3915918, 1.6414750};
-    private static final double[] redTrap3 =        { 2.9639514,-0.0016002, 1.6414750};
-    private static final double[] centerOfField =   { 0.0000000, 0.0000000, 0.0000000};
+    private static final double[] redSpeaker =      { 16.223742, 5.5478680, 2.0432395};
+    private static final double[] redAmp =          { 1.8415000, 8.2042000, 0.8891270};
+    private static final double[] redTrap1 =        {11.9047260, 3.7132260, 1.6414750};
+    private static final double[] redTrap2 =        {11.9047260, 4.4983400, 1.6414750};
+    private static final double[] redTrap3 =        {11.2201960, 4.1051480, 1.6414750};
+    private static final double[] centerOfField =   { 5.3207920, 4.1067482, 0.0000000};
     
     private static final double blueSpeakerID =     7;
     private static final double blueAmpID =         6;
