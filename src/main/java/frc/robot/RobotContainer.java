@@ -96,7 +96,7 @@ public class RobotContainer {
     // driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
     // driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
     // driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
-    driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
+    driverController.rightBumper().onTrue(new FeederShootCommand(shooter).andThen(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}))));
     // driverController.povRight().onTrue(new AimLiftWithOdometry());
   }
 

@@ -393,6 +393,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         JOYSTICK,
         AUTON,
         AIMATTARGET,
+        AIMATTRAP,
         ;
     }
 
