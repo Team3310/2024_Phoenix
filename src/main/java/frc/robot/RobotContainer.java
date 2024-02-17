@@ -87,7 +87,7 @@ public class RobotContainer {
     driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
 
     // //intake
-    driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
+    // driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
     // driverController.leftTrigger(0.5).onTrue(new IntakeSpit());
     // driverController.leftTrigger(0.5).onFalse(new StopIntake());
 
@@ -102,18 +102,19 @@ public class RobotContainer {
 
   public void configureOperatorController(){
     //intake
-    operatorController.a().onTrue(new IntakeUnder());
-    operatorController.y().onTrue(new IntakeUp());
-    operatorController.x().onTrue(new StopIntake());
-    operatorController.pov(0).onTrue(new IntakeSlurp());
+    operatorController.leftTrigger(0.5).onTrue(new IntakeAuton());
+    operatorController.rightTrigger(0.5).onTrue(new FeederShootCommand(shooter));
+    // operatorController.y().onTrue(new IntakeUp());
+    // operatorController.x().onTrue(new StopIntake());
+    // operatorController.pov(0).onTrue(new IntakeSlurp());
 
     //shooting
-    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
-    operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
-    operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
-    operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
-    operatorController.rightBumper().onTrue(new FeederShootCommand(shooter));
-    operatorController.povRight().onTrue(new AimLiftWithOdometry());
+    // operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
+    // operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
+    // operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
+    // operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
+    // operatorController.rightBumper().onTrue(new FeederShootCommand(shooter));
+    // operatorController.povRight().onTrue(new AimLiftWithOdometry());
 
     //flicker
     // flicker.setDefaultCommand(

@@ -7,13 +7,14 @@ public class Targeting{
     //Origin is BOTTOM LEFT OF FIELD
     //X, Y, Z (Inches)
     // private static final double[] blueSpeaker =     {-7.9387446, 1.4422628, 2.0432395}; 
-    private static final double[] blueSpeaker =     { 0.3175000, 5.5478680, 2.0432395};
+    // private static final double[] blueSpeaker =     { 0.3175000, 5.5478680, 2.0432395};
+    private static final double[] blueSpeaker =     {-0.2000000, 5.5478680, 2.0432395};
     private static final double[] blueAmp =         {14.7007580, 8.2042000, 0.8891270};
     private static final double[] blueTrap1 =       { 4.6413420, 4.4983400, 1.6414750};
     private static final double[] blueTrap2 =       { 4.6413420, 3.7132260, 1.6414750};
     private static final double[] blueTrap3 =       { 5.3207920, 4.1051480, 1.6414750};
     // private static final double[] redSpeaker =      { 7.9674974, 1.4422628, 2.0432395};
-    private static final double[] redSpeaker =      { 16.223742, 5.5478680, 2.0432395};
+    private static final double[] redSpeaker =      { 16.700000, 5.5478680, 2.0432395};
     private static final double[] redAmp =          { 1.8415000, 8.2042000, 0.8891270};
     private static final double[] redTrap1 =        {11.9047260, 3.7132260, 1.6414750};
     private static final double[] redTrap2 =        {11.9047260, 4.4983400, 1.6414750};
@@ -185,8 +186,17 @@ public class Targeting{
         }
     }
 
+    public static double rolloverConversion_radians(double angleRadians){
+        //Converts input angle to keep within range -pi to pi
+        if((angleRadians > Math.PI) || (angleRadians < -Math.PI)){
+            return (((angleRadians + Math.PI) % 2*Math.PI)-Math.PI);
+        }else{
+            return angleRadians;
+        }
+    }
+
     public double getAz(){
-        return this.targetAz;
+        return rolloverConversion_radians(this.targetAz + (Math.PI/2));
     }
     
     public double getEl(){
