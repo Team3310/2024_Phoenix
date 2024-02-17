@@ -11,7 +11,7 @@ import frc.robot.Constants;
 public class Elevator extends SubsystemBase{
     private static Elevator instance;
 
-    private final TalonFX elevatorMaster = new TalonFX(Constants.ELEVATOR_MASTER_ID);
+    private final TalonFX elevatorMaster = new TalonFX(Constants.ELEVATOR_MOTOR_ID);
     private final TalonFX elevatorSlave = new TalonFX(Constants.ELEVATOR_SLAVE_ID);
 
     private PositionVoltage control = new PositionVoltage(0);
