@@ -2,8 +2,9 @@ package com.pathplanner.lib.path;
 
 import com.pathplanner.lib.auto.CommandUtil;
 import com.pathplanner.lib.util.PPLibTelemetry;
-import edu.wpi.first.hal.FRCNetComm.tResourceType;
+
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;

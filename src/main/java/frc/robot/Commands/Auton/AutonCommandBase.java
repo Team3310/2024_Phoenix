@@ -30,11 +30,11 @@ public class AutonCommandBase extends SequentialCommandGroup {
     protected void resetRobotPose(PathPlannerPath path) {
         path.getTrajectory(new ChassisSpeeds(0, 0, 0), path.getStartingDifferentialPose().getRotation()).getInitialDifferentialPose();
         Pose2d start = path.getPreviewStartingHolonomicPose();
-        // SmartDashboard.putString("bot starting pose", start.toString());
+        SmartDashboard.putString("bot starting pose", start.toString());
         
         TunerConstants.DriveTrain.seedFieldRelative(start); 
 
-        // SmartDashboard.putString("robot pose after reset", TunerConstants.DriveTrain.getPose().toString());       
+        SmartDashboard.putString("robot pose after reset", TunerConstants.DriveTrain.getPose().toString());       
     }
 
     protected boolean getFlip(){
@@ -44,9 +44,11 @@ public class AutonCommandBase extends SequentialCommandGroup {
     protected PathPlannerPath getPath(String pathName){
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
         if(robotContainer.getDrivetrain().getSideMode() == SideMode.RED){
+            SmartDashboard.putBoolean("flipped path", true);
             path.preventFlipping = false;
             return path.flipPath();
         }
+        SmartDashboard.putBoolean("flipped path", false);
         return path;
     }
 
