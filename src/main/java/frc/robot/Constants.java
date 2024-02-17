@@ -29,14 +29,15 @@ public class Constants {
         public static final double KICKER_INTAKE_RPM = 1500.0;
     //#endregion    
 
-    //#region Hood
-        public static final double HOOD_GEAR_RATIO = (60.0/16.0)*(66.0/20.0)*(72.0/16.0);
+    //#region Lift
+        public static final double LIFT_GEAR_RATIO = (60.0/16.0)*(66.0/20.0)*(72.0/16.0);
 
-        public static final int HOOD_ID = 30;
+        public static final int LIFT_MOTOR_ID = 30;
+        public static final int LIFT_CANCODER_ID = 5;
 
-        public static final double HOOD_MAX_DEGREES = 75.0;
-        public static final double HOOD_MIN_DEGREES = 20.0;
-        public static final double HOOD_START_DEGREES = 20.0;
+        public static final double LIFT_MAX_DEGREES = 75.0;
+        public static final double LIFT_MIN_DEGREES = 20.0;
+        public static final double LIFT_START_DEGREES = 20.0;
     //#endregion    
 
     //#region Elevator
@@ -47,6 +48,9 @@ public class Constants {
 
         public static final double ELEVATOR_MAX_INCHES = 20.125;
         public static final double ELEVATOR_MIN_INCHES = 0.0;
+
+        public static final double AMP_SCORE_INCHES = 18.0;
+        public static final double TRAP_SCORE_INCHES = ELEVATOR_MAX_INCHES;
     //#endregion
 
     //#region Amp
@@ -59,8 +63,8 @@ public class Constants {
         public static final double CLIMBER_GEAR_RATIO = (70.0/18.0)*(60.0/11.0);
         public static final double CLIMBER_PULLY_DIAMTER = 1.25;
 
-        public static final int CLIMBER_MASTER_ID = 61;
-        public static final int CLIMBER_SLAVE_ID = 62;
+        public static final int CLIMBER_MASTER_ID = 60;
+        public static final int CLIMBER_SLAVE_ID = 61;
 
         public static final double CLIMBER_MAX_INCHES = 18.0;
         public static final double CLIMBER_MIN_INCHES = 0.0;

@@ -9,7 +9,7 @@ import frc.robot.Commands.Auton.DynamicAutoUtil.DynamicPathCommand;
 import frc.robot.Commands.Auton.DynamicAutoUtil.DynamicAutonGenerator.CompositionType;
 import frc.robot.Commands.Auton.DynamicAutoUtil.DynamicPathCommand.DecisionPoint;
 import frc.robot.Commands.Intake.IntakeIn;
-import frc.robot.Commands.Intake.IntakeUp;
+import frc.robot.Commands.Intake.IntakeAmp;
 
 public class DynamicPathExample extends AutonCommandBase{
     boolean skipped;
@@ -27,7 +27,7 @@ public class DynamicPathExample extends AutonCommandBase{
                 new IntakeIn()
             ),
             new SequentialCommandGroup(
-                new IntakeUp()
+                new IntakeAmp()
             ),
             CompositionType.PARALLEL_DEADLINE
         ).addSection(

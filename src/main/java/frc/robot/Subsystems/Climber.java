@@ -2,6 +2,9 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.MotionMagicVelocityDutyCycle;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 // import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
@@ -16,12 +19,12 @@ public class Climber extends SubsystemBase{
     private final TalonFX climberMaster = new TalonFX(Constants.CLIMBER_MASTER_ID);
     private final TalonFX climberSlave = new TalonFX(Constants.CLIMBER_SLAVE_ID);
 
-    private PositionVoltage control = new PositionVoltage(0);
+    private MotionMagicDutyCycle control = new MotionMagicDutyCycle(0);
 
     // private SimpleDifferentialMechanism mechanism = new SimpleDifferentialMechanism(climberMaster, climberSlave, true);
 
     private final double kF = 0.0;
-    private final double kP = 5.0;
+    private final double kP = 1.0;
     private final double kI = 0.0; 
     private final double kD = 0.0; 
 
@@ -41,26 +44,36 @@ public class Climber extends SubsystemBase{
         config.Slot0.kD = kD;
         config.Slot0.kV = kF;
 
-        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.CLIMBER_MAX_INCHES;
-        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.CLIMBER_MIN_INCHES;
+        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = getInchesToRotations(Constants.CLIMBER_MAX_INCHES);
+        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = getInchesToRotations(Constants.CLIMBER_MIN_INCHES);
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
+        config.CurrentLimits.StatorCurrentLimit = 40.0;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(9.0); //inches per second
+        config.MotionMagic.MotionMagicAcceleration = getInchesToRotations(9.0);
+
         climberMaster.getConfigurator().apply(config);
+        climberMaster.setInverted(false);
         climberSlave.getConfigurator().apply(config);
+        climberSlave.setInverted(true);
 
         // mechanism.setStaticBrake();
         // mechanism.applyConfigs();
 
-        climberSlave.setControl(new Follower(climberMaster.getDeviceID(), false));
+        // climberSlave.setControl(new Follower(climberMaster.getDeviceID(), true));
     }
 
     public void setPosition(double inches){
         // mechanism.setControl()
         climberMaster.setControl(control.withPosition(getInchesToRotations(inches)));
+        climberSlave.setControl(control.withPosition(getInchesToRotations(inches)));
+        // climberSlave.setControl(control.withPosition(getInchesToRotations(inches)));
     }
 
-    public void setElevatorZero(double inches){
+    public void setClimberZero(double inches){
         climberMaster.setPosition(getInchesToRotations(inches));
         climberSlave.setPosition(getInchesToRotations(inches));
     }
@@ -71,16 +84,20 @@ public class Climber extends SubsystemBase{
         }else if(inches<Constants.CLIMBER_MIN_INCHES){
             inches = Constants.CLIMBER_MIN_INCHES;
         }
-        return inches*(Constants.CLIMBER_GEAR_RATIO/(Math.PI * Constants.CLIMBER_PULLY_DIAMTER));
+        SmartDashboard.putNumber("Commanded Rotations", inches*Constants.CLIMBER_GEAR_RATIO/(Math.PI * Constants.CLIMBER_PULLY_DIAMTER));
+        return inches*Constants.CLIMBER_GEAR_RATIO/(Math.PI * Constants.CLIMBER_PULLY_DIAMTER);
     }
 
     private double getRotationsToInches(double rotations){
-        return rotations/(Constants.CLIMBER_GEAR_RATIO*(Math.PI * Constants.CLIMBER_PULLY_DIAMTER));
+        return rotations/Constants.CLIMBER_GEAR_RATIO*(Math.PI * Constants.CLIMBER_PULLY_DIAMTER);
     }
 
     @Override
     public void periodic(){
         SmartDashboard.putNumber("Climber Master Inches", getRotationsToInches(climberMaster.getPosition().getValueAsDouble()));
         SmartDashboard.putNumber("Climber Slave Inches", getRotationsToInches(climberSlave.getPosition().getValueAsDouble()));
+
+        SmartDashboard.putNumber("master rps", climberMaster.getVelocity().getValueAsDouble());
+        SmartDashboard.putNumber("slave rps", climberSlave.getVelocity().getValueAsDouble());
     }
 }

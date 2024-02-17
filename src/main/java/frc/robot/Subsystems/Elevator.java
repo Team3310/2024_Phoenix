@@ -1,6 +1,7 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -13,10 +14,10 @@ public class Elevator extends SubsystemBase{
 
     private final TalonFX elevatorMotor = new TalonFX(Constants.ELEVATOR_MOTOR_ID);
 
-    private PositionVoltage control = new PositionVoltage(0);
+    private MotionMagicDutyCycle control = new MotionMagicDutyCycle(0);
 
     private final double kF = 0.0;
-    private final double kP = 5.0;
+    private final double kP = 1.0;
     private final double kI = 0.0; 
     private final double kD = 0.0; 
 
@@ -36,10 +37,16 @@ public class Elevator extends SubsystemBase{
         config.Slot0.kD = kD;
         config.Slot0.kV = kF;
 
-        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.ELEVATOR_MAX_INCHES;
-        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.ELEVATOR_MIN_INCHES;
+        config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = getInchesToRotations(Constants.ELEVATOR_MAX_INCHES);
+        config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = getInchesToRotations(Constants.ELEVATOR_MIN_INCHES);
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+
+        config.CurrentLimits.StatorCurrentLimit = 10.0;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+
+        config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(9.0); //2 inches per second
+        config.MotionMagic.MotionMagicAcceleration = getInchesToRotations(9.0);
 
         elevatorMotor.getConfigurator().apply(config);
     }
@@ -54,15 +61,15 @@ public class Elevator extends SubsystemBase{
 
     private double getInchesToRotations(double inches){
         if(inches>Constants.ELEVATOR_MAX_INCHES){
-            return Constants.ELEVATOR_MAX_INCHES;
+            inches = Constants.ELEVATOR_MAX_INCHES;
         }else if(inches<Constants.ELEVATOR_MIN_INCHES){
-            return Constants.ELEVATOR_MIN_INCHES;
+            inches = Constants.ELEVATOR_MIN_INCHES;
         }
-        return Constants.ELEVATOR_GEAR_RATIO/(Math.PI * Constants.ELEVATOR_PULLY_DIAMTER);
+        return inches*Constants.ELEVATOR_GEAR_RATIO/(Math.PI * Constants.ELEVATOR_PULLY_DIAMTER);
     }
 
     private double getRotationsToInches(double rotations){
-        return rotations/(Constants.ELEVATOR_GEAR_RATIO*(Math.PI * Constants.ELEVATOR_PULLY_DIAMTER));
+        return rotations/Constants.ELEVATOR_GEAR_RATIO*(Math.PI * Constants.ELEVATOR_PULLY_DIAMTER);
     }
 
     @Override

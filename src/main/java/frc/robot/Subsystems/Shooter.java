@@ -36,7 +36,7 @@ public class Shooter extends SubsystemBase{
     /* Start at velocity 0, no feed forward, use slot 1 */
     private final VelocityTorqueCurrentFOC m_torqueVelocity = new VelocityTorqueCurrentFOC(0, 0, 0, 1, false, false, false);
 
-    private static final String canBusName = "Drivetrain";
+    private static final String canBusName = "rio";
 
     private DigitalInput sensor;
 

@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,9 +21,9 @@ public class Lift extends SubsystemBase{
 
     private final MotionMagicVoltage hoodControl = new MotionMagicVoltage(0);
     
-    private static final String canBusName = "Drivetrain";
+    private static final String canBusName = "rio";
 
-    private final double hoodRevsToMotorRevs = Constants.HOOD_GEAR_RATIO;
+    private final double hoodRevsToMotorRevs = Constants.LIFT_GEAR_RATIO;
 
     public static Lift getInstance(){
         if(instance == null){
@@ -34,10 +35,10 @@ public class Lift extends SubsystemBase{
     private Lift(){
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
-        hood = new TalonFX(Constants.HOOD_ID, canBusName);
+        hood = new TalonFX(Constants.LIFT_MOTOR_ID, canBusName);
 
-        configs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.HOOD_MAX_DEGREES;
-        configs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.HOOD_MIN_DEGREES;
+        configs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.LIFT_MAX_DEGREES;
+        configs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.LIFT_MIN_DEGREES;
         configs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
         configs.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
@@ -57,6 +58,9 @@ public class Lift extends SubsystemBase{
         configs.CurrentLimits.StatorCurrentLimit = 30;
         configs.CurrentLimits.StatorCurrentLimitEnable = true;
 
+        configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        configs.Feedback.FeedbackRemoteSensorID = Constants.LIFT_CANCODER_ID;
+
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for(int i = 0; i < 5; ++i) {
             status = hood.getConfigurator().apply(configs);
@@ -72,10 +76,10 @@ public class Lift extends SubsystemBase{
     }
 
     private double getHoodDegreesToRevs(double degrees){
-        if(degrees>Constants.HOOD_MAX_DEGREES){
-            degrees = Constants.HOOD_MAX_DEGREES;
-        }else if(degrees<Constants.HOOD_MIN_DEGREES){
-            degrees = Constants.HOOD_MIN_DEGREES;
+        if(degrees>Constants.LIFT_MAX_DEGREES){
+            degrees = Constants.LIFT_MAX_DEGREES;
+        }else if(degrees<Constants.LIFT_MIN_DEGREES){
+            degrees = Constants.LIFT_MIN_DEGREES;
         }
         return (degrees/360.0) * hoodRevsToMotorRevs;
     }
