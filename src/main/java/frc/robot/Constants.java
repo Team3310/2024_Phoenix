@@ -40,30 +40,29 @@ public class Constants {
     //#endregion    
 
     //#region Elevator
-        public static final double ELEVATOR_GEAR_RATIO = 1.0;
+        public static final double ELEVATOR_GEAR_RATIO = (54.0/34.0)*(54.0/11.0);
         public static final double ELEVATOR_PULLY_DIAMTER = 1.25;
 
         public static final int ELEVATOR_MOTOR_ID = 40;
 
-        public static final double ELEVATOR_MAX_INCHES = 45.0;
+        public static final double ELEVATOR_MAX_INCHES = 20.125;
         public static final double ELEVATOR_MIN_INCHES = 0.0;
     //#endregion
 
     //#region Amp
-        public static final double AMP_GEAR_RATIO = 1.0;
-        public static final double AMP_PULLY_DIAMTER = 1.25;
+        public static final double AMP_GEAR_RATIO = (30.0/12.0);
 
         public static final int AMP_MOTOR_ID = 50;
     //#endregion
 
     //#region Climber
-        public static final double CLIMBER_GEAR_RATIO = 1.0;
+        public static final double CLIMBER_GEAR_RATIO = (70.0/18.0)*(60.0/11.0);
         public static final double CLIMBER_PULLY_DIAMTER = 1.25;
 
         public static final int CLIMBER_MASTER_ID = 61;
         public static final int CLIMBER_SLAVE_ID = 62;
 
-        public static final double CLIMBER_MAX_INCHES = 45.0;
+        public static final double CLIMBER_MAX_INCHES = 18.0;
         public static final double CLIMBER_MIN_INCHES = 0.0;
     //#endregion
 

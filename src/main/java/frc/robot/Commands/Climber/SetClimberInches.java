@@ -1,18 +1,18 @@
-package frc.robot.Commands.Elevator;
+package frc.robot.Commands.Climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Subsystems.Elevator;
+import frc.robot.Subsystems.Climber;
 
-public class SetElevatorInches extends Command{
-    private Elevator elevator;
+public class SetClimberInches extends Command{
+    private Climber climber;
     private double inches;
 
 
-    public SetElevatorInches(Elevator elevator, double inches){
-        this.elevator = elevator;
+    public SetClimberInches(Climber climber, double inches){
+        this.climber = climber;
         this.inches = inches;
 
-        addRequirements(elevator);
+        addRequirements(climber);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class SetElevatorInches extends Command{
 
     @Override
     public void execute(){
-        elevator.setPosition(inches);
+        climber.setPosition(inches);
     }
 
     @Override

@@ -10,6 +10,8 @@ public class SetLiftAngle extends Command{
     public SetLiftAngle(Lift hood, double angle){
         this.lift = hood;
         this.angle = angle;
+
+        addRequirements(lift);
     }
 
     @Override

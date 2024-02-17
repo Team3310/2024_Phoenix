@@ -24,7 +24,9 @@ import frc.robot.Commands.Shooter.FeederShootCommand;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
 import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Commands.Shooter.SetShooterKickerRPM;
+import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
@@ -44,9 +46,11 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   public final Drivetrain drivetrain;
-  public final Intake intake;
-  public final Shooter shooter;
-  public final Lift lift;
+  // public final Intake intake;
+  // public final Shooter shooter;
+  // public final Lift lift;
+  public final Elevator elevator;
+  public final Climber climber;
 
   private final Telemetry logger;
 
@@ -59,9 +63,11 @@ public class RobotContainer {
   public RobotContainer() {
     instance = this;
 
-    lift = Lift.getInstance();
-    shooter = Shooter.getInstance();
-    intake = Intake.getInstance();
+    // lift = Lift.getInstance();
+    // shooter = Shooter.getInstance();
+    // intake = Intake.getInstance();
+    elevator = Elevator.getInstance();
+    climber = Climber.getInstance();
     drivetrain = TunerConstants.DriveTrain;
 
     spotChooser = new SpotChooser();
@@ -82,12 +88,12 @@ public class RobotContainer {
     // //driving related
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     //JOYSTICK MODE and TURN OFF SHOOTER
-    driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);})));
+    // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);})));
     //AIMATTARGET and AIMLIFTWITHODOMETRY and TURN ON SHOOTER
-    driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
+    // driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
 
     // //intake
-    driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
+    // driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
     // driverController.leftTrigger(0.5).onTrue(new IntakeSpit());
     // driverController.leftTrigger(0.5).onFalse(new StopIntake());
 
@@ -96,24 +102,24 @@ public class RobotContainer {
     // driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
     // driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
     // driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
-    driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
+    // driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
     // driverController.povRight().onTrue(new AimLiftWithOdometry());
   }
 
   public void configureOperatorController(){
     //intake
-    operatorController.a().onTrue(new IntakeUnder());
-    operatorController.y().onTrue(new IntakeUp());
-    operatorController.x().onTrue(new StopIntake());
-    operatorController.pov(0).onTrue(new IntakeSlurp());
+    // operatorController.a().onTrue(new IntakeUnder());
+    // operatorController.y().onTrue(new IntakeUp());
+    // operatorController.x().onTrue(new StopIntake());
+    // operatorController.pov(0).onTrue(new IntakeSlurp());
 
-    //shooting
-    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
-    operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
-    operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
-    operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
-    operatorController.rightBumper().onTrue(new FeederShootCommand(shooter));
-    operatorController.povRight().onTrue(new AimLiftWithOdometry());
+    // //shooting
+    // operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
+    // operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
+    // operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
+    // operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
+    // operatorController.rightBumper().onTrue(new FeederShootCommand(shooter));
+    // operatorController.povRight().onTrue(new AimLiftWithOdometry());
 
     //flicker
     // flicker.setDefaultCommand(
@@ -140,54 +146,54 @@ public class RobotContainer {
     }
 
     public void addShooterTestButtons(){
-      SmartDashboard.putData("Right Side RPM 0", new SetRightShooterRPM(shooter, 0.0));
-      SmartDashboard.putData("Right Side RPM 50", new SetRightShooterRPM(shooter, 0.0));
-      SmartDashboard.putData("Right Side RPM 500", new SetRightShooterRPM(shooter,500));
-      SmartDashboard.putData("Right Side RPM 1000", new SetRightShooterRPM(shooter,1000));
-      SmartDashboard.putData("Right Side RPM 2000", new SetRightShooterRPM(shooter,2000));
-      SmartDashboard.putData("Right Side RPM 3000", new SetRightShooterRPM(shooter,3000));
-      SmartDashboard.putData("Right Side RPM 4000", new SetRightShooterRPM(shooter,4000));
-      SmartDashboard.putData("Right Side RPM 5000", new SetRightShooterRPM(shooter,5000));
-      SmartDashboard.putData("Right Side RPM 6000", new SetRightShooterRPM(shooter,6000));
+    //   SmartDashboard.putData("Right Side RPM 0", new SetRightShooterRPM(shooter, 0.0));
+    //   SmartDashboard.putData("Right Side RPM 50", new SetRightShooterRPM(shooter, 0.0));
+    //   SmartDashboard.putData("Right Side RPM 500", new SetRightShooterRPM(shooter,500));
+    //   SmartDashboard.putData("Right Side RPM 1000", new SetRightShooterRPM(shooter,1000));
+    //   SmartDashboard.putData("Right Side RPM 2000", new SetRightShooterRPM(shooter,2000));
+    //   SmartDashboard.putData("Right Side RPM 3000", new SetRightShooterRPM(shooter,3000));
+    //   SmartDashboard.putData("Right Side RPM 4000", new SetRightShooterRPM(shooter,4000));
+    //   SmartDashboard.putData("Right Side RPM 5000", new SetRightShooterRPM(shooter,5000));
+    //   SmartDashboard.putData("Right Side RPM 6000", new SetRightShooterRPM(shooter,6000));
 
-      SmartDashboard.putData("Left Side RPM 0", new SetLeftShooterRPM(shooter, 0.0));
-      SmartDashboard.putData("Left Side RPM 50", new SetLeftShooterRPM(shooter, -50));
-      SmartDashboard.putData("Left Side RPM 500", new SetLeftShooterRPM(shooter, -500));
-      SmartDashboard.putData("Left Side RPM 1000", new SetLeftShooterRPM(shooter, -1000));
-      SmartDashboard.putData("Left Side RPM 2000", new SetLeftShooterRPM(shooter, -2000));
-      SmartDashboard.putData("Left Side RPM 3000", new SetLeftShooterRPM(shooter, -3000));
-      SmartDashboard.putData("Left Side RPM 4000", new SetLeftShooterRPM(shooter, -4000));
-      SmartDashboard.putData("Left Side RPM 5000", new SetLeftShooterRPM(shooter, -5000));
-      SmartDashboard.putData("Left Side RPM 6000", new SetLeftShooterRPM(shooter, -6000));
+    //   SmartDashboard.putData("Left Side RPM 0", new SetLeftShooterRPM(shooter, 0.0));
+    //   SmartDashboard.putData("Left Side RPM 50", new SetLeftShooterRPM(shooter, -50));
+    //   SmartDashboard.putData("Left Side RPM 500", new SetLeftShooterRPM(shooter, -500));
+    //   SmartDashboard.putData("Left Side RPM 1000", new SetLeftShooterRPM(shooter, -1000));
+    //   SmartDashboard.putData("Left Side RPM 2000", new SetLeftShooterRPM(shooter, -2000));
+    //   SmartDashboard.putData("Left Side RPM 3000", new SetLeftShooterRPM(shooter, -3000));
+    //   SmartDashboard.putData("Left Side RPM 4000", new SetLeftShooterRPM(shooter, -4000));
+    //   SmartDashboard.putData("Left Side RPM 5000", new SetLeftShooterRPM(shooter, -5000));
+    //   SmartDashboard.putData("Left Side RPM 6000", new SetLeftShooterRPM(shooter, -6000));
 
-      SmartDashboard.putData("Kicker RPM 0", new SetShooterKickerRPM(shooter, 0.0));
-      SmartDashboard.putData("Kicker RPM 50", new SetShooterKickerRPM(shooter, 50));
-      SmartDashboard.putData("Kicker RPM 500", new SetShooterKickerRPM(shooter, 500));
-      SmartDashboard.putData("Kicker RPM 1000", new SetShooterKickerRPM(shooter, 1000));
-      SmartDashboard.putData("Kicker RPM 2000", new SetShooterKickerRPM(shooter, 2000));
-      SmartDashboard.putData("Kicker RPM 3000", new SetShooterKickerRPM(shooter, 3000));
-      SmartDashboard.putData("Kicker RPM 4000", new SetShooterKickerRPM(shooter, 4000));
-      SmartDashboard.putData("Kicker RPM 5000", new SetShooterKickerRPM(shooter, 5000));
-      SmartDashboard.putData("Kicker RPM 6000", new SetShooterKickerRPM(shooter, 6000));
+    //   SmartDashboard.putData("Kicker RPM 0", new SetShooterKickerRPM(shooter, 0.0));
+    //   SmartDashboard.putData("Kicker RPM 50", new SetShooterKickerRPM(shooter, 50));
+    //   SmartDashboard.putData("Kicker RPM 500", new SetShooterKickerRPM(shooter, 500));
+    //   SmartDashboard.putData("Kicker RPM 1000", new SetShooterKickerRPM(shooter, 1000));
+    //   SmartDashboard.putData("Kicker RPM 2000", new SetShooterKickerRPM(shooter, 2000));
+    //   SmartDashboard.putData("Kicker RPM 3000", new SetShooterKickerRPM(shooter, 3000));
+    //   SmartDashboard.putData("Kicker RPM 4000", new SetShooterKickerRPM(shooter, 4000));
+    //   SmartDashboard.putData("Kicker RPM 5000", new SetShooterKickerRPM(shooter, 5000));
+    //   SmartDashboard.putData("Kicker RPM 6000", new SetShooterKickerRPM(shooter, 6000));
 
-      SmartDashboard.putData("Kicker Load", new FeederLoadCommand(shooter));
-      SmartDashboard.putData("Kicker Shoot", new FeederShootCommand(shooter));
+    //   SmartDashboard.putData("Kicker Load", new FeederLoadCommand(shooter));
+    //   SmartDashboard.putData("Kicker Shoot", new FeederShootCommand(shooter));
     }
 
     public void addLiftTestButtons(){
-    SmartDashboard.putData("Hood Angle 15", new SetLiftAngle(lift, 15));
-    SmartDashboard.putData("Hood Angle 20", new SetLiftAngle(lift, 20));
-    SmartDashboard.putData("Hood Angle 22", new SetLiftAngle(lift, 22));
-    SmartDashboard.putData("Hood Angle 25", new SetLiftAngle(lift, 25));
-    SmartDashboard.putData("Hood Angle 30", new SetLiftAngle(lift, 30));
-    SmartDashboard.putData("Hood Angle 35", new SetLiftAngle(lift, 35));
-    SmartDashboard.putData("Hood Angle 40", new SetLiftAngle(lift, 40));
-    SmartDashboard.putData("Hood Angle 45", new SetLiftAngle(lift, 45));
-    SmartDashboard.putData("Hood Angle 50", new SetLiftAngle(lift, 50));
-    SmartDashboard.putData("Hood Angle 60", new SetLiftAngle(lift, 60));
-    SmartDashboard.putData("Hood Angle 70", new SetLiftAngle(lift, 70));
-    SmartDashboard.putData("Zero Hood", new InstantCommand(()->lift.setHoodZero(90)));
-  }
+      // SmartDashboard.putData("Hood Angle 15", new SetLiftAngle(lift, 15));
+      // SmartDashboard.putData("Hood Angle 20", new SetLiftAngle(lift, 20));
+      // SmartDashboard.putData("Hood Angle 22", new SetLiftAngle(lift, 22));
+      // SmartDashboard.putData("Hood Angle 25", new SetLiftAngle(lift, 25));
+      // SmartDashboard.putData("Hood Angle 30", new SetLiftAngle(lift, 30));
+      // SmartDashboard.putData("Hood Angle 35", new SetLiftAngle(lift, 35));
+      // SmartDashboard.putData("Hood Angle 40", new SetLiftAngle(lift, 40));
+      // SmartDashboard.putData("Hood Angle 45", new SetLiftAngle(lift, 45));
+      // SmartDashboard.putData("Hood Angle 50", new SetLiftAngle(lift, 50));
+      // SmartDashboard.putData("Hood Angle 60", new SetLiftAngle(lift, 60));
+      // SmartDashboard.putData("Hood Angle 70", new SetLiftAngle(lift, 70));
+      // SmartDashboard.putData("Zero Hood", new InstantCommand(()->lift.setHoodZero(90)));
+    }
   //#endregion
 
   //#region getters

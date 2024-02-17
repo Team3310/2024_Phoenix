@@ -1,18 +1,17 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase{
     private static Elevator instance;
 
-    private final TalonFX elevatorMaster = new TalonFX(Constants.ELEVATOR_MOTOR_ID);
-    private final TalonFX elevatorSlave = new TalonFX(Constants.ELEVATOR_SLAVE_ID);
+    private final TalonFX elevatorMotor = new TalonFX(Constants.ELEVATOR_MOTOR_ID);
 
     private PositionVoltage control = new PositionVoltage(0);
 
@@ -42,18 +41,15 @@ public class Elevator extends SubsystemBase{
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
-        elevatorMaster.getConfigurator().apply(config.Slot0);
-
-        elevatorSlave.setControl(new Follower(elevatorMaster.getDeviceID(), false));
+        elevatorMotor.getConfigurator().apply(config);
     }
 
     public void setPosition(double inches){
-        elevatorMaster.setControl(control.withPosition(getInchesToRotations(inches)));
+        elevatorMotor.setControl(control.withPosition(getInchesToRotations(inches)));
     }
 
     public void setElevatorZero(double inches){
-        elevatorMaster.setPosition(getInchesToRotations(inches));
-        elevatorSlave.setPosition(getInchesToRotations(inches));
+        elevatorMotor.setPosition(getInchesToRotations(inches));
     }
 
     private double getInchesToRotations(double inches){
@@ -65,10 +61,12 @@ public class Elevator extends SubsystemBase{
         return Constants.ELEVATOR_GEAR_RATIO/(Math.PI * Constants.ELEVATOR_PULLY_DIAMTER);
     }
 
+    private double getRotationsToInches(double rotations){
+        return rotations/(Constants.ELEVATOR_GEAR_RATIO*(Math.PI * Constants.ELEVATOR_PULLY_DIAMTER));
+    }
+
     @Override
     public void periodic(){
-        // SmartDashboard.putNumber("Front Intake RPM", getFrontIntakeRPM());
-        // SmartDashboard.putNumber("Top Intake RPM", getTopIntakeRPM());
-        // SmartDashboard.putNumber("Bottom Intake RPM", getBottomIntakeRPM());
+        SmartDashboard.putNumber("Elevator Inches", getRotationsToInches(elevatorMotor.getPosition().getValueAsDouble()));
     }
 }
