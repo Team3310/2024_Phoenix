@@ -271,6 +271,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         if(canSeeTarget){
             Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+            SmartDashboard.putNumber("PID Error:", offset);
+            SmartDashboard.putNumber("PID Output:", request);
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed, 
                 getDriveY() * Constants.MaxSpeed, 
@@ -366,6 +368,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 this.Modules[i].apply(states[i], 
                 SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
             }
+        }
+    }
+
+    public void aimAtTrap(){
+        double botX = odometryTargeting.getBotPosX();
+        double botY = odometryTargeting.getBotPosY();
+        if(RobotContainer.getInstance().getSide() == SideMode.RED){
+            if(botX < 0){
+                {}
+            }
+        }else{
+            {}
         }
     }
 

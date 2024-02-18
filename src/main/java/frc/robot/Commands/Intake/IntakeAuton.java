@@ -16,7 +16,7 @@ public class IntakeAuton extends Command {
         this.shooter = Shooter.getInstance();
         this.lift = Lift.getInstance();
 
-        addRequirements(intake, shooter, lift);
+        // addRequirements(intake, shooter, lift);
     } 
 
     @Override
@@ -24,7 +24,7 @@ public class IntakeAuton extends Command {
         intake.setFrontIntakeRPM(Constants.IN_INTAKE_RPM);
         intake.setBackIntakeRPM(Constants.IN_INTAKE_RPM);
         shooter.setKickerRPM(Constants.KICKER_INTAKE_RPM);
-        lift.setHoodAngle(25.0);
+        lift.setHoodAngle(30.0);
     }
 
     @Override

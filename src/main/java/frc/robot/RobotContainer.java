@@ -82,9 +82,11 @@ public class RobotContainer {
     // //driving related
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     //JOYSTICK MODE and TURN OFF SHOOTER
-    driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);})));
+    // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);})));
+    driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{lift.setHoodAngle(25.0);})));
+    
     //AIMATTARGET and AIMLIFTWITHODOMETRY and TURN ON SHOOTER
-    driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
+    // driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
 
     // //intake
     // driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
@@ -96,14 +98,16 @@ public class RobotContainer {
     // driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
     // driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
     // driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
-    driverController.rightBumper().onTrue(new FeederShootCommand(shooter).andThen(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}))));
+    operatorController.rightBumper().onTrue(new FeederShootCommand(shooter).andThen(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{lift.setHoodAngle(30.0);}))));
     // driverController.povRight().onTrue(new AimLiftWithOdometry());
   }
 
   public void configureOperatorController(){
     //intake
-    operatorController.leftTrigger(0.5).onTrue(new IntakeAuton());
-    operatorController.rightTrigger(0.5).onTrue(new FeederShootCommand(shooter));
+    operatorController.rightTrigger(0.5).onTrue(new IntakeAuton().alongWith(new InstantCommand(()->{lift.setHoodAngle(30.0);})));
+    // driverController.rightTrigger(0.5).onTrue(new FeederShootCommand(shooter));
+    operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
+    operatorController.leftBumper().onTrue(new InstantCommand(()->{lift.setHoodAngle(25);}));
     // operatorController.y().onTrue(new IntakeUp());
     // operatorController.x().onTrue(new StopIntake());
     // operatorController.pov(0).onTrue(new IntakeSlurp());
