@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Elevator.SetElevatorInches;
+import frc.robot.Commands.Flicker.SetFlickerRPM;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Intake.IntakeSlurp;
 import frc.robot.Commands.Intake.IntakeSpit;
@@ -29,6 +30,7 @@ import frc.robot.Commands.Shooter.SetShooterKickerRPM;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Elevator;
+import frc.robot.Subsystems.Flicker;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
@@ -51,6 +53,7 @@ public class RobotContainer {
   // public final Intake intake;
   // public final Shooter shooter;
   // public final Lift lift;
+  public final Flicker flicker;
   public final Elevator elevator;
   public final Climber climber;
 
@@ -70,6 +73,7 @@ public class RobotContainer {
     // intake = Intake.getInstance();
     elevator = Elevator.getInstance();
     climber = Climber.getInstance();
+    flicker = Flicker.getInstance();
     drivetrain = TunerConstants.DriveTrain;
 
     spotChooser = new SpotChooser();
@@ -147,6 +151,12 @@ public class RobotContainer {
       addLiftTestButtons();
       addClimberTestButtons();
       addElevatorTestButtons();
+      addFlickerTestButtons();
+    }
+
+    private void addFlickerTestButtons() {
+      SmartDashboard.putData("set amp rpm", new SetFlickerRPM(flicker, 1.0));
+      SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0.0));
     }
 
     private void addElevatorTestButtons() {

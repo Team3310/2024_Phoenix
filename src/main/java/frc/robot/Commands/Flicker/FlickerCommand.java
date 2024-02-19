@@ -23,7 +23,7 @@ public class FlickerCommand extends Command{
 
     @Override
     public void execute(){
-        flicker.setPosition(joy.getRightY());
+        flicker.setRPM(joy.getRightY());
     }
 
     @Override

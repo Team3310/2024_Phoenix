@@ -1,7 +1,9 @@
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,14 +13,12 @@ import frc.robot.Constants;
 public class Flicker extends SubsystemBase{
     private static Flicker instance;
 
-    private final double maxPos = 5.0;//3.736816; //rotations
-    private final double minPos = 0.0;//8.763184;
     private final TalonFX motor = new TalonFX(Constants.AMP_MOTOR_ID);
 
-    private PositionVoltage control = new PositionVoltage(0);
+    private VelocityDutyCycle control = new VelocityDutyCycle(0);
 
     private final double kF = 0.0;
-    private final double kP = 5.0;
+    private final double kP = 1.0;
     private final double kI = 0.0; 
     private final double kD = 0.0; 
 
@@ -38,19 +38,20 @@ public class Flicker extends SubsystemBase{
         config.Slot0.kD = kD;
         config.Slot0.kV = kF;
 
-        config.CurrentLimits.StatorCurrentLimit = 10;
-        config.CurrentLimits.StatorCurrentLimitEnable = true; 
+        // config.CurrentLimits.StatorCurrentLimit = 10;
+        config.CurrentLimits.StatorCurrentLimitEnable = false; 
 
         motor.getConfigurator().apply(config.Slot0);
 
-        motor.setPosition(minPos);
         motor.setInverted(true);
     }
 
-    public void setPosition(double percent){
-        control.withPosition(percent*maxPos);
-        SmartDashboard.putNumber("control pos", control.Position);
-        motor.setControl(control);
+    public void setRPM(double rpm){
+        motor.setControl(new DutyCycleOut(rpm));
+    }
+
+    private double getRollerToMotorRPM(double rpm){
+        return (rpm/60.0) * Constants.AMP_GEAR_RATIO;
     }
 
     @Override

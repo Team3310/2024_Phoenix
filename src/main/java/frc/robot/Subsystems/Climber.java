@@ -24,7 +24,7 @@ public class Climber extends SubsystemBase{
     // private SimpleDifferentialMechanism mechanism = new SimpleDifferentialMechanism(climberMaster, climberSlave, true);
 
     private final double kF = 0.0;
-    private final double kP = 1.0;
+    private final double kP = 2.0;
     private final double kI = 0.0; 
     private final double kD = 0.0; 
 

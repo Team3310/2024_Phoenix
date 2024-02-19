@@ -46,7 +46,7 @@ public class Constants {
 
         public static final int ELEVATOR_MOTOR_ID = 40;
 
-        public static final double ELEVATOR_MAX_INCHES = 20.125;
+        public static final double ELEVATOR_MAX_INCHES = 23.125;
         public static final double ELEVATOR_MIN_INCHES = 0.0;
 
         public static final double AMP_SCORE_INCHES = 18.0;
@@ -57,6 +57,8 @@ public class Constants {
         public static final double AMP_GEAR_RATIO = (30.0/12.0);
 
         public static final int AMP_MOTOR_ID = 50;
+
+        public static final double AMP_SCORE_RPM = 5000.0;
     //#endregion
 
     //#region Climber
@@ -66,7 +68,7 @@ public class Constants {
         public static final int CLIMBER_MASTER_ID = 60;
         public static final int CLIMBER_SLAVE_ID = 61;
 
-        public static final double CLIMBER_MAX_INCHES = 18.0;
+        public static final double CLIMBER_MAX_INCHES = 20.25;
         public static final double CLIMBER_MIN_INCHES = 0.0;
     //#endregion
 

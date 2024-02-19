@@ -60,6 +60,7 @@ public class Lift extends SubsystemBase{
 
         configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         configs.Feedback.FeedbackRemoteSensorID = Constants.LIFT_CANCODER_ID;
+        configs.Feedback.RotorToSensorRatio = Constants.LIFT_GEAR_RATIO;
 
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for(int i = 0; i < 5; ++i) {
