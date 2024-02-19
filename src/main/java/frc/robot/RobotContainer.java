@@ -80,7 +80,9 @@ public class RobotContainer {
 
   //#region command abstraction
   Command shoot = new FeederShootCommand(shooter);
-  Command toJoystick = new SetDriveMode(DriveMode.JOYSTICK);
+  Command drivetrain_joystick = new SetDriveMode(DriveMode.JOYSTICK);
+  Command drivetrain_joystick2 = new SetDriveMode(DriveMode.JOYSTICK2);
+  Command drivetrain_aimAtTarget = new SetDriveMode(DriveMode.AIMATTARGET);
   Command zeroGyro = drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
   Command lift_IntakeAngle = new InstantCommand(() -> lift.setHoodAngle(25));
   Command lift_FenderShot = new InstantCommand(() -> lift.setHoodAngle(60));
@@ -96,8 +98,13 @@ public class RobotContainer {
     driverController.leftBumper().onTrue(zeroGyro);
     //JOYSTICK MODE and TURN OFF SHOOTER
     // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{lift.setHoodAngle(25.0);})));
-    driverController.b().onTrue(toJoystick.alongWith(lift_IntakeAngle));
-
+    driverController.b().onTrue(drivetrain_joystick.alongWith(lift_IntakeAngle));
+    driverController.y().onTrue(drivetrain_aimAtTarget);
+    driverController.x().onTrue(drivetrain_joystick2);
+    driverController.rightBumper().onTrue(shoot.andThen(drivetrain_joystick).andThen(lift_IntakeAngle));
+    driverController.rightTrigger(0.5).onTrue(intake_LoadShooter);
+    driverController.povUp().onTrue(shooter_On);
+    driverController.povDown().onTrue(shooter_Off);
     //AIMATTARGET and AIMLIFTWITHODOMETRY and TURN ON SHOOTER
     // driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
 
@@ -111,7 +118,6 @@ public class RobotContainer {
     // driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
     // driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
     // driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
-    operatorController.rightBumper().onTrue(new FeederShootCommand(shooter).andThen(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{lift.setHoodAngle(30.0);}))));
     // driverController.povRight().onTrue(new AimLiftWithOdometry());
   }
 
@@ -126,6 +132,7 @@ public class RobotContainer {
     operatorController.povDown().onTrue(shooter_Off);
     // operatorController.leftBumper().onTrue(new InstantCommand(()->{lift.setHoodAngle(25);}));
     operatorController.leftBumper().onTrue(lift_IntakeAngle);
+    operatorController.rightBumper().onTrue(shoot.andThen(drivetrain_joystick).andThen(lift_IntakeAngle));
     // operatorController.y().onTrue(new IntakeUp());
     // operatorController.x().onTrue(new StopIntake());
     // operatorController.pov(0).onTrue(new IntakeSlurp());

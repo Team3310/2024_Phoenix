@@ -334,7 +334,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-
     //aimAtTarget():
     //Combines both OdometryTrack and AprilTagTrack()
     //If the targeted aprilTag is in view ... aprilTagTrack() is used.
@@ -432,6 +431,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public enum DriveMode{
         JOYSTICK,
+        JOYSTICK2,
         AUTON,
         AIMATTARGET,
         AIMATTRAP,
@@ -496,6 +496,8 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
                 aimAtTarget(); break;
             case JOYSTICK:
                 joystickDrive(); break;
+            case JOYSTICK2:
+                joystickDrive2(); break;
             case AUTON:
                 var states = m_kinematics.toSwerveModuleStates(pathFollower.update(), new Translation2d());
                 if(!pathDone()){
