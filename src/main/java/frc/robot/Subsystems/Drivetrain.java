@@ -57,6 +57,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // private PidController aimAtSpeaker = new PidController(new PidConstants(1, 0.2, 0));
 
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.002, 0.0));
+    private PidController joystickController = new PidController(new PidConstants(1.0, 0.002, 0.0));
 
     private Limelight limelight = new Limelight("front");
     private Targeting frontCamera = new Targeting("front", false);
@@ -307,6 +308,32 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
         }
     }
+    
+    double joystickDrive_holdAngle = 0;
+    public void joystickDrive2(){
+        if (getDriveRotation() == 0){
+            double offset = getBotAz_FieldRelative() - joystickDrive_holdAngle;
+            Double request = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+            SmartDashboard.putNumber("PID Error:", offset);
+            SmartDashboard.putNumber("PID Output:", request);
+            ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+                getDriveX() * Constants.MaxSpeed, 
+                getDriveY() * Constants.MaxSpeed, 
+                request,
+                m_odometry.getEstimatedPosition()
+                        .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
+            ),0.2);
+            var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+            for(int i=0; i<this.Modules.length; i++){
+                this.Modules[i].apply(states[i], 
+                SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+            }
+        }else{
+            joystickDrive_holdAngle = getBotAz_FieldRelative();
+            joystickDrive();
+        }
+    }
+
 
     //aimAtTarget():
     //Combines both OdometryTrack and AprilTagTrack()
