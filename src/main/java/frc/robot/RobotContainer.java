@@ -81,23 +81,16 @@ public class RobotContainer {
 
   //#region controller buttons
   public void configureDriverController(){
-    // //driving related
+    // ::: Driving Related :::
     // driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     driverController.leftBumper().onTrue(new ZeroGyro());
-    //JOYSTICK MODE and TURN OFF SHOOTER
-    // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);})));
     driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
-    // driverController.y().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()));
-    // driverController.a().onTrue(new InstantCommand(()->lift.setHoodAngle(30)));
-    // driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
-    // driverController.povUp().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);}));
-    // driverController.povDown().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0); shooter.setRightMainRPM(0);}));
-    driverController.povLeft().onTrue(new FeederShootBackfeed(shooter));
-    //AIMATTARGET and AIMLIFTWITHODOMETRY and TURN ON SHOOTER
-    // driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
-
-    // //intake
+    
+    
+    
+    // ::: Intake :::
     driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
+    driverController.povLeft().onTrue(new FeederShootBackfeed(shooter));
     // driverController.leftTrigger(0.5).onTrue(new IntakeSpit());
     // driverController.leftTrigger(0.5).onFalse(new StopIntake());
 
