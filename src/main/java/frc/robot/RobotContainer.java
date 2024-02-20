@@ -129,7 +129,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // addTestButtons();
+    addTestButtons();
     configureDriverController();
     configureOperatorController();
 
@@ -140,8 +140,9 @@ public class RobotContainer {
 
   //#region smartdashboard buttons
     public void addTestButtons(){
-      addShooterTestButtons();
-      addLiftTestButtons();
+      // addShooterTestButtons();
+      // addLiftTestButtons();
+      addDrivemodeTestButtons();
     }
 
     public void addShooterTestButtons(){
@@ -193,6 +194,17 @@ public class RobotContainer {
     SmartDashboard.putData("Hood Angle 70", new SetLiftAngle(lift, 70));
     SmartDashboard.putData("Zero Hood", new InstantCommand(()->lift.setHoodZero(90)));
   }
+  
+  public void addDrivemodeTestButtons(){
+    SmartDashboard.putData("JOYSTICK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK)));
+    SmartDashboard.putData("AIMATTARGET", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTARGET)));
+    // SmartDashboard.putData("AIMATTRAP", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTRAP)));
+    SmartDashboard.putData("XPOS", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.XPOS)));
+    SmartDashboard.putData("XNEG", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.XNEG)));
+    SmartDashboard.putData("YPOS", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.YPOS)));
+    SmartDashboard.putData("YNEG", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.YNEG))); 
+  }
+
   //#endregion
 
   //#region getters
