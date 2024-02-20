@@ -194,6 +194,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public void setDriveMode(DriveMode mode){
         aimAtTargetController.integralAccum = 0;
+        
+        //Runs once on mode change to JOYSTICK, to set the current field-relative yaw of the robot to the hold angle.
+        if(mode == DriveMode.JOYSTICK){
+            setJoystickDrive_holdAngle(getBotAz_FieldRelative());
+        }
+
         mControlMode = mode;
     }
 
@@ -234,8 +240,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         offset = rolloverConversion_radians(offset);
         Double request = aimAtTargetController.calculate(offset, 0.02)*Constants.MaxAngularRate;
 
-        
-        // SmartDashboard.putNumber("odometryTargetng", ModuleCount)
         SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
         SmartDashboard.putNumber("PID Error:", offset);
 
@@ -282,8 +286,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         if(canSeeTarget){
             Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+
+            SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
             SmartDashboard.putNumber("PID Error:", offset);
-            SmartDashboard.putNumber("PID Output:", request);
+
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed, 
                 getDriveY() * Constants.MaxSpeed, 
@@ -321,7 +327,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
     */
 
-    double joystickDrive_holdAngle = 0;
+
+    private double joystickDrive_holdAngle = 0;
+    public void setJoystickDrive_holdAngle(double radians){
+        joystickDrive_holdAngle = rolloverConversion_radians(radians);
+    }
+    
     public void joystickDrive(){
         if (getDriveRotation() == 0){
             double offset = getBotAz_FieldRelative() - joystickDrive_holdAngle;
@@ -393,6 +404,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
             //aprilTagTack(), but offset is grabbed earlier due to this drive methoed needing to determine if target is in view.
             Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+
+            SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
+            SmartDashboard.putNumber("PID Error:", offset);
+
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed, 
                 getDriveY() * Constants.MaxSpeed, 
