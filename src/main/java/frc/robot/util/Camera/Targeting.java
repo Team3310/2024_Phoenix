@@ -2,7 +2,6 @@ package frc.robot.util.Camera;
 
 import frc.robot.RobotContainer;
 import frc.robot.Swerve.TunerConstants;
-import frc.robot.util.Choosers.SideChooser;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class Targeting{
@@ -99,7 +98,6 @@ public class Targeting{
     private double[] botPos = centerOfField;
     private double targetAz = 0;
     private double targetEl = 0;
-    private double distanceToTarget = 0;
     private String limelightHostname;
     private boolean isOdometry = false;
     private final Limelight limelight;
