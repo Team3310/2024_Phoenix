@@ -6,18 +6,17 @@ import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 
-public class SetDriveMode extends Command{
+public class ZeroGyro extends Command{
     private Drivetrain drivetrain;
     private DriveMode mode;
 
-    public SetDriveMode(DriveMode mode){
+    public ZeroGyro(){
         this.drivetrain = TunerConstants.DriveTrain;
-        this.mode = mode;
     }
 
     @Override
     public void initialize() {
-        drivetrain.setDriveMode(mode);
+        drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
     }
 
     @Override
