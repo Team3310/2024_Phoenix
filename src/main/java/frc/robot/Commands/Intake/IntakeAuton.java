@@ -16,7 +16,7 @@ public class IntakeAuton extends Command {
         this.shooter = Shooter.getInstance();
         this.lift = Lift.getInstance();
 
-        // addRequirements(intake, shooter, lift);
+        addRequirements(intake, shooter, lift);
     } 
 
     @Override

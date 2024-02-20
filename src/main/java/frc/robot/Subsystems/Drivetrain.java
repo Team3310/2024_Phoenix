@@ -83,6 +83,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aimAtTargetController.setOutputRange(-1.0, 1.0);
         aimAtTargetController.setSetpoint(0.0);
 
+        joystickController.setContinuous(true);
+        joystickController.setInputRange(-Math.PI, Math.PI);
+        joystickController.setOutputRange(-1.0, 1.0);
+        joystickController.setSetpoint(0.0);
+
         Targeting.setTarget(Target.REDSPEAKER);
 
         configurePathPlanner();
@@ -97,6 +102,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aimAtTargetController.setInputRange(-Math.PI, Math.PI);
         aimAtTargetController.setOutputRange(-1.0, 1.0);
         aimAtTargetController.setSetpoint(0.0);
+
+        joystickController.setContinuous(true);
+        joystickController.setInputRange(-Math.PI, Math.PI);
+        joystickController.setOutputRange(-1.0, 1.0);
+        joystickController.setSetpoint(0.0);
 
         Targeting.setTarget(Target.REDSPEAKER);
 
@@ -226,8 +236,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         
         // SmartDashboard.putNumber("odometryTargetng", ModuleCount)
-        // SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
-        // SmartDashboard.putNumber("PID Error:", offset);
+        SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
+        SmartDashboard.putNumber("PID Error:", offset);
 
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed, 
@@ -291,6 +301,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    /* 
     public void joystickDrive(){
 
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -308,9 +319,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
         }
     }
-    
+    */
+
     double joystickDrive_holdAngle = 0;
-    public void joystickDrive2(){
+    public void joystickDrive(){
         if (getDriveRotation() == 0){
             double offset = getBotAz_FieldRelative() - joystickDrive_holdAngle;
             Double request = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
@@ -363,12 +375,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
 
         //Update Odometry Targeting
-        odometryTargeting.update();
-        odometryTargeting.getAz();
+        // odometryTargeting.update();
 
         //If TargetID cant be seen by Limelight, use odometryTrack()
         if(!canSeeTarget){
-            aimAtSpeakerState = "LOOKING";
+            aimAtSpeakerState = "ODO MODE";
             odometryTrack();
             if(justChanged){
                 justChanged = false;
@@ -378,7 +389,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 aimAtTargetController.integralAccum=0;
                 justChanged = true;
             }
-            aimAtSpeakerState = "LOCKING";
+            aimAtSpeakerState = "LIME MODE";
 
             //aprilTagTack(), but offset is grabbed earlier due to this drive methoed needing to determine if target is in view.
             Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
@@ -438,7 +449,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         ;
     }
 
-private boolean odometryBotPosUpdaterMethodFlag = false;
+    private boolean odometryBotPosUpdaterMethodFlag = false;
     private boolean odometryBotPosUpdater(){
         if(odometryBotPosUpdaterMethodFlag){
             frontCamera.updateBotPos();
@@ -456,7 +467,7 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
         if(mControlMode!=DriveMode.AUTON){
             odometryTargeting.update();
             frontCamera.update();
-            if(periodicCounter == 500){
+            if(periodicCounter == 100){
                 odometryBotPosUpdaterMethodFlag = true;
             }
             periodicCounter++;
@@ -486,7 +497,6 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
         SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(getPose().getRotation().getRadians()-this.m_fieldRelativeOffset.getRadians()));
         }
     }
-
 
     @Override
     public void update(double time, double dt) {
@@ -536,7 +546,9 @@ private boolean odometryBotPosUpdaterMethodFlag = false;
 
     public static double rolloverConversion_radians(double angleRadians){
         //Converts input angle to keep within range -pi to pi
-        if((angleRadians > Math.PI) || (angleRadians < -Math.PI)){
+        if(angleRadians > Math.PI){
+            return (((angleRadians + Math.PI) % (2*Math.PI))-Math.PI);
+        }else if((angleRadians < -Math.PI)){
             return (((angleRadians + Math.PI) % (2*Math.PI))-Math.PI);
         }else{
             return angleRadians;
