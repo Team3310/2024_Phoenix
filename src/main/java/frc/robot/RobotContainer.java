@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Drive.ZeroGyro;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Intake.IntakeSlurp;
 import frc.robot.Commands.Intake.IntakeSpit;
@@ -81,7 +82,8 @@ public class RobotContainer {
   //#region controller buttons
   public void configureDriverController(){
     // //driving related
-    driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    // driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    driverController.leftBumper().onTrue(new ZeroGyro());
     //JOYSTICK MODE and TURN OFF SHOOTER
     // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);})));
     driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
