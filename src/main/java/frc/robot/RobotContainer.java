@@ -155,7 +155,7 @@ public class RobotContainer {
     }
 
     private void addFlickerTestButtons() {
-      SmartDashboard.putData("set amp rpm", new SetFlickerRPM(flicker, 1.0));
+      SmartDashboard.putData("set amp rpm", new SetFlickerRPM(flicker, Constants.AMP_SCORE_RPM));
       SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0.0));
     }
 

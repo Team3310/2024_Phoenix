@@ -45,7 +45,7 @@ public class Flicker extends SubsystemBase{
 
         motor.getConfigurator().apply(config.Slot0);
 
-        motor.setInverted(true);
+        motor.setInverted(false);
     }
 
     public void setRPM(double rpm){
@@ -56,7 +56,7 @@ public class Flicker extends SubsystemBase{
         return (rpm/60.0) * Constants.AMP_GEAR_RATIO;
     }
 
-    private boolean isNoteLoaded(){
+    public boolean isNoteLoaded(){
         return sensor.get();
     }
 

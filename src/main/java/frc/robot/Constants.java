@@ -59,7 +59,8 @@ public class Constants {
         public static final int AMP_MOTOR_ID = 50;
         public static final int AMP_SENSOR_PORT = 1;
 
-        public static final double AMP_SCORE_RPM = 5000.0;
+        public static final double AMP_SCORE_RPM = -2000.0;
+        public static final double AMP_INTAKE_RPM = 2000.0;
     //#endregion
 
     //#region Climber

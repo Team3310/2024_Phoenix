@@ -10,6 +10,8 @@ public class SetFlickerRPM extends Command{
     public SetFlickerRPM(Flicker flicker, double rpm){
         this.flicker = flicker;
         this.rpm = rpm;
+
+        addRequirements(flicker);
     }
 
     @Override

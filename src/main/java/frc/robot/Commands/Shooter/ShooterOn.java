@@ -8,6 +8,8 @@ public class ShooterOn extends Command{
 
     public ShooterOn(Shooter shooter){
         this.shooter = shooter;
+
+        addRequirements(shooter);
     }
 
     @Override

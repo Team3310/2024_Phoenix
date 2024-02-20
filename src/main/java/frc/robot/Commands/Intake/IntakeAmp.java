@@ -21,7 +21,7 @@ public class IntakeAmp extends Command{
         intake.setFrontIntakeRPM(Constants.UP_INTAKE_RPM);
         intake.setBottomIntakeRPM(Constants.UP_INTAKE_RPM);
         intake.setTopIntakeRPM(-Constants.UP_INTAKE_RPM);
-        flicker.setRPM(-1.0);
+        flicker.setRPM(Constants.AMP_INTAKE_RPM);
     }
 
     @Override
@@ -30,10 +30,11 @@ public class IntakeAmp extends Command{
 
     @Override
     public boolean isFinished(){
-        return true;
+        return flicker.isNoteLoaded();
     }
 
     @Override
     public void end(boolean interrupted) {
+
     }
 }
