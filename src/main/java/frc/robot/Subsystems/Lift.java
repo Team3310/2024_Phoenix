@@ -58,9 +58,9 @@ public class Lift extends SubsystemBase{
         configs.CurrentLimits.StatorCurrentLimit = 30;
         configs.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        configs.Feedback.FeedbackRemoteSensorID = Constants.LIFT_CANCODER_ID;
-        configs.Feedback.RotorToSensorRatio = Constants.LIFT_GEAR_RATIO;
+        // configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        // configs.Feedback.FeedbackRemoteSensorID = Constants.LIFT_CANCODER_ID;
+        // configs.Feedback.RotorToSensorRatio = Constants.LIFT_GEAR_RATIO;
 
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for(int i = 0; i < 5; ++i) {
@@ -70,6 +70,8 @@ public class Lift extends SubsystemBase{
         if (!status.isOK()) {
             System.out.println("Could not configure device. Error: " + status.toString());
         }
+
+        hood.setInverted(false);
     }
 
     public void setHoodAngle(double degrees){

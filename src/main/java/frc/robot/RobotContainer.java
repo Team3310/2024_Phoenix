@@ -50,9 +50,9 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   public final Drivetrain drivetrain;
-  // public final Intake intake;
-  // public final Shooter shooter;
-  // public final Lift lift;
+  public final Intake intake;
+  public final Shooter shooter;
+  public final Lift lift;
   public final Flicker flicker;
   public final Elevator elevator;
   public final Climber climber;
@@ -68,9 +68,9 @@ public class RobotContainer {
   public RobotContainer() {
     instance = this;
 
-    // lift = Lift.getInstance();
-    // shooter = Shooter.getInstance();
-    // intake = Intake.getInstance();
+    lift = Lift.getInstance();
+    shooter = Shooter.getInstance();
+    intake = Intake.getInstance();
     elevator = Elevator.getInstance();
     climber = Climber.getInstance();
     flicker = Flicker.getInstance();
@@ -94,22 +94,22 @@ public class RobotContainer {
     // //driving related
     driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     //JOYSTICK MODE and TURN OFF SHOOTER
-    // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);})));
-    //AIMATTARGET and AIMLIFTWITHODOMETRY and TURN ON SHOOTER
+    driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);})));
+    // AIMATTARGET and AIMLIFTWITHODOMETRY and TURN ON SHOOTER
     // driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
 
     // //intake
-    // driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
-    // driverController.leftTrigger(0.5).onTrue(new IntakeSpit());
-    // driverController.leftTrigger(0.5).onFalse(new StopIntake());
+    driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
+    driverController.leftTrigger(0.5).onTrue(new IntakeAmp());
+    driverController.leftTrigger(0.5).onFalse(new StopIntake());
 
     // //shooting
-    // driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
-    // driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
-    // driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
-    // driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
-    // driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
-    // driverController.povRight().onTrue(new AimLiftWithOdometry());
+    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
+    driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
+    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
+    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
+    driverController.rightBumper().onTrue(new FeederShootCommand(shooter));
+    driverController.povRight().onTrue(new AimLiftWithOdometry());
   }
 
   public void configureOperatorController(){

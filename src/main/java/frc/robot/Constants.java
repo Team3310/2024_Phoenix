@@ -30,14 +30,14 @@ public class Constants {
     //#endregion    
 
     //#region Lift
-        public static final double LIFT_GEAR_RATIO = (60.0/16.0)*(66.0/20.0)*(72.0/16.0);
+        public static final double LIFT_GEAR_RATIO = (60.0/16.0)*(72.0/16.0)*(70.0/18.0);
 
         public static final int LIFT_MOTOR_ID = 30;
         public static final int LIFT_CANCODER_ID = 5;
 
         public static final double LIFT_MAX_DEGREES = 75.0;
-        public static final double LIFT_MIN_DEGREES = 20.0;
-        public static final double LIFT_START_DEGREES = 20.0;
+        public static final double LIFT_MIN_DEGREES = 18.0;
+        public static final double LIFT_START_DEGREES = 18.0;
     //#endregion    
 
     //#region Elevator
@@ -57,6 +57,7 @@ public class Constants {
         public static final double AMP_GEAR_RATIO = (30.0/12.0);
 
         public static final int AMP_MOTOR_ID = 50;
+        public static final int AMP_SENSOR_PORT = 1;
 
         public static final double AMP_SCORE_RPM = 5000.0;
     //#endregion

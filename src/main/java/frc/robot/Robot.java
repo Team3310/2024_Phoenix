@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     updateManager.startLoop(0.005);
 
-    // m_robotContainer.lift.setHoodZero(Constants.HOOD_START_DEGREES);
+    m_robotContainer.lift.setHoodZero(Constants.LIFT_START_DEGREES);
     m_robotContainer.climber.setClimberZero(0);
     m_robotContainer.elevator.setElevatorZero(0);
   }

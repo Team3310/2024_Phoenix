@@ -81,6 +81,8 @@ public class Shooter extends SubsystemBase{
         configs.TorqueCurrent.PeakForwardTorqueCurrent = 40;
         configs.TorqueCurrent.PeakReverseTorqueCurrent = -40;
 
+        configs.CurrentLimits.StatorCurrentLimitEnable = false;
+
         /* Retry config apply up to 5 times, report if failure */
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for (int i = 0; i < 5; ++i) {
@@ -112,8 +114,9 @@ public class Shooter extends SubsystemBase{
             System.out.println("Could not apply kicker configs, error code: " + status.toString());
         }
 
-        shooterKicker.setInverted(true);
-        shooterTopLeftMaster.setInverted(true);
+        shooterKicker.setInverted(false);
+        shooterTopLeftMaster.setInverted(false);
+        shooterTopRightMaster.setInverted(true);
     }
 
     public boolean isNoteLoaded() {
@@ -129,7 +132,7 @@ public class Shooter extends SubsystemBase{
     }
 
     public void setRightMainRPM(double rpm) {
-        shooterTopRightMaster.setControl(m_voltageVelocityRight.withVelocity(rpm*shooterRpmToMotorRPS));
+        shooterTopRightMaster.setControl(m_voltageVelocityRight.withVelocity(rpm*shooterRpmToMotorRPS).withAcceleration(rpm*shooterRpmToMotorRPS/5.0));
 //        shooterTopRightMaster.setControl(m_torqueVelocity.withVelocity(rpm/60.0).withFeedForward(1));
     }
 
@@ -142,7 +145,7 @@ public class Shooter extends SubsystemBase{
     }
 
     public void setLeftMainRPM(double rpm) {
-        shooterTopLeftMaster.setControl(m_voltageVelocityLeft.withVelocity(rpm*shooterRpmToMotorRPS));
+        shooterTopLeftMaster.setControl(m_voltageVelocityLeft.withVelocity(rpm*shooterRpmToMotorRPS).withAcceleration(rpm*shooterRpmToMotorRPS/5.0));
 //        shooterTopLeftMaster.setControl(m_torqueVelocity.withVelocity(rpm/60.0).withFeedForward(1));
     }
 

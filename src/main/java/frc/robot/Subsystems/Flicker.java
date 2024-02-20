@@ -6,6 +6,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -14,6 +15,7 @@ public class Flicker extends SubsystemBase{
     private static Flicker instance;
 
     private final TalonFX motor = new TalonFX(Constants.AMP_MOTOR_ID);
+    private final DigitalInput sensor = new DigitalInput(Constants.AMP_SENSOR_PORT);
 
     private VelocityDutyCycle control = new VelocityDutyCycle(0);
 
@@ -47,11 +49,15 @@ public class Flicker extends SubsystemBase{
     }
 
     public void setRPM(double rpm){
-        motor.setControl(new DutyCycleOut(rpm));
+        motor.setControl(control.withVelocity(getRollerToMotorRPM(rpm)));
     }
 
     private double getRollerToMotorRPM(double rpm){
         return (rpm/60.0) * Constants.AMP_GEAR_RATIO;
+    }
+
+    private boolean isNoteLoaded(){
+        return sensor.get();
     }
 
     @Override
