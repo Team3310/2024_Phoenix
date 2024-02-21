@@ -98,6 +98,7 @@ public class Targeting{
     private double[] botPos = centerOfField;
     private double targetAz = 0;
     private double targetEl = 0;
+    private double trapAz = 0;
     private String limelightHostname;
     private boolean isOdometry = false;
     private final Limelight limelight;
@@ -205,6 +206,30 @@ public class Targeting{
     
     public double getEl(){
         return this.targetEl;
+    }
+
+    public double updateTrapAz_and_ID(){
+        if(RobotContainer.getInstance().getSide() == SideMode.BLUE){
+            if(botPos[0] < 5.7706260){
+                if(botPos[1] > 4.1056560){
+                    return((5/6)*Math.PI);
+                }else{
+                    return((1/6)*Math.PI);
+                }
+            }else{
+                return((-1/2)*Math.PI);
+            }
+        }else{ //SideMode.RED
+            if(botPos[0] > 11.7196870){
+                if(botPos[1] > 4.1056560)
+                    return((-5/6)*Math.PI);
+                else{
+                    return((-1/6)*Math.PI);
+                }
+            }else{
+                return((1/2)*Math.PI);
+            }
+        }
     }
 
     public double getBotPosX(){

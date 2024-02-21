@@ -450,16 +450,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    public void setTrapAngle(){
+        
+    }
+
     public void aimAtTrap(){
-        double botX = odometryTargeting.getBotPosX();
-        double botY = odometryTargeting.getBotPosY();
-        if(RobotContainer.getInstance().getSide() == SideMode.RED){
-            if(botX < 0){
-                {}
-            }
-        }else{
-            {}
-        }
+        joystickDrive_fixedAngle(ModuleCount);
     }
 
     private double getDriveX(){
