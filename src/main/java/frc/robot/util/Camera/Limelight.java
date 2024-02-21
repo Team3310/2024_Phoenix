@@ -69,7 +69,7 @@ public final class Limelight {
         ta = table.getEntry("ta");
         ts = table.getEntry("ts");
         tl = table.getEntry("tl");
-        bp = table.getEntry("botpose");
+        bp = table.getEntry("botpose_wpiblue");
 
         txFilter = LinearFilter.movingAverage(10);
         tyFilter = LinearFilter.movingAverage(3);

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Drive.ZeroGyro;
 import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
 import frc.robot.Commands.Flicker.ScoreAmp;
@@ -27,6 +28,7 @@ import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederLoadCommand;
+import frc.robot.Commands.Shooter.FeederShootBackfeed;
 import frc.robot.Commands.Shooter.FeederShootCommand;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
 import frc.robot.Commands.Shooter.SetRightShooterRPM;
@@ -146,6 +148,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     addTestButtons();
+    addTestButtons();
     configureDriverController();
     configureOperatorController();
 
@@ -156,8 +159,9 @@ public class RobotContainer {
 
   //#region smartdashboard buttons
     public void addTestButtons(){
-      addShooterTestButtons();
-      addLiftTestButtons();
+      // addShooterTestButtons();
+      // addLiftTestButtons();
+      addDrivemodeTestButtons();
       addClimberTestButtons();
       addElevatorTestButtons();
       addFlickerTestButtons();
@@ -228,6 +232,17 @@ public class RobotContainer {
       // SmartDashboard.putData("Hood Angle 70", new SetLiftAngle(lift, 70));
       // SmartDashboard.putData("Zero Hood", new InstantCommand(()->lift.setHoodZero(90)));
     }
+  
+  public void addDrivemodeTestButtons(){
+    SmartDashboard.putData("JOYSTICK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK)));
+    SmartDashboard.putData("AIMATTARGET", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTARGET)));
+    // SmartDashboard.putData("AIMATTRAP", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTRAP)));
+    SmartDashboard.putData("XPOS", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.XPOS)));
+    SmartDashboard.putData("XNEG", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.XNEG)));
+    SmartDashboard.putData("YPOS", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.YPOS)));
+    SmartDashboard.putData("YNEG", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.YNEG))); 
+  }
+
   //#endregion
 
   //#region getters
