@@ -86,11 +86,9 @@ public class RobotContainer {
     driverController.leftBumper().onTrue(new ZeroGyro());
     driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK));
     
-    
-    
     // ::: Intake :::
-    driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
-    driverController.povLeft().onTrue(new FeederShootBackfeed(shooter));
+    // driverController.rightTrigger(0.5).onTrue(new IntakeAuton());
+    // driverController.povLeft().onTrue(new FeederShootBackfeed(shooter));
     // driverController.leftTrigger(0.5).onTrue(new IntakeSpit());
     // driverController.leftTrigger(0.5).onFalse(new StopIntake());
 
