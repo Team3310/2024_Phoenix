@@ -69,7 +69,7 @@ public class Lift extends SubsystemBase{
         // configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         // configs.Slot0.kG = 0.0;
         
-        configs.MotionMagic.MotionMagicCruiseVelocity = 40.0;
+        configs.MotionMagic.MotionMagicCruiseVelocity = 20.0;
         configs.MotionMagic.MotionMagicAcceleration = 80.0;
         configs.MotionMagic.MotionMagicJerk = 100.0;
 

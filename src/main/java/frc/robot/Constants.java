@@ -50,7 +50,7 @@ public class Constants {
 
         public static final int ELEVATOR_MOTOR_ID = 40;
 
-        public static final double ELEVATOR_MAX_INCHES = 19.625;
+        public static final double ELEVATOR_MAX_INCHES = 20.625;
         public static final double ELEVATOR_MIN_INCHES = 0.0;
 
         public static final double AMP_SCORE_INCHES = 12.0;
