@@ -27,6 +27,10 @@ public class Constants {
         public static final int SHOOTER_KICKER_ID = 22;
 
         public static final double KICKER_INTAKE_RPM = 1500.0;
+        public static final double KICKER_SCORE_RPM = 1000.0;
+
+        public static final double LEFT_SCORE_RPM = 5000.0;
+        public static final double RIGHT_SCORE_RPM = 3000.0;
     //#endregion    
 
     //#region Lift
@@ -46,10 +50,10 @@ public class Constants {
 
         public static final int ELEVATOR_MOTOR_ID = 40;
 
-        public static final double ELEVATOR_MAX_INCHES = 23.125;
+        public static final double ELEVATOR_MAX_INCHES = 19.625;
         public static final double ELEVATOR_MIN_INCHES = 0.0;
 
-        public static final double AMP_SCORE_INCHES = 18.0;
+        public static final double AMP_SCORE_INCHES = 12.0;
         public static final double TRAP_SCORE_INCHES = ELEVATOR_MAX_INCHES;
     //#endregion
 
@@ -59,7 +63,8 @@ public class Constants {
         public static final int AMP_MOTOR_ID = 50;
         public static final int AMP_SENSOR_PORT = 1;
 
-        public static final double AMP_SCORE_RPM = -2000.0;
+        public static final double AMP_SCORE_RPM = -1500.0;
+        public static final double AMP_LOAD_RPM = 200.0;
         public static final double AMP_INTAKE_RPM = 2000.0;
     //#endregion
 
@@ -70,7 +75,7 @@ public class Constants {
         public static final int CLIMBER_MASTER_ID = 60;
         public static final int CLIMBER_SLAVE_ID = 61;
 
-        public static final double CLIMBER_MAX_INCHES = 20.25;
+        public static final double CLIMBER_MAX_INCHES = 22.0;
         public static final double CLIMBER_MIN_INCHES = 0.0;
     //#endregion
 

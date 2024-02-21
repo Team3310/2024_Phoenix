@@ -2,7 +2,6 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,8 +17,9 @@ public class Elevator extends SubsystemBase{
 
     private final double kF = 0.0;
     private final double kP = 1.0;
-    private final double kI = 0.0; 
-    private final double kD = 0.0; 
+    private final double kI = 0.001; 
+    private final double kD = 0.0003; 
+    private final double kG = 0.04;
 
 
     public static Elevator getInstance(){
@@ -36,17 +36,18 @@ public class Elevator extends SubsystemBase{
         config.Slot0.kI = kI;
         config.Slot0.kD = kD;
         config.Slot0.kV = kF;
+        config.Slot0.kG = kG;
 
         config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = getInchesToRotations(Constants.ELEVATOR_MAX_INCHES);
         config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = getInchesToRotations(Constants.ELEVATOR_MIN_INCHES);
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
 
-        config.CurrentLimits.StatorCurrentLimit = 10.0;
+        config.CurrentLimits.StatorCurrentLimit = 20.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(9.0); //2 inches per second
-        config.MotionMagic.MotionMagicAcceleration = getInchesToRotations(9.0);
+        config.MotionMagic.MotionMagicCruiseVelocity = 121.0; //rotations per second
+        config.MotionMagic.MotionMagicAcceleration = 201.0;
 
         elevatorMotor.getConfigurator().apply(config);
     }

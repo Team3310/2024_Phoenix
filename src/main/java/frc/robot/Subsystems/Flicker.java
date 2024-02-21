@@ -2,8 +2,10 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -17,12 +19,12 @@ public class Flicker extends SubsystemBase{
     private final TalonFX motor = new TalonFX(Constants.AMP_MOTOR_ID);
     private final DigitalInput sensor = new DigitalInput(Constants.AMP_SENSOR_PORT);
 
-    private VelocityDutyCycle control = new VelocityDutyCycle(0);
+    private VelocityVoltage control = new VelocityVoltage(0);
 
-    private final double kF = 0.0;
-    private final double kP = 1.0;
-    private final double kI = 0.0; 
-    private final double kD = 0.0; 
+    private final double kP = 0.11;
+    private final double kI = 0.5; 
+    private final double kD = 0.0001; 
+    private final double kV = 0.12;
 
 
     public static Flicker getInstance(){
@@ -38,7 +40,7 @@ public class Flicker extends SubsystemBase{
         config.Slot0.kP = kP;
         config.Slot0.kI = kI;
         config.Slot0.kD = kD;
-        config.Slot0.kV = kF;
+        config.Slot0.kV = kV;
 
         // config.CurrentLimits.StatorCurrentLimit = 10;
         config.CurrentLimits.StatorCurrentLimitEnable = false; 
@@ -49,6 +51,10 @@ public class Flicker extends SubsystemBase{
     }
 
     public void setRPM(double rpm){
+        if(Math.abs(rpm)<1.0){
+            motor.setControl(new DutyCycleOut(0.0));
+            return;
+        }
         motor.setControl(control.withVelocity(getRollerToMotorRPM(rpm)));
     }
 
@@ -65,5 +71,6 @@ public class Flicker extends SubsystemBase{
         // SmartDashboard.putNumber("Front Intake RPM", getFrontIntakeRPM());
         // SmartDashboard.putNumber("Top Intake RPM", getTopIntakeRPM());
         // SmartDashboard.putNumber("Bottom Intake RPM", getBottomIntakeRPM());
+        SmartDashboard.putBoolean("is note in amp", isNoteLoaded());
     }
 }

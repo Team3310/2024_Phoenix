@@ -6,6 +6,7 @@ package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Subsystems.Shooter;
 
 /** An example command that uses an example subsystem. */
@@ -29,7 +30,7 @@ public class FeederLoadCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.setKickerRPM(1000);
+    m_subsystem.setKickerRPM(Constants.KICKER_INTAKE_RPM);
     timer.reset();
     isNoteDetected = false;
   }

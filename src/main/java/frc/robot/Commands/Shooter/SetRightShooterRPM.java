@@ -10,8 +10,6 @@ public class SetRightShooterRPM extends Command{
     public SetRightShooterRPM(Shooter shooter, double rpm){
         this.shooter = shooter;
         this.rpm = rpm;
-
-        addRequirements(shooter);
     }
 
     @Override

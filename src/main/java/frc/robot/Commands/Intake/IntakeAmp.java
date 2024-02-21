@@ -35,6 +35,9 @@ public class IntakeAmp extends Command{
 
     @Override
     public void end(boolean interrupted) {
-
+        intake.setFrontIntakeRPM(0.0);
+        intake.setBottomIntakeRPM(0.0);
+        intake.setTopIntakeRPM(0.0);
+        flicker.setRPM(0.0);
     }
 }

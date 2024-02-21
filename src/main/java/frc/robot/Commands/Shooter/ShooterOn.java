@@ -1,6 +1,7 @@
 package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Subsystems.Shooter;
 
 public class ShooterOn extends Command{
@@ -19,8 +20,8 @@ public class ShooterOn extends Command{
 
     @Override
     public void initialize(){
-        shooter.setRightMainRPM(3000.0);
-        shooter.setLeftMainRPM(5000.0);
+        shooter.setRightMainRPM(Constants.RIGHT_SCORE_RPM);
+        shooter.setLeftMainRPM(Constants.LEFT_SCORE_RPM);
     }
 
     @Override

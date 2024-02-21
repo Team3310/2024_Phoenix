@@ -17,7 +17,7 @@ public class SetClimberInches extends Command{
 
     @Override
     public void initialize(){
-
+        
     }
 
     @Override
