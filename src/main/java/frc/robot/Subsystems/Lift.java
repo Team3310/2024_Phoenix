@@ -4,11 +4,15 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,8 +31,15 @@ public class Lift extends SubsystemBase{
 
     private StatusSignal<Boolean> f_fusedSensorOutOfSync;
     private StatusSignal<Boolean> sf_fusedSensorOutOfSync;
+    
+    private enum LiftClosedLoopOutputType {
+        Voltage,
+        TorqueCurrentFOC,
+    }
 
-    private final MotionMagicVoltage liftControlMotionMagicVoltage = new MotionMagicVoltage(0);
+    private final LiftClosedLoopOutputType liftClosedLoopOutput;
+    private final MotionMagicVoltage liftControlVoltage = new MotionMagicVoltage(0);
+    private final MotionMagicTorqueCurrentFOC liftControlTorqueFOC = new MotionMagicTorqueCurrentFOC(0);
     
     private static final String canBusName = "rio";
 
@@ -56,21 +67,24 @@ public class Lift extends SubsystemBase{
         configs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
         configs.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
-        configs.Slot0.kP = 40;
-        configs.Slot0.kI = 0;
-        configs.Slot0.kD = 0.1;
-        configs.Slot0.kV = 0.12;
-        configs.Slot0.kA = 0.01;
-        configs.Slot0.kS = 0.35;
-        // configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        // configs.Slot0.kG = 0.0;
-        
-        configs.MotionMagic.MotionMagicCruiseVelocity = 20.0;
-        configs.MotionMagic.MotionMagicAcceleration = 80.0;
-        configs.MotionMagic.MotionMagicJerk = 100.0;
+        configs.Slot0.kP = 150.0;
+        configs.Slot0.kI = 0.1;
+        configs.Slot0.kD = 0.2;
+        configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+        configs.Slot0.kG = 0.4;
 
-        configs.CurrentLimits.StatorCurrentLimit = 30;
-        configs.CurrentLimits.StatorCurrentLimitEnable = true;
+        configs.Slot1.kP = 1200.0;
+        configs.Slot1.kI = 1000.0;
+        configs.Slot1.kD = 10.0;
+        configs.Slot1.GravityType = GravityTypeValue.Arm_Cosine;
+        configs.Slot1.kG = 21.0;
+        
+        configs.MotionMagic.MotionMagicCruiseVelocity = 0.2;
+        configs.MotionMagic.MotionMagicAcceleration = 0.8;
+        configs.MotionMagic.MotionMagicJerk = 0.0;
+
+        configs.CurrentLimits.StatorCurrentLimit = 70;
+        configs.CurrentLimits.StatorCurrentLimitEnable = false;
 
         configs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
         configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
@@ -93,15 +107,26 @@ public class Lift extends SubsystemBase{
         sf_fusedSensorOutOfSync = liftMotor.getStickyFault_FusedSensorOutOfSync();
 
         liftPositionRevs = liftMotor.getPosition();
+
+        liftClosedLoopOutput = LiftClosedLoopOutputType.Voltage;
     }
 
-    public void setLiftAngle(double degrees){
-        if(degrees>Constants.LIFT_MAX_DEGREES){
+    public void setLiftAngle(double degrees) {
+        if (degrees > Constants.LIFT_MAX_DEGREES) {
             degrees = Constants.LIFT_MAX_DEGREES;
-        }else if(degrees<Constants.LIFT_MIN_DEGREES){
+        } else if (degrees < Constants.LIFT_MIN_DEGREES) {
             degrees = Constants.LIFT_MIN_DEGREES;
         }
-        liftMotor.setControl(liftControlMotionMagicVoltage.withPosition(getLiftDegreesToRevs(degrees)).withSlot(0));
+
+        switch (liftClosedLoopOutput) {
+            case Voltage:
+                liftMotor.setControl(liftControlVoltage.withPosition(getLiftDegreesToRevs(degrees)).withSlot(0));
+                break;
+
+            case TorqueCurrentFOC:
+                liftMotor.setControl(liftControlTorqueFOC.withPosition(getLiftDegreesToRevs(degrees)).withSlot(1));
+                break;
+        }
     }
 
     private double getLiftDegreesToRevs(double degrees){
