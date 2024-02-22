@@ -16,7 +16,7 @@ public class SetLiftAngle extends Command{
 
     @Override
     public void initialize(){
-        lift.setHoodAngle(angle);
+        lift.setLiftAngle(angle);
     }
 
     @Override

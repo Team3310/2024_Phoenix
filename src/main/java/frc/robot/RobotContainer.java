@@ -98,7 +98,7 @@ public class RobotContainer {
     // //driving related
     // driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     //JOYSTICK MODE and TURN OFF SHOOTER
-    // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);})));
+    // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setLiftAngle(25.0);})));
     // AIMATTARGET and AIMLIFTWITHODOMETRY and TURN ON SHOOTER
     // driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
 
@@ -107,10 +107,10 @@ public class RobotContainer {
     driverController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
 
     // //shooting
-    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
-    driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
-    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
-    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
+    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setLiftAngle(25.0);}));
+    driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0); shooter.setRightMainRPM(0); lift.setLiftAngle(40.0);}));
+    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0); shooter.setRightMainRPM(0); lift.setLiftAngle(25.0);}));
+    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0); shooter.setRightMainRPM(0); lift.setLiftAngle(60.0);}));
     driverController.rightBumper().onTrue(new FeederShootCommand(shooter)).onFalse(new StopAllIntakes());
     driverController.leftBumper().onTrue(new ScoreAmp(flicker)).onFalse(new StopAllIntakes());//.alongWith(new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES)));
     driverController.povRight().onTrue(new AimLiftWithOdometry());
@@ -129,10 +129,10 @@ public class RobotContainer {
     // operatorController.pov(0).onTrue(new IntakeSlurp());
 
     // //shooting
-    // operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setHoodAngle(25.0);}));
-    // operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(40.0);}));
-    // operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(25.0);}));
-    // operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setHoodAngle(60.0);}));
+    // operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setLiftAngle(25.0);}));
+    // operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(40.0);}));
+    // operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);}));
+    // operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(60.0);}));
     // operatorController.rightBumper().onTrue(new FeederShootCommand(shooter));
     // operatorController.povRight().onTrue(new AimLiftWithOdometry());
 
@@ -215,18 +215,18 @@ public class RobotContainer {
     }
 
     public void addLiftTestButtons(){
-      // SmartDashboard.putData("Hood Angle 15", new SetLiftAngle(lift, 15));
-      // SmartDashboard.putData("Hood Angle 20", new SetLiftAngle(lift, 20));
-      // SmartDashboard.putData("Hood Angle 22", new SetLiftAngle(lift, 22));
-      // SmartDashboard.putData("Hood Angle 25", new SetLiftAngle(lift, 25));
-      // SmartDashboard.putData("Hood Angle 30", new SetLiftAngle(lift, 30));
-      // SmartDashboard.putData("Hood Angle 35", new SetLiftAngle(lift, 35));
-      // SmartDashboard.putData("Hood Angle 40", new SetLiftAngle(lift, 40));
-      // SmartDashboard.putData("Hood Angle 45", new SetLiftAngle(lift, 45));
-      // SmartDashboard.putData("Hood Angle 50", new SetLiftAngle(lift, 50));
-      // SmartDashboard.putData("Hood Angle 60", new SetLiftAngle(lift, 60));
-      // SmartDashboard.putData("Hood Angle 70", new SetLiftAngle(lift, 70));
-      // SmartDashboard.putData("Zero Hood", new InstantCommand(()->lift.setHoodZero(90)));
+      // SmartDashboard.putData("Lift Angle 15", new SetLiftAngle(lift, 15));
+      // SmartDashboard.putData("Lift Angle 20", new SetLiftAngle(lift, 20));
+      // SmartDashboard.putData("Lift Angle 22", new SetLiftAngle(lift, 22));
+      // SmartDashboard.putData("Lift Angle 25", new SetLiftAngle(lift, 25));
+      // SmartDashboard.putData("Lift Angle 30", new SetLiftAngle(lift, 30));
+      // SmartDashboard.putData("Lift Angle 35", new SetLiftAngle(lift, 35));
+      // SmartDashboard.putData("Lift Angle 40", new SetLiftAngle(lift, 40));
+      // SmartDashboard.putData("Lift Angle 45", new SetLiftAngle(lift, 45));
+      // SmartDashboard.putData("Lift Angle 50", new SetLiftAngle(lift, 50));
+      // SmartDashboard.putData("Lift Angle 60", new SetLiftAngle(lift, 60));
+      // SmartDashboard.putData("Lift Angle 70", new SetLiftAngle(lift, 70));
+      // SmartDashboard.putData("Zero Lift", new InstantCommand(()->lift.setLiftZero(90)));
     }
   //#endregion
 

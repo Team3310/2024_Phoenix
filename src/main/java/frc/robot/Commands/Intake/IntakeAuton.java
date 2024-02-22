@@ -29,7 +29,7 @@ public class IntakeAuton extends Command {
         intake.setBackIntakeRPM(Constants.IN_INTAKE_RPM);
         shooter.setKickerRPM(Constants.KICKER_INTAKE_RPM);
         elevator.setPosition(2.0);
-        lift.setHoodAngle(20.0);
+        lift.setLiftAngle(20.0);
     }
 
     @Override

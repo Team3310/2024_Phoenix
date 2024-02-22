@@ -4,13 +4,11 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,17 +20,19 @@ public class Lift extends SubsystemBase{
     private static Lift instance;
 
     // Motor Controllers
-    private TalonFX hood;
-    // private CANcoder encoder;
+    private TalonFX liftMotor;
+    private CANcoder canCoder;
 
-    // private StatusSignal<Double> encoderPos;
-    // private StatusSignal<Double> motorPos;
+    private StatusSignal<Double> liftPositionRevs;
 
-    private final MotionMagicVoltage hoodControl = new MotionMagicVoltage(0);
+    private StatusSignal<Boolean> f_fusedSensorOutOfSync;
+    private StatusSignal<Boolean> sf_fusedSensorOutOfSync;
+
+    private final MotionMagicVoltage liftControlMotionMagicVoltage = new MotionMagicVoltage(0);
     
     private static final String canBusName = "rio";
 
-    private final double hoodRevsToMotorRevs = Constants.LIFT_GEAR_RATIO;
+    private int printCount = 0;
 
     public static Lift getInstance(){
         if(instance == null){
@@ -42,19 +42,15 @@ public class Lift extends SubsystemBase{
     }
 
     private Lift(){
+        CANcoderConfiguration canConfig = new CANcoderConfiguration();
+        canConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        canConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        canConfig.MagnetSensor.MagnetOffset = -0.250;
+
+        canCoder = new CANcoder(Constants.LIFT_CANCODER_ID, canBusName);
+        canCoder.getConfigurator().apply(canConfig);
+
         TalonFXConfiguration configs = new TalonFXConfiguration();
-        // CANcoderConfiguration canConfig = new CANcoderConfiguration();
-
-        // // canConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-        // // canConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        // // canConfig.MagnetSensor.MagnetOffset = -0.252;
-
-        // encoder = new CANcoder(Constants.LIFT_CANCODER_ID, canBusName);
-
-        // encoder.getConfigurator().apply(canConfig);
-
-        hood = new TalonFX(Constants.LIFT_MOTOR_ID, canBusName);
-
         configs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = Constants.LIFT_MAX_DEGREES;
         configs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = Constants.LIFT_MIN_DEGREES;
         configs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
@@ -76,57 +72,69 @@ public class Lift extends SubsystemBase{
         configs.CurrentLimits.StatorCurrentLimit = 30;
         configs.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        // configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        // configs.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
-        // configs.Feedback.RotorToSensorRatio = Constants.LIFT_GEAR_RATIO;
-        // configs.Feedback.SensorToMechanismRatio = 1.0;
+        configs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
+        configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        configs.Feedback.SensorToMechanismRatio = 1.0;
+        configs.Feedback.RotorToSensorRatio = Constants.LIFT_GEAR_RATIO;
 
+        liftMotor = new TalonFX(Constants.LIFT_MOTOR_ID, canBusName);
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for(int i = 0; i < 5; ++i) {
-            status = hood.getConfigurator().apply(configs);
+            status = liftMotor.getConfigurator().apply(configs);
             if (status.isOK()) break;
         }
         if (!status.isOK()) {
             System.out.println("Could not configure device. Error: " + status.toString());
         }
 
-        hood.setInverted(false);
+        liftMotor.setInverted(false);
 
-        // encoderPos = encoder.getAbsolutePosition().clone();
-        // motorPos = hood.getPosition().clone();
+        f_fusedSensorOutOfSync = liftMotor.getFault_FusedSensorOutOfSync();
+        sf_fusedSensorOutOfSync = liftMotor.getStickyFault_FusedSensorOutOfSync();
+
+        liftPositionRevs = liftMotor.getPosition();
     }
 
-    public void setHoodAngle(double degrees){
-        hood.setControl(hoodControl.withPosition(getHoodDegreesToRevs(degrees)).withSlot(0));
-    }
-
-    private double getHoodDegreesToRevs(double degrees){
+    public void setLiftAngle(double degrees){
         if(degrees>Constants.LIFT_MAX_DEGREES){
             degrees = Constants.LIFT_MAX_DEGREES;
         }else if(degrees<Constants.LIFT_MIN_DEGREES){
             degrees = Constants.LIFT_MIN_DEGREES;
         }
-        return (degrees/360.0) * hoodRevsToMotorRevs;
+        liftMotor.setControl(liftControlMotionMagicVoltage.withPosition(getLiftDegreesToRevs(degrees)).withSlot(0));
     }
 
-    private double getHoodDegreesFromRevs(double revs){
-        return (revs / hoodRevsToMotorRevs) * 360.0;
+    private double getLiftDegreesToRevs(double degrees){
+        return (degrees/360.0); 
     }
 
-    public double getHoodDegrees(){
-        // motorPos.refresh();
-        return getHoodDegreesFromRevs(hood.getPosition().getValue());
+    private double getLiftDegreesFromRevs(double revs){
+        return revs * 360.0;
     }
 
-    public void setHoodZero(double angle){
-        hood.setPosition(getHoodDegreesToRevs(angle));
+    public double getLiftDegrees(){
+        liftPositionRevs.refresh(); 
+        return getLiftDegreesFromRevs(liftPositionRevs.getValue());
     }
 
     @Override
     public void periodic() {
-        // encoderPos.refresh();
-        // motorPos.refresh();
-
-        SmartDashboard.putNumber("Hood Angle", getHoodDegrees());
+        if (printCount++ > 10) {
+            printCount = 0;
+            // If any faults happen, print them out. Sticky faults will always be present if live-fault occurs
+            f_fusedSensorOutOfSync.refresh();
+            sf_fusedSensorOutOfSync.refresh();
+            boolean anyFault = sf_fusedSensorOutOfSync.getValue();
+            if (anyFault) {
+              System.out.println("A fault has occurred:");
+              /* If we're live, indicate live, otherwise if we're sticky indicate sticky, otherwise do nothing */
+              if (f_fusedSensorOutOfSync.getValue()) {
+                System.out.println("Fused sensor out of sync live-faulted");
+              } else if (sf_fusedSensorOutOfSync.getValue()) {
+                System.out.println("Fused sensor out of sync sticky-faulted");
+              }
+            }      
+            SmartDashboard.putNumber("Lift Angle Deg", getLiftDegrees());
+        }
     }
 }
