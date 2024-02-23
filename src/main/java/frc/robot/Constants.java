@@ -70,14 +70,16 @@ public class Constants {
 
     //#region Climber
         public static final double CLIMBER_GEAR_RATIO = (70.0/18.0)*(60.0/11.0);
-        public static final double CLIMBER_PULLY_DIAMTER = 1.25;
+        public static final double CLIMBER_PULLEY_DIAMETER = 1.25;
 
-        public static final int CLIMBER_MASTER_ID = 60;
-        public static final int CLIMBER_SLAVE_ID = 61;
+        public static final int CLIMBER_LEFT_ID = 60;
+        public static final int CLIMBER_RIGHT_ID = 61;
 
         public static final double CLIMBER_MAX_INCHES = 22.0;
         public static final double CLIMBER_MIN_INCHES = 0.0;
-    //#endregion
+        public static final double CLIMBER_AUTO_ZERO_SPEED = -0.1;
+        public static final double CLIMBER_AUTO_ZERO_MOTOR_CURRENT = 5.0;
+   //#endregion
 
     //drivetrain
     public static final double MaxSpeed = 6; // 6 meters per second desired top speed

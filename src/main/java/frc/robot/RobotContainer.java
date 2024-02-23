@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.SetClimberInches;
+import frc.robot.Commands.Climber.SetClimberSpeed;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
@@ -168,13 +170,15 @@ public class RobotContainer {
       SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0.0));
     }
 
-    private void addElevatorTestButtons() {
+   private void addClimberTestButtons() {
       SmartDashboard.putData("set climber max", new SetClimberInches(climber, Constants.CLIMBER_MAX_INCHES));
       SmartDashboard.putData("set climber min", new SetClimberInches(climber, Constants.CLIMBER_MIN_INCHES));
+      SmartDashboard.putData("set climber speed", new SetClimberSpeed(climber, Constants.CLIMBER_AUTO_ZERO_SPEED));
+      SmartDashboard.putData("auto zero climber", new ClimberAutoZero(climber));
     }
 
-    private void addClimberTestButtons() {
-      SmartDashboard.putData("elevator amp score", new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES));
+    private void addElevatorTestButtons() {
+       SmartDashboard.putData("elevator amp score", new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES));
       SmartDashboard.putData("elevator trap score", new SetElevatorInches(elevator, Constants.TRAP_SCORE_INCHES));
       SmartDashboard.putData("elevator zero", new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
     }

@@ -3,21 +3,21 @@ package frc.robot.Commands.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Climber;
 
-public class SetClimberInches extends Command{
+public class SetClimberSpeed extends Command{
     private Climber climber;
-    private double inches;
+    private double speed;
 
 
-    public SetClimberInches(Climber climber, double inches){
+    public SetClimberSpeed(Climber climber, double speed){
         this.climber = climber;
-        this.inches = inches;
+        this.speed = speed;
 
         addRequirements(climber);
     }
 
     @Override
     public void initialize(){
-        climber.setPosition(inches);
+        climber.setSpeed(speed, speed);
     }
 
     @Override
