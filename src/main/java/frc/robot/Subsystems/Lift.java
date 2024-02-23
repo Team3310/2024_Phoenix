@@ -4,12 +4,10 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -44,6 +42,8 @@ public class Lift extends SubsystemBase{
     private static final String canBusName = "rio";
 
     private int printCount = 0;
+    private double targetLiftAngleDegrees = 0;
+    private final double LIFT_ANGLE_ERROR = 1;
 
     public static Lift getInstance(){
         if(instance == null){
@@ -67,11 +67,13 @@ public class Lift extends SubsystemBase{
         configs.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;
         configs.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
+        configs.Slot0.kV = 1.28;
+        configs.Slot0.kA = 0.01;
         configs.Slot0.kP = 150.0;
         configs.Slot0.kI = 0.1;
         configs.Slot0.kD = 0.2;
         configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-        configs.Slot0.kG = 0.4;
+        configs.Slot0.kG = 0.35;
 
         configs.Slot1.kP = 1200.0;
         configs.Slot1.kI = 1000.0;
@@ -79,8 +81,8 @@ public class Lift extends SubsystemBase{
         configs.Slot1.GravityType = GravityTypeValue.Arm_Cosine;
         configs.Slot1.kG = 21.0;
         
-        configs.MotionMagic.MotionMagicCruiseVelocity = 0.2;
-        configs.MotionMagic.MotionMagicAcceleration = 0.8;
+        configs.MotionMagic.MotionMagicCruiseVelocity = 0.25;
+        configs.MotionMagic.MotionMagicAcceleration = 0.80;
         configs.MotionMagic.MotionMagicJerk = 0.0;
 
         configs.CurrentLimits.StatorCurrentLimit = 70;
@@ -103,6 +105,11 @@ public class Lift extends SubsystemBase{
 
         liftMotor.setInverted(false);
 
+        liftControlVoltage.EnableFOC = true;
+       liftControlVoltage.Slot = 0;
+
+        liftControlTorqueFOC.Slot = 1;
+
         f_fusedSensorOutOfSync = liftMotor.getFault_FusedSensorOutOfSync();
         sf_fusedSensorOutOfSync = liftMotor.getStickyFault_FusedSensorOutOfSync();
 
@@ -118,13 +125,15 @@ public class Lift extends SubsystemBase{
             degrees = Constants.LIFT_MIN_DEGREES;
         }
 
+        targetLiftAngleDegrees = degrees;
+
         switch (liftClosedLoopOutput) {
             case Voltage:
-                liftMotor.setControl(liftControlVoltage.withPosition(getLiftDegreesToRevs(degrees)).withSlot(0));
+                liftMotor.setControl(liftControlVoltage.withPosition(getLiftDegreesToRevs(degrees)));
                 break;
 
             case TorqueCurrentFOC:
-                liftMotor.setControl(liftControlTorqueFOC.withPosition(getLiftDegreesToRevs(degrees)).withSlot(1));
+                liftMotor.setControl(liftControlTorqueFOC.withPosition(getLiftDegreesToRevs(degrees)));
                 break;
         }
     }
@@ -140,6 +149,10 @@ public class Lift extends SubsystemBase{
     public double getLiftDegrees(){
         liftPositionRevs.refresh(); 
         return getLiftDegreesFromRevs(liftPositionRevs.getValue());
+    }
+
+    public boolean isFinished() {
+        return (Math.abs(targetLiftAngleDegrees - getLiftDegrees()) < LIFT_ANGLE_ERROR );
     }
 
     @Override
