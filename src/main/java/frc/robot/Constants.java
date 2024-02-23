@@ -1,6 +1,9 @@
 package frc.robot;
 
 public class Constants {
+
+    public static final String rioCANbusName = "rio";
+
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
 
@@ -9,14 +12,15 @@ public class Constants {
         public static final int BOTTOM_INTAKE_ID = 12;
 
         public static final double UNDER_INTAKE_RPM = 3000.0;
-        public static final double IN_INTAKE_RPM = 2000.0;
-        public static final double UP_INTAKE_RPM = 2000.0;
+        public static final double IN_INTAKE_RPM = 1000.0;
+        public static final double UP_INTAKE_RPM = 1000.0;
         public static final double SPIT_RPM = 1500.0;
         public static final double SLURP_INTAKE_RPM = 1000.0;
     //#endregion
 
     //#region Shooter
         public static final double SHOOTER_GEAR_RATIO = 1.0;
+        public static final double KICKER_GEAR_RATIO = 2.5;
 
         public static final int SHOOTER_RIGHT_MASTER_ID = 20;
         public static final int SHOOTER_RIGHT_SLAVE_ID = 1000;
@@ -26,7 +30,7 @@ public class Constants {
 
         public static final int SHOOTER_KICKER_ID = 22;
 
-        public static final double KICKER_INTAKE_RPM = 1500.0;
+        public static final double KICKER_INTAKE_RPM = 1000.0;
         public static final double KICKER_SCORE_RPM = 1000.0;
 
         public static final double LEFT_SCORE_RPM = 5000.0;
@@ -46,12 +50,15 @@ public class Constants {
 
     //#region Elevator
         public static final double ELEVATOR_GEAR_RATIO = (54.0/34.0)*(54.0/11.0);
-        public static final double ELEVATOR_PULLY_DIAMTER = 1.25;
+        public static final double ELEVATOR_PULLEY_DIAMETER = 1.25;
 
         public static final int ELEVATOR_MOTOR_ID = 40;
 
         public static final double ELEVATOR_MAX_INCHES = 20.625;
         public static final double ELEVATOR_MIN_INCHES = 0.0;
+
+        public static final double ELEVATOR_AUTO_ZERO_SPEED = -0.1;
+        public static final double ELEVATOR_AUTO_ZERO_MOTOR_CURRENT = 1.0;
 
         public static final double AMP_SCORE_INCHES = 12.0;
         public static final double TRAP_SCORE_INCHES = ELEVATOR_MAX_INCHES;
@@ -65,7 +72,7 @@ public class Constants {
 
         public static final double AMP_SCORE_RPM = -1500.0;
         public static final double AMP_LOAD_RPM = 200.0;
-        public static final double AMP_INTAKE_RPM = 2000.0;
+        public static final double AMP_INTAKE_RPM = 800.0;
     //#endregion
 
     //#region Climber

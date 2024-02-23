@@ -10,30 +10,31 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Climber extends SubsystemBase{
+public class Climber extends SubsystemBase {
     private static Climber instance;
 
-    private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID);
-    private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID);
+    private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID, Constants.rioCANbusName);
+    private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID, Constants.rioCANbusName);
 
     private MotionMagicDutyCycle control = new MotionMagicDutyCycle(0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);
 
-    // private SimpleDifferentialMechanism mechanism = new SimpleDifferentialMechanism(climberMaster, climberSlave, true);
+    // private SimpleDifferentialMechanism mechanism = new
+    // SimpleDifferentialMechanism(climberMaster, climberSlave, true);
 
     private final double kF = 0.0;
     private final double kP = 2.0;
-    private final double kI = 0.0; 
-    private final double kD = 0.0; 
+    private final double kI = 0.0;
+    private final double kD = 0.0;
 
-    public static Climber getInstance(){
-        if(instance == null){
+    public static Climber getInstance() {
+        if (instance == null) {
             instance = new Climber();
         }
         return instance;
     }
 
-    private Climber(){
+    private Climber() {
         TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.Slot0.kP = kP;
@@ -49,13 +50,15 @@ public class Climber extends SubsystemBase{
         config.CurrentLimits.StatorCurrentLimit = 40.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(9.0); //inches per second
+        config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(9.0); // inches per second
         config.MotionMagic.MotionMagicAcceleration = getInchesToRotations(9.0);
 
         climberRight.getConfigurator().apply(config);
         climberRight.setInverted(false);
         climberLeft.getConfigurator().apply(config);
         climberLeft.setInverted(true);
+
+        control.EnableFOC = true;
 
         // mechanism.setStaticBrake();
         // mechanism.applyConfigs();
@@ -68,30 +71,31 @@ public class Climber extends SubsystemBase{
         climberLeft.setControl(speedControl.withOutput(leftSpeed));
     }
 
-    public void setPosition(double inches){
+    public void setPosition(double inches) {
         // mechanism.setControl()
         climberRight.setControl(control.withPosition(getInchesToRotations(inches)));
         climberLeft.setControl(control.withPosition(getInchesToRotations(inches)));
         // climberSlave.setControl(control.withPosition(getInchesToRotations(inches)));
     }
 
-    public void setClimberZero(double inches){
+    public void setClimberZero(double inches) {
         climberRight.setPosition(getInchesToRotations(inches));
         climberLeft.setPosition(getInchesToRotations(inches));
     }
 
-    private double getInchesToRotations(double inches){
-        if(inches>Constants.CLIMBER_MAX_INCHES){
+    private double getInchesToRotations(double inches) {
+        if (inches > Constants.CLIMBER_MAX_INCHES) {
             inches = Constants.CLIMBER_MAX_INCHES;
-        }else if(inches<Constants.CLIMBER_MIN_INCHES){
+        } else if (inches < Constants.CLIMBER_MIN_INCHES) {
             inches = Constants.CLIMBER_MIN_INCHES;
         }
-        SmartDashboard.putNumber("Commanded Rotations", inches*Constants.CLIMBER_GEAR_RATIO/(Math.PI * Constants.CLIMBER_PULLEY_DIAMETER));
-        return inches*Constants.CLIMBER_GEAR_RATIO/(Math.PI * Constants.CLIMBER_PULLEY_DIAMETER);
+        SmartDashboard.putNumber("Commanded Rotations",
+                inches * Constants.CLIMBER_GEAR_RATIO / (Math.PI * Constants.CLIMBER_PULLEY_DIAMETER));
+        return inches * Constants.CLIMBER_GEAR_RATIO / (Math.PI * Constants.CLIMBER_PULLEY_DIAMETER);
     }
 
-    private double getRotationsToInches(double rotations){
-        return rotations/Constants.CLIMBER_GEAR_RATIO*(Math.PI * Constants.CLIMBER_PULLEY_DIAMETER);
+    private double getRotationsToInches(double rotations) {
+        return rotations / Constants.CLIMBER_GEAR_RATIO * (Math.PI * Constants.CLIMBER_PULLEY_DIAMETER);
     }
 
     public double getRightPositionInches() {
@@ -103,19 +107,16 @@ public class Climber extends SubsystemBase{
     }
 
     public double getRightCurrent() {
-        return climberRight.getStatorCurrent().getValue();
+        return climberRight.getTorqueCurrent().getValueAsDouble();
     }
 
     public double getLeftCurrent() {
-        return climberLeft.getStatorCurrent().getValue();
+        return climberLeft.getTorqueCurrent().getValueAsDouble();
     }
 
     @Override
-    public void periodic(){
-        SmartDashboard.putNumber("Climber Left Inches", getRotationsToInches(climberRight.getPosition().getValueAsDouble()));
-        SmartDashboard.putNumber("Climber Right Inches", getRotationsToInches(climberLeft.getPosition().getValueAsDouble()));
-
-        SmartDashboard.putNumber("Climber Left rps", climberRight.getVelocity().getValueAsDouble());
-        SmartDashboard.putNumber("Climber Right rps", climberLeft.getVelocity().getValueAsDouble());
+    public void periodic() {
+        SmartDashboard.putNumber("Climber Left Inches", getLeftPositionInches());
+        SmartDashboard.putNumber("Climber Right Inches", getRightPositionInches());
     }
 }

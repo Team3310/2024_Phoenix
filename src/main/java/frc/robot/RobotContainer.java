@@ -14,6 +14,7 @@ import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Climber.SetClimberSpeed;
 import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Elevator.ElevatorAutoZero;
 import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
 import frc.robot.Commands.Flicker.ScoreAmp;
@@ -158,6 +159,7 @@ public class RobotContainer {
 
   //#region smartdashboard buttons
     public void addTestButtons(){
+      addIntakeTestButtons();
       addShooterTestButtons();
       addLiftTestButtons();
       addClimberTestButtons();
@@ -165,8 +167,24 @@ public class RobotContainer {
       addFlickerTestButtons();
     }
 
+    private void addIntakeTestButtons() {
+      SmartDashboard.putData("Intake Top +rpm", new InstantCommand(()->intake.setTopIntakeRPM(Constants.IN_INTAKE_RPM)));
+      SmartDashboard.putData("Intake Top -rpm", new InstantCommand(()->intake.setTopIntakeRPM(-Constants.IN_INTAKE_RPM)));
+      SmartDashboard.putData("Intake Top 0 rpm", new InstantCommand(()->intake.setTopIntakeRPM(0)));
+      SmartDashboard.putData("Intake Bottom +rpm", new InstantCommand(()->intake.setBottomIntakeRPM(Constants.IN_INTAKE_RPM)));
+      SmartDashboard.putData("Intake Bottom -rpm", new InstantCommand(()->intake.setBottomIntakeRPM(-Constants.IN_INTAKE_RPM)));
+      SmartDashboard.putData("Intake Bottom 0 rpm", new InstantCommand(()->intake.setBottomIntakeRPM(0)));
+      SmartDashboard.putData("Intake Front +rpm", new InstantCommand(()->intake.setFrontIntakeRPM(Constants.IN_INTAKE_RPM)));
+      SmartDashboard.putData("Intake Front -rpm", new InstantCommand(()->intake.setFrontIntakeRPM(-Constants.IN_INTAKE_RPM)));
+      SmartDashboard.putData("Intake Front 0 rpm", new InstantCommand(()->intake.setFrontIntakeRPM(0)));
+      SmartDashboard.putData("set amp +rpm", new SetFlickerRPM(flicker, 1000));
+      SmartDashboard.putData("set amp -rpm", new SetFlickerRPM(flicker,-1000));
+      SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0));
+    }
+
     private void addFlickerTestButtons() {
-      SmartDashboard.putData("set amp rpm", new SetFlickerRPM(flicker, Constants.AMP_SCORE_RPM));
+      SmartDashboard.putData("set amp +rpm", new SetFlickerRPM(flicker, Constants.AMP_SCORE_RPM));
+      SmartDashboard.putData("set amp -rpm", new SetFlickerRPM(flicker, -Constants.AMP_SCORE_RPM));
       SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0.0));
     }
 
@@ -178,9 +196,10 @@ public class RobotContainer {
     }
 
     private void addElevatorTestButtons() {
-       SmartDashboard.putData("elevator amp score", new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES));
+      SmartDashboard.putData("elevator amp score", new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES));
       SmartDashboard.putData("elevator trap score", new SetElevatorInches(elevator, Constants.TRAP_SCORE_INCHES));
       SmartDashboard.putData("elevator zero", new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
+      SmartDashboard.putData("auto zero elevator", new ElevatorAutoZero(elevator));
     }
 
     public void addShooterTestButtons(){

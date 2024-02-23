@@ -5,22 +5,22 @@ import frc.robot.Constants;
 import frc.robot.Subsystems.Flicker;
 import frc.robot.Subsystems.Shooter;
 
-public class Outtake extends Command{
+public class Outtake extends Command {
     private Shooter shooter;
     private Flicker flicker;
 
-    public Outtake(Shooter shooter, Flicker flicker){
+    public Outtake(Shooter shooter, Flicker flicker) {
         this.shooter = shooter;
         this.flicker = flicker;
 
         addRequirements(shooter, flicker);
-    } 
+    }
 
     @Override
     public void initialize() {
-        if(shooter.isNoteLoaded()){
+        if (shooter.isNoteLoaded()) {
             shooter.setKickerRPM(Constants.KICKER_SCORE_RPM);
-        }else if(flicker.isNoteLoaded()){
+        } else if (flicker.isNoteLoaded()) {
             flicker.setRPM(Constants.AMP_SCORE_RPM);
         }
     }
@@ -30,7 +30,7 @@ public class Outtake extends Command{
     }
 
     @Override
-    public boolean isFinished(){
+    public boolean isFinished() {
         return true;
     }
 
