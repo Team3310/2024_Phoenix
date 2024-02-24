@@ -13,10 +13,14 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,6 +42,7 @@ import frc.robot.util.Camera.Targeting.Target;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Control.PidConstants;
 import frc.robot.util.Control.PidController;
+import frc.robot.util.Control.TimeDelayedBoolean;
 import frc.robot.util.PathFollowing.FollowPathCommand;
 
 /**
@@ -79,27 +84,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                      // driving in open loop
 
-    public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
-            SwerveModuleConstants... modules) {
-        super(driveTrainConstants, OdometryUpdateFrequency, modules);
+                                                                        public boolean isSnapping;
+    private double mLimelightVisionAlignGoal;
+    private double mGoalTrackVisionAlignGoal;
+    private double mVisionAlignAdjustment;
 
-        aimAtTargetController.setContinuous(true);
-        aimAtTargetController.setInputRange(-Math.PI, Math.PI);
-        aimAtTargetController.setOutputRange(-1.0, 1.0);
-        aimAtTargetController.setSetpoint(0.0);
-
-        joystickController.setContinuous(true);
-        joystickController.setInputRange(-Math.PI, Math.PI);
-        joystickController.setOutputRange(-1.0, 1.0);
-        joystickController.setSetpoint(0.0);
-
-        Targeting.setTarget(Target.REDSPEAKER);
-
-        configurePathPlanner();
-        if (Utils.isSimulation()) {
-            startSimThread();
-        }
-    }
+    public ProfiledPIDController snapPIDController;
+    public PIDController visionPIDController;
 
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
@@ -115,6 +106,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         joystickController.setSetpoint(0.0);
 
         Targeting.setTarget(Target.REDSPEAKER);
+
+        snapPIDController = new ProfiledPIDController(Constants.SnapConstants.kP, Constants.SnapConstants.kI,
+                Constants.SnapConstants.kD, Constants.SnapConstants.kThetaControllerConstraints);
+        snapPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
+        visionPIDController = new PIDController(Constants.VisionAlignConstants.kP, Constants.VisionAlignConstants.kI,
+                Constants.VisionAlignConstants.kD);
+        visionPIDController.enableContinuousInput(-Math.PI, Math.PI);
+        visionPIDController.setTolerance(0.0);
 
         double driveBaseRadius = 0;
         for (var moduleLocation : m_moduleLocations) {
@@ -355,6 +355,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void joystickDrive() {
+        double rotation = getDriveRotation();
+        if (isSnapping) {
+            if (Math.abs(getDriveRotation()) == 0.0) {
+                maybeStopSnap(false);
+                rotation = calculateSnapValue();
+            } else {
+                maybeStopSnap(true);
+            }
+        }
+
         if (getDriveRotation() == 0) {
             double offset = getBotAz_FieldRelative() - joystickDrive_holdAngle;
             Double request = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
@@ -643,6 +653,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void update(double time, double dt) {
+        chooseVisionAlignGoal();
         switch (mControlMode) {
             case AIMATTARGET:
                 aimAtTarget();
@@ -742,5 +753,64 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public DriveMode getDriveMode() {
         return mControlMode;
+    }
+
+    // 1678 Snap/Camera Code
+    public double getYawAngleRadians() {
+        return 0; // TODO
+    }
+
+    public void visionAlignDrive(Translation2d translation2d, boolean fieldRelative) {
+        // drive(translation2d, mVisionAlignAdjustment, fieldRelative, false);
+    }
+
+    public void angleAlignDrive(Translation2d translation2d, double targetHeading, boolean fieldRelative) {
+        snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(targetHeading), 0.0));
+        double angleAdjustment = snapPIDController.calculate(getYawAngleRadians());
+        // drive(translation2d, angleAdjustment, fieldRelative, false);
+    }
+
+    public void acceptLatestGoalTrackVisionAlignGoal(double vision_goal) {
+        mGoalTrackVisionAlignGoal = vision_goal; 
+    }
+
+    public void chooseVisionAlignGoal() {
+        double currentAngle = getYawAngleRadians();
+        if (limelight.hasTarget()) {
+            double targetOffset = 0; // TODO    Math.toRadians(limelight.getOffset()[0]);
+            mLimelightVisionAlignGoal = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
+            visionPIDController.setSetpoint(mLimelightVisionAlignGoal);
+        } else {
+            visionPIDController.setSetpoint(mGoalTrackVisionAlignGoal);
+        }
+
+        mVisionAlignAdjustment = visionPIDController.calculate(currentAngle);
+    }
+
+    public double calculateSnapValue() {
+        return snapPIDController.calculate(getYawAngleRadians());
+    }
+
+    public void startSnap(double snapAngle) {
+        snapPIDController.reset(getYawAngleRadians());
+        snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(snapAngle), 0.0));
+        isSnapping = true;
+    }
+    
+    TimeDelayedBoolean delayedBoolean = new TimeDelayedBoolean();
+
+    private boolean snapComplete() {
+        double error = snapPIDController.getGoal().position - getYawAngleRadians();
+        return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapConstants.kEpsilon), Constants.SnapConstants.kTimeout);
+    }
+
+    public void maybeStopSnap(boolean force){
+        if (!isSnapping) {
+            return;
+        } 
+        if (force || snapComplete()) {
+            isSnapping = false;
+            snapPIDController.reset(getYawAngleRadians());
+        }
     }
 }

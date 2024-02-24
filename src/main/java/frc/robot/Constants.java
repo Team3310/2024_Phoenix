@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 public class Constants {
 
     public static final String rioCANbusName = "rio";
@@ -94,4 +96,37 @@ public class Constants {
     
     //camera
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters
+
+    public static final class SnapConstants {
+        public static final double kP = 5.0;
+        public static final double kI = 0;
+        public static final double kD = 0.0;
+        public static final double kTimeout = 0.25;
+        public static final double kEpsilon = 1.0;
+
+        // Constraints for the profiled angle controller
+        public static final double kMaxAngularSpeedRadiansPerSecond = 2.0 * Math.PI;
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.pow(kMaxAngularSpeedRadiansPerSecond,
+                2);
+
+        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    }
+
+    public static final class VisionAlignConstants {
+        public static final double kP = 6.37;
+        public static final double kI = 0.0;
+        public static final double kD = 0.10;
+        public static final double kTimeout = 0.25;
+        public static final double kEpsilon = 5.0;
+
+        // Constraints for the profiled angle controller
+        public static final double kMaxAngularSpeedRadiansPerSecond = 2.0 * Math.PI;
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = 10.0 * Math.PI;
+
+        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+                kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    }
+
+
 }
