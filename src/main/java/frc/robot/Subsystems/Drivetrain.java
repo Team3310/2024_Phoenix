@@ -65,8 +65,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // private PidController aimAtSpeaker = new PidController(new PidConstants(1,
     // 0.2, 0));
 
-    private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.0, 0.0));
-    private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
+    private PidController aimAtTargetController = new PidController(new PidConstants(5.0, 0.0, 0.0));
+    private PidController joystickController = new PidController(new PidConstants(5.0, 0, 0.0));
 
     // private ProfiledPIDController aimAtTargetController = new
     // ProfiledPIDController(1.0, 0.0, 0.0, new Constraints(Math.PI/2.0, Math.PI));
@@ -221,7 +221,29 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             setJoystickDrive_holdAngle(getBotAz_FieldRelative());
             maybeStopSnap(true);
         } else if (mode == DriveMode.AIMATTARGET){
-            startSnap(odometryTargeting.getAz());
+            // Get JSON Dump from Limelight-front
+            LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
+
+            // Go through limelight JSON dump, and look for Target ID
+            // If ID found, save TX value to offset for targeting.
+            boolean canSeeTarget = false;
+            double offset = 0;
+            for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
+                if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
+                    offset = -(Math.toRadians(aprilTagResults.tx));
+                    canSeeTarget = true;
+                }
+            }
+            if (canSeeTarget) {
+                if (Math.abs(Math.toDegrees(offset)) > 5.0) {
+                    startSnap(Math.toDegrees(getBotAz_FieldRelative() -  offset));
+                    aimAtSpeakerState = "LIME SNAP MODE";
+                }
+            }
+            else {
+                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI));
+                aimAtSpeakerState = "ODO SNAP MODE";
+            }
         }
 
         mControlMode = mode;
@@ -376,14 +398,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 maybeStopSnap(true);
             }
         } else {
-            if (rotation == 0) {
-                double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
-                rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
-                SmartDashboard.putNumber("PID Error:", offset);
-                SmartDashboard.putNumber("PID Output:", rotation);
-            } else {
-                joystickDrive_holdAngle = getBotAz_FieldRelative();
-            } 
+            // if (rotation == 0) {
+            //     double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
+            //     rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+            //     SmartDashboard.putNumber("PID Error:", offset);
+            //     SmartDashboard.putNumber("PID Output:", rotation);
+            // } else {
+            //     joystickDrive_holdAngle = getBotAz_FieldRelative();
+            // } 
         }
         joystickDrive_OpenLoop(rotation);
     }
@@ -458,6 +480,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     justChanged = false;
                 }
             }else if((!canSeeTarget) && (lockedOn)){
+                aimAtSpeakerState = "LIME LOST MODE";
                 offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
                 double rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
                 SmartDashboard.putNumber("PID Error:", offset);
@@ -473,7 +496,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
                 // aprilTagTack(), but offset is grabbed earlier due to this drive methoed
                 // needing to determine if target is in view.
-                Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+                Double request = aimAtTargetController.calculate(offset, 0.005) * Constants.MaxAngularRate;
 
                 SmartDashboard.putNumber("PID Output:", request / Constants.MaxAngularRate);
                 SmartDashboard.putNumber("PID Error:", offset);

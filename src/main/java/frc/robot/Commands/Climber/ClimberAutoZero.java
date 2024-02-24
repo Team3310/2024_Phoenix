@@ -48,7 +48,7 @@ public class ClimberAutoZero extends Command {
 			double rightPositionChange = lastClimberRightPosition - currentClimberRightPosition;
 			lastClimberRightPosition = currentClimberRightPosition;
 			testRight = encoderCountRight > 2 && Math.abs(rightPositionChange) < MIN_CLIMBER_POSITION_CHANGE
-					&& climber.getRightCurrent() > Constants.CLIMBER_AUTO_ZERO_MOTOR_CURRENT;
+					&& Math.abs(climber.getRightCurrent()) > Constants.CLIMBER_AUTO_ZERO_MOTOR_CURRENT;
 			System.out.println("encoderCountRight = " + encoderCountRight + ", testRight = " + testRight
 					+ ", right climber change = " + rightPositionChange + ", right current = "
 					+ climber.getRightCurrent());
@@ -71,7 +71,7 @@ public class ClimberAutoZero extends Command {
 			double leftPositionChange = lastClimberLeftPosition - currentClimberLeftPosition;
 			lastClimberLeftPosition = currentClimberLeftPosition;
 			testLeft = encoderCountLeft > 2 && Math.abs(leftPositionChange) < MIN_CLIMBER_POSITION_CHANGE
-					&& climber.getLeftCurrent() > Constants.CLIMBER_AUTO_ZERO_MOTOR_CURRENT;
+					&& Math.abs(climber.getLeftCurrent()) > Constants.CLIMBER_AUTO_ZERO_MOTOR_CURRENT;
 			System.out.println("encoderCountLeft = " + encoderCountLeft + ", testLeft = " + testLeft
 					+ ", left climber change = " + leftPositionChange + ", left current = " + climber.getLeftCurrent());
 
