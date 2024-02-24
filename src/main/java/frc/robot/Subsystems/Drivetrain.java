@@ -368,23 +368,23 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public void joystickDrive() {
         double rotation = getDriveRotation();
-        if (isSnapping) {
-            if (Math.abs(getDriveRotation()) == 0.0) {
-                maybeStopSnap(false);
-                rotation = -calculateSnapValue();
-            } else {
-                maybeStopSnap(true);
-            }
-        } else {
-            if (rotation == 0) {
-                double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
-                rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
-                SmartDashboard.putNumber("PID Error:", offset);
-                SmartDashboard.putNumber("PID Output:", rotation);
-            } else {
-                joystickDrive_holdAngle = getBotAz_FieldRelative();
-            } 
-        }
+        // if (isSnapping) {
+        //     if (Math.abs(getDriveRotation()) == 0.0) {
+        //         maybeStopSnap(false);
+        //         rotation = -calculateSnapValue();
+        //     } else {
+        //         maybeStopSnap(true);
+        //     }
+        // } else {
+        //     if (rotation == 0) {
+        //         double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
+        //         rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+        //         SmartDashboard.putNumber("PID Error:", offset);
+        //         SmartDashboard.putNumber("PID Output:", rotation);
+        //     } else {
+        //         joystickDrive_holdAngle = getBotAz_FieldRelative();
+        //     } 
+        // }
         joystickDrive_OpenLoop(rotation);
     }
 

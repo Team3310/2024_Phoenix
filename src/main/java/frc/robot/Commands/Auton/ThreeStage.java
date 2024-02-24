@@ -1,10 +1,12 @@
 package frc.robot.Commands.Auton;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Commands.Intake.FullIntakeGo;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
@@ -21,37 +23,42 @@ public class ThreeStage extends AutonCommandBase{
 
         this.addCommands(
             new ParallelDeadlineGroup(
-                new WaitCommand(0.25),
+                new WaitCommand(0.5),
                 new ShooterOn(robotContainer.shooter),
                 new SetLiftAngle(Lift.getInstance(), Constants.FENDER_SHOT_ANGLE)
             ),
             new ParallelDeadlineGroup(
-                new WaitCommand(0.25), 
+                new WaitCommand(0.5), 
                 new FeederShootCommandAuton(robotContainer.shooter)
             ),
             new ParallelDeadlineGroup(
                 follow(getPath("2Stage")), 
                 new IntakeAuton()
             ),
+            follow("3StagePreShoot"),
             new ParallelDeadlineGroup(
-                follow("3Stage"),
-                new SequentialCommandGroup( 
-                    new ParallelDeadlineGroup(
+                follow("3StageShoot"),
+                new SequentialCommandGroup(
+                    new ParallelRaceGroup(
                         new AimLiftWithOdometryAuton(),
                         new SequentialCommandGroup(
-                            new WaitCommand(0.1),
-                            new FeederShootCommandAuton(robotContainer.shooter)
+                            new WaitCommand(0.5),
+                            new FeederShootCommandAuton(robotContainer.shooter).until(()->!robotContainer.shooter.isNoteLoaded())
                         )
                     ),
                     new IntakeAuton(),
-                    new ParallelDeadlineGroup(
+                    new ParallelRaceGroup(
                         new AimLiftWithOdometryAuton(),
                         new SequentialCommandGroup(
-                            new WaitCommand(0.1),
-                            new FeederShootCommandAuton(robotContainer.shooter)
+                            new WaitCommand(0.5),
+                            new FeederShootCommandAuton(robotContainer.shooter).until(()->!robotContainer.shooter.isNoteLoaded())
                         )
                     )
                 )
+            ),
+            new ParallelDeadlineGroup(
+                new WaitCommand(0.25),
+                new FeederShootCommandAuton(robotContainer.shooter).until(()->!robotContainer.shooter.isNoteLoaded())
             )
         );
     }

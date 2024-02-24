@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3Stage"
+            "pathName": "3StagePreShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3StageShoot"
           }
         },
         {
