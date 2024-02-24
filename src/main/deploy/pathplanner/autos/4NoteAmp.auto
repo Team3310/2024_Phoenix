@@ -14,19 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2Amp"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3Amp"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4Amp"
+            "pathName": null
           }
         }
       ]

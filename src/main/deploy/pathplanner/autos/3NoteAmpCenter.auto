@@ -14,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2Center"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3AmpCenter"
+            "pathName": null
           }
         }
       ]

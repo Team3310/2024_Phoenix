@@ -14,19 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2Outside"
+            "pathName": "2Stage"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3Outside"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4Outside"
+            "pathName": null
           }
         }
       ]
