@@ -175,7 +175,5 @@ public class Lift extends SubsystemBase {
             }
             SmartDashboard.putNumber("Lift Angle Deg", getLiftDegrees());
         }
-
-        // setLiftAngle(SmartDashboard.getNumber("set hood degrees", 20.0));
     }
 }

@@ -23,12 +23,12 @@ public class AimLiftWithOdometry extends Command{
 
     @Override
     public void execute(){ 
-        if(drive.hasTarget()){
+        if (drive.hasTarget()) {
             drive.getLimelightTargeting().update();
-            lift.setLiftAngle(Math.toDegrees(drive.getLimelightTargeting().getEl()));
+            lift.setLiftAngle(drive.getLimelightTargeting().getEl());
         }else{
-        drive.getOdoTargeting().update();  
-        lift.setLiftAngle(Math.toDegrees(drive.getOdoTargeting().getEl()));
+            drive.getOdoTargeting().update();  
+            lift.setLiftAngle(drive.getOdoTargeting().getEl());
         }
     }
 

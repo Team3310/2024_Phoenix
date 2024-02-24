@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     public static final String rioCANbusName = "rio";
 
@@ -42,6 +42,8 @@ public class Constants {
 
         public static final double LEFT_SCORE_RPM = 5000.0;
         public static final double RIGHT_SCORE_RPM = 3000.0;
+
+        public static final double SHOOT_TIME = 0.25;
     //#endregion    
 
     //#region Lift
@@ -114,10 +116,11 @@ public class Constants {
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters
 
     public static final class SnapConstants {
-        public static final double kP = 5.0;
-        public static final double kI = 0;
+        public static final double kP = 1.0;
+        public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.25;
+
         public static final double kEpsilon = 1.0;
 
         // Constraints for the profiled angle controller

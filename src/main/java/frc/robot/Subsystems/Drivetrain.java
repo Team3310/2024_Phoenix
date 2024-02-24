@@ -88,7 +88,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                      // driving in open loop
 
-                                                                        public boolean isSnapping;
+    public boolean isSnapping;
     private double mLimelightVisionAlignGoal;
     private double mGoalTrackVisionAlignGoal;
     private double mVisionAlignAdjustment;
@@ -330,27 +330,24 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-    /*
-     * public void joystickDrive(){
-     * 
-     * ChassisSpeeds speeds =
-     * ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
-     * getDriveX() * Constants.MaxSpeed,
-     * getDriveY() * Constants.MaxSpeed,
-     * getDriveRotation() * Constants.MaxAngularRate,
-     * m_odometry.getEstimatedPosition()
-     * .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()
-     * ),0.2);
-     * 
-     * var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
-     * 
-     * for(int i=0; i<this.Modules.length; i++){
-     * this.Modules[i].apply(states[i],
-     * SwerveModule.DriveRequestType.OpenLoopVoltage,
-     * SwerveModule.SteerRequestType.MotionMagic);
-     * }
-     * }
-     */
+    public void joystickDrive_OpenLoop(double rotation) {
+
+        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+                getDriveX() * Constants.MaxSpeed,
+                getDriveY() * Constants.MaxSpeed,
+                rotation * Constants.MaxAngularRate,
+                m_odometry.getEstimatedPosition()
+                        .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
+                0.2);
+
+        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+
+        for (int i = 0; i < this.Modules.length; i++) {
+            this.Modules[i].apply(states[i],
+                    SwerveModule.DriveRequestType.OpenLoopVoltage,
+                    SwerveModule.SteerRequestType.MotionMagic);
+        }
+    }
 
     // joystickDrive_holdAngle:
     // Uses PID to hold robot at its current heading, while allowing translation
@@ -368,33 +365,36 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         if (isSnapping) {
             if (Math.abs(getDriveRotation()) == 0.0) {
                 maybeStopSnap(false);
-                rotation = calculateSnapValue();
+                rotation = -calculateSnapValue();
             } else {
                 maybeStopSnap(true);
             }
         }
 
-        if (getDriveRotation() == 0) {
-            double offset = getBotAz_FieldRelative() - joystickDrive_holdAngle;
-            Double request = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
-            SmartDashboard.putNumber("PID Error:", offset);
-            SmartDashboard.putNumber("PID Output:", request);
-            ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
-                    getDriveX() * Constants.MaxSpeed,
-                    getDriveY() * Constants.MaxSpeed,
-                    request,
-                    m_odometry.getEstimatedPosition()
-                            .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-                    0.2);
-            var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
-            for (int i = 0; i < this.Modules.length; i++) {
-                this.Modules[i].apply(states[i],
-                        SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
-            }
-        } else {
-            joystickDrive_holdAngle = getBotAz_FieldRelative();
-            joystickDrive();
-        }
+        // if (rotation == 0) {
+        // double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
+        // Double request = joystickController.calculate(offset, 0.02) *
+        // Constants.MaxAngularRate;
+        // SmartDashboard.putNumber("PID Error:", offset);
+        // SmartDashboard.putNumber("PID Output:", request);
+        // ChassisSpeeds speeds =
+        // ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+        // getDriveX() * Constants.MaxSpeed,
+        // getDriveY() * Constants.MaxSpeed,
+        // request,
+        // m_odometry.getEstimatedPosition()
+        // .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
+        // 0.2);
+        // var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+        // for (int i = 0; i < this.Modules.length; i++) {
+        // this.Modules[i].apply(states[i],
+        // SwerveModule.DriveRequestType.OpenLoopVoltage,
+        // SwerveModule.SteerRequestType.MotionMagic);
+        // }
+        // } else {
+        // joystickDrive_holdAngle = getBotAz_FieldRelative();
+        joystickDrive_OpenLoop(rotation);
+
     }
 
     // joystickDrive_fixedAngle:
@@ -608,10 +608,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         AUTON,
         AIMATTARGET, AIMATTARGET_AUTON,
         AIMATTRAP,
-        XPOS,
-        XNEG,
-        YPOS,
-        YNEG,
         ;
     }
 
@@ -679,6 +675,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 aimAtTargetController.setD(SmartDashboard.getNumber("D", 1.0));
             }
         }
+
+        SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
+    }
+
+    public ChassisSpeeds getFieldRelativeVelocites() {
+        ChassisSpeeds robotChassisSpeeds = m_kinematics.toChassisSpeeds(m_cachedState.ModuleStates);
+        Double velocity = Math.hypot(robotChassisSpeeds.vxMetersPerSecond, robotChassisSpeeds.vyMetersPerSecond);
+        Double angle = getBotAz_FieldRelative();
+        ChassisSpeeds fieldRelativeVelocites = new ChassisSpeeds(velocity * Math.cos(angle), velocity * Math.sin(angle),
+                robotChassisSpeeds.omegaRadiansPerSecond);
+        return fieldRelativeVelocites;
     }
 
     @Override
@@ -693,18 +700,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 break;
             case JOYSTICK:
                 joystickDrive();
-                break;
-            case XPOS:
-                joystickDrive_fixedAngle(Math.PI / 2);
-                break;
-            case XNEG:
-                joystickDrive_fixedAngle(-Math.PI / 2);
-                break;
-            case YPOS:
-                joystickDrive_fixedAngle(0);
-                break;
-            case YNEG:
-                joystickDrive_fixedAngle(Math.PI);
                 break;
             case AUTON:
                 var states = m_kinematics.toSwerveModuleStates(pathFollower.update(), new Translation2d());
@@ -786,9 +781,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     // 1678 Snap/Camera Code
-    public double getYawAngleRadians() {
-        return 0; // TODO
-    }
+    // public double getYawAngleRadians() {
+    // return 0; // TODO
+    // }
 
     public void visionAlignDrive(Translation2d translation2d, boolean fieldRelative) {
         // drive(translation2d, mVisionAlignAdjustment, fieldRelative, false);
@@ -796,18 +791,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public void angleAlignDrive(Translation2d translation2d, double targetHeading, boolean fieldRelative) {
         snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(targetHeading), 0.0));
-        double angleAdjustment = snapPIDController.calculate(getYawAngleRadians());
+        double angleAdjustment = snapPIDController.calculate(getBotAz_FieldRelative());
         // drive(translation2d, angleAdjustment, fieldRelative, false);
     }
 
     public void acceptLatestGoalTrackVisionAlignGoal(double vision_goal) {
-        mGoalTrackVisionAlignGoal = vision_goal; 
+        mGoalTrackVisionAlignGoal = vision_goal;
     }
 
     public void chooseVisionAlignGoal() {
-        double currentAngle = getYawAngleRadians();
+        double currentAngle = getBotAz_FieldRelative();
         if (limelight.hasTarget()) {
-            double targetOffset = 0; // TODO    Math.toRadians(limelight.getOffset()[0]);
+            double targetOffset = frontCamera.getAz();
             mLimelightVisionAlignGoal = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
             visionPIDController.setSetpoint(mLimelightVisionAlignGoal);
         } else {
@@ -818,29 +813,30 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public double calculateSnapValue() {
-        return snapPIDController.calculate(getYawAngleRadians());
+        return snapPIDController.calculate(getBotAz_FieldRelative());
     }
 
     public void startSnap(double snapAngle) {
-        snapPIDController.reset(getYawAngleRadians());
+        snapPIDController.reset(getBotAz_FieldRelative());
         snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(snapAngle), 0.0));
         isSnapping = true;
     }
-    
+
     TimeDelayedBoolean delayedBoolean = new TimeDelayedBoolean();
 
     private boolean snapComplete() {
-        double error = snapPIDController.getGoal().position - getYawAngleRadians();
-        return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapConstants.kEpsilon), Constants.SnapConstants.kTimeout);
+        double error = snapPIDController.getGoal().position - getBotAz_FieldRelative();
+        return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapConstants.kEpsilon),
+                Constants.SnapConstants.kTimeout);
     }
 
-    public void maybeStopSnap(boolean force){
+    public void maybeStopSnap(boolean force) {
         if (!isSnapping) {
             return;
-        } 
+        }
         if (force || snapComplete()) {
             isSnapping = false;
-            snapPIDController.reset(getYawAngleRadians());
+            snapPIDController.reset(getBotAz_FieldRelative());
         }
     }
 }

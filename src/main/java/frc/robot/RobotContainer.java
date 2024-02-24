@@ -259,10 +259,10 @@ public class RobotContainer {
     SmartDashboard.putData("JOYSTICK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK)));
     SmartDashboard.putData("AIMATTARGET", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTARGET)));
     // SmartDashboard.putData("AIMATTRAP", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTRAP)));
-    SmartDashboard.putData("XPOS", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.XPOS)));
-    SmartDashboard.putData("XNEG", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.XNEG)));
-    SmartDashboard.putData("YPOS", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.YPOS)));
-    SmartDashboard.putData("YNEG", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.YNEG))); 
+    SmartDashboard.putData("StartSnap XPOS", new InstantCommand(()->drivetrain.startSnap(90)));
+    SmartDashboard.putData("StartSnap XNEG", new InstantCommand(()->drivetrain.startSnap(-90)));
+    SmartDashboard.putData("StartSnap YPOS", new InstantCommand(()->drivetrain.startSnap(0)));
+    SmartDashboard.putData("StartSnap YNEG", new InstantCommand(()->drivetrain.startSnap(180))); 
   }
 
   //#endregion

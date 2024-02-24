@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.3509924162705473,
-      "y": 4.133967125077108
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -20,13 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "3Stage"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "4Stage"
           }
         }
       ]
