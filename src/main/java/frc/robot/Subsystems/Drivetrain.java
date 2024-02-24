@@ -500,7 +500,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public void aimAtTrap() {
         // joystickDrive_fixedAngle(ModuleCount);
-        odometryTargeting.
+        // odometryTargeting.
     }
 
     public void aimAtTargetAuton() {

@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.0724627163540046,
-      "y": 4.1
-    },
-    "rotation": 0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,7 +8,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "2Stage"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2StageScore"
           }
         }
       ]

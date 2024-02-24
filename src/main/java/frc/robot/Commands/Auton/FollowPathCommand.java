@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 
 public class FollowPathCommand extends Command{
@@ -18,6 +19,7 @@ public class FollowPathCommand extends Command{
     @Override
     public void initialize(){
         drive.setPath(path, false);
+        drive.setDriveMode(DriveMode.AUTON);
     }
 
     @Override

@@ -66,6 +66,8 @@ public class Constants {
             kLiftAngleMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(21.7));
             kLiftAngleMap.put(new InterpolatingDouble(30.0), new InterpolatingDouble(21.7));
         }
+
+        public static final double FENDER_SHOT_ANGLE = 60.0;
     //#endregion    
 
     //#region Elevator
