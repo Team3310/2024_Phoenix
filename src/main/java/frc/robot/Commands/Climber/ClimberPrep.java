@@ -15,8 +15,7 @@ public class ClimberPrep extends SequentialCommandGroup{
                 new ShooterOff(robotContainer.shooter),
                 new SetElevatorInches(robotContainer.elevator, Constants.ELEVATOR_MIN_INCHES),
                 new SetClimberInches(robotContainer.climber, Constants.CLIMBER_MAX_INCHES), 
-                new InstantCommand(()->{robotContainer.drivetrain.startSnap(-30);})  // snap to trap angle
-                // set to robot centric drive
+                new InstantCommand(()->{robotContainer.drivetrain.startSnap(Math.toDegrees(robotContainer.drivetrain.getOdoTargeting().getTrapAz()));}) 
             )
         );
     }
