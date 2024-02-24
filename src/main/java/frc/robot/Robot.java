@@ -11,6 +11,7 @@ import frc.robot.Commands.Auton.TestOneNote;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
+import frc.robot.util.Camera.LimelightHelpers;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -28,6 +29,9 @@ public class Robot extends TimedRobot {
 
     m_robotContainer.climber.setClimberZero(0);
     m_robotContainer.elevator.setElevatorZero(0);
+
+    //TODO FYI if robot locked check this
+    LimelightHelpers.getLatestResults("limelight-front");
   }
 
   @Override

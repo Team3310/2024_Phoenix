@@ -1,8 +1,11 @@
 package frc.robot.util.Camera;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
+import frc.robot.util.Interpolable.InterpolatingDouble;
 
 public class Targeting{
     //Cartesian Coordinates of Targets 
@@ -98,6 +101,7 @@ public class Targeting{
     private double[] botPos = centerOfField;
     private double targetAz = 0;
     private double targetEl = 0;
+    private double distance_XY = 0.0;
     private double trapAz = 0;
     private String limelightHostname;
     private boolean isOdometry = false;
@@ -169,9 +173,10 @@ public class Targeting{
         }
 
         //Elevation Trig
-        double distance_XY = Math.hypot(delta_X, delta_Y);
+        distance_XY = Math.hypot(delta_X, delta_Y);
+        SmartDashboard.putNumber("Distance2Target", (distance_XY/0.0254)/12.0);
         if (distance_XY != 0){ 
-            this.targetEl = Math.atan(delta_Z / distance_XY);
+            this.targetEl = Constants.kLiftAngleMap.getInterpolated(new InterpolatingDouble((distance_XY/0.0254)/12.0)).value;
         }else {
             {}; //Nothing is done if the distance is 0 somehow, 
         }

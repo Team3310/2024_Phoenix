@@ -116,7 +116,9 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Climber Left Inches", getLeftPositionInches());
-        SmartDashboard.putNumber("Climber Right Inches", getRightPositionInches());
+        if (Constants.debug) {
+            SmartDashboard.putNumber("Climber Left Inches", getLeftPositionInches());
+            SmartDashboard.putNumber("Climber Right Inches", getRightPositionInches());
+        }
     }
 }

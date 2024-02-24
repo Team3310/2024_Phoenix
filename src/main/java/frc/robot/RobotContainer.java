@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Climber.SetClimberSpeed;
+import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Elevator.ElevatorAutoZero;
 import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
@@ -23,6 +24,8 @@ import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Shooter.FeederShootCommand;
+import frc.robot.Commands.Shooter.SetLeftShooterRPM;
+import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Elevator;
@@ -88,23 +91,23 @@ public class RobotContainer {
   //#region controller buttons
   public void configureDriverController(){
     // //driving related
-    // driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     //JOYSTICK MODE and TURN OFF SHOOTER
     // driverController.b().onTrue(new SetDriveMode(DriveMode.JOYSTICK).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setLiftAngle(25.0);})));
     // AIMATTARGET and AIMLIFTWITHODOMETRY and TURN ON SHOOTER
-    // driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()).alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
+    driverController.a().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry()));//.alongWith(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000);})));
 
     // //intake
     driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new StopAllIntakes());
     driverController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
 
     // //shooting
-    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0.0); shooter.setRightMainRPM(0.0); lift.setLiftAngle(25.0);}));
+    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000.0); shooter.setRightMainRPM(3000.0); lift.setLiftAngle(SmartDashboard.getNumber("set hood degrees", 20.0));}));
     driverController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0); shooter.setRightMainRPM(0); lift.setLiftAngle(40.0);}));
-    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0); shooter.setRightMainRPM(0); lift.setLiftAngle(25.0);}));
+    // driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0); shooter.setRightMainRPM(0); lift.setLiftAngle(25.0);}));
     driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(0); shooter.setRightMainRPM(0); lift.setLiftAngle(60.0);}));
     driverController.rightBumper().onTrue(new FeederShootCommand(shooter)).onFalse(new StopAllIntakes());
-    driverController.leftBumper().onTrue(new ScoreAmp(flicker)).onFalse(new StopAllIntakes());//.alongWith(new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES)));
+    // driverController.leftBumper().onTrue(new ScoreAmp(flicker)).onFalse(new StopAllIntakes());//.alongWith(new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES)));
     driverController.povRight().onTrue(new AimLiftWithOdometry());
 
     driverController.povLeft().onTrue(new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES));
@@ -138,7 +141,6 @@ public class RobotContainer {
 
   private void configureBindings() {
     addTestButtons();
-    addTestButtons();
     configureDriverController();
     configureOperatorController();
 
@@ -149,13 +151,23 @@ public class RobotContainer {
 
   //#region smartdashboard buttons
     public void addTestButtons(){
-      addIntakeTestButtons();
-      // addShooterTestButtons();
-      // addLiftTestButtons();
-      addDrivemodeTestButtons();
-      addClimberTestButtons();
-      addElevatorTestButtons();
-      addFlickerTestButtons();
+      if(Constants.debug){
+        addIntakeTestButtons();
+        addShooterTestButtons();
+        addLiftTestButtons();
+        addDrivemodeTestButtons();
+        addClimberTestButtons();
+        addElevatorTestButtons();
+        addFlickerTestButtons();
+
+        SmartDashboard.putNumber("P", 1.0);
+        SmartDashboard.putNumber("I", 0);
+        SmartDashboard.putNumber("D", 0);
+
+        SmartDashboard.putNumber("set hood degrees", 20.0);
+
+        SmartDashboard.putData("shooter wheels go", new SetLeftShooterRPM(shooter, 5000).alongWith(new SetRightShooterRPM(shooter, 3000)));
+      }
     }
 
     private void addIntakeTestButtons() {

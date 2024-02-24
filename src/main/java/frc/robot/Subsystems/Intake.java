@@ -5,6 +5,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Swerve.TunerConstants;
@@ -126,8 +127,10 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("Front Intake RPM", getFrontIntakeRPM());
-        // SmartDashboard.putNumber("Top Intake RPM", getTopIntakeRPM());
-        // SmartDashboard.putNumber("Bottom Intake RPM", getBottomIntakeRPM());
+        if (Constants.debug) {
+            SmartDashboard.putNumber("Front Intake RPM", getFrontIntakeRPM());
+            SmartDashboard.putNumber("Top Intake RPM", getTopIntakeRPM());
+            SmartDashboard.putNumber("Bottom Intake RPM", getBottomIntakeRPM());
+        }
     }
 }

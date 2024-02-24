@@ -52,7 +52,8 @@ public class Shooter extends SubsystemBase {
         outputConfigs.NeutralMode = NeutralModeValue.Coast;
 
         /*
-         * Voltage-based velocity requires a feed forward to account for the back-emf of the motor
+         * Voltage-based velocity requires a feed forward to account for the back-emf of
+         * the motor
          */
         configs.Slot0.kP = 0.11; // An error of 1 rotation per second results in 2V output
         configs.Slot0.kI = 0.5; // An error of 1 rotation per second increases output by 0.5V every second
@@ -164,9 +165,11 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Shooter Right RPM", getRightMainRPM());
-        SmartDashboard.putNumber("Shooter Left RPM", getLeftMainRPM());
-        SmartDashboard.putNumber("Kicker RPM", getKickerRPM());
-        SmartDashboard.putBoolean("isNoteLoaded", isNoteLoaded());
+        if (Constants.debug) {
+            SmartDashboard.putNumber("Shooter Right RPM", getRightMainRPM());
+            SmartDashboard.putNumber("Shooter Left RPM", getLeftMainRPM());
+            SmartDashboard.putNumber("Kicker RPM", getKickerRPM());
+            SmartDashboard.putBoolean("isNoteLoaded", isNoteLoaded());
+        }
     }
 }

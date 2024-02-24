@@ -1,6 +1,11 @@
 package frc.robot;
 
+import frc.robot.util.Interpolable.InterpolatingDouble;
+import frc.robot.util.Interpolable.InterpolatingTreeMap;
+
 public class Constants {
+
+    public static final boolean debug = false;
 
     public static final String rioCANbusName = "rio";
 
@@ -30,7 +35,7 @@ public class Constants {
 
         public static final int SHOOTER_KICKER_ID = 22;
 
-        public static final double KICKER_INTAKE_RPM = 1000.0;
+        public static final double KICKER_INTAKE_RPM = 400.0;
         public static final double KICKER_SCORE_RPM = 1000.0;
 
         public static final double LEFT_SCORE_RPM = 5000.0;
@@ -46,6 +51,17 @@ public class Constants {
         public static final double LIFT_MAX_DEGREES = 75.0;
         public static final double LIFT_MIN_DEGREES = 18.0;
         public static final double LIFT_START_DEGREES = 18.0;
+
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMap = new InterpolatingTreeMap<>();
+        static {
+            kLiftAngleMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(60.0));
+            kLiftAngleMap.put(new InterpolatingDouble(5.1), new InterpolatingDouble(60.0));
+            kLiftAngleMap.put(new InterpolatingDouble(8.6), new InterpolatingDouble(42.0));
+            kLiftAngleMap.put(new InterpolatingDouble(12.5), new InterpolatingDouble(32.0));
+            kLiftAngleMap.put(new InterpolatingDouble(16.3), new InterpolatingDouble(27.0));
+            kLiftAngleMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(21.7));
+            kLiftAngleMap.put(new InterpolatingDouble(30.0), new InterpolatingDouble(21.7));
+        }
     //#endregion    
 
     //#region Elevator
@@ -54,7 +70,7 @@ public class Constants {
 
         public static final int ELEVATOR_MOTOR_ID = 40;
 
-        public static final double ELEVATOR_MAX_INCHES = 20.625;
+        public static final double ELEVATOR_MAX_INCHES = 19.625;
         public static final double ELEVATOR_MIN_INCHES = 0.0;
 
         public static final double ELEVATOR_AUTO_ZERO_SPEED = -0.1;

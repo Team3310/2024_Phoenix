@@ -17,11 +17,12 @@ public class Elevator extends SubsystemBase {
     private MotionMagicDutyCycle mmDutyCycleControl = new MotionMagicDutyCycle(0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);
 
-    private final double kF = 0.0;
-    private final double kP = 1.0;
+    private final double kV = 0.01;
+    private final double kP = 0.5;
     private final double kI = 0.001;
     private final double kD = 0.0003;
-    private final double kG = 0.04;
+    private final double kG = 0.03;
+    private final double kA = 0.001;
 
     public static Elevator getInstance() {
         if (instance == null) {
@@ -36,8 +37,9 @@ public class Elevator extends SubsystemBase {
         config.Slot0.kP = kP;
         config.Slot0.kI = kI;
         config.Slot0.kD = kD;
-        config.Slot0.kV = kF;
+        config.Slot0.kV = kV;
         config.Slot0.kG = kG;
+        config.Slot0.kA = kA;
 
         config.SoftwareLimitSwitch.ForwardSoftLimitThreshold = getInchesToRotations(Constants.ELEVATOR_MAX_INCHES);
         config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = getInchesToRotations(Constants.ELEVATOR_MIN_INCHES);
@@ -90,6 +92,8 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevator Inches", getRotationsToInches(getPositionInches()));
+        if (Constants.debug) {
+            SmartDashboard.putNumber("Elevator Inches", getPositionInches());
+        }
     }
 }

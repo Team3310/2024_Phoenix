@@ -21,6 +21,10 @@ public class PidController {
         this.constants = constants;
     }
 
+    public PidConstants getPidConstants(){
+        return constants;
+    }
+
     public double calculate(double current, double dt) {
         double error = setpoint - current;
         if (continuous) {
@@ -96,5 +100,17 @@ public class PidController {
 
         minOutput = min;
         maxOutput = max;
+    }
+
+    public void setP(double p) {
+        constants = new PidConstants(p, constants.i, constants.d);
+    }
+
+    public void setI(double i) {
+        constants = new PidConstants(constants.p, i, constants.d);
+    }
+    
+    public void setD(double d) {
+        constants = new PidConstants(constants.p, constants.i, d);
     }
 }
