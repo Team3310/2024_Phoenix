@@ -14,6 +14,7 @@ import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.ClimberPrep;
 import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Climber.SetClimberSpeed;
+import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Drive.ZeroGyro;
 import frc.robot.Commands.Elevator.ElevatorAutoZero;
 import frc.robot.Commands.Elevator.SetElevatorInches;
@@ -96,7 +97,7 @@ public class RobotContainer {
 
     // shooting
     driverController.rightBumper().onTrue(new FeederShootCommand(shooter)).onFalse(new StopAllIntakes());
-    driverController.leftBumper().onTrue(new FeederShootCommand(shooter)).onFalse(new StopAllIntakes()); // auto speaker track
+    driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET)).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.a().onTrue(new ShooterOff(shooter));
     driverController.y().onTrue(new ShooterOn(shooter));
 
