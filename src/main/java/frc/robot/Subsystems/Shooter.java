@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Swerve.TunerConstants;
 
 public class Shooter extends SubsystemBase {
     private static Shooter instance;
@@ -42,9 +43,9 @@ public class Shooter extends SubsystemBase {
     private Shooter() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
-        shooterRightMain = new TalonFX(Constants.SHOOTER_RIGHT_MASTER_ID, Constants.rioCANbusName);
-        shooterLeftMain = new TalonFX(Constants.SHOOTER_LEFT_MASTER_ID, Constants.rioCANbusName);
-        shooterKicker = new TalonFX(Constants.SHOOTER_KICKER_ID, Constants.rioCANbusName);
+        shooterRightMain = new TalonFX(Constants.SHOOTER_RIGHT_MASTER_ID, TunerConstants.kCANbusName);
+        shooterLeftMain = new TalonFX(Constants.SHOOTER_LEFT_MASTER_ID, TunerConstants.kCANbusName);
+        shooterKicker = new TalonFX(Constants.SHOOTER_KICKER_ID, TunerConstants.kCANbusName);
 
         sensor = new DigitalInput(0);
 

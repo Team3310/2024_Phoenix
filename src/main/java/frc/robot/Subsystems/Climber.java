@@ -9,12 +9,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Swerve.TunerConstants;
 
 public class Climber extends SubsystemBase {
     private static Climber instance;
 
-    private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID, Constants.rioCANbusName);
-    private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID, Constants.rioCANbusName);
+    private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID, TunerConstants.kCANbusName);
+    private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID, TunerConstants.kCANbusName);
 
     private MotionMagicDutyCycle control = new MotionMagicDutyCycle(0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);

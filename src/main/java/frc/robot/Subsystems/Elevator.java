@@ -8,11 +8,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Swerve.TunerConstants;
 
 public class Elevator extends SubsystemBase {
     private static Elevator instance;
 
-    private final TalonFX elevatorMotor = new TalonFX(Constants.ELEVATOR_MOTOR_ID, Constants.rioCANbusName);
+    private final TalonFX elevatorMotor = new TalonFX(Constants.ELEVATOR_MOTOR_ID, TunerConstants.kCANbusName);
 
     private MotionMagicDutyCycle mmDutyCycleControl = new MotionMagicDutyCycle(0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);

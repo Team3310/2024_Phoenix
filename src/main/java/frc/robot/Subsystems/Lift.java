@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Swerve.TunerConstants;
 
 public class Lift extends SubsystemBase {
     private static Lift instance;
@@ -54,7 +55,7 @@ public class Lift extends SubsystemBase {
         canConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         canConfig.MagnetSensor.MagnetOffset = -0.250;
 
-        canCoder = new CANcoder(Constants.LIFT_CANCODER_ID, Constants.rioCANbusName);
+        canCoder = new CANcoder(Constants.LIFT_CANCODER_ID, TunerConstants.kCANbusName);
         canCoder.getConfigurator().apply(canConfig);
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -89,7 +90,7 @@ public class Lift extends SubsystemBase {
         configs.Feedback.SensorToMechanismRatio = 1.0;
         configs.Feedback.RotorToSensorRatio = Constants.LIFT_GEAR_RATIO;
 
-        liftMotor = new TalonFX(Constants.LIFT_MOTOR_ID, Constants.rioCANbusName);
+        liftMotor = new TalonFX(Constants.LIFT_MOTOR_ID, TunerConstants.kCANbusName);
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for (int i = 0; i < 5; ++i) {
             status = liftMotor.getConfigurator().apply(configs);

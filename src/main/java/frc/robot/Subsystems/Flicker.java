@@ -9,11 +9,12 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Swerve.TunerConstants;
 
 public class Flicker extends SubsystemBase {
     private static Flicker instance;
 
-    private final TalonFX motor = new TalonFX(Constants.AMP_MOTOR_ID, Constants.rioCANbusName);
+    private final TalonFX motor = new TalonFX(Constants.AMP_MOTOR_ID, TunerConstants.kCANbusName);
     private final DigitalInput sensor = new DigitalInput(Constants.AMP_SENSOR_PORT);
 
     private VelocityVoltage control = new VelocityVoltage(0);

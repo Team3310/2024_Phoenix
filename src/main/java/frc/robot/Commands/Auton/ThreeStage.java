@@ -23,12 +23,12 @@ public class ThreeStage extends AutonCommandBase{
 
         this.addCommands(
             new ParallelDeadlineGroup(
-                new WaitCommand(0.5),
+                new WaitCommand(0.3),
                 new ShooterOn(robotContainer.shooter),
                 new SetLiftAngle(Lift.getInstance(), Constants.FENDER_SHOT_ANGLE)
             ),
             new ParallelDeadlineGroup(
-                new WaitCommand(0.5), 
+                new WaitCommand(0.25), 
                 new FeederShootCommandAuton(robotContainer.shooter)
             ),
             new ParallelDeadlineGroup(
@@ -37,12 +37,15 @@ public class ThreeStage extends AutonCommandBase{
             ),
             follow("3StagePreShoot"),
             new ParallelDeadlineGroup(
-                follow("3StageShoot"),
+                new SequentialCommandGroup(
+                    follow("3StageShoot"),
+                    new WaitCommand(0.5)
+                ),
                 new SequentialCommandGroup(
                     new ParallelRaceGroup(
                         new AimLiftWithOdometryAuton(),
                         new SequentialCommandGroup(
-                            new WaitCommand(0.5),
+                            new WaitCommand(0.3),
                             new FeederShootCommandAuton(robotContainer.shooter).until(()->!robotContainer.shooter.isNoteLoaded())
                         )
                     ),
@@ -50,7 +53,7 @@ public class ThreeStage extends AutonCommandBase{
                     new ParallelRaceGroup(
                         new AimLiftWithOdometryAuton(),
                         new SequentialCommandGroup(
-                            new WaitCommand(0.5),
+                            new WaitCommand(0.3),
                             new FeederShootCommandAuton(robotContainer.shooter).until(()->!robotContainer.shooter.isNoteLoaded())
                         )
                     )
