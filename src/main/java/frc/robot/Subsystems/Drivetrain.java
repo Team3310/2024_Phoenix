@@ -221,7 +221,29 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             setJoystickDrive_holdAngle(getBotAz_FieldRelative());
             maybeStopSnap(true);
         } else if (mode == DriveMode.AIMATTARGET){
-            startSnap(odometryTargeting.getAz());
+            // Get JSON Dump from Limelight-front
+            LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
+
+            // Go through limelight JSON dump, and look for Target ID
+            // If ID found, save TX value to offset for targeting.
+            boolean canSeeTarget = false;
+            double offset = 0;
+            for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
+                if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
+                    offset = (Math.toRadians(aprilTagResults.tx));
+                    canSeeTarget = true;
+                }
+            }
+            if (canSeeTarget) {
+                if (Math.abs(Math.toDegrees(offset)) > 5.0) {
+                    // drivetrain_state = "LIME SNAP";
+                    startSnap(Math.toDegrees(getBotAz_FieldRelative() -  offset));
+                }
+            }
+            else {
+                // drivetrain_state = "ODO SNAP";
+                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI));
+            }
         }
 
         mControlMode = mode;
@@ -367,15 +389,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void joystickDrive() {
-        double rotation = getDriveRotation();
-        // if (isSnapping) {
-        //     if (Math.abs(getDriveRotation()) == 0.0) {
-        //         maybeStopSnap(false);
-        //         rotation = -calculateSnapValue();
-        //     } else {
-        //         maybeStopSnap(true);
-        //     }
-        // } else {
+        double rotation = -getDriveRotation();
+        if (isSnapping) {
+            if (Math.abs(getDriveRotation()) == 0.0) {
+                maybeStopSnap(false);
+                rotation = calculateSnapValue();
+            } else {
+                maybeStopSnap(true);
+            }
+        } //else {
         //     if (rotation == 0) {
         //         double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
         //         rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
@@ -431,7 +453,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // Get JSON Dump from Limelight-front
         if(isSnapping){
             maybeStopSnap(false);
-            joystickDrive_OpenLoop(-calculateSnapValue());
+            joystickDrive_OpenLoop(calculateSnapValue());
         } else {
             LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
 
@@ -458,7 +480,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     justChanged = false;
                 }
             }else if((!canSeeTarget) && (lockedOn)){
-                offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
+                offset = (getBotAz_FieldRelative() - joystickDrive_holdAngle);
                 double rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
                 SmartDashboard.putNumber("PID Error:", offset);
                 SmartDashboard.putNumber("PID Output:", rotation);
@@ -641,7 +663,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
         }
 
-        sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
+        if(sideMode!=RobotContainer.getInstance().getSideChooser().getSelected()){
+            sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
+            Targeting.setTarget(sideMode==SideMode.BLUE?Target.BLUESPEAKER:Target.REDSPEAKER);
+        }
 
         SmartDashboard.putString("side", sideMode.toString());
 

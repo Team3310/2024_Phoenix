@@ -53,7 +53,7 @@ public class Lift extends SubsystemBase {
         CANcoderConfiguration canConfig = new CANcoderConfiguration();
         canConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         canConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        canConfig.MagnetSensor.MagnetOffset = -0.250;
+        canConfig.MagnetSensor.MagnetOffset = 0.197510+(18.0/360.0);
 
         canCoder = new CANcoder(Constants.LIFT_CANCODER_ID, TunerConstants.kCANbusName);
         canCoder.getConfigurator().apply(canConfig);

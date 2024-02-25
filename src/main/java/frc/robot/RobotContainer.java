@@ -106,7 +106,7 @@ public class RobotContainer {
     driverController.b().onTrue(new InstantCommand(()->{drivetrain.startSnap(90);}));
 
     // reset buttons
-    driverController.start().onTrue(new ZeroGyro());
+    driverController.start().onTrue(new InstantCommand(()->drivetrain.seedFieldRelative()));
  
     // //driving related
     // driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
