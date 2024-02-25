@@ -14,15 +14,18 @@ import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.ClimberPrep;
 import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Climber.SetClimberSpeed;
+import frc.robot.Commands.Climber.SetClimberUpDown;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Drive.ZeroGyro;
 import frc.robot.Commands.Elevator.ElevatorAutoZero;
 import frc.robot.Commands.Elevator.SetElevatorInches;
+import frc.robot.Commands.Flicker.LoadAmp;
 import frc.robot.Commands.Flicker.SetFlickerRPM;
 import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Intake.StopAllIntakes;
-import frc.robot.Commands.Shooter.FeederShootCommand;
+import frc.robot.Commands.Lift.AimLiftWithOdometry;
+import frc.robot.Commands.Shooter.ScoreCommand;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
 import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Commands.Shooter.ShooterOff;
@@ -96,14 +99,14 @@ public class RobotContainer {
     driverController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
 
     // shooting
-    driverController.rightBumper().onTrue(new FeederShootCommand(shooter)).onFalse(new StopAllIntakes());
-    driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET)).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
+    driverController.rightBumper().onTrue(new ScoreCommand(shooter, flicker));
+    driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.a().onTrue(new ShooterOff(shooter));
     driverController.y().onTrue(new ShooterOn(shooter));
 
     // snap to cardinal angles
-    driverController.x().onTrue(new InstantCommand(()->{drivetrain.startSnap(-60);}));
-    driverController.b().onTrue(new InstantCommand(()->{drivetrain.startSnap(90);}));
+    driverController.x().onTrue(new InstantCommand(()->{drivetrain.startSnap(-60);}).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
+    driverController.b().onTrue(new InstantCommand(()->{drivetrain.startSnap(90);}).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
 
     // reset buttons
     driverController.start().onTrue(new InstantCommand(()->drivetrain.seedFieldRelative()));
@@ -133,22 +136,22 @@ public class RobotContainer {
     operatorController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
 
     // shooting
-    operatorController.rightBumper().onTrue(new FeederShootCommand(shooter)).onFalse(new StopAllIntakes());
-    operatorController.leftBumper().onTrue(new FeederShootCommand(shooter)).onFalse(new StopAllIntakes()); // auto speaker track
+    operatorController.rightBumper().onTrue(new ScoreCommand(shooter, flicker));
+    operatorController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET)).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
  
     // climb
-    driverController.povRight().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MAX_INCHES));
-    driverController.povLeft().onTrue(new SetClimberInches(climber, Constants.CLIMBER_MAX_INCHES));
+    operatorController.povRight().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MAX_INCHES).alongWith(new LoadAmp(flicker)));
+    operatorController.povLeft().onTrue(new SetClimberUpDown(climber).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
 
     // amp
-    driverController.povUp().onTrue(new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES));
-    driverController.povDown().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
+    operatorController.povUp().onTrue(new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES).alongWith(new LoadAmp(flicker)));
+    operatorController.povDown().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
 
     // shooting
     operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);}));
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(40.0);}));
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(60.0);}));
-    operatorController.b().onTrue(new ClimberPrep(this));
+    operatorController.b().onTrue(new ClimberPrep(this).alongWith(new SetDriveMode(DriveMode.JOYSTICK_BOTREL)));
 
     //intake
     // operatorController.a().onTrue(new IntakeUnder());
@@ -287,10 +290,6 @@ public class RobotContainer {
     SmartDashboard.putData("JOYSTICK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK)));
     SmartDashboard.putData("AIMATTARGET", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTARGET)));
     // SmartDashboard.putData("AIMATTRAP", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTRAP)));
-    SmartDashboard.putData("StartSnap XPOS", new InstantCommand(()->drivetrain.startSnap(90)));
-    SmartDashboard.putData("StartSnap XNEG", new InstantCommand(()->drivetrain.startSnap(-90)));
-    SmartDashboard.putData("StartSnap YPOS", new InstantCommand(()->drivetrain.startSnap(0)));
-    SmartDashboard.putData("StartSnap YNEG", new InstantCommand(()->drivetrain.startSnap(180))); 
   }
 
   //#endregion
