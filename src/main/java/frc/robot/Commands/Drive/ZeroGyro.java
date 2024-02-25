@@ -16,6 +16,7 @@ public class ZeroGyro extends Command{
 
     @Override
     public void initialize() {
+        System.out.print("ZeroGyro!");
         drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
     }
 

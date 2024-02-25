@@ -67,7 +67,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // 0.2, 0));
 
     private PidController aimAtTargetController = new PidController(new PidConstants(5.0, 0.0, 0.0));
-    private PidController joystickController = new PidController(new PidConstants(5.0, 0, 0.0));
+    private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
     // private ProfiledPIDController aimAtTargetController = new
     // ProfiledPIDController(1.0, 0.0, 0.0, new Constraints(Math.PI/2.0, Math.PI));
@@ -203,8 +203,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public ChassisSpeeds getCurrentRobotChassisSpeeds() {
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
-
+    
+    public boolean odosnap = false;
     public void setDriveMode(DriveMode mode) {
+        odosnap = false;
         if (mode == mControlMode){
             return;
         }
@@ -242,7 +244,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 }
             }
             else {
+                odosnap = true;
                 drivetrain_state = "ODO SNAP";
+                
                 startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI));
             }
         }
@@ -381,8 +385,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     SwerveModule.SteerRequestType.MotionMagic);
         }
     }
-
-    public void joystickDrive_RobotRelative_OpenLoop(double rotation) {
+    
+    //TODO This is not working
+    public void joystickDrive_RobotRelative_OpenLoop(double rotation) { 
 
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromRobotRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed,
@@ -431,16 +436,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 maybeStopSnap(true);
             }
         } else {
-            if (rotation == 0) {
-                drivetrain_state = "JOYSTICKDRIVE_PID";
-                double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
-                rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
-                SmartDashboard.putNumber("PID Error:", offset);
-                SmartDashboard.putNumber("PID Output:", rotation);
-            } else {
+            // if (rotation == 0) {
+            //     drivetrain_state = "JOYSTICKDRIVE_PID";
+            //     double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
+            //     rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+            //     SmartDashboard.putNumber("PID Error:", offset);
+            //     SmartDashboard.putNumber("PID Output:", rotation);
+            // } else {
                 drivetrain_state = "JOYSTICKDRIVE_OPENLOOP";
                 joystickDrive_holdAngle = getBotAz_FieldRelative();
-            }
+            // }
         }
         joystickDrive_OpenLoop(rotation);
     }
@@ -500,7 +505,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 }
             }
         if(isSnapping){
-            if(canSeeTarget){
+            if(canSeeTarget && odosnap){
                 if((Math.abs(Math.toDegrees(offset)) < 5)){
                     maybeStopSnap(true);
                     }
@@ -643,6 +648,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         return ((Math.abs(joystick.getRightX()) > 0.1) ? joystick.getRightX() : 0.0);
     }
 
+    //#region auto stuff
     public boolean pathDone() {
         return pathFollower.pathDone();
     }
@@ -650,6 +656,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public double getPathTime() {
         return pathFollower.getPathTime();
     }
+    //#endregion auto stuff
 
     public enum DriveMode {
         JOYSTICK,
@@ -658,6 +665,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         AIMATTARGET, 
         AIMATTARGET_AUTON,
         AIMATTRAP,
+        ODOMETRYTRACK,
         ;
     }
 
@@ -755,6 +763,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             case JOYSTICK_BOTREL:
                 joystickDrive_RobotRelative();
                 break;
+            case ODOMETRYTRACK:
+                odometryTrack();
+                break;
             case AUTON:
                 var states = m_kinematics.toSwerveModuleStates(pathFollower.update(), new Translation2d());
                 if (!pathDone()) {
@@ -834,11 +845,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         return mControlMode;
     }
 
-    // 1678 Snap/Camera Code
-    // public double getYawAngleRadians() {
-    // return 0; // TODO
-    // }
-
+    //#region 1678 Snap/Camera Code    
     public void visionAlignDrive(Translation2d translation2d, boolean fieldRelative) {
         // drive(translation2d, mVisionAlignAdjustment, fieldRelative, false);
     }
@@ -894,4 +901,4 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             snapPIDController.reset(getBotAz_FieldRelative());
         }
     }
-}
+}   //#endregion

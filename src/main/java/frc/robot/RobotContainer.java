@@ -109,7 +109,7 @@ public class RobotContainer {
     driverController.b().onTrue(new InstantCommand(()->{drivetrain.startSnap(90);}).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
 
     // reset buttons
-    driverController.start().onTrue(new ZeroGyro());
+    driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
  
     // //driving related
     // driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -151,7 +151,7 @@ public class RobotContainer {
     operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);}));
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(40.0);}));
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(60.0);}));
-    operatorController.b().onTrue(new ClimberPrep(this).alongWith(new SetDriveMode(DriveMode.JOYSTICK_BOTREL)));
+    operatorController.b().onTrue(new ClimberPrep(this));
 
     //intake
     // operatorController.a().onTrue(new IntakeUnder());
@@ -287,8 +287,10 @@ public class RobotContainer {
     }
   
   public void addDrivemodeTestButtons(){
+    SmartDashboard.putData("JOYSTICK_BOTREL", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK_BOTREL)));
     SmartDashboard.putData("JOYSTICK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK)));
     SmartDashboard.putData("AIMATTARGET", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTARGET)));
+    SmartDashboard.putData("ODOMETRYTRACK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.ODOMETRYTRACK)));
     // SmartDashboard.putData("AIMATTRAP", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTRAP)));
   }
 
