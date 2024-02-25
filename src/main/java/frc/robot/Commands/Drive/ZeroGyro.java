@@ -1,11 +1,14 @@
 package frc.robot.Commands.Drive;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 
 public class ZeroGyro extends Command{
     private Drivetrain drivetrain;
+    private DriveMode mode;
 
     public ZeroGyro(){
         this.drivetrain = TunerConstants.DriveTrain;
@@ -13,8 +16,7 @@ public class ZeroGyro extends Command{
 
     @Override
     public void initialize() {
-        drivetrain.seedFieldRelative();
-        System.out.println("!!!!!!!Gyro Zero!!!!!!!!");
+        drivetrain.runOnce(() -> drivetrain.seedFieldRelative());
     }
 
     @Override

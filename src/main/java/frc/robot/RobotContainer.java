@@ -105,8 +105,8 @@ public class RobotContainer {
     driverController.y().onTrue(new ShooterOn(shooter));
 
     // snap to cardinal angles
-    driverController.x().onTrue(new InstantCommand(()->{drivetrain.startSnap(-60);}));
-    driverController.b().onTrue(new InstantCommand(()->{drivetrain.startSnap(90);}));
+    driverController.x().onTrue(new InstantCommand(()->{drivetrain.startSnap(-60);}).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
+    driverController.b().onTrue(new InstantCommand(()->{drivetrain.startSnap(90);}).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
 
     // reset buttons
     driverController.start().onTrue(new ZeroGyro());
@@ -141,7 +141,7 @@ public class RobotContainer {
  
     // climb
     operatorController.povRight().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MAX_INCHES).alongWith(new LoadAmp(flicker)));
-    operatorController.povLeft().onTrue(new SetClimberUpDown(climber));
+    operatorController.povLeft().onTrue(new SetClimberUpDown(climber).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
 
     // amp
     operatorController.povUp().onTrue(new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES).alongWith(new LoadAmp(flicker)));
@@ -151,7 +151,7 @@ public class RobotContainer {
     operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);}));
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(40.0);}));
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(60.0);}));
-    operatorController.b().onTrue(new ClimberPrep(this));
+    operatorController.b().onTrue(new ClimberPrep(this).alongWith(new SetDriveMode(DriveMode.JOYSTICK_BOTREL)));
 
     //intake
     // operatorController.a().onTrue(new IntakeUnder());
@@ -290,10 +290,6 @@ public class RobotContainer {
     SmartDashboard.putData("JOYSTICK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK)));
     SmartDashboard.putData("AIMATTARGET", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTARGET)));
     // SmartDashboard.putData("AIMATTRAP", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTRAP)));
-    SmartDashboard.putData("StartSnap XPOS", new InstantCommand(()->drivetrain.startSnap(90)));
-    SmartDashboard.putData("StartSnap XNEG", new InstantCommand(()->drivetrain.startSnap(-90)));
-    SmartDashboard.putData("StartSnap YPOS", new InstantCommand(()->drivetrain.startSnap(0)));
-    SmartDashboard.putData("StartSnap YNEG", new InstantCommand(()->drivetrain.startSnap(180))); 
   }
 
   //#endregion

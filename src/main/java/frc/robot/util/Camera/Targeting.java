@@ -8,20 +8,21 @@ import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Interpolable.InterpolatingDouble;
 
 public class Targeting {
+    //#region Static Constants
     // Cartesian Coordinates of Targets
     // Origin is BOTTOM LEFT OF FIELD
     // X, Y, Z (Inches)
-    private static final double[] blueSpeaker = { -0.2000000, 5.5478680, 2.0432395 };
-    private static final double[] blueAmp = { 14.7007580, 8.2042000, 0.8891270 };
-    private static final double[] blueTrap1 = { 4.6413420, 4.4983400, 1.6414750 };
-    private static final double[] blueTrap2 = { 4.6413420, 3.7132260, 1.6414750 };
-    private static final double[] blueTrap3 = { 5.3207920, 4.1051480, 1.6414750 };
-    private static final double[] redSpeaker = { 16.700000, 5.5478680, 2.0432395 };
-    private static final double[] redAmp = { 1.8415000, 8.2042000, 0.8891270 };
-    private static final double[] redTrap1 = { 11.9047260, 3.7132260, 1.6414750 };
-    private static final double[] redTrap2 = { 11.9047260, 4.4983400, 1.6414750 };
-    private static final double[] redTrap3 = { 11.2201960, 4.1051480, 1.6414750 };
-    private static final double[] centerOfField = { 5.3207920, 4.1067482, 0.0000000 };
+    private static final double[] blueSpeaker =     { -0.2000000, 5.5478680, 2.0432395 };
+    private static final double[] blueAmp =         { 14.7007580, 8.2042000, 0.8891270 };
+    private static final double[] blueTrap1 =       { 4.6413420, 4.4983400, 1.6414750 };
+    private static final double[] blueTrap2 =       { 4.6413420, 3.7132260, 1.6414750 };
+    private static final double[] blueTrap3 =       { 5.3207920, 4.1051480, 1.6414750 };
+    private static final double[] redSpeaker =      { 16.700000, 5.5478680, 2.0432395 };
+    private static final double[] redAmp =          { 1.8415000, 8.2042000, 0.8891270 };
+    private static final double[] redTrap1 =        { 11.9047260, 3.7132260, 1.6414750 };
+    private static final double[] redTrap2 =        { 11.9047260, 4.4983400, 1.6414750 };
+    private static final double[] redTrap3 =        { 11.2201960, 4.1051480, 1.6414750 };
+    private static final double[] centerOfField =   { 5.3207920, 4.1067482, 0.0000000 };
 
     private static final double blueSpeakerID = 7;
     private static final double blueAmpID = 6;
@@ -34,6 +35,7 @@ public class Targeting {
     private static final double redTrap2ID = 12;
     private static final double redTrap3ID = 13;
     private static final double nullID = 0;
+    //#endregion
 
     public enum Target {
         BLUESPEAKER(blueSpeaker, blueSpeakerID), BLUAMP(blueAmp, blueAmpID), BLUTRAP1(blueTrap1, blueTrap1ID),
@@ -58,6 +60,7 @@ public class Targeting {
         }
     }
 
+    //#region Constructors
     // Targeting Constructor, Limelight
     public Targeting(String limelightHostname, boolean isOdometry) {
         this.limelightHostname = "-" + limelightHostname;
@@ -70,8 +73,9 @@ public class Targeting {
         this.isOdometry = isOdometry;
         this.limelight = new Limelight();
     }
+    //#endregion
 
-    // STATIC
+    //#region Static
     private static double[] targetPos = centerOfField;
     private static double targetID = nullID;
     private static Target target = Target.NONE;
@@ -81,7 +85,7 @@ public class Targeting {
         targetPos = target.getPos();
         targetID = target.getID();
     }
-
+    //#region Static Getters
     public static Target getTarget() {
         return target;
     }
@@ -89,13 +93,14 @@ public class Targeting {
     public static double getTargetID() {
         return targetID;
     }
+    //#endregion Static Getters
+    //#endregion Static
 
-    // NON-STATIC
+    //#region Non-Static
     private double[] botPos = centerOfField;
     private double targetAz = 0;
     private double targetEl = 0;
     private double distance_XY = 0.0;
-    private double trapAz = 0;
     private String limelightHostname;
     private boolean isOdometry = false;
     private final Limelight limelight;
@@ -202,6 +207,12 @@ public class Targeting {
         }
     }
 
+    public void update() {
+        updateBotPos();
+        updateTargetAzEl();
+    }
+
+    //#region Getters
     public double getAz() {
         if (RobotContainer.getInstance().getSide() == SideMode.RED) {
             return rolloverConversion_radians(this.targetAz + (Math.PI / 2));
@@ -216,26 +227,28 @@ public class Targeting {
         return this.targetEl;
     }
 
+    //getTrapAz will use botPos to determine which 'region' the bot is in and return the angle needed to face the trap in radians
+    //The angle returned is already calculated with the red/blue gyro zero in mind.
     public double getTrapAz() {
-        if (RobotContainer.getInstance().getSide() == SideMode.BLUE) {
+        if (RobotContainer.getInstance().getSide() == SideMode.BLUE) { //+PI/2
             if (botPos[0] < 5.7706260) {
                 if (botPos[1] > 4.1056560) {
-                    return ((2 / 6) * Math.PI);
+                    return ((2 / 6) * Math.PI); //60 degrees
                 } else {
-                    return (Math.PI);
+                    return ((-2 / 6) * Math.PI); //-60 degrees
                 }
             } else {
-                return ((-1 / 2) * Math.PI);
+                return (Math.PI); //180 degrees
             }
-        } else { // SideMode.RED
+        } else { // SideMode.RED //-PI/2
             if (botPos[0] > 11.7196870) {
                 if (botPos[1] > 4.1056560)
-                    return ((-2 / 6) * Math.PI);
+                    return ((-2 / 6) * Math.PI); //-60 degrees
                 else {
-                    return ((2 / 6) * Math.PI);
+                    return ((2 / 6) * Math.PI); //60 degrees
                 }
             } else {
-                return (Math.PI);
+                return (Math.PI); //180 degrees
             }
         }
     }
@@ -247,9 +260,6 @@ public class Targeting {
     public double getBotPosY() {
         return botPos[1];
     }
-
-    public void update() {
-        updateBotPos();
-        updateTargetAzEl();
-    }
+    //#endregion
+    //#endregion Non-Static
 }
