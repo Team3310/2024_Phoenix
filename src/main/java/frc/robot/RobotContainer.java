@@ -137,8 +137,8 @@ public class RobotContainer {
 
     // shooting
     operatorController.rightBumper().onTrue(new ScoreCommand(shooter, flicker));
-    operatorController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET)).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
- 
+    operatorController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
+    
     // climb
     operatorController.povRight().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MAX_INCHES).alongWith(new LoadAmp(flicker)));
     operatorController.povLeft().onTrue(new SetClimberUpDown(climber).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
