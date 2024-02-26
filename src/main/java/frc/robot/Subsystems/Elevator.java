@@ -1,9 +1,11 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,6 +35,7 @@ public class Elevator extends SubsystemBase {
 
     private Elevator() {
         TalonFXConfiguration config = new TalonFXConfiguration();
+        MotorOutputConfigs outputConfigs = new MotorOutputConfigs();
 
         config.Slot0.kP = kP;
         config.Slot0.kI = kI;
@@ -46,6 +49,8 @@ public class Elevator extends SubsystemBase {
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
 
+        outputConfigs.NeutralMode = NeutralModeValue.Brake;
+
         config.CurrentLimits.StatorCurrentLimit = 20.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
@@ -53,6 +58,7 @@ public class Elevator extends SubsystemBase {
         config.MotionMagic.MotionMagicAcceleration = 201.0;
 
         elevatorMotor.getConfigurator().apply(config);
+        elevatorMotor.getConfigurator().apply(outputConfigs);
 
         mmDutyCycleControl.EnableFOC = true;
     }

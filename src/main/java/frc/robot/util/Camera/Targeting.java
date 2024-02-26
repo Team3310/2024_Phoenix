@@ -100,6 +100,8 @@ public class Targeting {
     private double[] botPos = centerOfField;
     private double targetAz = 0;
     private double targetEl = 0;
+    private double leftShooterSpeed = 0;
+    private double rightShooterSpeed = 0;
     private double distance_XY = 0.0;
     private String limelightHostname;
     private boolean isOdometry = false;
@@ -183,6 +185,10 @@ public class Targeting {
         if (distance_XY != 0) {
             this.targetEl = Constants.kLiftAngleMap
                     .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+            this.leftShooterSpeed = Constants.kLeftShooterMap
+                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+            this.rightShooterSpeed = Constants.kRightShooterMap
+                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
         } else {
             {
             }
@@ -225,6 +231,14 @@ public class Targeting {
 
     public double getEl() {
         return this.targetEl;
+    }
+
+    public double getLeftShooterSpeed(){
+        return this.leftShooterSpeed;
+    }
+
+    public double getRightShooterSpeed(){
+        return this.rightShooterSpeed;
     }
 
     //getTrapAz will use botPos to determine which 'region' the bot is in and return the angle needed to face the trap in radians

@@ -66,7 +66,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // private PidController aimAtSpeaker = new PidController(new PidConstants(1,
     // 0.2, 0));
 
-    private PidController aimAtTargetController = new PidController(new PidConstants(5.0, 0.0, 0.0));
+    private PidController aimAtTargetController = new PidController(new PidConstants(3.0, 0.0, 0.0));
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
     // private ProfiledPIDController aimAtTargetController = new
@@ -369,6 +369,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public void joystickDrive_OpenLoop(double rotation) {
 
+        //OLD
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed,
                 getDriveY() * Constants.MaxSpeed,
@@ -635,7 +636,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
         }
     }
-
+    
+    //#region getters
     private double getDriveX() {
         return ((Math.abs(joystick.getLeftY()) > 0.1) ? -Math.copySign(Math.pow(joystick.getLeftY(), 2.0), joystick.getLeftY()) : 0.0);
     }
@@ -647,8 +649,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private double getDriveRotation() {
         return -((Math.abs(joystick.getRightX()) > 0.1) ? joystick.getRightX() : 0.0);
     }
+    //#endregion getters
 
     //#region auto stuff
+    
     public boolean pathDone() {
         return pathFollower.pathDone();
     }

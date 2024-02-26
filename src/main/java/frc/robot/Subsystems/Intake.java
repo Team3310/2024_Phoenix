@@ -73,7 +73,7 @@ public class Intake extends SubsystemBase {
 
     public void setBackIntakeRPM(double rpm) {
         setBottomIntakeRPM(rpm);
-        setTopIntakeRPM(-rpm);
+        setTopIntakeRPM(rpm);
     }
 
     public void setBottomIntakeRPM(double rpm) {
