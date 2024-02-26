@@ -385,7 +385,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     SwerveModule.SteerRequestType.MotionMagic);
         }
     }
-    
+
     //TODO This is not working
     public void joystickDrive_RobotRelative_OpenLoop(double rotation) { 
 
@@ -637,15 +637,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     private double getDriveX() {
-        return ((Math.abs(joystick.getLeftY()) > 0.1) ? -joystick.getLeftY() : 0.0);
+        return ((Math.abs(joystick.getLeftY()) > 0.1) ? -Math.copySign(Math.pow(joystick.getLeftY(), 2.0), joystick.getLeftY()) : 0.0);
     }
 
     private double getDriveY() {
-        return ((Math.abs(joystick.getLeftX()) > 0.1) ? -joystick.getLeftX() : 0.0);
+        return ((Math.abs(joystick.getLeftX()) > 0.1) ? -Math.copySign(Math.pow(joystick.getLeftX(), 2.0), joystick.getLeftX()) : 0.0);
     }
 
     private double getDriveRotation() {
-        return ((Math.abs(joystick.getRightX()) > 0.1) ? joystick.getRightX() : 0.0);
+        return -((Math.abs(joystick.getRightX()) > 0.1) ? joystick.getRightX() : 0.0);
     }
 
     //#region auto stuff

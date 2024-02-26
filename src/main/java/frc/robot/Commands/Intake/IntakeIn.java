@@ -16,8 +16,8 @@ public class IntakeIn extends Command{
 
     @Override
     public void initialize() {
-        intake.setFrontIntakeRPM(Constants.IN_INTAKE_RPM);
-        intake.setBackIntakeRPM(Constants.IN_INTAKE_RPM);
+        intake.setFrontIntakeRPM(Constants.FRONT_IN_INTAKE_RPM);
+        intake.setBackIntakeRPM(Constants.BACK_IN_INTAKE_RPM);
     }
 
     @Override

@@ -38,8 +38,8 @@ public class Flicker extends SubsystemBase {
         config.Slot0.kD = kD;
         config.Slot0.kV = kV;
 
-        // config.CurrentLimits.StatorCurrentLimit = 10;
-        config.CurrentLimits.StatorCurrentLimitEnable = false;
+        config.CurrentLimits.StatorCurrentLimit = 80;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config.Slot0);
 
