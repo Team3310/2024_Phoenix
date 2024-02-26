@@ -19,7 +19,8 @@ public class Constants {
         public static final int BOTTOM_INTAKE_ID = 12;
 
         public static final double UNDER_INTAKE_RPM = 3000.0;
-        public static final double IN_INTAKE_RPM = 1000.0;
+        public static final double FRONT_IN_INTAKE_RPM = 800.0;
+        public static final double BACK_IN_INTAKE_RPM = 800.0;
         public static final double UP_INTAKE_RPM = 1000.0;
         public static final double SPIT_RPM = 1500.0;
         public static final double SLURP_INTAKE_RPM = 1000.0;
@@ -37,7 +38,7 @@ public class Constants {
 
         public static final int SHOOTER_KICKER_ID = 22;
 
-        public static final double KICKER_INTAKE_RPM = 400.0;
+        public static final double KICKER_INTAKE_RPM = 800.0;
         public static final double KICKER_SCORE_RPM = 1000.0;
 
         public static final double LEFT_SCORE_RPM = 5000.0;

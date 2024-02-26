@@ -8,19 +8,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2Stage"
+            "pathName": "2StagePreGrab"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3StagePreShoot"
+            "pathName": "2StageGrab"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3StageShoot"
+            "pathName": "3Stage"
           }
         },
         {

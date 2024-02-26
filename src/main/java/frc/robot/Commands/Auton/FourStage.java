@@ -16,15 +16,14 @@ public class FourStage extends AutonCommandBase{
         this.addCommands(
             new ThreeStage(robotContainer),
             new ParallelDeadlineGroup(
-                follow("4Stage"),
+                follow("4Stage").andThen(new WaitCommand(0.5)),
                 new IntakeAuton()
             ),
+            new AimLiftWithOdometryAuton().withTimeout(0.15),
             new ParallelDeadlineGroup(
-                new WaitCommand(0.2), 
-                new AimLiftWithOdometryAuton(),
-                new SetDriveMode(DriveMode.AIMATTARGET_AUTON)
-            ),
-            new FeederShootCommandAuton(robotContainer.shooter)
+                new WaitCommand(0.25), 
+                new FeederShootCommandAuton(robotContainer.shooter)
+            )
         );
     }
 }

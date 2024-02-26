@@ -8,13 +8,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2Stage"
+            "pathName": "2StagePreGrab"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2StageScore"
+            "pathName": "2StageGrab"
           }
         }
       ]

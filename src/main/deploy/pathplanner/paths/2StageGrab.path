@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.988800727169675,
-        "y": 4.0975590068624
+        "x": 2.042022972934835,
+        "y": 4.560720232551576
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5038992806828433,
-        "y": 3.7879127719765426
+        "x": 2.251084064781302,
+        "y": 4.423630991996516
       },
       "isLocked": false,
       "linkedName": "2StageEnd"
     },
     {
       "anchor": {
-        "x": 0.6918991385478449,
-        "y": 4.41657311639321
+        "x": 2.78,
+        "y": 4.133152710749866
       },
       "prevControl": {
-        "x": 1.4220869892516983,
-        "y": 3.9699533630500765
+        "x": 2.6899800602229624,
+        "y": 4.164465741251905
+      },
+      "nextControl": {
+        "x": 2.870019939777037,
+        "y": 4.101839680247827
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.2130499816555194,
+        "y": 4.560720232551576
+      },
+      "prevControl": {
+        "x": 2.0499993075926697,
+        "y": 4.6174366749637095
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "2StageGrabEnd"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -61.76255446183278,
+    "rotation": -26.569999999999993,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -4.139999999999986,
+    "rotation": -26.569999999999993,
     "velocity": 0
   },
   "useDefaultConstraints": false
