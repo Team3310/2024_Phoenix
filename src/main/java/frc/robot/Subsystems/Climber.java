@@ -1,10 +1,12 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 // import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,7 +39,7 @@ public class Climber extends SubsystemBase {
 
     private Climber() {
         TalonFXConfiguration config = new TalonFXConfiguration();
-
+        MotorOutputConfigs outputConfigs = new MotorOutputConfigs();
         config.Slot0.kP = kP;
         config.Slot0.kI = kI;
         config.Slot0.kD = kD;
@@ -47,16 +49,19 @@ public class Climber extends SubsystemBase {
         config.SoftwareLimitSwitch.ReverseSoftLimitThreshold = getInchesToRotations(Constants.CLIMBER_MIN_INCHES);
         config.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
+        outputConfigs.NeutralMode = NeutralModeValue.Brake;
 
         config.CurrentLimits.StatorCurrentLimit = 40.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(9.0); // inches per second
-        config.MotionMagic.MotionMagicAcceleration = getInchesToRotations(9.0);
+        config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(18.0); // inches per second
+        config.MotionMagic.MotionMagicAcceleration = getInchesToRotations(18.0);
 
         climberRight.getConfigurator().apply(config);
+        climberRight.getConfigurator().apply(outputConfigs);
         climberRight.setInverted(false);
         climberLeft.getConfigurator().apply(config);
+        climberLeft.getConfigurator().apply(outputConfigs);
         climberLeft.setInverted(true);
 
         control.EnableFOC = true;

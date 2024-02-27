@@ -55,6 +55,7 @@ public class Constants {
 
         public static final double LIFT_MAX_DEGREES = 75.0;
         public static final double LIFT_MIN_DEGREES = 18.0;
+        public static final double LIFT_INTAKE_DEGREES = 20.0;
         public static final double LIFT_START_DEGREES = 18.0;
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMap = new InterpolatingTreeMap<>();
@@ -66,6 +67,28 @@ public class Constants {
             kLiftAngleMap.put(new InterpolatingDouble(16.3), new InterpolatingDouble(27.0));
             kLiftAngleMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(21.7));
             kLiftAngleMap.put(new InterpolatingDouble(30.0), new InterpolatingDouble(21.7));
+        }
+
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
+        static {
+            kRightShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(2500.0));
+            kRightShooterMap.put(new InterpolatingDouble(5.1), new InterpolatingDouble(2500.0));
+            kRightShooterMap.put(new InterpolatingDouble(8.6), new InterpolatingDouble(2500.0));
+            kRightShooterMap.put(new InterpolatingDouble(12.5), new InterpolatingDouble(3000.0));
+            kRightShooterMap.put(new InterpolatingDouble(16.3), new InterpolatingDouble(3000.0));
+            kRightShooterMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(3500.0));
+            kRightShooterMap.put(new InterpolatingDouble(30.0), new InterpolatingDouble(3500.0));
+        }
+
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLeftShooterMap = new InterpolatingTreeMap<>();
+        static {
+            kLeftShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(3500.0));
+            kLeftShooterMap.put(new InterpolatingDouble(5.1), new InterpolatingDouble(3500.0));
+            kLeftShooterMap.put(new InterpolatingDouble(8.6), new InterpolatingDouble(3500.0));
+            kLeftShooterMap.put(new InterpolatingDouble(12.5), new InterpolatingDouble(5000.0));
+            kLeftShooterMap.put(new InterpolatingDouble(16.3), new InterpolatingDouble(5000.0));
+            kLeftShooterMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(5500.0));
+            kLeftShooterMap.put(new InterpolatingDouble(30.0), new InterpolatingDouble(5500.0));
         }
 
         public static final double FENDER_SHOT_ANGLE = 60.0;
@@ -93,7 +116,7 @@ public class Constants {
         public static final int AMP_MOTOR_ID = 50;
         public static final int AMP_SENSOR_PORT = 1;
 
-        public static final double AMP_SCORE_RPM = -1500.0;
+        public static final double AMP_SCORE_RPM = -2000.0;
         public static final double AMP_LOAD_RPM = 200.0;
         public static final double AMP_INTAKE_RPM = 800.0;
     //#endregion
@@ -113,7 +136,7 @@ public class Constants {
 
     //drivetrain
     public static final double MaxSpeed = 6; // 6 meters per second desired top speed
-    public static final double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+    public static final double MaxAngularRate = 4 * Math.PI; // 3/4 of a rotation per second max angular velocity
     
     //camera
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters

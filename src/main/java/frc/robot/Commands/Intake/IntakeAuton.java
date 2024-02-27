@@ -29,8 +29,8 @@ public class IntakeAuton extends Command {
             intake.setFrontIntakeRPM(Constants.FRONT_IN_INTAKE_RPM);
             intake.setBackIntakeRPM(Constants.BACK_IN_INTAKE_RPM);
             shooter.setKickerRPM(Constants.KICKER_INTAKE_RPM);
-            elevator.setPosition(2.0);
-            lift.setLiftAngle(20.0);
+            // elevator.setPosition(2.0);
+            lift.setLiftAngle(Constants.LIFT_INTAKE_DEGREES);
         // }
     }
 

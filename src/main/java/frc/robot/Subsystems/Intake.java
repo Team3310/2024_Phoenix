@@ -48,7 +48,8 @@ public class Intake extends SubsystemBase {
         config.Slot0.kD = kD;
         config.Slot0.kV = kF;
 
-        config.CurrentLimits.StatorCurrentLimitEnable = false;
+        config.CurrentLimits.StatorCurrentLimit = 80.0;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         frontIntake.getConfigurator().apply(config.Slot0);
         topIntake.getConfigurator().apply(config.Slot0);
