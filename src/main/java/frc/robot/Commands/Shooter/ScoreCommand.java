@@ -18,6 +18,7 @@ public class ScoreCommand extends Command {
   public ScoreCommand(Shooter shooter, Flicker flicker) {
     this.shooter = shooter;
     this.flicker = flicker;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.shooter);
     addRequirements(this.flicker);
@@ -29,18 +30,8 @@ public class ScoreCommand extends Command {
     timer.reset();
     timer.start();
 
-    if (shooter.isNoteLoaded()) {
-      shooter.setKickerRPM(Constants.KICKER_SCORE_RPM);
-    }
-    else if (flicker.isNoteLoaded()) {
-      flicker.setRPM(Constants.AMP_SCORE_RPM);
-    }
-
-    // Just in case the note is stuck
-    else {
-      shooter.setKickerRPM(Constants.KICKER_SCORE_RPM);
-      flicker.setRPM(Constants.AMP_SCORE_RPM);
-    }
+    shooter.setKickerRPM(Constants.KICKER_SCORE_RPM);
+    flicker.setRPM(Constants.AMP_SCORE_RPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

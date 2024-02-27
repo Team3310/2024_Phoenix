@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -13,6 +14,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -37,6 +39,7 @@ public class Lift extends SubsystemBase {
     private final LiftClosedLoopOutputType liftClosedLoopOutput;
     private final MotionMagicVoltage liftControlVoltage = new MotionMagicVoltage(0);
     private final MotionMagicTorqueCurrentFOC liftControlTorqueFOC = new MotionMagicTorqueCurrentFOC(0);
+    private final DutyCycleOut speedControl = new DutyCycleOut(0);
 
     private int printCount = 0;
     private double targetLiftAngleDegrees = 0;
@@ -135,6 +138,10 @@ public class Lift extends SubsystemBase {
             liftMotor.setControl(liftControlTorqueFOC.withPosition(getLiftDegreesToRevs(degrees)));
             break;
         }
+    }
+    
+    public void setLiftOff() {
+        liftMotor.setControl(speedControl.withOutput(0));
     }
 
     private double getLiftDegreesToRevs(double degrees) {

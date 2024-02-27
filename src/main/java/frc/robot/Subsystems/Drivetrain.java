@@ -79,14 +79,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                      // driving in open loop
 
-    public boolean isSnapping;
+    private boolean isSnapping;
     private double mLimelightVisionAlignGoal;
     private double mGoalTrackVisionAlignGoal;
     private double mVisionAlignAdjustment;
 
-    public ProfiledPIDController snapPIDController;
-    public ProfiledPIDController snapPIDControllerAuton;
-    public PIDController visionPIDController;
+    private ProfiledPIDController snapPIDController;
+    private ProfiledPIDController snapPIDControllerAuton;
+    private PIDController visionPIDController;
 
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
@@ -883,5 +883,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             isSnapping = false;
             snapPIDController.reset(getBotAz_FieldRelative());
         }
+    }
+
+    public boolean isSnapping() {
+        return this.isSnapping;
     }
 }   //#endregion

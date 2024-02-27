@@ -19,9 +19,13 @@ public class Constants {
         public static final int BOTTOM_INTAKE_ID = 12;
 
         public static final double UNDER_INTAKE_RPM = 3000.0;
+        public static final double UNDER_INTAKE_EJECT_RPM = -3000.0;
         public static final double FRONT_IN_INTAKE_RPM = 800.0;
+        public static final double FRONT_EJECT_INTAKE_RPM = -800.0;
         public static final double BACK_IN_INTAKE_RPM = 800.0;
+        public static final double BACK_EJECT_INTAKE_RPM = -800.0;
         public static final double UP_INTAKE_RPM = 1000.0;
+        public static final double UP_INTAKE_EJECT_RPM = -1000.0;
         public static final double SPIT_RPM = 1500.0;
         public static final double SLURP_INTAKE_RPM = 1000.0;
     //#endregion
@@ -39,6 +43,7 @@ public class Constants {
         public static final int SHOOTER_KICKER_ID = 22;
 
         public static final double KICKER_INTAKE_RPM = 800.0;
+        public static final double KICKER_EJECT_RPM = -800.0;
         public static final double KICKER_SCORE_RPM = 1000.0;
 
         public static final double LEFT_SCORE_RPM = 5000.0;
@@ -116,14 +121,17 @@ public class Constants {
         public static final int AMP_MOTOR_ID = 50;
         public static final int AMP_SENSOR_PORT = 1;
 
-        public static final double AMP_SCORE_RPM = -2000.0;
-        public static final double AMP_LOAD_RPM = 200.0;
+        public static final double AMP_SCORE_RPM = -3000.0;
+        public static final double AMP_LOAD_RPM = 400.0;
         public static final double AMP_INTAKE_RPM = 800.0;
+        public static final double AMP_EJECT_RPM = -800.0;
     //#endregion
 
     //#region Climber
         public static final double CLIMBER_GEAR_RATIO = (70.0/18.0)*(60.0/11.0);
         public static final double CLIMBER_PULLEY_DIAMETER = 1.25;
+
+        public static final int CHAIN_SENSOR_PORT = 2;
 
         public static final int CLIMBER_LEFT_ID = 60;
         public static final int CLIMBER_RIGHT_ID = 61;
@@ -190,5 +198,17 @@ public class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
     }
 
+    public enum SwerveCardinal {
+        NONE(0),
+
+        AMP(90),
+        SOURCE(-60);
+
+        public final double degrees;
+
+        SwerveCardinal(double degrees) {
+            this.degrees = degrees;
+        }
+    }
 
 }

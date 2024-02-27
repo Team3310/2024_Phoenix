@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 // import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,6 +19,8 @@ public class Climber extends SubsystemBase {
 
     private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID, TunerConstants.kCANbusName);
     private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID, TunerConstants.kCANbusName);
+
+    private final DigitalInput chainSensor = new DigitalInput(Constants.CHAIN_SENSOR_PORT);
 
     private MotionMagicDutyCycle control = new MotionMagicDutyCycle(0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);
@@ -118,6 +121,10 @@ public class Climber extends SubsystemBase {
 
     public double getLeftCurrent() {
         return climberLeft.getTorqueCurrent().getValueAsDouble();
+    }
+
+    public boolean isChainDetected() {
+        return chainSensor.get();
     }
 
     @Override
