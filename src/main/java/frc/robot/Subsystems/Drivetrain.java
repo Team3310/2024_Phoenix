@@ -647,7 +647,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     private double getDriveRotation() {
-        return -((Math.abs(joystick.getRightX()) > 0.1) ? joystick.getRightX() : 0.0);
+        return ((Math.abs(joystick.getRightX()) > 0.1) ? -Math.copySign(Math.pow(joystick.getRightX(), 2.0), joystick.getRightX()) : 0.0);
     }
     //#endregion getters
 
