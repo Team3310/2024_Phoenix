@@ -3,11 +3,10 @@ package frc.robot.Commands.Auton;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
-import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Drive.AngleRobotFromPathEnd;
 import frc.robot.Commands.Intake.IntakeAuton;
-import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
+import frc.robot.Commands.Lift.AimLiftFromPathEnd;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
-import frc.robot.Subsystems.Drivetrain.DriveMode;
 
 public class FourStageMiddle extends AutonCommandBase{
     public FourStageMiddle(RobotContainer robotContainer){
@@ -20,9 +19,8 @@ public class FourStageMiddle extends AutonCommandBase{
                 new IntakeAuton()
             ),
             new ParallelDeadlineGroup(
-                new WaitCommand(0.75),
-                new AimLiftWithOdometryAuton(),
-                new SetDriveMode(DriveMode.AIMATTARGET_AUTON)
+                new AngleRobotFromPathEnd(getPath("3StageMiddle")).withTimeout(0.5),
+                new AimLiftFromPathEnd(getPath("3StageMiddle"))
             ),
             new ParallelDeadlineGroup(
                 new WaitCommand(0.25), 

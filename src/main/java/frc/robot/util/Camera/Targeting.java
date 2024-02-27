@@ -1,5 +1,6 @@
 package frc.robot.util.Camera;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -94,6 +95,58 @@ public class Targeting {
         return targetID;
     }
     //#endregion Static Getters
+
+    public static double[] getTargetAzElFromPoint(Pose2d botPos) {
+        // AZIMUTH
+        // -----------------------------------------------------------------------------------------------------------------------
+        // 0 degrees is in the fields Y Positive Direction
+        // pi/2 (90 degrees) is in the fields X Positive Direction
+        // pi (180 degrees) is in the fields Y Negative Direction
+        // -pi/2 (-90 degrees) is in the fields X Negative Direction
+        // Range is from pi to ~-pi (180 to -179.999)
+
+        // ELEVATION
+        // -----------------------------------------------------------------------------------------------------------------------
+        // 0 degrees is along the XY plane
+        // 90 degrees is in the fields Z Positive Direction
+        // -90 degrees is in the fields Z Negative Direction
+        // Range is from pi/2 to -pi/2 (180 to -180)
+
+        // Compute the X, Y, and Z distances between coordinates
+        double delta_X = targetPos[0] - botPos.getX();
+        double delta_Y = targetPos[1] - botPos.getY();
+        double delta_Z = targetPos[2] - 0.0;
+
+        double targetAz = 0.0;
+        double targetEl = 0.0;
+
+        // Azimuth Trig
+        if (delta_Y > 0) { // (pi/2 to -pi/2), (90 deg to -90 deg))
+            targetAz = Math.atan(delta_X / delta_Y);
+        } else if ((delta_X > 0) && (delta_Y <= 0)) { // [pi/2 to pi)
+            targetAz = -(Math.atan(delta_Y / delta_X)) + (Math.PI / 2);
+        } else if ((delta_X < 0) && (delta_Y <= 0)) { // [-pi/2 to -pi)
+            targetAz = -(Math.atan(delta_Y / delta_X)) - (Math.PI / 2);
+        } else if ((delta_X == 0) && (delta_Y < 0)) { // Edge case: pointing along Y-Axis, Y-: pi (180 deg)
+            targetAz = Math.PI;
+        } else if ((delta_X == 0) && (delta_Y == 0)) { // This should never occur in a realistic scenario, will not
+                                                       // update AZ.
+            {}; // Nothing is done if both delta_X and delta_Y are 0, targetAz is not updated.
+        } else { // No cases ran, should never occur
+            {};
+        }
+
+        // Elevation Trig
+        double distance_XY = Math.hypot(delta_X, delta_Y);
+        // SmartDashboard.putNumber("Distance2Target", (distance_XY / 0.0254) / 12.0);
+        if (distance_XY != 0) {
+            targetEl = Constants.kLiftAngleMap.getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+        } else {
+            {}; // Nothing is done if the distance is 0 somehow,
+        }
+
+        return new double[]{targetAz, targetEl};
+    }
     //#endregion Static
 
     //#region Non-Static

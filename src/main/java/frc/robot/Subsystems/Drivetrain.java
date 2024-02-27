@@ -95,6 +95,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private double mVisionAlignAdjustment;
 
     public ProfiledPIDController snapPIDController;
+    public ProfiledPIDController snapPIDControllerAuton;
     public PIDController visionPIDController;
 
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
@@ -116,6 +117,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         snapPIDController = new ProfiledPIDController(Constants.SnapConstants.kP, Constants.SnapConstants.kI,
                 Constants.SnapConstants.kD, Constants.SnapConstants.kThetaControllerConstraints);
         snapPIDController.enableContinuousInput(-Math.PI, Math.PI);
+
+        snapPIDControllerAuton = new ProfiledPIDController(Constants.SnapAutonConstants.kP, Constants.SnapAutonConstants.kI,
+                Constants.SnapAutonConstants.kD, Constants.SnapAutonConstants.kThetaControllerConstraints);
+        snapPIDControllerAuton.enableContinuousInput(-Math.PI, Math.PI);
 
         visionPIDController = new PIDController(Constants.VisionAlignConstants.kP, Constants.VisionAlignConstants.kI,
                 Constants.VisionAlignConstants.kD);
@@ -248,6 +253,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
 
         mControlMode = mode;
+    }
+
+    public void snapToAngleAuton(double angle){
+        if (sideMode == SideMode.RED) {
+            angle = rolloverConversion_radians(angle + (Math.PI / 2));
+        } else if (RobotContainer.getInstance().getSide() == SideMode.BLUE) {
+            angle = rolloverConversion_radians(angle - (Math.PI / 2));
+        }
+        setDriveMode(DriveMode.AIMATTARGET_AUTON);
+        startSnap(Math.toDegrees(rolloverConversion_radians(angle+Math.PI)));
     }
 
     private void startSimThread() {
@@ -557,23 +572,27 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void aimAtTargetAuton() {
-        Double offset = getBotAz_FieldRelative() - odometryTargeting.getAz();
-        offset = rolloverConversion_radians(offset);
-        Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+        if(isSnapping){
+            maybeStopSnap(false);
 
-        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
-                0.0,
-                0.0,
-                request,
-                m_odometry.getEstimatedPosition()
-                        .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-                0.2);
+            Double request = -calculateSnapValue();
 
-        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+            ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+                    0.0,
+                    0.0,
+                    request * Constants.MaxAngularRate,
+                    m_odometry.getEstimatedPosition()
+                            .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
+                    0.2);
 
-        for (int i = 0; i < this.Modules.length; i++) {
-            this.Modules[i].apply(states[i],
-                    SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+            var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+
+            for (int i = 0; i < this.Modules.length; i++) {
+                this.Modules[i].apply(states[i],
+                        SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+            }
+        }else{
+            {}; //stop moving
         }
     }
 
@@ -645,6 +664,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
 
         SmartDashboard.putString("side", sideMode.toString());
+        SmartDashboard.putBoolean("is snapping", isSnapping);
 
         if (Constants.debug) {
 
@@ -816,22 +836,39 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public double calculateSnapValue() {
+        if(mControlMode == DriveMode.AIMATTARGET_AUTON){
+            return snapPIDControllerAuton.calculate(getBotAz_FieldRelative());
+        }
         return snapPIDController.calculate(getBotAz_FieldRelative());
     }
 
     public void startSnap(double snapAngle) {
-        joystickDrive_holdAngle = Math.toRadians(snapAngle);
-        snapPIDController.reset(getBotAz_FieldRelative());
-        snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(snapAngle), 0.0));
-        isSnapping = true;
+        if(mControlMode == DriveMode.AIMATTARGET_AUTON){
+            joystickDrive_holdAngle = Math.toRadians(snapAngle);
+            snapPIDControllerAuton.reset(getBotAz_FieldRelative());
+            snapPIDControllerAuton.setGoal(new TrapezoidProfile.State(Math.toRadians(snapAngle), 0.0));
+            isSnapping = true;
+        }else{
+            joystickDrive_holdAngle = Math.toRadians(snapAngle);
+            snapPIDController.reset(getBotAz_FieldRelative());
+            snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(snapAngle), 0.0));
+            isSnapping = true;
+        }
     }
 
     TimeDelayedBoolean delayedBoolean = new TimeDelayedBoolean();
 
     private boolean snapComplete() {
-        double error = snapPIDController.getGoal().position - getBotAz_FieldRelative();
-        return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapConstants.kEpsilon),
-                Constants.SnapConstants.kTimeout);
+        if(mControlMode == DriveMode.AIMATTARGET_AUTON){
+            double error = snapPIDControllerAuton.getGoal().position - getBotAz_FieldRelative();
+            return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapAutonConstants.kEpsilon),
+                Constants.SnapAutonConstants.kTimeout);
+        }
+        else{
+            double error = snapPIDController.getGoal().position - getBotAz_FieldRelative();
+            return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapConstants.kEpsilon),
+                    Constants.SnapConstants.kTimeout);
+        }        
     }
 
     public void maybeStopSnap(boolean force) {
