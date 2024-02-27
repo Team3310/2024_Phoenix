@@ -59,18 +59,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
 
-    // private PidController limelightController = new PidController(new
-    // PidConstants(1.0, 0.002, 0.0));
-    // private PidController aprilTagController = new PidController(new
-    // PidConstants(1.0, 0.0, 0.0));
-    // private PidController aimAtSpeaker = new PidController(new PidConstants(1,
-    // 0.2, 0));
-
     private PidController aimAtTargetController = new PidController(new PidConstants(3.0, 0.0, 0.0));
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
-
-    // private ProfiledPIDController aimAtTargetController = new
-    // ProfiledPIDController(1.0, 0.0, 0.0, new Constraints(Math.PI/2.0, Math.PI));
 
     private Limelight limelight = new Limelight("front");
     private Targeting frontCamera = new Targeting("front", false);
@@ -105,7 +95,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aimAtTargetController.setInputRange(-Math.PI, Math.PI);
         aimAtTargetController.setOutputRange(-1.0, 1.0);
         aimAtTargetController.setSetpoint(0.0);
-        // aimAtTargetController.enableContinuousInput(-Math.PI, Math.PI);
 
         joystickController.setContinuous(true);
         joystickController.setInputRange(-Math.PI, Math.PI);
@@ -154,39 +143,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-    public void setPath(PathPlannerPath path, boolean resetPose) {
-        pathFollower.setPath(path);
-        pathFollower.initialize(this, resetPose);
-    }
-
-    public void stopPath() {
-        pathFollower.stopPath();
-    }
-
-    public SideMode getSideMode() {
-        return sideMode;
-    }
-
-    private void configurePathPlanner() {
-        double driveBaseRadius = 0;
-        for (var moduleLocation : m_moduleLocations) {
-            driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
-        }
-
-        AutoBuilder.configureHolonomic(
-                () -> this.getState().Pose, // Supplier of current robot pose
-                this::seedFieldRelative, // Consumer for seeding pose against auto
-                this::getCurrentRobotChassisSpeeds,
-                (speeds) -> fromChassisSpeed(speeds), // Consumer of ChassisSpeeds to drive the robot
-                new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                        new PIDConstants(10, 0, 0),
-                        TunerConstants.kSpeedAt12VoltsMps,
-                        driveBaseRadius,
-                        new ReplanningConfig()),
-                () -> false, // Change this if the path needs to be flipped on red vs blue
-                this); // Subsystem for requirements
-    }
-
+    //#region DriveTrain things... 
     private void fromChassisSpeed(ChassisSpeeds speeds) {
         var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
 
@@ -200,15 +157,22 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
-    public Command getAutoPath(String pathName) {
-        return AutoBuilder.followPath(PathPlannerPath.fromPathFile(pathName));
-        // return new PathPlannerAuto(pathName);
-    }
+    private void startSimThread() {
+        m_lastSimTime = Utils.getCurrentTimeSeconds();
 
-    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
-        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
+        /* Run simulation at a faster rate so PID gains behave more reasonably */
+        m_simNotifier = new Notifier(() -> {
+            final double currentTime = Utils.getCurrentTimeSeconds();
+            double deltaTime = currentTime - m_lastSimTime;
+            m_lastSimTime = currentTime;
+
+            /* use the measured time delta, get battery voltage from WPILib */
+            updateSimState(deltaTime, RobotController.getBatteryVoltage());
+        });
+        m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
-    
+    //#endregion
+
     public boolean odosnap = false;
     public void setDriveMode(DriveMode mode) {
         odosnap = false;
@@ -269,38 +233,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         startSnap(Math.toDegrees(rolloverConversion_radians(angle+Math.PI)));
     }
 
-    private void startSimThread() {
-        m_lastSimTime = Utils.getCurrentTimeSeconds();
-
-        /* Run simulation at a faster rate so PID gains behave more reasonably */
-        m_simNotifier = new Notifier(() -> {
-            final double currentTime = Utils.getCurrentTimeSeconds();
-            double deltaTime = currentTime - m_lastSimTime;
-            m_lastSimTime = currentTime;
-
-            /* use the measured time delta, get battery voltage from WPILib */
-            updateSimState(deltaTime, RobotController.getBatteryVoltage());
-        });
-        m_simNotifier.startPeriodic(kSimLoopPeriod);
-    }
-
-    public Pose2d getOdoPose() {
-        return this.m_odometry.getEstimatedPosition();
-    }
-
-    public double getBotAz_FieldRelative() {
-        // Note from James to Zac, I'm changing this back to the 'old' one to see if it
-        // works...
-        return rolloverConversion_radians(
-                this.m_fieldRelativeOffset.getRadians() - getPose().getRotation().getRadians());
-        // return
-        // rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getOdoPose().getRotation().getRadians());
-    }
+    //#region DriveTrain methods
 
     // odometryTrack():
     // Uses the Odometries X and Y position, relative to the target, and drives the
     // yaw of the drivetrain to face the target.
-
     // odometryTrack() needs:
     // Targeting.setTarget(Target.#########); needs to be ran prior, this sets the
     // targetPos that the drivetrain will orient to.
@@ -337,7 +274,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // ... and controls the Yaw of the robot keep the drivetrain facing the target,
     // with the targeted april tag centered.
     // ... if the april tag cannot be seen, joystickDrive() is enabled.
-
     // aprilTagTrack() needs:
     // Targeting.setTarget(Target.#########); needs to be ran prior, this sets which
     // april tag ID to lock onto.
@@ -383,8 +319,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void joystickDrive_OpenLoop(double rotation) {
-
-        //OLD
         ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                 getDriveX() * Constants.MaxSpeed,
                 getDriveY() * Constants.MaxSpeed,
@@ -496,7 +430,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // Otherwise, OdometryTrack() is ran, the goal of which is to use
     // OdometryTrack() to point
     // ... the limelight at where the targeted april tag should be.
-
     // aimAtTarget() needs:
     // Will need everything that odometryTrack() and aprilTagTrack() need.
     // As well as the variables listed below...
@@ -602,6 +535,31 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
     
+    private void rotationHold() {
+        Double offset = getBotAz_FieldRelative() - pathFollower.lastAngle().getRadians();
+        offset = rolloverConversion_radians(offset);
+        Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+        SmartDashboard.putNumber("PID Output:", request / Constants.MaxAngularRate);
+        SmartDashboard.putNumber("PID Error:", offset);
+
+        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
+                0.0,
+                0.0,
+                request,
+                m_odometry.getEstimatedPosition()
+                        .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
+                0.2);
+
+        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+
+        for (int i = 0; i < this.Modules.length; i++) {
+            this.Modules[i].apply(states[i],
+                    SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+        }
+    }
+
+    //#endregion
+
     //#region getters
     private double getDriveX() {
         return ((Math.abs(joystick.getLeftY()) > 0.1) ? -Math.copySign(Math.pow(joystick.getLeftY(), 2.0), joystick.getLeftY()) : 0.0);
@@ -614,9 +572,69 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private double getDriveRotation() {
         return ((Math.abs(joystick.getRightX()) > 0.1) ? -Math.copySign(Math.pow(joystick.getRightX(), 2.0), joystick.getRightX()) : 0.0);
     }
+
+    public Pose2d getOdoPose() {
+        return this.m_odometry.getEstimatedPosition();
+    }
+
+    public SideMode getSideMode() {
+        return sideMode;
+    }
+
+    public double getBotAz_FieldRelative() {
+        // Note from James to Zac, I'm changing this back to the 'old' one to see if it
+        // works...
+        return rolloverConversion_radians(
+                this.m_fieldRelativeOffset.getRadians() - getPose().getRotation().getRadians());
+        // return
+        // rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getOdoPose().getRotation().getRadians());
+    }
+
+    public ChassisSpeeds getFieldRelativeVelocites() {
+        ChassisSpeeds robotChassisSpeeds = m_kinematics.toChassisSpeeds(m_cachedState.ModuleStates);
+        Double velocity = Math.hypot(robotChassisSpeeds.vxMetersPerSecond, robotChassisSpeeds.vyMetersPerSecond);
+        Double angle = getBotAz_FieldRelative();
+        ChassisSpeeds fieldRelativeVelocites = new ChassisSpeeds(velocity * Math.cos(angle), velocity * Math.sin(angle),
+                robotChassisSpeeds.omegaRadiansPerSecond);
+        return fieldRelativeVelocites;
+    }
+
+    public Pose2d getPose() {
+        // Note from James to Zac, I'm changing this back to the 'old' one to see if it
+        // works...
+        return m_odometry.getEstimatedPosition();
+        // return new Pose2d(this.m_odometry.getEstimatedPosition().getTranslation(),
+        // Rotation2d.fromRadians(getBotAz_FieldRelative()));
+    }
+
+    public Rotation2d getRotation() {
+        return Rotation2d.fromRadians(rolloverConversion_radians(
+                getPose().getRotation().getRadians() - this.m_fieldRelativeOffset.getRadians()));
+    }
+
+    public boolean hasTarget() {
+        return limelight.hasTarget();
+    }
+
+    public Targeting getOdoTargeting() {
+        return odometryTargeting;
+    }
+
+    public Targeting getLimelightTargeting() {
+        return frontCamera;
+    }
+
+    public DriveMode getDriveMode() {
+        return mControlMode;
+    }
+
+    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
+        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
+    }
+    
     //#endregion getters
 
-    //#region auto stuff
+    //#region auton stuff
     
     public boolean pathDone() {
         return pathFollower.pathDone();
@@ -624,6 +642,40 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public double getPathTime() {
         return pathFollower.getPathTime();
+    }
+
+    public void setPath(PathPlannerPath path, boolean resetPose) {
+        pathFollower.setPath(path);
+        pathFollower.initialize(this, resetPose);
+    }
+
+    public void stopPath() {
+        pathFollower.stopPath();
+    }
+
+    private void configurePathPlanner() {
+        double driveBaseRadius = 0;
+        for (var moduleLocation : m_moduleLocations) {
+            driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
+        }
+
+        AutoBuilder.configureHolonomic(
+                () -> this.getState().Pose, // Supplier of current robot pose
+                this::seedFieldRelative, // Consumer for seeding pose against auto
+                this::getCurrentRobotChassisSpeeds,
+                (speeds) -> fromChassisSpeed(speeds), // Consumer of ChassisSpeeds to drive the robot
+                new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+                        new PIDConstants(10, 0, 0),
+                        TunerConstants.kSpeedAt12VoltsMps,
+                        driveBaseRadius,
+                        new ReplanningConfig()),
+                () -> false, // Change this if the path needs to be flipped on red vs blue
+                this); // Subsystem for requirements
+    }
+
+    public Command getAutoPath(String pathName) {
+        return AutoBuilder.followPath(PathPlannerPath.fromPathFile(pathName));
+        // return new PathPlannerAuto(pathName);
     }
     //#endregion auto stuff
 
@@ -638,8 +690,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         ;
     }
 
+    //Odometry re-seeding with limelight stuff
     private boolean odometryBotPosUpdaterMethodFlag = false;
-
     private boolean odometryBotPosUpdater() {
         if (odometryBotPosUpdaterMethodFlag) {
             frontCamera.updateBotPos();
@@ -651,7 +703,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
         return false;
     }
-
     public int periodicCounter = 0;
 
     @Override
@@ -659,15 +710,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         if (mControlMode != DriveMode.AUTON && mControlMode != DriveMode.AIMATTARGET_AUTON) {
             odometryTargeting.update();
             frontCamera.update();
+
+            //#region Odometry reSeeds with Limelight BotPos periodically
             if (periodicCounter == 100) {
                 odometryBotPosUpdaterMethodFlag = true;
             }
             periodicCounter++;
-
             if (odometryBotPosUpdater()) {
                 periodicCounter = 0;
                 odometryBotPosUpdaterMethodFlag = false;
             }
+            //#endregion 
+
         }
 
         if(sideMode!=RobotContainer.getInstance().getSideChooser().getSelected()){
@@ -711,15 +765,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
     }
 
-    public ChassisSpeeds getFieldRelativeVelocites() {
-        ChassisSpeeds robotChassisSpeeds = m_kinematics.toChassisSpeeds(m_cachedState.ModuleStates);
-        Double velocity = Math.hypot(robotChassisSpeeds.vxMetersPerSecond, robotChassisSpeeds.vyMetersPerSecond);
-        Double angle = getBotAz_FieldRelative();
-        ChassisSpeeds fieldRelativeVelocites = new ChassisSpeeds(velocity * Math.cos(angle), velocity * Math.sin(angle),
-                robotChassisSpeeds.omegaRadiansPerSecond);
-        return fieldRelativeVelocites;
-    }
-
     @Override
     public void update(double time, double dt) {
         chooseVisionAlignGoal();
@@ -755,29 +800,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-    private void rotationHold() {
-        Double offset = getBotAz_FieldRelative() - pathFollower.lastAngle().getRadians();
-        offset = rolloverConversion_radians(offset);
-        Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
-        SmartDashboard.putNumber("PID Output:", request / Constants.MaxAngularRate);
-        SmartDashboard.putNumber("PID Error:", offset);
-
-        ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
-                0.0,
-                0.0,
-                request,
-                m_odometry.getEstimatedPosition()
-                        .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-                0.2);
-
-        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
-
-        for (int i = 0; i < this.Modules.length; i++) {
-            this.Modules[i].apply(states[i],
-                    SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
-        }
-    }
-
     public static double rolloverConversion_radians(double angleRadians) {
         // Converts input angle to keep within range -pi to pi
         if (angleRadians > Math.PI) {
@@ -787,35 +809,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         } else {
             return angleRadians;
         }
-    }
-
-    public Pose2d getPose() {
-        // Note from James to Zac, I'm changing this back to the 'old' one to see if it
-        // works...
-        return m_odometry.getEstimatedPosition();
-        // return new Pose2d(this.m_odometry.getEstimatedPosition().getTranslation(),
-        // Rotation2d.fromRadians(getBotAz_FieldRelative()));
-    }
-
-    public Rotation2d getRotation() {
-        return Rotation2d.fromRadians(rolloverConversion_radians(
-                getPose().getRotation().getRadians() - this.m_fieldRelativeOffset.getRadians()));
-    }
-
-    public boolean hasTarget() {
-        return limelight.hasTarget();
-    }
-
-    public Targeting getOdoTargeting() {
-        return odometryTargeting;
-    }
-
-    public Targeting getLimelightTargeting() {
-        return frontCamera;
-    }
-
-    public DriveMode getDriveMode() {
-        return mControlMode;
     }
 
     //#region 1678 Snap/Camera Code    
