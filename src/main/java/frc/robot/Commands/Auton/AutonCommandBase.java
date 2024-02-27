@@ -30,7 +30,8 @@ public class AutonCommandBase extends SequentialCommandGroup {
         path.getTrajectory(new ChassisSpeeds(0, 0, 0), path.getStartingDifferentialPose().getRotation()).getInitialDifferentialPose();
         Pose2d start = path.getPreviewStartingHolonomicPose();
         
-        TunerConstants.DriveTrain.seedFieldRelative(start);     
+        TunerConstants.DriveTrain.seedFieldRelative(start);   
+        TunerConstants.DriveTrain.seedFieldRelative();  
     }
 
     protected boolean getFlip(){

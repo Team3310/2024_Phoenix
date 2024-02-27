@@ -60,9 +60,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private String drivetrain_state = "INIT";
 
     private PidController aimAtTargetController = new PidController(new PidConstants(3.0, 0.0, 0.0));
+    private PidController noteTrackController = new PidController(new PidConstants(2.0, 0.02, 0.0));
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
     private Limelight limelight = new Limelight("front");
+    private Limelight noteLimelight = new Limelight("note");
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting odometryTargeting = new Targeting(true);
 
@@ -95,6 +97,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aimAtTargetController.setInputRange(-Math.PI, Math.PI);
         aimAtTargetController.setOutputRange(-1.0, 1.0);
         aimAtTargetController.setSetpoint(0.0);
+
+        noteTrackController.setContinuous(true);
+        noteTrackController.setInputRange(-Math.PI, Math.PI);
+        noteTrackController.setOutputRange(-1.0, 1.0);
+        noteTrackController.setSetpoint(0.0);
 
         joystickController.setContinuous(true);
         joystickController.setInputRange(-Math.PI, Math.PI);
@@ -230,6 +237,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             angle = rolloverConversion_radians(angle - (Math.PI / 2));
         }
         setDriveMode(DriveMode.AIMATTARGET_AUTON);
+        SmartDashboard.putNumber("snap auton angle", Math.toDegrees(rolloverConversion_radians(angle+Math.PI)));
         startSnap(Math.toDegrees(rolloverConversion_radians(angle+Math.PI)));
     }
 
@@ -534,6 +542,28 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             {}; //stop moving
         }
     }
+
+    public boolean isTrackingNote = false;
+    private void autonDrive(){
+        ChassisSpeeds speeds = pathFollower.update();
+
+        if(isTrackingNote){
+            double offset = noteLimelight.getFilteredTargetHorizOffset();
+            double request = noteTrackController.calculate(offset, 0.005);
+            speeds.omegaRadiansPerSecond = request*Constants.MaxAngularRate;
+        }
+
+        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+        if (!pathDone()) {
+            for (int i = 0; i < this.Modules.length; i++) {
+                this.Modules[i].apply(states[i],
+                        SwerveModule.DriveRequestType.OpenLoopVoltage,
+                        SwerveModule.SteerRequestType.MotionMagic);
+            }
+        } else {
+            // rotationHold();
+        }
+    }
     
     private void rotationHold() {
         Double offset = getBotAz_FieldRelative() - pathFollower.lastAngle().getRadians();
@@ -785,18 +815,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 odometryTrack();
                 break;
             case AUTON:
-                var states = m_kinematics.toSwerveModuleStates(pathFollower.update(), new Translation2d());
-                if (!pathDone()) {
-                    for (int i = 0; i < this.Modules.length; i++) {
-                        this.Modules[i].apply(states[i],
-                                SwerveModule.DriveRequestType.OpenLoopVoltage,
-                                SwerveModule.SteerRequestType.MotionMagic);
-                    }
-                    ;
-                    break;
-                } else {
-                    // rotationHold();
-                }
+                autonDrive();
+                break;
         }
     }
 

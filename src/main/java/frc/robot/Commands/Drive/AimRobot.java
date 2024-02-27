@@ -10,17 +10,15 @@ import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Camera.Targeting;
 
-public class AngleRobotFromPathEnd extends Command{
+public class AimRobot extends Command{
     private Drivetrain drivetrain;
-    private Pose2d pos;
-    public AngleRobotFromPathEnd(PathPlannerPath path){
+    public AimRobot(){
         this.drivetrain = TunerConstants.DriveTrain;
-        this.pos = path.getPathPoses().get(path.getPathPoses().size()-1);
     }
 
     @Override
     public void initialize() {
-        drivetrain.snapToAngleAuton(Targeting.getTargetAzElFromPoint(pos)[0]);
+        drivetrain.setDriveMode(DriveMode.AIMATTARGET);
     }
 
     @Override
