@@ -39,7 +39,7 @@ public class TunerConstants {
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
-    private static final double kSlipCurrentA = 40.0;
+    private static final double kSlipCurrentA = 80.0;
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
@@ -57,9 +57,11 @@ public class TunerConstants {
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
 
-    public static final String kCANbusName = "Drivetrain";
+    public static final String kPrimaryCANbusName = "Drivetrain";
+    public static final String kSecondaryCANbusName = isCompbot ? "Drivetrain" : "rio";
     private static final int kPigeonId = 0;
 
+    public static final double liftMagnetOffset = isCompbot ? 0.25572 : 0.73713;
 
     // These are only used for simulation
     private static final double kSteerInertia = 0.00001;
@@ -70,7 +72,7 @@ public class TunerConstants {
 
     private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
             .withPigeon2Id(kPigeonId)
-            .withCANbusName(kCANbusName);
+            .withCANbusName(kPrimaryCANbusName);
 
     private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
             .withDriveMotorGearRatio(kDriveGearRatio)

@@ -59,7 +59,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
 
-    private PidController aimAtTargetController = new PidController(new PidConstants(3.0, 0.0, 0.0));
+    private PidController aimAtTargetController = new PidController(new PidConstants(0.1, 0.0, 0.01));
     private PidController noteTrackController = new PidController(new PidConstants(0.25, 0.0, 0.0));
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
@@ -220,10 +220,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 }
             }
             else {
-                odosnap = true;
-                drivetrain_state = "ODO SNAP";
+                // odosnap = true;
+                drivetrain_state = "NO TARGET";
                 
-                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI));
+                // startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI));
             }
         }
 
@@ -266,7 +266,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 request,
                 m_odometry.getEstimatedPosition()
                         .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-                0.2);
+                0.005);
 
         var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
 
@@ -314,7 +314,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     request,
                     m_odometry.getEstimatedPosition()
                             .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-                    0.2);
+                    0.005);
             var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
             for (int i = 0; i < this.Modules.length; i++) {
                 this.Modules[i].apply(states[i],
@@ -333,9 +333,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 rotation * Constants.MaxAngularRate,
                 m_odometry.getEstimatedPosition()
                         .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-                0.2);
+                // Rotation2d.fromRadians(getBotAz_FieldRelative())),
+                0.005
+                );
 
-        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d(0,0));
 
         for (int i = 0; i < this.Modules.length; i++) {
             this.Modules[i].apply(states[i],
@@ -387,12 +389,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //Then send rotation command to the joystickDrive_OpenLoop.
         double rotation = getDriveRotation();
         if (isSnapping) {
-            if (Math.abs(getDriveRotation()) == 0.0) {
+            // if (Math.abs(getDriveRotation()) == 0.0) {
                 maybeStopSnap(false);
-                rotation = calculateSnapValue();
-            } else {
-                maybeStopSnap(true);
-            }
+                rotation = -calculateSnapValue();
+            // } else {
+            //     maybeStopSnap(true);
+            // }
         } else {
             // if (rotation == 0) {
             //     drivetrain_state = "JOYSTICKDRIVE_PID";
@@ -473,48 +475,43 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 joystickDrive_OpenLoop(-calculateSnapValue());
             }
         } else {
-            // If TargetID cant be seen by Limelight, use odometryTrack()
-            if ((!canSeeTarget) && (!lockedOn)){
-                drivetrain_state = "ODOMETRYTRACK";
-                odometryTrack();
-                if (justChanged) {
-                    justChanged = false;
-                }
-            }else if((!canSeeTarget) && (lockedOn)){
-                drivetrain_state = "LIME LOST MODE";
-                offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
-                double rotation = joystickController.calculate(offset, 0.005) * Constants.MaxAngularRate;
-                SmartDashboard.putNumber("PID Error:", offset);
-                SmartDashboard.putNumber("PID Output:", rotation);
-                joystickDrive_OpenLoop(rotation);
-            }else { // If TargetID can be seen, use Limelight TX tracking
-                if (!justChanged) { // When changing modes, clear integral accumulation
-                    aimAtTargetController.integralAccum = 0;
-                    justChanged = true;
-                    lockedOn = true;
-                }
-                drivetrain_state = "LIME MODE";
-                joystickDrive_holdAngle = getBotAz_FieldRelative();
-                // aprilTagTack(), but offset is grabbed earlier due to this drive methoed
-                // needing to determine if target is in view.
-                Double request = aimAtTargetController.calculate(offset, 0.005) * Constants.MaxAngularRate;
+            // // If TargetID cant be seen by Limelight, use odometryTrack()
+            // if ((!canSeeTarget) && (!lockedOn)){
+            //     drivetrain_state = "ODOMETRYTRACK";
+            //     odometryTrack();
+            //     if (justChanged) {
+            //         justChanged = false;
+            //     }
+            // }else if((!canSeeTarget) && (lockedOn)){
+            //     drivetrain_state = "LIME LOST MODE";
+            //     offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
+            //     double rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+            //     SmartDashboard.putNumber("PID Error:", offset);
+            //     SmartDashboard.putNumber("PID Output:", rotation);
+            //     joystickDrive_OpenLoop(rotation);
+            // }else { // If TargetID can be seen, use Limelight TX tracking
+                if (canSeeTarget) {
+                    if (!justChanged) { // When changing modes, clear integral accumulation
+                        aimAtTargetController.integralAccum = 0;
+                        justChanged = true;
+                        lockedOn = true;
+                    }
+                    drivetrain_state = "LIME MODE";
+                    joystickDrive_holdAngle = getBotAz_FieldRelative();
+                    // aprilTagTack(), but offset is grabbed earlier due to this drive methoed
+                    // needing to determine if target is in view.
+                    
+                    Double rotation = aimAtTargetController.calculate(offset, 0.005);
 
-                SmartDashboard.putNumber("PID Output:", request / Constants.MaxAngularRate);
-                SmartDashboard.putNumber("PID Error:", offset);
+                    SmartDashboard.putNumber("PID Output:", rotation);
+                    SmartDashboard.putNumber("PID Error:", offset);
 
-                ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
-                        getDriveX() * Constants.MaxSpeed,
-                        getDriveY() * Constants.MaxSpeed,
-                        request,
-                        m_odometry.getEstimatedPosition()
-                                .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-                        0.2);
-                var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
-                for (int i = 0; i < this.Modules.length; i++) {
-                    this.Modules[i].apply(states[i],
-                            SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+                    joystickDrive_OpenLoop(rotation);
                 }
-            }
+                else {
+                    joystickDrive();
+                }
+            // }
         }
     }
 
@@ -530,7 +527,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     request * Constants.MaxAngularRate,
                     m_odometry.getEstimatedPosition()
                             .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-                    0.2);
+                    0.005);
 
             var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
 
@@ -578,7 +575,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 request,
                 m_odometry.getEstimatedPosition()
                         .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-                0.2);
+                0.005);
 
         var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
 

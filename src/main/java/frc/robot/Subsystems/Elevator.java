@@ -15,7 +15,7 @@ import frc.robot.Swerve.TunerConstants;
 public class Elevator extends SubsystemBase {
     private static Elevator instance;
 
-    private final TalonFX elevatorMotor = new TalonFX(Constants.ELEVATOR_MOTOR_ID, TunerConstants.kCANbusName);
+    private final TalonFX elevatorMotor = new TalonFX(Constants.ELEVATOR_MOTOR_ID, TunerConstants.kSecondaryCANbusName);
 
     private MotionMagicDutyCycle mmDutyCycleControl = new MotionMagicDutyCycle(0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);
@@ -52,7 +52,7 @@ public class Elevator extends SubsystemBase {
 
         outputConfigs.NeutralMode = NeutralModeValue.Brake;
 
-        config.CurrentLimits.StatorCurrentLimit = 20.0;
+        config.CurrentLimits.StatorCurrentLimit = 40.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         config.MotionMagic.MotionMagicCruiseVelocity = 121.0; // rotations per second

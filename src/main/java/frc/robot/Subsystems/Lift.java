@@ -14,7 +14,6 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -56,9 +55,9 @@ public class Lift extends SubsystemBase {
         CANcoderConfiguration canConfig = new CANcoderConfiguration();
         canConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         canConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        canConfig.MagnetSensor.MagnetOffset = 0.197510+(18.0/360.0);
+        canConfig.MagnetSensor.MagnetOffset = TunerConstants.liftMagnetOffset;
 
-        canCoder = new CANcoder(Constants.LIFT_CANCODER_ID, TunerConstants.kCANbusName);
+        canCoder = new CANcoder(Constants.LIFT_CANCODER_ID, TunerConstants.kSecondaryCANbusName);
         canCoder.getConfigurator().apply(canConfig);
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -85,15 +84,15 @@ public class Lift extends SubsystemBase {
         configs.MotionMagic.MotionMagicAcceleration = 3.0;
         configs.MotionMagic.MotionMagicJerk = 0.0;
 
-        configs.CurrentLimits.StatorCurrentLimit = 70;
-        configs.CurrentLimits.StatorCurrentLimitEnable = false;
+        configs.CurrentLimits.StatorCurrentLimit = 50;
+        configs.CurrentLimits.StatorCurrentLimitEnable = true;
 
         configs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
         configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         configs.Feedback.SensorToMechanismRatio = 1.0;
         configs.Feedback.RotorToSensorRatio = Constants.LIFT_GEAR_RATIO;
 
-        liftMotor = new TalonFX(Constants.LIFT_MOTOR_ID, TunerConstants.kCANbusName);
+        liftMotor = new TalonFX(Constants.LIFT_MOTOR_ID, TunerConstants.kSecondaryCANbusName);
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for (int i = 0; i < 5; ++i) {
             status = liftMotor.getConfigurator().apply(configs);

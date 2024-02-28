@@ -43,9 +43,9 @@ public class Shooter extends SubsystemBase {
     private Shooter() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
-        shooterRightMain = new TalonFX(Constants.SHOOTER_RIGHT_MASTER_ID, TunerConstants.kCANbusName);
-        shooterLeftMain = new TalonFX(Constants.SHOOTER_LEFT_MASTER_ID, TunerConstants.kCANbusName);
-        shooterKicker = new TalonFX(Constants.SHOOTER_KICKER_ID, TunerConstants.kCANbusName);
+        shooterRightMain = new TalonFX(Constants.SHOOTER_RIGHT_MASTER_ID, TunerConstants.kSecondaryCANbusName);
+        shooterLeftMain = new TalonFX(Constants.SHOOTER_LEFT_MASTER_ID, TunerConstants.kSecondaryCANbusName);
+        shooterKicker = new TalonFX(Constants.SHOOTER_KICKER_ID, TunerConstants.kSecondaryCANbusName);
 
         sensor = new DigitalInput(0);
 
@@ -154,6 +154,10 @@ public class Shooter extends SubsystemBase {
 
     public double getKickerRPM() {
         return shooterKicker.getVelocity().getValue() / shooterRpmToMotorRPS;
+    }
+
+    public void setKickerSpeed(double speed) {
+        shooterKicker.setControl(new DutyCycleOut(speed));
     }
 
     public void setKickerRPM(double rpm) {

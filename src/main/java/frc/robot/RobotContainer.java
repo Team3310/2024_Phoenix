@@ -27,6 +27,7 @@ import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Intake.IntakeEject;
 import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
+import frc.robot.Commands.Lift.SetLiftOff;
 import frc.robot.Commands.Shooter.ScoreCommand;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
 import frc.robot.Commands.Shooter.SetRightShooterRPM;
@@ -101,7 +102,7 @@ public class RobotContainer {
     driverController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
 
     // shooting
-    driverController.rightBumper().onTrue(new ScoreCommand(shooter, flicker));
+    driverController.rightBumper().onTrue(new ScoreCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
     driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.x().onTrue(new ShooterOff(shooter));
     driverController.b().onTrue(new ShooterOn(shooter));
@@ -144,10 +145,10 @@ public class RobotContainer {
     operatorController.rightStick().onTrue(new IntakeEject()).onFalse(new StopAllIntakes());
 
     // shooting
-    operatorController.rightBumper().onTrue(new ScoreCommand(shooter, flicker));
-    operatorController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
-    
-    // climb
+    operatorController.rightBumper().onTrue(new ScoreCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
+    operatorController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
+   
+    // climb 
     operatorController.back().onTrue(new SetClimberUpDown(climber).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
     operatorController.start().onTrue(new ClimberPrepNoAngle(this));
 
@@ -160,8 +161,8 @@ public class RobotContainer {
     operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(40.0);})); // platform
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
-    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(4000); shooter.setRightMainRPM(2000); lift.setLiftAngle(45.0);})); // pass
-
+    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2000); lift.setLiftAngle(40.0);})); // pass
+  
     //intake
     // operatorController.a().onTrue(new IntakeUnder());
     // operatorController.y().onTrue(new IntakeUp());
@@ -207,6 +208,11 @@ public class RobotContainer {
         SmartDashboard.putNumber("set hood degrees", 20.0);
 
         SmartDashboard.putData("shooter wheels go", new SetLeftShooterRPM(shooter, 5000).alongWith(new SetRightShooterRPM(shooter, 3000)));
+
+        SmartDashboard.putData("Snap 0", new InstantCommand(()->drivetrain.startSnap(0)));
+        SmartDashboard.putData("Snap 90", new InstantCommand(()->drivetrain.startSnap(90)));
+        SmartDashboard.putData("Snap -90", new InstantCommand(()->drivetrain.startSnap(-90)));
+        SmartDashboard.putData("Snap 180", new InstantCommand(()->drivetrain.startSnap(180)));
       }
     }
 

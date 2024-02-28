@@ -17,8 +17,8 @@ import frc.robot.Swerve.TunerConstants;
 public class Climber extends SubsystemBase {
     private static Climber instance;
 
-    private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID, TunerConstants.kCANbusName);
-    private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID, TunerConstants.kCANbusName);
+    private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID, TunerConstants.kSecondaryCANbusName);
+    private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID, TunerConstants.kSecondaryCANbusName);
 
     private final DigitalInput chainSensor = new DigitalInput(Constants.CHAIN_SENSOR_PORT);
 
@@ -54,7 +54,7 @@ public class Climber extends SubsystemBase {
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
         outputConfigs.NeutralMode = NeutralModeValue.Brake;
 
-        config.CurrentLimits.StatorCurrentLimit = 40.0;
+        config.CurrentLimits.StatorCurrentLimit = 80.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(18.0); // inches per second

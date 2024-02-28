@@ -13,9 +13,9 @@ import frc.robot.Swerve.TunerConstants;
 public class Intake extends SubsystemBase {
     private static Intake instance;
 
-    private final TalonFX frontIntake = new TalonFX(Constants.FRONT_INTAKE_ID, TunerConstants.kCANbusName);
-    private final TalonFX topIntake = new TalonFX(Constants.TOP_INTAKE_ID, TunerConstants.kCANbusName);
-    private final TalonFX bottomIntake = new TalonFX(Constants.BOTTOM_INTAKE_ID, TunerConstants.kCANbusName);
+    private final TalonFX frontIntake = new TalonFX(Constants.FRONT_INTAKE_ID, TunerConstants.kPrimaryCANbusName);
+    private final TalonFX topIntake = new TalonFX(Constants.TOP_INTAKE_ID, TunerConstants.kPrimaryCANbusName);
+    private final TalonFX bottomIntake = new TalonFX(Constants.BOTTOM_INTAKE_ID, TunerConstants.kPrimaryCANbusName);
 
     // private DigitalInput indexerSensor = new DigitalInput(0);
     // private DigitalInput upSensor = new DigitalInput(1);
@@ -132,6 +132,9 @@ public class Intake extends SubsystemBase {
             SmartDashboard.putNumber("Front Intake RPM", getFrontIntakeRPM());
             SmartDashboard.putNumber("Top Intake RPM", getTopIntakeRPM());
             SmartDashboard.putNumber("Bottom Intake RPM", getBottomIntakeRPM());
+            SmartDashboard.putNumber("Front Intake AMP", frontIntake.getTorqueCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Top Intake AMP", topIntake.getTorqueCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Bottom Intake AMP", bottomIntake.getTorqueCurrent().getValueAsDouble());
         }
     }
 }
