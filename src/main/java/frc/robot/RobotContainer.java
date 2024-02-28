@@ -146,8 +146,8 @@ public class RobotContainer {
     // shooting
     operatorController.rightBumper().onTrue(new ScoreCommand(shooter, flicker));
     operatorController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).alongWith(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
-   
-    // climb 
+    
+    // climb
     operatorController.back().onTrue(new SetClimberUpDown(climber).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
     operatorController.start().onTrue(new ClimberPrepNoAngle(this));
 
@@ -161,7 +161,7 @@ public class RobotContainer {
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(40.0);})); // platform
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
     operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(4000); shooter.setRightMainRPM(2000); lift.setLiftAngle(45.0);})); // pass
-  
+
     //intake
     // operatorController.a().onTrue(new IntakeUnder());
     // operatorController.y().onTrue(new IntakeUp());

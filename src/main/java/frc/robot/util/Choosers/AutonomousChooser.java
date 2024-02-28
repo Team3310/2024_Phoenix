@@ -5,12 +5,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.FourStage;
+import frc.robot.Commands.Auton.FourStageLeft;
 import frc.robot.Commands.Auton.FourStageMiddle;
 import frc.robot.Commands.Auton.Test;
 import frc.robot.Commands.Auton.TestOneNote;
 import frc.robot.Commands.Auton.ThreeStage;
+import frc.robot.Commands.Auton.ThreeStageLeft;
 import frc.robot.Commands.Auton.ThreeStageMiddle;
 import frc.robot.Commands.Auton.TwoStage;
+import frc.robot.Commands.Auton.TwoStageLeft;
 
 public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousMode>{
     public AutonomousChooser() {
@@ -22,6 +25,9 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         addOption(AutonomousMode.FOUR_STAGE);
         addOption(AutonomousMode.THREE_STAGE_MIDDLE);
         addOption(AutonomousMode.FOUR_STAGE_MIDDLE);
+        addOption(AutonomousMode.TWO_STAGE_LEFT);
+        addOption(AutonomousMode.THREE_STAGE_LEFT);
+        addOption(AutonomousMode.FOUR_STAGE_LEFT);
     }
 
     public Command getCommand() {
@@ -35,7 +41,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         THREE_STAGE("three stage"),
         FOUR_STAGE("four stage"),
         THREE_STAGE_MIDDLE("three stage middle"),
-        FOUR_STAGE_MIDDLE("four stage middle")
+        FOUR_STAGE_MIDDLE("four stage middle"),
+        TWO_STAGE_LEFT("two stage left"),
+        THREE_STAGE_LEFT("three stage left"),
+        FOUR_STAGE_LEFT("four stage left")
         ;
 
         private String name = "";
@@ -60,7 +69,13 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                 case THREE_STAGE_MIDDLE:
                     return new ThreeStageMiddle(RobotContainer.getInstance());
                 case FOUR_STAGE_MIDDLE:
-                    return new FourStageMiddle(RobotContainer.getInstance());        
+                    return new FourStageMiddle(RobotContainer.getInstance());   
+                case TWO_STAGE_LEFT:
+                    return new TwoStageLeft(RobotContainer.getInstance());
+                case THREE_STAGE_LEFT:
+                    return new ThreeStageLeft(RobotContainer.getInstance());
+                case FOUR_STAGE_LEFT:
+                    return new FourStageLeft(RobotContainer.getInstance());                 
                 default:
                     return new WaitCommand(0.0);
             }

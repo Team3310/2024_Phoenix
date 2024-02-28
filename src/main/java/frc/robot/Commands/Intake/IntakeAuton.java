@@ -16,6 +16,7 @@ public class IntakeAuton extends Command {
     private Lift lift;
     private Elevator elevator;
     private Drivetrain drive;
+    private boolean trackNote;
 
     public IntakeAuton(){
         this.intake = Intake.getInstance();
@@ -23,6 +24,19 @@ public class IntakeAuton extends Command {
         this.lift = Lift.getInstance();
         this.elevator = Elevator.getInstance();
         this.drive = TunerConstants.DriveTrain;
+        this.trackNote = false;
+
+        addRequirements(intake, shooter, lift, elevator);
+    } 
+
+    public IntakeAuton(boolean trackNote){
+        this.intake = Intake.getInstance();
+        this.shooter = Shooter.getInstance();
+        this.lift = Lift.getInstance();
+        this.elevator = Elevator.getInstance();
+        this.drive = TunerConstants.DriveTrain;
+
+        this.trackNote = trackNote;
 
         addRequirements(intake, shooter, lift, elevator);
     } 
@@ -35,7 +49,7 @@ public class IntakeAuton extends Command {
             shooter.setKickerRPM(Constants.KICKER_INTAKE_RPM);
             // elevator.setPosition(2.0);
             lift.setLiftAngle(Constants.LIFT_INTAKE_DEGREES);
-            drive.isTrackingNote = true;
+            drive.isTrackingNote = trackNote;
         // }
     }
 

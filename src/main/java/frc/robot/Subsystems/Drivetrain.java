@@ -60,7 +60,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private String drivetrain_state = "INIT";
 
     private PidController aimAtTargetController = new PidController(new PidConstants(3.0, 0.0, 0.0));
-    private PidController noteTrackController = new PidController(new PidConstants(2.0, 0.02, 0.0));
+    private PidController noteTrackController = new PidController(new PidConstants(0.25, 0.0, 0.0));
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
     private Limelight limelight = new Limelight("front");
@@ -255,7 +255,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         drivetrain_state = "ODOMETRYTRACK";
         Double offset = getBotAz_FieldRelative() - odometryTargeting.getAz();
         offset = rolloverConversion_radians(offset);
-        Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+        Double request = aimAtTargetController.calculate(offset, 0.005) * Constants.MaxAngularRate;
 
         SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
         SmartDashboard.putNumber("PID Error:", offset);
@@ -307,7 +307,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         if (canSeeTarget) {
             drivetrain_state = "APRILTAGTRACK";
-            Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+            Double request = aimAtTargetController.calculate(offset, 0.005) * Constants.MaxAngularRate;
             ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
                     getDriveX() * Constants.MaxSpeed,
                     getDriveY() * Constants.MaxSpeed,
@@ -397,7 +397,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // if (rotation == 0) {
             //     drivetrain_state = "JOYSTICKDRIVE_PID";
             //     double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
-            //     rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+            //     rotation = joystickController.calculate(offset, 0.005) * Constants.MaxAngularRate;
             //     SmartDashboard.putNumber("PID Error:", offset);
             //     SmartDashboard.putNumber("PID Output:", rotation);
             // } else {
@@ -421,7 +421,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             if (rotation == 0) {
                 drivetrain_state = "JOYSTICKDRIVE_PID";
                 double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
-                rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+                rotation = joystickController.calculate(offset, 0.005) * Constants.MaxAngularRate;
                 SmartDashboard.putNumber("PID Error:", offset);
                 SmartDashboard.putNumber("PID Output:", rotation);
             } else {
@@ -483,7 +483,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }else if((!canSeeTarget) && (lockedOn)){
                 drivetrain_state = "LIME LOST MODE";
                 offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
-                double rotation = joystickController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+                double rotation = joystickController.calculate(offset, 0.005) * Constants.MaxAngularRate;
                 SmartDashboard.putNumber("PID Error:", offset);
                 SmartDashboard.putNumber("PID Output:", rotation);
                 joystickDrive_OpenLoop(rotation);
@@ -548,7 +548,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         ChassisSpeeds speeds = pathFollower.update();
 
         if(isTrackingNote){
-            double offset = noteLimelight.getFilteredTargetHorizOffset();
+            double offset = noteLimelight.getTargetHorizOffset();
             double request = noteTrackController.calculate(offset, 0.005);
             speeds.omegaRadiansPerSecond = request*Constants.MaxAngularRate;
         }
@@ -568,7 +568,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private void rotationHold() {
         Double offset = getBotAz_FieldRelative() - pathFollower.lastAngle().getRadians();
         offset = rolloverConversion_radians(offset);
-        Double request = aimAtTargetController.calculate(offset, 0.02) * Constants.MaxAngularRate;
+        Double request = aimAtTargetController.calculate(offset, 0.005) * Constants.MaxAngularRate;
         SmartDashboard.putNumber("PID Output:", request / Constants.MaxAngularRate);
         SmartDashboard.putNumber("PID Error:", offset);
 
