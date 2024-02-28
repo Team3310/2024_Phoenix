@@ -302,10 +302,10 @@ public class RobotContainer {
     }
   
   public void addDrivemodeTestButtons(){
-    SmartDashboard.putData("JOYSTICK_BOTREL", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK_BOTREL)));
-    SmartDashboard.putData("JOYSTICK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK)));
-    SmartDashboard.putData("AIMATTARGET", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTARGET)));
-    SmartDashboard.putData("ODOMETRYTRACK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.ODOMETRYTRACK)));
+    // SmartDashboard.putData("JOYSTICK_BOTREL", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK_BOTREL)));
+    // SmartDashboard.putData("JOYSTICK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.JOYSTICK)));
+    // SmartDashboard.putData("AIMATTARGET", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTARGET)));
+    // SmartDashboard.putData("ODOMETRYTRACK", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.ODOMETRYTRACK)));
     // SmartDashboard.putData("AIMATTRAP", new InstantCommand(()->drivetrain.setDriveMode(DriveMode.AIMATTRAP)));
   }
 
