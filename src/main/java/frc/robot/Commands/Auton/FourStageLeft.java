@@ -19,11 +19,11 @@ public class FourStageLeft extends AutonCommandBase{
                 follow("4StageLeft"), 
                 new SequentialCommandGroup(
                     new WaitCommand(0.75),
-                    new IntakeAuton(true)
+                    new IntakeAuton(false)
                 )
             ),
-            new AimLiftWithOdometryAuton().withTimeout(0.15),
-            new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.125)
+            new AimLiftWithOdometryAuton().withTimeout(0.25),
+            new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.3)
         );
     }
 }

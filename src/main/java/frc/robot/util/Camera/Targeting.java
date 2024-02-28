@@ -231,8 +231,8 @@ public class Targeting {
         }
 
         // Elevation Trig
-        delta_X += TunerConstants.DriveTrain.getFieldRelativeVelocites().vxMetersPerSecond * Constants.SHOOT_TIME;
-        delta_Y += TunerConstants.DriveTrain.getFieldRelativeVelocites().vyMetersPerSecond * Constants.SHOOT_TIME;
+        // delta_X += TunerConstants.DriveTrain.getFieldRelativeVelocites().vxMetersPerSecond * Constants.SHOOT_TIME;
+        // delta_Y += TunerConstants.DriveTrain.getFieldRelativeVelocites().vyMetersPerSecond * Constants.SHOOT_TIME;
         distance_XY = Math.hypot(delta_X, delta_Y);
         SmartDashboard.putNumber("Distance2Target", (distance_XY / 0.0254) / 12.0);
         if (distance_XY != 0) {

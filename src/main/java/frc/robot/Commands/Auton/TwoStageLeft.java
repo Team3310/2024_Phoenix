@@ -26,8 +26,8 @@ public class TwoStageLeft extends AutonCommandBase{
                 follow("2StageLeftGrab"),
                 new IntakeAuton(false)
             ),
-            new AimLiftWithOdometryAuton().withTimeout(0.125),
-            new FeederShootCommandAuton(robotContainer.shooter)
+            new AimLiftWithOdometryAuton().withTimeout(0.25),
+            new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.3)
         );
     }
 }

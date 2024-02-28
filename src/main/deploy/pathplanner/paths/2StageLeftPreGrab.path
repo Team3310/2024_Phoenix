@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.904894952647049,
+        "x": 2.127943684458798,
         "y": 5.55593454044051
       },
       "prevControl": {
-        "x": 1.904894952647049,
+        "x": 1.96668964766501,
         "y": 5.55593454044051
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "2StageLeftPreGrab"
     }
   ],
   "rotationTargets": [],
