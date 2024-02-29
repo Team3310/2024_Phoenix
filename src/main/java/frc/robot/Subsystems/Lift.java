@@ -166,20 +166,20 @@ public class Lift extends SubsystemBase {
             printCount = 0;
             // If any faults happen, print them out. Sticky faults will always be present if
             // live-fault occurs
-            f_fusedSensorOutOfSync.refresh();
-            sf_fusedSensorOutOfSync.refresh();
-            boolean anyFault = sf_fusedSensorOutOfSync.getValue();
-            if (anyFault) {
-                System.out.println("A fault has occurred:");
-                /*
-                 * If we're live, indicate live, otherwise if we're sticky indicate sticky, otherwise do nothing
-                 */
-                if (f_fusedSensorOutOfSync.getValue()) {
-                    System.out.println("Fused sensor out of sync live-faulted");
-                } else if (sf_fusedSensorOutOfSync.getValue()) {
-                    System.out.println("Fused sensor out of sync sticky-faulted");
-                }
-            }
+            // f_fusedSensorOutOfSync.refresh();
+            // sf_fusedSensorOutOfSync.refresh();
+            // boolean anyFault = sf_fusedSensorOutOfSync.getValue();
+            // if (anyFault) {
+            //     System.out.println("A fault has occurred:");
+            //     /*
+            //      * If we're live, indicate live, otherwise if we're sticky indicate sticky, otherwise do nothing
+            //      */
+            //     if (f_fusedSensorOutOfSync.getValue()) {
+            //         System.out.println("Fused sensor out of sync live-faulted");
+            //     } else if (sf_fusedSensorOutOfSync.getValue()) {
+            //         System.out.println("Fused sensor out of sync sticky-faulted");
+            //     }
+            // }
             SmartDashboard.putNumber("Lift Angle Deg", getLiftDegrees());
         }
     }

@@ -36,6 +36,10 @@ public class Targeting {
     private static final double redTrap2ID = 12;
     private static final double redTrap3ID = 13;
     private static final double nullID = 0;
+
+    private static final double speakerHeightInches = 60;
+    private static final double cameraMountAngleDegrees = 15;
+    private static final double caneraMountHeightInches = 20;
     //#endregion
 
     public enum Target {
@@ -156,6 +160,7 @@ public class Targeting {
     private double leftShooterSpeed = 0;
     private double rightShooterSpeed = 0;
     private double distance_XY = 0.0;
+    private double distance_XY_pos = 0.0;
     private String limelightHostname;
     private boolean isOdometry = false;
     private final Limelight limelight;
@@ -182,6 +187,14 @@ public class Targeting {
                 botPos = new double[] { 0, 0, 0, 0, 0, 0 };
             }
         }
+    }
+
+    public double getDistanceToTarget() {
+        double angleToSpeakerDegrees = cameraMountAngleDegrees + botPos[2];
+        double heightDelta = speakerHeightInches - caneraMountHeightInches;
+        double distance = heightDelta / Math.tan(Math.toRadians(angleToSpeakerDegrees));
+
+        return distance;
     }
 
     public void updateTargetAzEl() {
@@ -234,7 +247,9 @@ public class Targeting {
         // delta_X += TunerConstants.DriveTrain.getFieldRelativeVelocites().vxMetersPerSecond * Constants.SHOOT_TIME;
         // delta_Y += TunerConstants.DriveTrain.getFieldRelativeVelocites().vyMetersPerSecond * Constants.SHOOT_TIME;
         distance_XY = Math.hypot(delta_X, delta_Y);
+ //       distance_XY = getDistanceToTarget();
         SmartDashboard.putNumber("Distance2Target", (distance_XY / 0.0254) / 12.0);
+ //       SmartDashboard.putNumber("Distance2Target pos", (distance_XY_pos / 0.0254) / 12.0);
         if (distance_XY != 0) {
             this.targetEl = Constants.kLiftAngleMap
                     .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;

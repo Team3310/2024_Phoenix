@@ -4,10 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Commands.Auton.TestOneNote;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
@@ -15,6 +16,7 @@ import frc.robot.util.Camera.LimelightHelpers;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private final boolean useLimelight = false;
 
   private RobotContainer m_robotContainer = new RobotContainer();
 
@@ -30,13 +32,22 @@ public class Robot extends TimedRobot {
     m_robotContainer.climber.setClimberZero(0);
     m_robotContainer.elevator.setElevatorZero(0);
 
-    //TODO FYI if robot locked check this
-    LimelightHelpers.getLatestResults("limelight-front");
+    m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
   }
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); 
+    CommandScheduler.getInstance().run();
+
+    // if (useLimelight) {
+    //   var lastResult = LimelightHelpers.getLatestResults("limelight-fron").targetingResults;
+
+    //   Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
+
+    //   if (lastResult.valid) {
+    //     m_robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+    //   }
+    // }
   }
 
   @Override

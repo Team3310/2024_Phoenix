@@ -159,8 +159,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-    public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
-        return run(() -> this.setControl(requestSupplier.get()));
+    public void applyRequest(Supplier<SwerveRequest> requestSupplier) {
+        this.setControl(requestSupplier.get());
     }
 
     //#endregion
@@ -251,8 +251,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             .withVelocityX(getDriveX() * Constants.MaxSpeed) 
             .withVelocityY(getDriveY() * Constants.MaxSpeed) 
             .withRotationalRate(rotation * Constants.MaxAngularRate) 
-        ).ignoringDisable(true);
-
+        );
     }
 
     // joystickDrive_holdAngle:
