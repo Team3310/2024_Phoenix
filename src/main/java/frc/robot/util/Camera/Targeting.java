@@ -39,7 +39,7 @@ public class Targeting {
 
     private static final double speakerHeightInches = 60;
     private static final double cameraMountAngleDegrees = 15;
-    private static final double caneraMountHeightInches = 20;
+    private static final double caneraMountHeightInches = 23.25;
     //#endregion
 
     public enum Target {
