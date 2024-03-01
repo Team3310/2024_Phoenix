@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2AmpPreGrab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2AmpGrab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3Amp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4Amp"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

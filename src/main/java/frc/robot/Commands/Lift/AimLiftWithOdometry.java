@@ -1,7 +1,9 @@
 package frc.robot.Commands.Lift;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
@@ -11,13 +13,16 @@ public class AimLiftWithOdometry extends Command{
     private Lift lift;
     private Drivetrain drive;
     private Shooter shooter;
+    private LED led;
+    private boolean setBlink = false;
 
     public AimLiftWithOdometry(){
         this.lift = Lift.getInstance();
         this.drive = TunerConstants.DriveTrain;
         this.shooter = Shooter.getInstance();
+        this.led = LED.getInstance();
 
-        addRequirements(lift);
+        addRequirements(lift, led);
     }
 
     @Override
@@ -26,11 +31,19 @@ public class AimLiftWithOdometry extends Command{
 
     @Override
     public void execute(){ 
-        if (drive.hasTarget()) {
+        if (drive.canSeeTargetTag()) {
  //           drive.getLimelightTargeting().update();
             lift.setLiftAngle(drive.getLimelightTargeting().getEl());
             shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
             shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
+
+            // if(drive.snapComplete() && lift.isFinished()){
+                led.setSolid(new Color(0,255,0));
+            // }else{
+            //     led.setBlink(new Color(243, 204, 20));
+            // }
+        }else{
+            led.setSolid(new Color(255,0,0));
         }
         // else{
         //     drive.getOdoTargeting().update();  
@@ -47,6 +60,6 @@ public class AimLiftWithOdometry extends Command{
 
     @Override
     public void end(boolean interrupted){
-
+        // led.setPrevState();
     }
 }

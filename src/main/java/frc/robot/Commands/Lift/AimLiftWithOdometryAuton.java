@@ -26,7 +26,7 @@ public class AimLiftWithOdometryAuton extends Command{
     @Override
     public void execute(){ 
         if (drive.hasTarget()) {
-            drive.getLimelightTargeting().update();
+            // drive.getLimelightTargeting().update();
             lift.setLiftAngle(drive.getLimelightTargeting().getEl());
             shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
             shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());

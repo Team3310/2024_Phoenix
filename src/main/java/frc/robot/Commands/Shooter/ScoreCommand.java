@@ -5,19 +5,27 @@
 package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Flicker;
+import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Shooter;
 
 public class ScoreCommand extends Command {
   private final Shooter shooter;
   private final Flicker flicker;
+  private final Elevator elevator;
+  private LED led;
+
   private final Timer timer = new Timer();
 
   public ScoreCommand(Shooter shooter, Flicker flicker) {
     this.shooter = shooter;
     this.flicker = flicker;
+    this.elevator = Elevator.getInstance();
+    this.led = LED.getInstance();
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.shooter);
@@ -31,7 +39,12 @@ public class ScoreCommand extends Command {
     timer.start();
 
     shooter.setKickerRPM(Constants.KICKER_SCORE_RPM);
-    flicker.setRPM(Constants.AMP_SCORE_RPM);
+
+    if(elevator.getPositionInches()>Constants.ELEVATOR_MAX_INCHES-2.0){
+      flicker.setRPM(Constants.TRAP_SCORE_RPM);
+    }else{
+      flicker.setRPM(Constants.AMP_SCORE_RPM);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,5 +63,6 @@ public class ScoreCommand extends Command {
   public void end(boolean interrupted) {
     shooter.setKickerOff();
     flicker.setRPM(0);
+    led.setOff();
   }
 }

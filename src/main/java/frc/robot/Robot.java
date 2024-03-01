@@ -27,6 +27,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
     updateManager.startLoop(0.005);
 
     m_robotContainer.climber.setClimberZero(0);
@@ -51,10 +52,14 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.led.setOff();
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    
+  }
 
   @Override
   public void disabledExit() {}

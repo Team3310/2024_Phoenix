@@ -27,7 +27,7 @@ public class StopAllIntakes extends Command{
         shooter.setKickerOff();
         intake.stopIntake();
         flicker.setRPM(0.0);
-        led.setOff();
+        led.setPrevState();
     }
 
     @Override

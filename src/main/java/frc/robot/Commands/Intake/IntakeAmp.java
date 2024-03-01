@@ -44,6 +44,9 @@ public class IntakeAmp extends Command{
         intake.setBottomIntakeRPM(0.0);
         intake.setTopIntakeRPM(0.0);
         flicker.setRPM(0.0);
-        led.setSolid(new Color(0, 0, 255));
+        if(!interrupted){
+            led.setSolid(new Color(0, 0, 255));
+            led.setSolid(new Color(0, 0, 255));
+        }
     }
 }

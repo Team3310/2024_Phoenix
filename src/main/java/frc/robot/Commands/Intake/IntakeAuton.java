@@ -57,7 +57,8 @@ public class IntakeAuton extends Command {
             lift.setLiftAngle(Constants.LIFT_INTAKE_DEGREES);
             drive.isTrackingNote = trackNote;
         // }
-        led.setBlink(new Color(0, 255, 0));
+        // led.setBlink(new Color(0, 255, 0));
+        led.setBlink(new Color(243, 204, 20));
     }
 
     @Override
@@ -76,6 +77,9 @@ public class IntakeAuton extends Command {
         shooter.setKickerRPM(0.0);
         elevator.setPosition(0.0);
         drive.isTrackingNote = false;
-        led.setSolid(new Color(0, 255, 0));
+        if(!interrupted){
+            led.setSolid(new Color(243, 204, 20));
+            led.setSolid(new Color(243, 204, 20));
+        }
     }
 }

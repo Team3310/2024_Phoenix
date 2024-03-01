@@ -90,6 +90,8 @@ public class Intake extends SubsystemBase {
             return;
         }
 
+        rpm*=1.38;
+
         topIntake.setControl(topIntakeControl.withVelocity(getRPMtoMotorRPS(rpm)));
     }
 

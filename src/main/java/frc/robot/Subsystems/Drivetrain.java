@@ -60,7 +60,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
 
-    private PidController aimAtTargetController = new PidController(new PidConstants(3.0, 0.0, 0.01));
+    private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.0, 0.01));
     private PidController noteTrackController = new PidController(new PidConstants(0.25, 0.0, 0.0));
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
@@ -562,6 +562,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         return AutoBuilder.followPath(PathPlannerPath.fromPathFile(pathName));
         // return new PathPlannerAuto(pathName);
     }
+
+    public boolean canSeeTargetTag(){
+        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
+
+        for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
+            if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
+                return true;
+            }
+        }
+        return false;
+    }
     //#endregion auto stuff
 
     public enum DriveMode {
@@ -725,7 +736,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     TimeDelayedBoolean delayedBoolean = new TimeDelayedBoolean();
 
-    private boolean snapComplete() {
+    public boolean snapComplete() {
         if(mControlMode == DriveMode.AIMATTARGET_AUTON){
             double error = snapPIDControllerAuton.getGoal().position - getBotAz_FieldRelative();
             return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapAutonConstants.kEpsilon),

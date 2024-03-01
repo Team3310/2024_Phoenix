@@ -4,30 +4,32 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.Commands.Auton.FourStage;
-import frc.robot.Commands.Auton.FourStageLeft;
-import frc.robot.Commands.Auton.FourStageMiddle;
-import frc.robot.Commands.Auton.Test;
-import frc.robot.Commands.Auton.TestOneNote;
-import frc.robot.Commands.Auton.ThreeStage;
-import frc.robot.Commands.Auton.ThreeStageLeft;
-import frc.robot.Commands.Auton.ThreeStageMiddle;
-import frc.robot.Commands.Auton.TwoStage;
-import frc.robot.Commands.Auton.TwoStageLeft;
+import frc.robot.Commands.Auton.Amp.FourAmp;
+import frc.robot.Commands.Auton.Amp.ThreeAmp;
+import frc.robot.Commands.Auton.Amp.TwoAmp;
+import frc.robot.Commands.Auton.Center.FourStageLeft;
+import frc.robot.Commands.Auton.Center.ThreeStageLeft;
+import frc.robot.Commands.Auton.Center.TwoStageLeft;
+import frc.robot.Commands.Auton.Stage.FourStage;
+import frc.robot.Commands.Auton.Stage.FourStageMiddle;
+import frc.robot.Commands.Auton.Stage.ThreeStage;
+import frc.robot.Commands.Auton.Stage.ThreeStageMiddle;
+import frc.robot.Commands.Auton.Stage.TwoStage;
 
 public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousMode>{
     public AutonomousChooser() {
         super("Autonomous Mode");
-        setDefaultOption(AutonomousMode.TEST);
-        addOption(AutonomousMode.TEST_ONE);
+        setDefaultOption(AutonomousMode.FOUR_STAGE);
         addOption(AutonomousMode.TWO_STAGE);
         addOption(AutonomousMode.THREE_STAGE);
-        addOption(AutonomousMode.FOUR_STAGE);
         addOption(AutonomousMode.THREE_STAGE_MIDDLE);
         addOption(AutonomousMode.FOUR_STAGE_MIDDLE);
         addOption(AutonomousMode.TWO_STAGE_LEFT);
         addOption(AutonomousMode.THREE_STAGE_LEFT);
         addOption(AutonomousMode.FOUR_STAGE_LEFT);
+        addOption(AutonomousMode.TWO_AMP);
+        addOption(AutonomousMode.THREE_AMP);
+        addOption(AutonomousMode.FOUR_AMP);
     }
 
     public Command getCommand() {
@@ -35,8 +37,6 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
     }
 
     public enum AutonomousMode {
-        TEST("test"),
-        TEST_ONE("one note test"),
         TWO_STAGE("two stage"),
         THREE_STAGE("three stage"),
         FOUR_STAGE("four stage"),
@@ -44,7 +44,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         FOUR_STAGE_MIDDLE("four stage middle"),
         TWO_STAGE_LEFT("two stage left"),
         THREE_STAGE_LEFT("three stage left"),
-        FOUR_STAGE_LEFT("four stage left")
+        FOUR_STAGE_LEFT("four stage left"),
+        TWO_AMP("two amp"),
+        THREE_AMP("three amp"),
+        FOUR_AMP("four amp"),
         ;
 
         private String name = "";
@@ -75,7 +78,13 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                 case THREE_STAGE_LEFT:
                     return new ThreeStageLeft(RobotContainer.getInstance());
                 case FOUR_STAGE_LEFT:
-                    return new FourStageLeft(RobotContainer.getInstance());                 
+                    return new FourStageLeft(RobotContainer.getInstance());   
+                case TWO_AMP:
+                    return new TwoAmp(RobotContainer.getInstance());
+                case THREE_AMP:
+                    return new ThreeAmp(RobotContainer.getInstance());
+                case FOUR_AMP:
+                    return new FourAmp(RobotContainer.getInstance());                          
                 default:
                     return new WaitCommand(0.0);
             }

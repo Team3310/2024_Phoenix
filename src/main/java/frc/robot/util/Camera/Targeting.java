@@ -245,13 +245,9 @@ public class Targeting {
             this.targetAz = Math.PI;
         } else if ((delta_X == 0) && (delta_Y == 0)) { // This should never occur in a realistic scenario, will not
                                                        // update AZ.
-            {
-            }
-            ; // Nothing is done if both delta_X and delta_Y are 0, targetAz is not updated.
+            {}; // Nothing is done if both delta_X and delta_Y are 0, targetAz is not updated.
         } else { // No cases ran, should never occur
-            {
-            }
-            ;
+            {};
         }
 
         // Elevation Trig
