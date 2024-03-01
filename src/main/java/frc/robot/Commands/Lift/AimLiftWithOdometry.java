@@ -27,16 +27,17 @@ public class AimLiftWithOdometry extends Command{
     @Override
     public void execute(){ 
         if (drive.hasTarget()) {
-            drive.getLimelightTargeting().update();
+ //           drive.getLimelightTargeting().update();
             lift.setLiftAngle(drive.getLimelightTargeting().getEl());
             shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
             shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
-        }else{
-            drive.getOdoTargeting().update();  
-            lift.setLiftAngle(drive.getOdoTargeting().getEl());
-            shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
-            shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
         }
+        // else{
+        //     drive.getOdoTargeting().update();  
+        //     lift.setLiftAngle(drive.getOdoTargeting().getEl());
+        //     shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
+        //     shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
+        // }
     }
 
     @Override

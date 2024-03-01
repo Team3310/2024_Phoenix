@@ -10,6 +10,7 @@ import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
+import frc.robot.Commands.Shooter.SetLeftShooterRPM;
 import frc.robot.Commands.Shooter.ShooterOn;
 import frc.robot.Subsystems.Lift;
 
@@ -21,10 +22,9 @@ public class TwoStage extends AutonCommandBase{
 
         this.addCommands(
             new ParallelDeadlineGroup(
-                follow("2StagePreGrab"),
-                new ShooterOn(robotContainer.shooter)
+                follow("2StagePreGrab").andThen(new WaitCommand(0.3)),
+                new AimLiftWithOdometryAuton()
             ),
-            new AimLiftWithOdometryAuton().withTimeout(0.30),
             new ParallelDeadlineGroup(
                 new WaitCommand(0.3), 
                 new FeederShootCommandAuton(robotContainer.shooter)

@@ -26,6 +26,8 @@ public class Lift extends SubsystemBase {
     private TalonFX liftMotor;
     private CANcoder canCoder;
 
+    private double offset = 0.0;
+
     private StatusSignal<Double> liftPositionRevs;
 
     private StatusSignal<Boolean> f_fusedSensorOutOfSync;
@@ -120,6 +122,8 @@ public class Lift extends SubsystemBase {
     }
 
     public void setLiftAngle(double degrees) {
+        degrees+=offset;
+
         if (degrees > Constants.LIFT_MAX_DEGREES) {
             degrees = Constants.LIFT_MAX_DEGREES;
         } else if (degrees < Constants.LIFT_MIN_DEGREES) {
@@ -160,6 +164,18 @@ public class Lift extends SubsystemBase {
         return (Math.abs(targetLiftAngleDegrees - getLiftDegrees()) < LIFT_ANGLE_ERROR);
     }
 
+    public void adjustLiftOffset(double amount){
+        offset+=amount;
+    }
+
+    public void resetLiftOffset(){
+        offset = 0.0;
+    }
+
+    public double getOffset(){
+        return offset;
+    }
+
     @Override
     public void periodic() {
         if (printCount++ > 10) {
@@ -181,6 +197,7 @@ public class Lift extends SubsystemBase {
             //     }
             // }
             SmartDashboard.putNumber("Lift Angle Deg", getLiftDegrees());
+            SmartDashboard.putNumber("Lift Offset", offset);
         }
     }
 }

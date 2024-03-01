@@ -39,6 +39,7 @@ import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Flicker;
 import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.Telemetry;
@@ -62,6 +63,7 @@ public class RobotContainer {
   public final Flicker flicker;
   public final Elevator elevator;
   public final Climber climber;
+  public final LED led;
 
   private final Telemetry logger;
 
@@ -80,6 +82,7 @@ public class RobotContainer {
     elevator = Elevator.getInstance();
     climber = Climber.getInstance();
     flicker = Flicker.getInstance();
+    led = LED.getInstance();
     drivetrain = TunerConstants.DriveTrain;
 
     spotChooser = new SpotChooser();
@@ -192,6 +195,10 @@ public class RobotContainer {
 
   //#region smartdashboard buttons
     public void addTestButtons(){
+      //always want these offset buttons for comp
+      addOffsetButtons();
+
+      //only want these if you're testing things
       if(Constants.debug){
         addIntakeTestButtons();
         addShooterTestButtons();
@@ -214,6 +221,16 @@ public class RobotContainer {
         SmartDashboard.putData("Snap -90", new InstantCommand(()->drivetrain.startSnap(-90)));
         SmartDashboard.putData("Snap 180", new InstantCommand(()->drivetrain.startSnap(180)));
       }
+    }
+
+    private void addOffsetButtons(){
+      SmartDashboard.putData("increase lift offset", new InstantCommand(()->lift.adjustLiftOffset(0.5)));
+      SmartDashboard.putData("decrease lift offset", new InstantCommand(()->lift.adjustLiftOffset(-0.5)));
+      SmartDashboard.putData("reset lift offset", new InstantCommand(()->lift.resetLiftOffset()));
+
+      SmartDashboard.putData("increase RPM offset", new InstantCommand(()->shooter.adjustRPMOffset(200.0)));
+      SmartDashboard.putData("decrease RPM offset", new InstantCommand(()->shooter.adjustRPMOffset(-200.0)));
+      SmartDashboard.putData("reset RPM offset", new InstantCommand(()->shooter.resetRPMOffset()));
     }
 
     private void addIntakeTestButtons() {

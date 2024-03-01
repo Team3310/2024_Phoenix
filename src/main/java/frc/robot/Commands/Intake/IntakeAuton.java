@@ -1,5 +1,6 @@
 package frc.robot.Commands.Intake;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
@@ -7,6 +8,7 @@ import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.TunerConstants;
 
@@ -16,6 +18,7 @@ public class IntakeAuton extends Command {
     private Lift lift;
     private Elevator elevator;
     private Drivetrain drive;
+    private LED led;
     private boolean trackNote;
 
     public IntakeAuton(){
@@ -24,9 +27,11 @@ public class IntakeAuton extends Command {
         this.lift = Lift.getInstance();
         this.elevator = Elevator.getInstance();
         this.drive = TunerConstants.DriveTrain;
+        this.led = LED.getInstance();
+
         this.trackNote = false;
 
-        addRequirements(intake, shooter, lift, elevator);
+        addRequirements(intake, shooter, lift, elevator, led);
     } 
 
     public IntakeAuton(boolean trackNote){
@@ -35,6 +40,7 @@ public class IntakeAuton extends Command {
         this.lift = Lift.getInstance();
         this.elevator = Elevator.getInstance();
         this.drive = TunerConstants.DriveTrain;
+        this.led = LED.getInstance();
 
         this.trackNote = trackNote;
 
@@ -51,6 +57,7 @@ public class IntakeAuton extends Command {
             lift.setLiftAngle(Constants.LIFT_INTAKE_DEGREES);
             drive.isTrackingNote = trackNote;
         // }
+        led.setBlink(new Color(0, 255, 0));
     }
 
     @Override
@@ -69,5 +76,6 @@ public class IntakeAuton extends Command {
         shooter.setKickerRPM(0.0);
         elevator.setPosition(0.0);
         drive.isTrackingNote = false;
+        led.setSolid(new Color(0, 255, 0));
     }
 }

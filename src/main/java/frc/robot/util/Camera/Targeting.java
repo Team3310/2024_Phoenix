@@ -37,8 +37,8 @@ public class Targeting {
     private static final double redTrap3ID = 13;
     private static final double nullID = 0;
 
-    private static final double speakerHeightInches = 60;
-    private static final double cameraMountAngleDegrees = 15;
+    private static final double speakerHeightInches = 57.0;
+    private static final double cameraMountAngleDegrees = 15.0;
     private static final double caneraMountHeightInches = 23.25;
     //#endregion
 
@@ -189,8 +189,19 @@ public class Targeting {
         }
     }
 
-    public double getDistanceToTarget() {
-        double angleToSpeakerDegrees = cameraMountAngleDegrees + botPos[2];
+    public double getDistanceToTargetInches() {
+        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
+
+        boolean canSeeTarget = false;
+        double offset = 0;
+        for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
+            if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
+                offset = (Math.toRadians(aprilTagResults.ty));
+                canSeeTarget = true;
+            }
+        }
+
+        double angleToSpeakerDegrees = cameraMountAngleDegrees + limelight.getTargetVertOffset();
         double heightDelta = speakerHeightInches - caneraMountHeightInches;
         double distance = heightDelta / Math.tan(Math.toRadians(angleToSpeakerDegrees));
 
@@ -247,8 +258,9 @@ public class Targeting {
         // delta_X += TunerConstants.DriveTrain.getFieldRelativeVelocites().vxMetersPerSecond * Constants.SHOOT_TIME;
         // delta_Y += TunerConstants.DriveTrain.getFieldRelativeVelocites().vyMetersPerSecond * Constants.SHOOT_TIME;
         distance_XY = Math.hypot(delta_X, delta_Y);
- //       distance_XY = getDistanceToTarget();
-        SmartDashboard.putNumber("Distance2Target", (distance_XY / 0.0254) / 12.0);
+        SmartDashboard.putNumber("Distance2Target", ((distance_XY / 0.0254) / 12.0));
+        // distance_XY = getDistanceToTargetInches();
+        // SmartDashboard.putNumber("Distance2Target", (distance_XY / 12.0));
  //       SmartDashboard.putNumber("Distance2Target pos", (distance_XY_pos / 0.0254) / 12.0);
         if (distance_XY != 0) {
             this.targetEl = Constants.kLiftAngleMap
@@ -257,6 +269,12 @@ public class Targeting {
                     .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
             this.rightShooterSpeed = Constants.kRightShooterMap
                     .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+            // this.targetEl = Constants.kLiftAngleMap
+            //         .getInterpolated(new InterpolatingDouble(distance_XY / 12.0)).value;
+            // this.leftShooterSpeed = Constants.kLeftShooterMap
+            //         .getInterpolated(new InterpolatingDouble(distance_XY / 12.0)).value;
+            // this.rightShooterSpeed = Constants.kRightShooterMap
+            //         .getInterpolated(new InterpolatingDouble(distance_XY / 12.0)).value;
         } else {
             {
             }

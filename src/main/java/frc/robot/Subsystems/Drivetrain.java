@@ -60,7 +60,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
 
-    private PidController aimAtTargetController = new PidController(new PidConstants(0.1, 0.0, 0.01));
+    private PidController aimAtTargetController = new PidController(new PidConstants(3.0, 0.0, 0.01));
     private PidController noteTrackController = new PidController(new PidConstants(0.25, 0.0, 0.0));
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
@@ -68,6 +68,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private Limelight noteLimelight = new Limelight("note");
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting odometryTargeting = new Targeting(true);
+
+    private int pidVisionUpdateCounter = 0;
+    private final int VISON_COUNTER_MAX = 4;
 
     private static Function<PathPlannerPath, Command> pathFollowingCommandBuilder;
 
@@ -95,7 +98,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         aimAtTargetController.setContinuous(true);
         aimAtTargetController.setInputRange(-Math.PI, Math.PI);
         aimAtTargetController.setOutputRange(-1.0, 1.0);
-        aimAtTargetController.setSetpoint(0.0);
 
         noteTrackController.setContinuous(true);
         noteTrackController.setInputRange(-Math.PI, Math.PI);
@@ -361,11 +363,23 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                         lockedOn = true;
                     }
                     drivetrain_state = "LIME MODE";
-                    joystickDrive_holdAngle = getBotAz_FieldRelative();
+
+                    double currentAngle = getBotAz_FieldRelative();
+                    double targetOffset = offset;
+                    mLimelightVisionAlignGoal = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
+                    
+                    if (pidVisionUpdateCounter > VISON_COUNTER_MAX) {
+                        aimAtTargetController.setSetpoint(mLimelightVisionAlignGoal);
+                        pidVisionUpdateCounter = 0;
+                    }
+                    pidVisionUpdateCounter++;
+                    mVisionAlignAdjustment = aimAtTargetController.calculate(currentAngle, 0.005);
+
+                    // joystickDrive_holdAngle = getBotAz_FieldRelative();
                     // aprilTagTack(), but offset is grabbed earlier due to this drive methoed
                     // needing to determine if target is in view.
                     
-                    Double rotation = aimAtTargetController.calculate(offset, 0.005);
+                    Double rotation = mVisionAlignAdjustment;
 
                     SmartDashboard.putNumber("PID Output:", rotation);
                     SmartDashboard.putNumber("PID Error:", offset);
@@ -579,6 +593,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //     //#endregion 
 
         // }
+        frontCamera.update();
 
         if (sideMode != RobotContainer.getInstance().getSideChooser().getSelected()) {
             sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
@@ -618,6 +633,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
 
             SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
+            SmartDashboard.putNumber("mVisionAlignAdjustment", mVisionAlignAdjustment);
         }
     }
 
@@ -684,6 +700,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         mVisionAlignAdjustment = visionPIDController.calculate(currentAngle);
     }
+    
 
     public double calculateSnapValue() {
         if(mControlMode == DriveMode.AIMATTARGET_AUTON){

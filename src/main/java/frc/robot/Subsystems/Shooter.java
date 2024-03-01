@@ -33,6 +33,8 @@ public class Shooter extends SubsystemBase {
     private final double shooterRpmToMotorRPS = Constants.SHOOTER_GEAR_RATIO / 60;
     private final double kickerRpmToMotorRPS = Constants.KICKER_GEAR_RATIO / 60;
 
+    private double offset = 0.0;
+
     public static Shooter getInstance() {
         if (instance == null) {
             instance = new Shooter();
@@ -127,6 +129,9 @@ public class Shooter extends SubsystemBase {
             shooterRightMain.setControl(new DutyCycleOut(0.0));
             return;
         }
+
+        rpm += offset*(3.0/5.0);
+
         shooterRightMain.setControl(m_voltageVelocityRight.withVelocity(rpm * shooterRpmToMotorRPS)
                 .withAcceleration(rpm * shooterRpmToMotorRPS / 5.0));
     }
@@ -144,6 +149,9 @@ public class Shooter extends SubsystemBase {
             shooterLeftMain.setControl(new DutyCycleOut(0.0));
             return;
         }
+
+        rpm += offset;
+
         shooterLeftMain.setControl(m_voltageVelocityLeft.withVelocity(rpm * shooterRpmToMotorRPS)
                 .withAcceleration(rpm * shooterRpmToMotorRPS / 5.0));
     }
@@ -168,6 +176,14 @@ public class Shooter extends SubsystemBase {
         shooterKicker.setControl(m_voltageVelocityKicker.withVelocity(rpm * kickerRpmToMotorRPS));
     }
 
+    public void adjustRPMOffset(double amount){
+        offset += amount;
+    }
+
+    public void resetRPMOffset(){
+        offset = 0.0;
+    }
+
     @Override
     public void periodic() {
         if (Constants.debug) {
@@ -176,5 +192,7 @@ public class Shooter extends SubsystemBase {
             SmartDashboard.putNumber("Kicker RPM", getKickerRPM());
             SmartDashboard.putBoolean("isNoteLoaded", isNoteLoaded());
         }
+
+        SmartDashboard.putNumber("Shooter RPM Offset", offset);
     }
 }

@@ -9,10 +9,12 @@ import frc.robot.Swerve.TunerConstants;
 public class AimLiftWithOdometryAuton extends Command{
     private Lift lift;
     private Drivetrain drive;
+    private Shooter shooter;
 
     public AimLiftWithOdometryAuton(){
         this.lift = Lift.getInstance();
         this.drive = TunerConstants.DriveTrain;
+        this.shooter = Shooter.getInstance();
 
         addRequirements(lift);
     }
@@ -26,9 +28,13 @@ public class AimLiftWithOdometryAuton extends Command{
         if (drive.hasTarget()) {
             drive.getLimelightTargeting().update();
             lift.setLiftAngle(drive.getLimelightTargeting().getEl());
+            shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
+            shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
         }else{
             drive.getOdoTargeting().update();  
             lift.setLiftAngle(drive.getOdoTargeting().getEl());
+            shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
+            shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
         }
     }
 
