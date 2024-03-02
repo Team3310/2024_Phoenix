@@ -66,8 +66,8 @@ public class Constants {
             kLiftAngleMapComp.put(new InterpolatingDouble(3.0), new InterpolatingDouble(60.0));
             kLiftAngleMapComp.put(new InterpolatingDouble(5.1), new InterpolatingDouble(60.0));
             kLiftAngleMapComp.put(new InterpolatingDouble(8.6), new InterpolatingDouble(42.0));
-            kLiftAngleMapComp.put(new InterpolatingDouble(12.5), new InterpolatingDouble(31.0));
-            kLiftAngleMapComp.put(new InterpolatingDouble(16.3), new InterpolatingDouble(26.0));
+            kLiftAngleMapComp.put(new InterpolatingDouble(12.5), new InterpolatingDouble(32.0));
+            kLiftAngleMapComp.put(new InterpolatingDouble(16.3), new InterpolatingDouble(27.0));
             kLiftAngleMapComp.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.7));
             kLiftAngleMapComp.put(new InterpolatingDouble(30.0), new InterpolatingDouble(20.7));
         }
@@ -136,7 +136,7 @@ public class Constants {
         public static final double AMP_LOAD_RPM = 400.0;
         public static final double AMP_INTAKE_RPM = 800.0;
         public static final double AMP_EJECT_RPM = -800.0;
-        public static final double TRAP_SCORE_RPM = -1500.0;
+        public static final double TRAP_SCORE_RPM = -800.0;
     //#endregion
 
     //#region Climber
