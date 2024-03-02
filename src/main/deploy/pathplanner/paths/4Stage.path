@@ -3,32 +3,38 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.196455281799453,
-        "y": 5.85767504868343
+        "x": 3.124828585839508,
+        "y": 5.531335051274091
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1826993337348797,
-        "y": 6.290116397158527
+        "x": 1.861859906055994,
+        "y": 5.472864279061892
       },
       "isLocked": false,
       "linkedName": "3StageEnd"
     },
     {
       "anchor": {
-        "x": 3.0539327745322162,
-        "y": 7.91
+        "x": 3.019581195857548,
+        "y": 7.1217400554459225
       },
       "prevControl": {
-        "x": 1.9280049671210457,
-        "y": 7.140378460756922
+        "x": 1.5928943538798759,
+        "y": 6.373314171129768
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 30.96,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -39,7 +45,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 41.34770049034995,
+    "rotation": 30.963756532073543,
     "rotateFast": false
   },
   "reversed": false,

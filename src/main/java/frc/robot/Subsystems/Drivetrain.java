@@ -161,6 +161,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    public boolean canSeeNote(){
+        return noteLimelight.hasTarget();
+    }
+
     public void applyRequest(Supplier<SwerveRequest> requestSupplier) {
         this.setControl(requestSupplier.get());
     }

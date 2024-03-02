@@ -32,13 +32,13 @@ public class ThreeStageLeft extends AutonCommandBase{
                     new IntakeAuton(false)
                 )
             ),
-            // new AimLiftWithOdometryAuton().until(()->Lift.getInstance().isFinished()),
-            new ParallelDeadlineGroup(
-                new WaitCommand(0.5), 
-                new SetLiftAngle(Lift.getInstance(), 60.0),
-                new SetLeftShooterRPM(Shooter.getInstance(), 3500),
-                new SetRightShooterRPM(Shooter.getInstance(), 2500)
-            ),
+            new AimLiftWithOdometryAuton().until(()->Lift.getInstance().isFinished()),
+            // new ParallelDeadlineGroup(
+            //     new WaitCommand(0.5), 
+            //     new SetLiftAngle(Lift.getInstance(), 60.0),
+            //     new SetLeftShooterRPM(Shooter.getInstance(), 3500),
+            //     new SetRightShooterRPM(Shooter.getInstance(), 2500)
+            // ),
             new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.3)
         );
     }

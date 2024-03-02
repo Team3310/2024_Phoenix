@@ -33,13 +33,13 @@ public class ThreeAmp extends AutonCommandBase{
                 follow(Paths.getInstance().THREE_AMP),
                 new IntakeAuton()
             ),
-            // new AimLiftWithOdometryAuton().until(()->Lift.getInstance().isFinished()),
-            new ParallelDeadlineGroup(
-                new WaitCommand(0.5), 
-                new SetLiftAngle(Lift.getInstance(), 60.0),
-                new SetLeftShooterRPM(Shooter.getInstance(), 3500),
-                new SetRightShooterRPM(Shooter.getInstance(), 2500)
-            ),
+            new AimLiftWithOdometryAuton().until(()->Lift.getInstance().isFinished()),
+            // new ParallelDeadlineGroup(
+            //     new WaitCommand(0.5), 
+            //     new SetLiftAngle(Lift.getInstance(), 60.0),
+            //     new SetLeftShooterRPM(Shooter.getInstance(), 3500),
+            //     new SetRightShooterRPM(Shooter.getInstance(), 2500)
+            // ),
             new ParallelDeadlineGroup(
                 new WaitCommand(0.25), 
                 new FeederShootCommandAuton(robotContainer.shooter)
