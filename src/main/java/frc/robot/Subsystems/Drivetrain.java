@@ -79,7 +79,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private final CommandXboxController joystick = new CommandXboxController(0);
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
+            .withDeadband(Constants.MaxSpeed * 0.1).withRotationalDeadband(Constants.MaxAngularRate * 0.1) 
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
             .withDeadband(Constants.MaxSpeed * 0.1).withRotationalDeadband(Constants.MaxAngularRate * 0.1) 
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
@@ -91,6 +94,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private ProfiledPIDController snapPIDController;
     private ProfiledPIDController snapPIDControllerAuton;
     private PIDController visionPIDController;
+
+    public enum DriveOrientation {
+        ROBOT_CENTRIC,
+        FIELD_CENTRIC
+    }
+    private DriveOrientation driveOrientation = DriveOrientation.FIELD_CENTRIC;
 
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
@@ -236,29 +245,20 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     //#region DriveTrain methods
 
     public void joystickDrive_OpenLoop(double rotation) {
-        // ChassisSpeeds speeds = ChassisSpeeds.discretize(ChassisSpeeds.fromFieldRelativeSpeeds(
-        //         getDriveX() * Constants.MaxSpeed,
-        //         getDriveY() * Constants.MaxSpeed,
-        //         rotation * Constants.MaxAngularRate,
-        //         m_odometry.getEstimatedPosition()
-        //                 .relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation()),
-        //         // Rotation2d.fromRadians(getBotAz_FieldRelative())),
-        //         0.005
-        //         );
-
-        // var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d(0,0));
-
-        // for (int i = 0; i < this.Modules.length; i++) {
-        //     this.Modules[i].apply(states[i],
-        //             SwerveModule.DriveRequestType.OpenLoopVoltage,
-        //             SwerveModule.SteerRequestType.MotionMagic);
-        // }
-        
-        this.applyRequest(() -> drive
-            .withVelocityX(getDriveX() * Constants.MaxSpeed) 
-            .withVelocityY(getDriveY() * Constants.MaxSpeed) 
-            .withRotationalRate(rotation * Constants.MaxAngularRate) 
-        );
+        if (driveOrientation == DriveOrientation.FIELD_CENTRIC) {        
+            this.applyRequest(() -> driveFieldCentric
+                .withVelocityX(getDriveX() * Constants.MaxSpeed) 
+                .withVelocityY(getDriveY() * Constants.MaxSpeed) 
+                .withRotationalRate(rotation * Constants.MaxAngularRate) 
+            );
+        }
+        else {
+            this.applyRequest(() -> driveRobotCentric
+                .withVelocityX(getDriveX() * Constants.MaxSpeed) 
+                .withVelocityY(getDriveY() * Constants.MaxSpeed) 
+                .withRotationalRate(rotation * Constants.MaxAngularRate) 
+            );
+        }
     }
 
     // joystickDrive_holdAngle:
@@ -625,29 +625,29 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putString("DriveTrain State", drivetrain_state);
             SmartDashboard.putNumber("joystickDrive_holdAngle", joystickDrive_holdAngle);
             SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
-            SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
-            SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
+            // SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
+            // SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
             SmartDashboard.putNumber("limelightTargeting.getEl()", frontCamera.getEl());
             SmartDashboard.putString("", mControlMode.toString());
 
-            SmartDashboard.putNumber("getPose().getX()", getPose().getX());
-            SmartDashboard.putNumber("getPose().getY()", getPose().getY());
-            SmartDashboard.putNumber("odometryTargeting.getBotPosX()", odometryTargeting.getBotPosX());
-            SmartDashboard.putNumber("odometryTargeting.getBotPosY()", odometryTargeting.getBotPosY());
+            // SmartDashboard.putNumber("getPose().getX()", getPose().getX());
+            // SmartDashboard.putNumber("getPose().getY()", getPose().getY());
+            // SmartDashboard.putNumber("odometryTargeting.getBotPosX()", odometryTargeting.getBotPosX());
+            // SmartDashboard.putNumber("odometryTargeting.getBotPosY()", odometryTargeting.getBotPosY());
 
             SmartDashboard.putString("Set Target:", Targeting.getTarget().toString());
             SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(
                     getPose().getRotation().getRadians() - this.m_fieldRelativeOffset.getRadians()));
 
-            if (SmartDashboard.getNumber("P", 1.0) != aimAtTargetController.getPidConstants().p) {
-                aimAtTargetController.setP(SmartDashboard.getNumber("P", 1.0));
-            }
-            if (SmartDashboard.getNumber("I", 1.0) != aimAtTargetController.getPidConstants().i) {
-                aimAtTargetController.setI(SmartDashboard.getNumber("I", 1.0));
-            }
-            if (SmartDashboard.getNumber("D", 1.0) != aimAtTargetController.getPidConstants().d) {
-                aimAtTargetController.setD(SmartDashboard.getNumber("D", 1.0));
-            }
+            // if (SmartDashboard.getNumber("P", 1.0) != aimAtTargetController.getPidConstants().p) {
+            //     aimAtTargetController.setP(SmartDashboard.getNumber("P", 1.0));
+            // }
+            // if (SmartDashboard.getNumber("I", 1.0) != aimAtTargetController.getPidConstants().i) {
+            //     aimAtTargetController.setI(SmartDashboard.getNumber("I", 1.0));
+            // }
+            // if (SmartDashboard.getNumber("D", 1.0) != aimAtTargetController.getPidConstants().d) {
+            //     aimAtTargetController.setD(SmartDashboard.getNumber("D", 1.0));
+            // }
 
             SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
             SmartDashboard.putNumber("mVisionAlignAdjustment", mVisionAlignAdjustment);
@@ -767,6 +767,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public boolean isSnapping() {
         return this.isSnapping;
+    }
+
+    public void setDriveOrientation(DriveOrientation orientation) {
+        driveOrientation = orientation;
+    }
+
+    public DriveOrientation getDriveOrientation() {
+        return driveOrientation;
     }
     
     // private void startSimThread() {

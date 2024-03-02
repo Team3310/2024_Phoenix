@@ -19,6 +19,7 @@ import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Climber.SetClimberSpeed;
 import frc.robot.Commands.Climber.SetClimberUpDown;
 import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Drive.SetDriveOrientation;
 import frc.robot.Commands.Drive.SetSnapToCardinal;
 import frc.robot.Commands.Elevator.ElevatorAutoZero;
 import frc.robot.Commands.Elevator.SetElevatorInches;
@@ -38,6 +39,7 @@ import frc.robot.Commands.Shooter.ShooterOn;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
+import frc.robot.Subsystems.Drivetrain.DriveOrientation;
 import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Flicker;
 import frc.robot.Subsystems.Intake;
@@ -105,7 +107,7 @@ public class RobotContainer {
   public void configureDriverController(){
     // intake
     driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new StopAllIntakes());
-    driverController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
+    driverController.leftTrigger(0.5).onTrue(new SetDriveOrientation(DriveOrientation.ROBOT_CENTRIC)).onFalse(new SetDriveOrientation(DriveOrientation.FIELD_CENTRIC));
 
     // shooting
     driverController.rightBumper().onTrue(new ScoreCommand(shooter, flicker).andThen(new SetLiftOff(lift)));

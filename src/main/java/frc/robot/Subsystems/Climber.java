@@ -134,7 +134,5 @@ public class Climber extends SubsystemBase {
             SmartDashboard.putNumber("Climber Left Inches", getLeftPositionInches());
             SmartDashboard.putNumber("Climber Right Inches", getRightPositionInches());
         }
-
-        SmartDashboard.putNumber("el", Targeting.getTargetAzElFromPoint(2.96, 5.53)[1]);
     }
 }

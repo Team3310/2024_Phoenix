@@ -89,13 +89,4 @@ public class LED extends SubsystemBase{
             setSolid(prevColor);
         }
     }
-
-    @Override
-    public void periodic(){
-        // if(animate){
-        //     candle.animate(blink,0);
-        // }else{
-            // candle.setLEDs((int)color.red*255, (int)color.green*255, (int)color.blue*255);
-        // }
-    }
 }
