@@ -9,14 +9,17 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Commands.Auton.Paths;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
 import frc.robot.util.Camera.LimelightHelpers;
+import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private final boolean useLimelight = false;
+  private SideMode lastSideMode = SideMode.RED;
 
   private RobotContainer m_robotContainer = new RobotContainer();
 
@@ -34,6 +37,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.elevator.setElevatorZero(0);
 
     m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
+
+    Paths.getInstance();
   }
 
   @Override
@@ -58,7 +63,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    
+    if(m_robotContainer.drivetrain.getSideMode()!=lastSideMode){
+      Paths.getInstance().flip(m_robotContainer.drivetrain.getSideMode());
+      lastSideMode = m_robotContainer.drivetrain.getSideMode();
+    }
   }
 
   @Override

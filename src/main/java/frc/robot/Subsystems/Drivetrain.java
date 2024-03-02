@@ -192,6 +192,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
             // Go through limelight JSON dump, and look for Target ID
             // If ID found, save TX value to offset for targeting.
+            pidVisionUpdateCounter = VISON_COUNTER_MAX + 1;
             boolean canSeeTarget = false;
             double offset = 0;
             for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
+import frc.robot.Commands.Auton.Paths;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
@@ -19,11 +20,11 @@ public class TwoAmp extends AutonCommandBase{
     public TwoAmp(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose(getPath("2AmpPreGrab"));
+        resetRobotPose(Paths.getInstance().TWO_AMP_PRE_GRAB);
 
         this.addCommands(
             new ParallelDeadlineGroup(
-                follow("2AmpPreGrab").andThen(new WaitCommand(0.3)),
+                follow(Paths.getInstance().TWO_AMP_PRE_GRAB).andThen(new WaitCommand(0.3)),
                 new AimLiftWithOdometryAuton()
             ),
             new ParallelDeadlineGroup(
@@ -31,10 +32,10 @@ public class TwoAmp extends AutonCommandBase{
                 new FeederShootCommandAuton(robotContainer.shooter)
             ),
             new ParallelDeadlineGroup(
-                follow("2AmpGrab").andThen(new WaitCommand(0.25)), 
+                follow(Paths.getInstance().TWO_AMP_GRAB).andThen(new WaitCommand(0.25)), 
                 new IntakeAuton()
             ),
-            new AimLiftWithOdometryAuton().withTimeout(0.5),
+            new AimLiftWithOdometryAuton().until(()->Lift.getInstance().isFinished()),
             new ParallelDeadlineGroup(
                 new WaitCommand(0.5), 
                 new FeederShootCommandAuton(robotContainer.shooter)

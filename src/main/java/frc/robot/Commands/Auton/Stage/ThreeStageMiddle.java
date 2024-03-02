@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
+import frc.robot.Commands.Auton.Paths;
 import frc.robot.Commands.Drive.AimRobot;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Lift.AimLiftFromPathEnd;
@@ -15,12 +16,10 @@ public class ThreeStageMiddle extends AutonCommandBase{
     public ThreeStageMiddle(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose(getPath("2Stage"));
-
         this.addCommands(
             new TwoStage(robotContainer),
             new ParallelDeadlineGroup(
-                follow("3StageMiddle"),
+                follow(Paths.getInstance().THREE_STAGE_MIDDLE),
                 new IntakeAuton()
             ),
             new ParallelDeadlineGroup(

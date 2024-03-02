@@ -124,6 +124,9 @@ public class Targeting {
         double targetAz = 0.0;
         double targetEl = 0.0;
 
+        double leftShooterSpeed = 0.0;
+        double rightShooterSpeed = 0.0;
+
         // Azimuth Trig
         if (delta_Y > 0) { // (pi/2 to -pi/2), (90 deg to -90 deg))
             targetAz = Math.atan(delta_X / delta_Y);
@@ -144,12 +147,17 @@ public class Targeting {
         double distance_XY = Math.hypot(delta_X, delta_Y);
         // SmartDashboard.putNumber("Distance2Target", (distance_XY / 0.0254) / 12.0);
         if (distance_XY != 0) {
-            targetEl = Constants.kLiftAngleMap.getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+            targetEl = Constants.kLiftAngleMap
+                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+            leftShooterSpeed = Constants.kLeftShooterMap
+                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+            rightShooterSpeed = Constants.kRightShooterMap
+                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
         } else {
             {}; // Nothing is done if the distance is 0 somehow,
         }
 
-        return new double[]{targetAz, targetEl};
+        return new double[]{targetAz, targetEl, leftShooterSpeed, rightShooterSpeed};
     }
     //#endregion Static
 

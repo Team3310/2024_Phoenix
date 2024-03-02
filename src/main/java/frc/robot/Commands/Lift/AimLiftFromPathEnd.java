@@ -6,23 +6,29 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Lift;
+import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Camera.Targeting;
 
 public class AimLiftFromPathEnd extends Command{
     private Lift lift;
+    private Shooter shooter;
     private Pose2d pos;
 
-    public AimLiftFromPathEnd(PathPlannerPath path){
+    public AimLiftFromPathEnd(Pose2d pos){
         this.lift = Lift.getInstance();
-        this.pos = path.getPathPoses().get(path.getPathPoses().size()-1);
-        addRequirements(lift);
+        this.shooter = Shooter.getInstance();
+        this.pos = pos;
+        addRequirements(lift, shooter);
     }
 
     @Override
     public void initialize(){
-        lift.setLiftAngle(Targeting.getTargetAzElFromPoint(pos)[1]);
+        double[] values = Targeting.getTargetAzElFromPoint(pos);
+        lift.setLiftAngle(values[1]);
+        shooter.setLeftMainRPM(values[2]);
+        shooter.setRightMainRPM(values[3]);
     }
 
     @Override
@@ -32,7 +38,7 @@ public class AimLiftFromPathEnd extends Command{
 
     @Override
     public boolean isFinished(){
-        return true;
+        return false;
     }
 
     @Override
