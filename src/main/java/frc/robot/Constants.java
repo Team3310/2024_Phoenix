@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -18,10 +18,10 @@ public class Constants {
 
         public static final double UNDER_INTAKE_RPM = 3000.0;
         public static final double UNDER_INTAKE_EJECT_RPM = -3000.0;
-        public static final double FRONT_IN_INTAKE_RPM = 800.0;
-        public static final double FRONT_EJECT_INTAKE_RPM = -800.0;
-        public static final double BACK_IN_INTAKE_RPM = 800.0;
-        public static final double BACK_EJECT_INTAKE_RPM = -800.0;
+        public static final double FRONT_IN_INTAKE_RPM = 1000.0;
+        public static final double FRONT_EJECT_INTAKE_RPM = -1000.0;
+        public static final double BACK_IN_INTAKE_RPM = 1000.0;
+        public static final double BACK_EJECT_INTAKE_RPM = -1000.0;
         public static final double UP_INTAKE_RPM = 1000.0;
         public static final double UP_INTAKE_EJECT_RPM = -1000.0;
         public static final double SPIT_RPM = 1500.0;
@@ -66,10 +66,10 @@ public class Constants {
             kLiftAngleMapComp.put(new InterpolatingDouble(3.0), new InterpolatingDouble(60.0));
             kLiftAngleMapComp.put(new InterpolatingDouble(5.1), new InterpolatingDouble(60.0));
             kLiftAngleMapComp.put(new InterpolatingDouble(8.6), new InterpolatingDouble(42.0));
-            kLiftAngleMapComp.put(new InterpolatingDouble(12.5), new InterpolatingDouble(32.0));
-            kLiftAngleMapComp.put(new InterpolatingDouble(16.3), new InterpolatingDouble(27.0));
-            kLiftAngleMapComp.put(new InterpolatingDouble(24.0), new InterpolatingDouble(21.7));
-            kLiftAngleMapComp.put(new InterpolatingDouble(30.0), new InterpolatingDouble(21.7));
+            kLiftAngleMapComp.put(new InterpolatingDouble(12.5), new InterpolatingDouble(31.0));
+            kLiftAngleMapComp.put(new InterpolatingDouble(16.3), new InterpolatingDouble(26.0));
+            kLiftAngleMapComp.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.7));
+            kLiftAngleMapComp.put(new InterpolatingDouble(30.0), new InterpolatingDouble(20.7));
         }
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMapPractice = new InterpolatingTreeMap<>();
@@ -136,6 +136,7 @@ public class Constants {
         public static final double AMP_LOAD_RPM = 400.0;
         public static final double AMP_INTAKE_RPM = 800.0;
         public static final double AMP_EJECT_RPM = -800.0;
+        public static final double TRAP_SCORE_RPM = -1500.0;
     //#endregion
 
     //#region Climber
