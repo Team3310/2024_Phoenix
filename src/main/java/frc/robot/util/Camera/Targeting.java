@@ -1,6 +1,7 @@
 package frc.robot.util.Camera;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -100,7 +101,7 @@ public class Targeting {
     }
     //#endregion Static Getters
 
-    public static double[] getTargetAzElFromPoint(Pose2d botPos) {
+    public static double[] getTargetAzElFromPoint(double x, double y) {
         // AZIMUTH
         // -----------------------------------------------------------------------------------------------------------------------
         // 0 degrees is in the fields Y Positive Direction
@@ -117,8 +118,8 @@ public class Targeting {
         // Range is from pi/2 to -pi/2 (180 to -180)
 
         // Compute the X, Y, and Z distances between coordinates
-        double delta_X = targetPos[0] - botPos.getX();
-        double delta_Y = targetPos[1] - botPos.getY();
+        double delta_X = targetPos[0] - x;
+        double delta_Y = targetPos[1] - y;
         double delta_Z = targetPos[2] - 0.0;
 
         double targetAz = 0.0;

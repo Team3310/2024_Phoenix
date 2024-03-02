@@ -6,10 +6,19 @@
       "/Shuffleboard/Driver Readout/Autonomous Mode": "String Chooser",
       "/Shuffleboard/Driver Readout/Side": "String Chooser",
       "/Shuffleboard/Driver Readout/Spot": "String Chooser",
+      "/SmartDashboard/Autonomous Mode": "String Chooser",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
-      "/SmartDashboard/Module 3": "Mechanism2d"
+      "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Side": "String Chooser",
+      "/SmartDashboard/Spot": "String Chooser",
+      "/SmartDashboard/decrease RPM offset": "Command",
+      "/SmartDashboard/decrease lift offset": "Command",
+      "/SmartDashboard/increase RPM offset": "Command",
+      "/SmartDashboard/increase lift offset": "Command",
+      "/SmartDashboard/reset RPM offset": "Command",
+      "/SmartDashboard/reset lift offset": "Command"
     }
   },
   "NetworkTables Info": {

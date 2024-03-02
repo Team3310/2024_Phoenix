@@ -25,7 +25,7 @@ public class AimLiftFromPathEnd extends Command{
 
     @Override
     public void initialize(){
-        double[] values = Targeting.getTargetAzElFromPoint(pos);
+        double[] values = new double[6];//Targeting.getTargetAzElFromPoint(pos);
         lift.setLiftAngle(values[1]);
         shooter.setLeftMainRPM(values[2]);
         shooter.setRightMainRPM(values[3]);

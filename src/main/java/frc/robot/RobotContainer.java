@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,6 +47,7 @@ import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.Telemetry;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.DriverReadout;
+import frc.robot.util.Camera.Targeting;
 import frc.robot.util.Choosers.AutonomousChooser;
 import frc.robot.util.Choosers.AutonomousChooser.AutonomousMode;
 import frc.robot.util.Choosers.SideChooser;

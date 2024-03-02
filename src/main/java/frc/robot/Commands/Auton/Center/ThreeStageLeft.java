@@ -11,9 +11,13 @@ import frc.robot.Commands.Auton.Paths;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Lift.AimLiftFromPathEnd;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
+import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
+import frc.robot.Commands.Shooter.SetLeftShooterRPM;
+import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Commands.Shooter.ShooterOn;
 import frc.robot.Subsystems.Lift;
+import frc.robot.Subsystems.Shooter;
 
 public class ThreeStageLeft extends AutonCommandBase{
     public ThreeStageLeft(RobotContainer robotContainer){
@@ -29,7 +33,12 @@ public class ThreeStageLeft extends AutonCommandBase{
                 )
             ),
             // new AimLiftWithOdometryAuton().until(()->Lift.getInstance().isFinished()),
-            new AimLiftFromPathEnd(new Pose2d(2.96, 5.53, Rotation2d.fromDegrees(0.0))).until(()->Lift.getInstance().isFinished()),
+            new ParallelDeadlineGroup(
+                new WaitCommand(0.5), 
+                new SetLiftAngle(Lift.getInstance(), 60.0),
+                new SetLeftShooterRPM(Shooter.getInstance(), 3500),
+                new SetRightShooterRPM(Shooter.getInstance(), 2500)
+            ),
             new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.3)
         );
     }

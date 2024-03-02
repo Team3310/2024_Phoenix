@@ -202,7 +202,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 }
             }
             if (canSeeTarget) {
-                if (Math.abs(Math.toDegrees(offset)) > 5.0) {
+                if (Math.abs(Math.toDegrees(offset)) > 3.0) {
                     drivetrain_state = "LIME SNAP";
                     startSnap(Math.toDegrees(getBotAz_FieldRelative() -  offset));
                 }
@@ -605,6 +605,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //     //#endregion 
 
         // }
+        LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
 
         if (sideMode != RobotContainer.getInstance().getSideChooser().getSelected()) {

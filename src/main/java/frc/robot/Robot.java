@@ -44,7 +44,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
     // if (useLimelight) {
     //   var lastResult = LimelightHelpers.getLatestResults("limelight-fron").targetingResults;
 

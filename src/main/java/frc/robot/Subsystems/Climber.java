@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Swerve.TunerConstants;
+import frc.robot.util.Camera.Targeting;
 
 public class Climber extends SubsystemBase {
     private static Climber instance;
@@ -133,5 +134,7 @@ public class Climber extends SubsystemBase {
             SmartDashboard.putNumber("Climber Left Inches", getLeftPositionInches());
             SmartDashboard.putNumber("Climber Right Inches", getRightPositionInches());
         }
+
+        SmartDashboard.putNumber("el", Targeting.getTargetAzElFromPoint(2.96, 5.53)[1]);
     }
 }
