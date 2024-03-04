@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
@@ -33,7 +34,13 @@ public class ThreeAmp extends AutonCommandBase{
                 follow(Paths.getInstance().THREE_AMP),
                 new IntakeAuton()
             ),
-            new AimLiftWithOdometryAuton().until(()->Lift.getInstance().isFinished()),
+            new ParallelRaceGroup(
+                new AimLiftWithOdometryAuton(),
+                new SequentialCommandGroup(
+                    new WaitCommand(0.1),
+                    new WaitUntilCommand(()->Lift.getInstance().isFinished())
+                )
+            ),
             // new ParallelDeadlineGroup(
             //     new WaitCommand(0.5), 
             //     new SetLiftAngle(Lift.getInstance(), 60.0),

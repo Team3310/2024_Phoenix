@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2StageLeftPreGrab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2StageLeftGrab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3StageLeftCounter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "3StageLeft"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

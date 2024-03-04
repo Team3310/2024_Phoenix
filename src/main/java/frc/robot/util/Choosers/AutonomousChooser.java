@@ -8,8 +8,11 @@ import frc.robot.Commands.Auton.Amp.FourAmp;
 import frc.robot.Commands.Auton.Amp.ThreeAmp;
 import frc.robot.Commands.Auton.Amp.TwoAmp;
 import frc.robot.Commands.Auton.Center.FourStageLeft;
+import frc.robot.Commands.Auton.Center.FourStageLeftCounter;
 import frc.robot.Commands.Auton.Center.ThreeStageLeft;
+import frc.robot.Commands.Auton.Center.ThreeStageLeftCounter;
 import frc.robot.Commands.Auton.Center.TwoStageLeft;
+import frc.robot.Commands.Auton.Stage.FastStageFour;
 import frc.robot.Commands.Auton.Stage.FourStage;
 import frc.robot.Commands.Auton.Stage.FourStageMiddle;
 import frc.robot.Commands.Auton.Stage.ThreeStage;
@@ -30,6 +33,9 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         addOption(AutonomousMode.TWO_AMP);
         addOption(AutonomousMode.THREE_AMP);
         addOption(AutonomousMode.FOUR_AMP);
+        addOption(AutonomousMode.THREE_STAGE_LEFT_COUNTER);
+        addOption(AutonomousMode.FOUR_STAGE_LEFT_COUNTER);
+        addOption(AutonomousMode.FAST_FOUR);
     }
 
     public Command getCommand() {
@@ -48,6 +54,9 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         TWO_AMP("two amp"),
         THREE_AMP("three amp"),
         FOUR_AMP("four amp"),
+        THREE_STAGE_LEFT_COUNTER("three stage left counter"),
+        FOUR_STAGE_LEFT_COUNTER("four stage left counter"),
+        FAST_FOUR("fast four"),
         ;
 
         private String name = "";
@@ -84,7 +93,13 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                 case THREE_AMP:
                     return new ThreeAmp(RobotContainer.getInstance());
                 case FOUR_AMP:
-                    return new FourAmp(RobotContainer.getInstance());                          
+                    return new FourAmp(RobotContainer.getInstance());     
+                case THREE_STAGE_LEFT_COUNTER:
+                    return new ThreeStageLeftCounter(RobotContainer.getInstance());
+                case FOUR_STAGE_LEFT_COUNTER:
+                    return new FourStageLeftCounter(RobotContainer.getInstance());
+                case FAST_FOUR:
+                    return new FastStageFour(RobotContainer.getInstance());
                 default:
                     return new WaitCommand(0.0);
             }

@@ -19,7 +19,7 @@ public class Flicker extends SubsystemBase {
 
     private VelocityVoltage control = new VelocityVoltage(0);
 
-    private final double kP = 0.11;
+    private final double kP = 0.3;
     private final double kI = 0.5;
     private final double kD = 0.0001;
     private final double kV = 0.12;

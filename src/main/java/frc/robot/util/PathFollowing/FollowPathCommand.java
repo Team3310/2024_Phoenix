@@ -183,7 +183,7 @@ public class FollowPathCommand{
   }
 
   public boolean pathDone() {
-      return timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds());
+    return timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds());
   }
 
   public double getPathTime() {

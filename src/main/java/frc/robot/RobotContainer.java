@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,6 +30,8 @@ import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.SetLiftOff;
 import frc.robot.Commands.Shooter.ScoreCommand;
+import frc.robot.Commands.Shooter.ScoreOffCommand;
+import frc.robot.Commands.Shooter.ScoreOnCommand;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
 import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Commands.Shooter.ShooterOff;
@@ -49,7 +49,6 @@ import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.Telemetry;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.DriverReadout;
-import frc.robot.util.Camera.Targeting;
 import frc.robot.util.Choosers.AutonomousChooser;
 import frc.robot.util.Choosers.AutonomousChooser.AutonomousMode;
 import frc.robot.util.Choosers.SideChooser;
@@ -106,26 +105,26 @@ public class RobotContainer {
   //#region controller buttons
   public void configureDriverController(){
     // intake
-    driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new StopAllIntakes());
+    driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
     driverController.leftTrigger(0.5).onTrue(new SetDriveOrientation(DriveOrientation.ROBOT_CENTRIC)).onFalse(new SetDriveOrientation(DriveOrientation.FIELD_CENTRIC));
 
-    // shooting
-    driverController.rightBumper().onTrue(new ScoreCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
+    // shooting 
+    driverController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker).andThen(new SetLiftOff(lift))).onFalse(new ScoreOffCommand(shooter, flicker));
     driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.x().onTrue(new ShooterOff(shooter));
     driverController.b().onTrue(new ShooterOn(shooter));
 
     // snap to cardinal angles
-    driverController.y().onTrue(new SetSnapToCardinal(Constants.SwerveCardinal.SOURCE));
-    driverController.a().onTrue(new SetSnapToCardinal(Constants.SwerveCardinal.AMP));
+    // driverController.y().onTrue(new SetSnapToCardinal(Constants.SwerveCardinal.SOURCE));
+    // driverController.a().onTrue(new SetSnapToCardinal(Constants.SwerveCardinal.AMP));
 
     // reset buttons
     driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
     // climber prep
-    driverController.povUp().onTrue(new ClimberPrep(this, 0.0));
-    driverController.povRight().onTrue(new ClimberPrep(this, 120.0));
-    driverController.povLeft().onTrue(new ClimberPrep(this, -120.0));
+    // driverController.povUp().onTrue(new ClimberPrep(this, 0.0));
+    // driverController.povRight().onTrue(new ClimberPrep(this, 120.0));
+    // driverController.povLeft().onTrue(new ClimberPrep(this, -120.0));
  
     // //driving related
     // driverController.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
@@ -153,7 +152,7 @@ public class RobotContainer {
     operatorController.rightStick().onTrue(new IntakeEject()).onFalse(new StopAllIntakes());
 
     // shooting
-    operatorController.rightBumper().onTrue(new ScoreCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
+    operatorController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker).andThen(new SetLiftOff(lift))).onFalse(new ScoreOffCommand(shooter, flicker));
     operatorController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
    
     // climb 

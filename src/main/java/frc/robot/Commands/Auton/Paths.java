@@ -23,6 +23,12 @@ public class Paths {
     public final PathPlannerPath THREE_STAGE_LEFT;
     public final PathPlannerPath FOUR_STAGE_LEFT;
 
+    public final PathPlannerPath THREE_STAGE_COUNTER;
+
+    public final PathPlannerPath THREE_FAST;
+    public final PathPlannerPath FOUR_FAST;
+    public final PathPlannerPath FAST_END;
+
     private static Paths instance;
 
     public static Paths getInstance(){
@@ -51,6 +57,12 @@ public class Paths {
             TWO_STAGE_LEFT_GRAB = PathPlannerPath.fromPathFile("2StageLeftGrab").flipPath();
             THREE_STAGE_LEFT = PathPlannerPath.fromPathFile("3StageLeft").flipPath();
             FOUR_STAGE_LEFT = PathPlannerPath.fromPathFile("4StageLeft").flipPath();
+
+            THREE_STAGE_COUNTER = PathPlannerPath.fromPathFile("3StageLeftCounter").flipPath();
+
+            THREE_FAST = PathPlannerPath.fromPathFile("Fast3MiddleStage").flipPath();
+            FOUR_FAST = PathPlannerPath.fromPathFile("Fast4MiddleStage").flipPath();
+            FAST_END = PathPlannerPath.fromPathFile("lastFastMiddle").flipPath();
         }else{
             TWO_STAGE_PRE_GRAB = PathPlannerPath.fromPathFile("2StagePreGrab");
             TWO_STAGE_GRAB = PathPlannerPath.fromPathFile("2StageGrab");
@@ -69,6 +81,12 @@ public class Paths {
             TWO_STAGE_LEFT_GRAB = PathPlannerPath.fromPathFile("2StageLeftGrab");
             THREE_STAGE_LEFT = PathPlannerPath.fromPathFile("3StageLeft");
             FOUR_STAGE_LEFT = PathPlannerPath.fromPathFile("4StageLeft");
+
+            THREE_STAGE_COUNTER = PathPlannerPath.fromPathFile("3StageLeftCounter");
+
+            THREE_FAST = PathPlannerPath.fromPathFile("Fast3MiddleStage");
+            FOUR_FAST = PathPlannerPath.fromPathFile("Fast4MiddleStage");
+            FAST_END = PathPlannerPath.fromPathFile("lastFastMiddle");
         }
     }
 

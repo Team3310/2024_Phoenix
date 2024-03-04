@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Fast3MiddleStage"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Fast4MiddleStage"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "lastFastMiddle"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -61,7 +61,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private String drivetrain_state = "INIT";
 
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.0, 0.01));
-    private PidController noteTrackController = new PidController(new PidConstants(0.25, 0.0, 0.0));
+    private PidController noteTrackController = new PidController(new PidConstants(0.4, 0.00, 0.02));
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
     private Limelight limelight = new Limelight("front");
@@ -71,6 +71,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     private int pidVisionUpdateCounter = 0;
     private final int VISON_COUNTER_MAX = 4;
+    private int pidNoteUpdateCounter = 0;
+    private final int NOTE_COUNTER_MAX = 4;
 
     private static Function<PathPlannerPath, Command> pathFollowingCommandBuilder;
 
@@ -111,7 +113,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         noteTrackController.setContinuous(true);
         noteTrackController.setInputRange(-Math.PI, Math.PI);
         noteTrackController.setOutputRange(-1.0, 1.0);
-        noteTrackController.setSetpoint(0.0);
 
         joystickController.setContinuous(true);
         joystickController.setInputRange(-Math.PI, Math.PI);
@@ -188,6 +189,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
 
         aimAtTargetController.integralAccum = 0;
+        noteTrackController.integralAccum = 0;
         joystickController.integralAccum = 0;
 
         if (lockedOn) {
@@ -199,6 +201,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         if (mode == DriveMode.JOYSTICK) {
             setJoystickDrive_holdAngle(getBotAz_FieldRelative());
             maybeStopSnap(true);
+        } else if (mode == DriveMode.AIM_AT_NOTE){
+            pidNoteUpdateCounter = NOTE_COUNTER_MAX + 1;
         } else if (mode == DriveMode.AIMATTARGET){
             // Get JSON Dump from Limelight-front
             LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
@@ -423,6 +427,32 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+     public void aimAtNote() {
+        // Get JSON Dump from Limelight-fron
+        if(noteLimelight.hasTarget()){
+            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
+ 
+            drivetrain_state = "NOTE MODE";
+
+            double currentAngle = getBotAz_FieldRelative();
+            double adjustAngle = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
+
+            if (pidNoteUpdateCounter > NOTE_COUNTER_MAX) {
+                noteTrackController.setSetpoint(adjustAngle);
+                pidNoteUpdateCounter = 0;
+            }
+            pidNoteUpdateCounter++;
+            double pidOutput = noteTrackController.calculate(currentAngle, 0.005);
+                
+            setDriveOrientation(DriveOrientation.ROBOT_CENTRIC);
+            joystickDrive_OpenLoop(pidOutput);         
+        }
+        else {
+            setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
+            joystickDrive();
+        }
+    }
+
     public boolean isTrackingNote = false;
     private void autonDrive(){
         ChassisSpeeds speeds = pathFollower.update();
@@ -558,7 +588,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                         new PIDConstants(10, 0, 0),
                         TunerConstants.kSpeedAt12VoltsMps,
                         driveBaseRadius,
-                        new ReplanningConfig()),
+                        new ReplanningConfig(true, true, 1.0, 0.25)),
                 () -> false, // Change this if the path needs to be flipped on red vs blue
                 this); // Subsystem for requirements
     }
@@ -587,6 +617,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         AIMATTARGET, 
         AIMATTARGET_AUTON,
         AIMATTRAP,
+        AIM_AT_NOTE
         // ODOMETRYTRACK,
         ;
     }
@@ -619,7 +650,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         SmartDashboard.putString("side", sideMode.toString());
         
+        SmartDashboard.putNumber("notetx", noteLimelight.getTargetHorizOffset());
+
         if (Constants.debug) {
+
             SmartDashboard.putBoolean("is snapping", isSnapping);
 
             SmartDashboard.putString("DriveTrain State", drivetrain_state);
@@ -666,6 +700,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 break;
             case JOYSTICK:
                 joystickDrive();
+                break;
+            case AIM_AT_NOTE:
+                aimAtNote();
                 break;
             // case JOYSTICK_BOTREL:
             //     joystickDrive_RobotRelative();

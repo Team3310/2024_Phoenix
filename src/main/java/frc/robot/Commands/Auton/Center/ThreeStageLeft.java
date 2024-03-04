@@ -3,8 +3,10 @@ package frc.robot.Commands.Auton.Center;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
 import frc.robot.Commands.Auton.Paths;
@@ -32,7 +34,13 @@ public class ThreeStageLeft extends AutonCommandBase{
                     new IntakeAuton(false)
                 )
             ),
-            new AimLiftWithOdometryAuton().until(()->Lift.getInstance().isFinished()),
+            new ParallelRaceGroup(
+                new AimLiftWithOdometryAuton(),
+                new SequentialCommandGroup(
+                    new WaitCommand(0.1),
+                    new WaitUntilCommand(()->Lift.getInstance().isFinished())
+                )
+            ),
             // new ParallelDeadlineGroup(
             //     new WaitCommand(0.5), 
             //     new SetLiftAngle(Lift.getInstance(), 60.0),
