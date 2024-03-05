@@ -3,6 +3,7 @@ package frc.robot.Subsystems;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
@@ -400,6 +401,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 }
             // }
         }
+    }
+
+    public void trapQueen(){
+        Orchestra trapQUEEN = new Orchestra();
+        for(SwerveModule m:Modules){
+            trapQUEEN.addInstrument(m.getDriveMotor());
+            trapQUEEN.addInstrument(m.getSteerMotor());
+        }
+
+        trapQUEEN.loadMusic("TrapQueen.chrp");
+        trapQUEEN.play();
     }
 
     public void aimAtTargetAuton() {

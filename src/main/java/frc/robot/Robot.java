@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
-    updateManager.startLoop(0.005);
+    // updateManager.startLoop(0.005);
 
     m_robotContainer.climber.setClimberZero(0);
     m_robotContainer.elevator.setElevatorZero(0);
@@ -93,6 +93,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     TunerConstants.DriveTrain.setDriveMode(DriveMode.JOYSTICK);
+    TunerConstants.DriveTrain.trapQueen();
   }
 
   @Override
