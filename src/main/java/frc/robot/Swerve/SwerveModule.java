@@ -136,6 +136,8 @@ public class SwerveModule {
         talonConfigs.CurrentLimits.StatorCurrentLimit = constants.SlipCurrent;
         talonConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
 
+        talonConfigs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.05;
+
         talonConfigs.MotorOutput.Inverted = constants.DriveMotorInverted ? InvertedValue.Clockwise_Positive
                 : InvertedValue.CounterClockwise_Positive;
         StatusCode response = m_driveMotor.getConfigurator().apply(talonConfigs);
@@ -169,6 +171,8 @@ public class SwerveModule {
         talonConfigs.MotionMagic.MotionMagicAcceleration = talonConfigs.MotionMagic.MotionMagicCruiseVelocity / 0.100;
         talonConfigs.MotionMagic.MotionMagicExpo_kV = 0.12 * constants.SteerMotorGearRatio;
         talonConfigs.MotionMagic.MotionMagicExpo_kA = 0.1;
+
+        talonConfigs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0;
 
         talonConfigs.ClosedLoopGeneral.ContinuousWrap = true; // Enable continuous wrap for swerve modules
 
