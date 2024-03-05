@@ -62,7 +62,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private String drivetrain_state = "INIT";
 
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.0, 0.01));
-    private PidController noteTrackController = new PidController(new PidConstants(0.4, 0.00, 0.02));
+    private PidController noteTrackController = new PidController(new PidConstants(1.0, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
     private Limelight limelight = new Limelight("front");
@@ -80,14 +80,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private FollowPathCommand pathFollower;
 
     private final CommandXboxController joystick = new CommandXboxController(0);
+    private final double STICK_DEADBAND = 0.1;
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
+    
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
-            .withDeadband(Constants.MaxSpeed * 0.1).withRotationalDeadband(Constants.MaxAngularRate * 0.1) 
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+            .withDeadband(Constants.MaxSpeed * STICK_DEADBAND) 
+            .withDriveRequestType(DriveRequestType.Velocity);
+    private final SwerveRequest.FieldCentric driveFieldCentricNoDeadband = new SwerveRequest.FieldCentric()
+            .withDriveRequestType(DriveRequestType.Velocity);
+
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
-            .withDeadband(Constants.MaxSpeed * 0.1).withRotationalDeadband(Constants.MaxAngularRate * 0.1) 
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+            .withDeadband(Constants.MaxSpeed * STICK_DEADBAND) 
+            .withDriveRequestType(DriveRequestType.Velocity);
+    private final SwerveRequest.RobotCentric driveRobotCentricNoDeadband = new SwerveRequest.RobotCentric()
+            .withDriveRequestType(DriveRequestType.Velocity);
 
     private boolean isSnapping;
     private double mLimelightVisionAlignGoal;
@@ -249,22 +256,40 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     //#region DriveTrain methods
 
-    public void joystickDrive_OpenLoop(double rotation) {
+    public void updateDrive(double rotation) {
         if (driveOrientation == DriveOrientation.FIELD_CENTRIC) {        
             this.applyRequest(() -> driveFieldCentric
-                .withVelocityX(getDriveX() * Constants.MaxSpeed) 
-                .withVelocityY(getDriveY() * Constants.MaxSpeed) 
+                .withVelocityX(getDriveXWithoutDeadband() * Constants.MaxSpeed) 
+                .withVelocityY(getDriveYWithoutDeadband() * Constants.MaxSpeed) 
                 .withRotationalRate(rotation * Constants.MaxAngularRate) 
             );
         }
         else {
             this.applyRequest(() -> driveRobotCentric
-                .withVelocityX(getDriveX() * Constants.MaxSpeed) 
-                .withVelocityY(getDriveY() * Constants.MaxSpeed) 
+                .withVelocityX(getDriveXWithoutDeadband() * Constants.MaxSpeed) 
+                .withVelocityY(getDriveYWithoutDeadband() * Constants.MaxSpeed) 
                 .withRotationalRate(rotation * Constants.MaxAngularRate) 
             );
         }
     }
+
+    public void updateDriveStrafe(double yInput) {
+        if (driveOrientation == DriveOrientation.FIELD_CENTRIC) {        
+            this.applyRequest(() -> driveFieldCentricNoDeadband
+                .withVelocityX(getDriveXWithDeadband() * Constants.MaxSpeed) 
+                .withVelocityY(yInput * Constants.MaxSpeed) 
+                .withRotationalRate(getDriveRotationWithDeadband() * Constants.MaxAngularRate) 
+            );
+        }
+        else {
+            this.applyRequest(() -> driveRobotCentricNoDeadband
+                .withVelocityX(getDriveXWithDeadband() * Constants.MaxSpeed) 
+                .withVelocityY(yInput * Constants.MaxSpeed) 
+                .withRotationalRate(getDriveRotationWithDeadband() * Constants.MaxAngularRate) 
+            );
+        }
+    }
+
 
     // joystickDrive_holdAngle:
     // Uses PID to hold robot at its current heading, while allowing translation
@@ -287,7 +312,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 //Use the gyro's current angle and joystickDrive_holdAngle in a PID to hold the current angle
             //else, joystick is moving, so update the hold angle with the current bot angle
         //Then send rotation command to the joystickDrive_OpenLoop.
-        double rotation = getDriveRotation();
+        double rotation = getDriveRotationWithDeadband();
         if (isSnapping) {
             // if (Math.abs(getDriveRotation()) == 0.0) {
                 maybeStopSnap(false);
@@ -307,7 +332,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 joystickDrive_holdAngle = getBotAz_FieldRelative();
             // }
         }
-        joystickDrive_OpenLoop(rotation);
+        updateDrive(rotation);
     }
 
     // aimAtTarget():
@@ -328,18 +353,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // Get JSON Dump from Limelight-front
         LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
 
-            boolean canSeeTarget = false;
+        boolean canSeeTarget = false;
 
-            // Go through limelight JSON dump, and look for Target ID
-            // If ID found, save TX value to offset for targeting.
-            double offset = 0;
-            for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
-                if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
-                    offset = (Math.toRadians(aprilTagResults.tx));
-                    canSeeTarget = true;
-                }
+        // Go through limelight JSON dump, and look for Target ID
+        // If ID found, save TX value to offset for targeting.
+        double offset = 0;
+        for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
+            if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
+                offset = (Math.toRadians(aprilTagResults.tx));
+                canSeeTarget = true;
             }
-        if(isSnapping){
+        }
+        if (isSnapping) {
             // if(canSeeTarget && odosnap){
             //     if((Math.abs(Math.toDegrees(offset)) < 5)){
             //         maybeStopSnap(true);
@@ -348,7 +373,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             //     }
             // }else{
                 maybeStopSnap(false);
-                joystickDrive_OpenLoop(-calculateSnapValue());
+                updateDrive(-calculateSnapValue());
             // }
         } else {
             // // If TargetID cant be seen by Limelight, use odometryTrack()
@@ -394,7 +419,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     SmartDashboard.putNumber("PID Output:", rotation);
                     SmartDashboard.putNumber("PID Error:", offset);
 
-                    joystickDrive_OpenLoop(rotation);
+                    updateDrive(rotation);
                 }
                 else {
                     joystickDrive();
@@ -456,8 +481,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             pidNoteUpdateCounter++;
             double pidOutput = noteTrackController.calculate(currentAngle, 0.005);
                 
-            setDriveOrientation(DriveOrientation.ROBOT_CENTRIC);
-            joystickDrive_OpenLoop(pidOutput);         
+            setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
+            updateDriveStrafe(pidOutput);         
         }
         else {
             setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
@@ -490,19 +515,32 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     //#endregion
 
     //#region getters
-    private double getDriveX() {
-        // return ((Math.abs(joystick.getLeftY()) > 0.1) ? -Math.copySign(Math.pow(joystick.getLeftY(), 2.0), joystick.getLeftY()) : 0.0);
+    private double getDriveXWithoutDeadband() {
         return -Math.copySign(Math.pow(joystick.getLeftY(), 2.0), joystick.getLeftY());
     }
 
-    private double getDriveY() {
-        // return ((Math.abs(joystick.getLeftX()) > 0.1) ? -Math.copySign(Math.pow(joystick.getLeftX(), 2.0), joystick.getLeftX()) : 0.0);
+    private double getDriveXWithDeadband() {
+        return addDeadband(getDriveXWithoutDeadband());
+    }
+
+    private double getDriveYWithoutDeadband() {
         return -Math.copySign(Math.pow(joystick.getLeftX(), 2.0), joystick.getLeftX());
+    }
+
+    private double getDriveYWithDeadband() {
+        return addDeadband(getDriveYWithoutDeadband());
    }
 
-    private double getDriveRotation() {
-        // return ((Math.abs(joystick.getRightX()) > 0.1) ? -Math.copySign(Math.pow(joystick.getRightX(), 2.0), joystick.getRightX()) : 0.0);
+    private double getDriveRotationWithoutDeadband() {
         return -Math.copySign(Math.pow(joystick.getRightX(), 2.0), joystick.getRightX());
+    }
+
+    private double getDriveRotationWithDeadband() {
+        return addDeadband(getDriveRotationWithoutDeadband());
+    }
+
+    private double addDeadband(double input) {
+        return Math.abs(input) > STICK_DEADBAND ? input : 0.0;
     }
 
     public Pose2d getOdoPose() {
