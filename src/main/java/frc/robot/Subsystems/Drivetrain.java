@@ -64,6 +64,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.0, 0.01));
     private PidController noteTrackController = new PidController(new PidConstants(1.0, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
+    private PidController strafeTxController = new PidController(new PidConstants(1.0, 0.00, 0.02));
+    private PidController strafeRotateController = new PidController(new PidConstants(1.0, 0.00, 0.02));
+
 
     private Limelight limelight = new Limelight("front");
     private Limelight noteLimelight = new Limelight("note");
@@ -121,6 +124,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         noteTrackController.setContinuous(true);
         noteTrackController.setInputRange(-Math.PI, Math.PI);
         noteTrackController.setOutputRange(-1.0, 1.0);
+
+        strafeRotateController.setContinuous(true);
+        strafeRotateController.setInputRange(-Math.PI, Math.PI);
+        strafeRotateController.setOutputRange(-1.0, 1.0);
+
+        // strafeTxController.setContinuous(true);
+        // strafeTxController.setInputRange(-Math.PI, Math.PI);
+        strafeTxController.setOutputRange(-1.0, 1.0);
 
         joystickController.setContinuous(true);
         joystickController.setInputRange(-Math.PI, Math.PI);
@@ -290,6 +301,22 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    public void updateDriveStrafeRotate(double yInput, double rotationInput){
+        if (driveOrientation == DriveOrientation.FIELD_CENTRIC) {        
+            this.applyRequest(() -> driveFieldCentric
+                .withVelocityX(getDriveXWithDeadband() * Constants.MaxSpeed) 
+                .withVelocityY(yInput * Constants.MaxSpeed) 
+                .withRotationalRate(rotationInput * Constants.MaxAngularRate) 
+            );
+        }
+        else {
+            this.applyRequest(() -> driveRobotCentric
+                .withVelocityX(getDriveXWithDeadband() * Constants.MaxSpeed) 
+                .withVelocityY(yInput * Constants.MaxSpeed) 
+                .withRotationalRate(rotationInput * Constants.MaxAngularRate) 
+            );
+        }
+    }
 
     // joystickDrive_holdAngle:
     // Uses PID to hold robot at its current heading, while allowing translation
@@ -333,6 +360,38 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // }
         }
         updateDrive(rotation);
+    }
+
+    private final double ROTATE_THRESH = 0.01;
+    private final double TX_THRESH = 0.1;
+    public void strafeToAprilTag() {
+        if(frontCamera.hasTarget()){
+            double rotate_targetOffset = Math.toRadians(limelight.getTargetHorizOffset());
+            double[] tp_rs = limelight.getTable().getEntry("botpose_targetspace").getDoubleArray(new double[6]);
+            double tx_targetOffset = tp_rs[0];
+            drivetrain_state = "STRAFE2APRILTAG";
+
+            double tx_pidOutput = strafeTxController.calculate(tx_targetOffset, 0.005);
+            double rotate_pidOutput = strafeRotateController.calculate(rotate_targetOffset, 0.005);
+            
+            SmartDashboard.putNumber("ROT PID Error:", rotate_targetOffset);
+            SmartDashboard.putNumber("ROT PID Output:", rotate_pidOutput);
+
+            SmartDashboard.putNumber("TX PID Error:", tx_targetOffset);
+            SmartDashboard.putNumber("TX PID Output:", tx_pidOutput);
+
+            setDriveOrientation(DriveOrientation.ROBOT_CENTRIC);
+            updateDriveStrafeRotate(tx_pidOutput, rotate_pidOutput);   
+            
+            if(Math.abs(rotate_targetOffset) < ROTATE_THRESH && Math.abs(tx_targetOffset) < TX_THRESH){
+                setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
+                setDriveMode(DriveMode.JOYSTICK);
+            }
+        }
+        else {
+            setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
+            joystickDrive();
+        }
     }
 
     // aimAtTarget():
@@ -667,8 +726,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         AIMATTARGET, 
         AIMATTARGET_AUTON,
         AIMATTRAP,
-        AIM_AT_NOTE
+        AIM_AT_NOTE,
         // ODOMETRYTRACK,
+        STRAFE2APRILTAG,
         ;
     }
 
@@ -753,6 +813,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 break;
             case AIM_AT_NOTE:
                 aimAtNote();
+                break;
+            case STRAFE2APRILTAG:
+                strafeToAprilTag();
                 break;
             // case JOYSTICK_BOTREL:
             //     joystickDrive_RobotRelative();
