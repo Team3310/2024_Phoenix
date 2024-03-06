@@ -3,56 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2130499816555194,
-        "y": 4.560720232551576
+        "x": 0.7352951848760846,
+        "y": 6.670053340106681
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3694348920073778,
-        "y": 4.5536310301175575
+        "x": 1.5562248267353682,
+        "y": 6.054356108712217
       },
       "isLocked": false,
-      "linkedName": "2StageGrabEnd"
+      "linkedName": "AmpStart"
     },
     {
       "anchor": {
-        "x": 3.196455281799453,
-        "y": 5.85767504868343
+        "x": 6.393845930549004,
+        "y": 6.376864182299793
       },
       "prevControl": {
-        "x": 1.8920420339401418,
-        "y": 5.942745477891647
+        "x": 5.440981167676622,
+        "y": 6.2302696033963505
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "3StageEnd"
+      "linkedName": "AmpMiddle"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.2,
       "rotationDegrees": 0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0.1,
+      "rotationDegrees": 59.74,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 600.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4Podium",
+  "folder": "4Amp",
   "previewStartingState": {
-    "rotation": -17.180000000000007,
+    "rotation": 59.74,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

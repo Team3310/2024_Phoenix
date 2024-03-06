@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3509924162705473,
-        "y": 5.55593454044051
+        "x": 0.7352951848760846,
+        "y": 4.41249682499365
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.350992416270551,
-        "y": 5.55593454044051
+        "x": 1.541565368845024,
+        "y": 3.694183388366777
       },
       "isLocked": false,
-      "linkedName": "CenterStart"
+      "linkedName": "StageStart"
     },
     {
       "anchor": {
-        "x": 2.127943684458798,
-        "y": 5.55593454044051
+        "x": 6.203272977974527,
+        "y": 1.5832214521571912
       },
       "prevControl": {
-        "x": 1.96668964766501,
-        "y": 5.55593454044051
+        "x": 5.203272977974527,
+        "y": 1.5832214521571912
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2StageLeftPreGrab"
+      "linkedName": "SourceMiddle"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -43,9 +43,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4Middle",
+  "folder": "4Podium",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": -59.35000000000002,
     "velocity": 0
   },
   "useDefaultConstraints": false

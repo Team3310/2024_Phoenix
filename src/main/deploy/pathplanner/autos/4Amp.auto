@@ -8,13 +8,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2AmpPreGrab"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "2AmpGrab"
+            "pathName": "2Amp"
           }
         },
         {

@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.042022972934835,
-        "y": 4.560720232551576
+        "x": 0.7352951848760846,
+        "y": 4.41249682499365
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.251084064781302,
-        "y": 4.423630991996516
+        "x": 2.30385717914293,
+        "y": 3.914075256721943
       },
       "isLocked": false,
-      "linkedName": "2StageEnd"
+      "linkedName": "StageStart"
     },
     {
       "anchor": {
@@ -44,7 +44,18 @@
       "linkedName": "2StageGrabEnd"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.25,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -59,9 +70,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "4Podium",
   "previewStartingState": {
-    "rotation": -26.569999999999993,
+    "rotation": -59.35000000000002,
     "velocity": 0
   },
   "useDefaultConstraints": false

@@ -5,16 +5,14 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class Paths {
-    public final PathPlannerPath TWO_STAGE_PRE_GRAB;
-    public final PathPlannerPath TWO_STAGE_GRAB;
+    public final PathPlannerPath TWO_STAGE;
     public final PathPlannerPath THREE_STAGE;
     public final PathPlannerPath FOUR_STAGE;
 
     public final PathPlannerPath THREE_STAGE_MIDDLE;
     public final PathPlannerPath FOUR_STAGE_MIDDLE;
 
-    public final PathPlannerPath TWO_AMP_PRE_GRAB;
-    public final PathPlannerPath TWO_AMP_GRAB;
+    public final PathPlannerPath TWO_AMP;
     public final PathPlannerPath THREE_AMP;
     public final PathPlannerPath FOUR_AMP;
 
@@ -29,6 +27,8 @@ public class Paths {
     public final PathPlannerPath FOUR_FAST;
     public final PathPlannerPath FAST_END;
 
+    public final PathPlannerPath DRIVE_TEST;
+
     private static Paths instance;
 
     public static Paths getInstance(){
@@ -40,16 +40,14 @@ public class Paths {
 
     private Paths(SideMode side){
         if(side == SideMode.RED){
-            TWO_STAGE_PRE_GRAB = PathPlannerPath.fromPathFile("2StagePreGrab").flipPath();
-            TWO_STAGE_GRAB = PathPlannerPath.fromPathFile("2StageGrab").flipPath();
+            TWO_STAGE = PathPlannerPath.fromPathFile("2Stage").flipPath();
             THREE_STAGE = PathPlannerPath.fromPathFile("3Stage").flipPath();
             FOUR_STAGE = PathPlannerPath.fromPathFile("4Stage").flipPath();
             
             THREE_STAGE_MIDDLE = PathPlannerPath.fromPathFile("3StageMiddle").flipPath();
             FOUR_STAGE_MIDDLE = PathPlannerPath.fromPathFile("4StageMiddle").flipPath();
 
-            TWO_AMP_PRE_GRAB = PathPlannerPath.fromPathFile("2AmpPreGrab").flipPath();
-            TWO_AMP_GRAB = PathPlannerPath.fromPathFile("2AmpGrab").flipPath();
+            TWO_AMP = PathPlannerPath.fromPathFile("2Amp").flipPath();
             THREE_AMP = PathPlannerPath.fromPathFile("3Amp").flipPath();
             FOUR_AMP = PathPlannerPath.fromPathFile("4Amp").flipPath();
 
@@ -63,17 +61,17 @@ public class Paths {
             THREE_FAST = PathPlannerPath.fromPathFile("Fast3MiddleStage").flipPath();
             FOUR_FAST = PathPlannerPath.fromPathFile("Fast4MiddleStage").flipPath();
             FAST_END = PathPlannerPath.fromPathFile("lastFastMiddle").flipPath();
+
+            DRIVE_TEST = PathPlannerPath.fromPathFile("DriveTest").flipPath();
         }else{
-            TWO_STAGE_PRE_GRAB = PathPlannerPath.fromPathFile("2StagePreGrab");
-            TWO_STAGE_GRAB = PathPlannerPath.fromPathFile("2StageGrab");
+            TWO_STAGE = PathPlannerPath.fromPathFile("2Stage");
             THREE_STAGE = PathPlannerPath.fromPathFile("3Stage");
             FOUR_STAGE = PathPlannerPath.fromPathFile("4Stage");
             
             THREE_STAGE_MIDDLE = PathPlannerPath.fromPathFile("3StageMiddle");
             FOUR_STAGE_MIDDLE = PathPlannerPath.fromPathFile("4StageMiddle");
 
-            TWO_AMP_PRE_GRAB = PathPlannerPath.fromPathFile("2AmpPreGrab");
-            TWO_AMP_GRAB = PathPlannerPath.fromPathFile("2AmpGrab");
+            TWO_AMP = PathPlannerPath.fromPathFile("2Amp");
             THREE_AMP = PathPlannerPath.fromPathFile("3Amp");
             FOUR_AMP = PathPlannerPath.fromPathFile("4Amp");
 
@@ -87,6 +85,8 @@ public class Paths {
             THREE_FAST = PathPlannerPath.fromPathFile("Fast3MiddleStage");
             FOUR_FAST = PathPlannerPath.fromPathFile("Fast4MiddleStage");
             FAST_END = PathPlannerPath.fromPathFile("lastFastMiddle");
+
+            DRIVE_TEST = PathPlannerPath.fromPathFile("DriveTest");
         }
     }
 

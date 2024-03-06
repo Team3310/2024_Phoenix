@@ -22,19 +22,16 @@ public class TwoAmp extends AutonCommandBase{
     public TwoAmp(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose(Paths.getInstance().TWO_AMP_PRE_GRAB);
+        resetRobotPose(Paths.getInstance().TWO_AMP);
 
         this.addCommands(
+            new AimLiftWithOdometryAuton(),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().TWO_AMP_PRE_GRAB).andThen(new WaitCommand(0.3)),
-                new AimLiftWithOdometryAuton()
-            ),
-            new ParallelDeadlineGroup(
-                new WaitCommand(0.3), 
+                new WaitCommand(0.2), 
                 new FeederShootCommandAuton(robotContainer.shooter)
             ),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().TWO_AMP_GRAB).andThen(new WaitCommand(0.25)), 
+                follow(Paths.getInstance().TWO_AMP).andThen(new WaitCommand(0.25)), 
                 new IntakeAuton()
             ),
             new ParallelRaceGroup(

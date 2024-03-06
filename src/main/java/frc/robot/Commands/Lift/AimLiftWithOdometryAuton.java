@@ -40,7 +40,7 @@ public class AimLiftWithOdometryAuton extends Command{
 
     @Override
     public boolean isFinished(){
-        return false;
+        return lift.isFinished();
     }
 
     @Override

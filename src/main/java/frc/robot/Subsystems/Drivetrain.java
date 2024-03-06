@@ -35,6 +35,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Swerve.SwerveDrivetrain;
 import frc.robot.Swerve.SwerveModule;
 import frc.robot.Swerve.SwerveModule.DriveRequestType;
+import frc.robot.Swerve.SwerveRequest.SwerveDriveBrake;
 import frc.robot.Swerve.SwerveRequest;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
@@ -502,13 +503,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
         if (!pathDone()) {
-            for (int i = 0; i < this.Modules.length; i++) {
-                this.Modules[i].apply(states[i],
-                        SwerveModule.DriveRequestType.OpenLoopVoltage,
-                        SwerveModule.SteerRequestType.MotionMagic);
-            }
+            SmartDashboard.putBoolean("path done", false);
+            applyRequest(()->driveFieldCentricNoDeadband
+                .withVelocityX(speeds.vxMetersPerSecond)
+                .withVelocityY(speeds.vyMetersPerSecond)
+                .withRotationalRate(speeds.omegaRadiansPerSecond)
+                .withDriveRequestType(DriveRequestType.Velocity)
+            );
         } else {
             // rotationHold();
+            SmartDashboard.putBoolean("path done", true);
+            applyRequest(()->new SwerveDriveBrake());
         }
     }
     
@@ -697,6 +702,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
             Targeting.setTarget(sideMode == SideMode.BLUE ? Target.BLUESPEAKER : Target.REDSPEAKER);
         }
+
+        SmartDashboard.putNumber("odo x", getPose().getX());
+        SmartDashboard.putNumber("odo y", getPose().getY());
 
         SmartDashboard.putString("side", sideMode.toString());
         

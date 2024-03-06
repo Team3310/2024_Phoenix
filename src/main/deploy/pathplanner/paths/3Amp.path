@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8909454969907094,
-        "y": 6.9346335843668845
+        "x": 2.890235494756704,
+        "y": 6.948583040023223
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8267774427286747,
-        "y": 6.0692661556263285
+        "x": 1.497586995173991,
+        "y": 6.142312856054285
       },
       "isLocked": false,
       "linkedName": "2AmpGrabEnd"
     },
     {
       "anchor": {
-        "x": 2.8909454969907094,
-        "y": 5.5196408968316515
+        "x": 2.890235494756704,
+        "y": 5.541275082550166
       },
       "prevControl": {
-        "x": 1.6396709716496354,
-        "y": 5.344228580195052
+        "x": 1.3070140425995143,
+        "y": 5.497296708879134
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
+      "rotationDegrees": -2.5448043798132693,
       "rotateFast": false
     }
   ],
@@ -49,9 +49,9 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "4Amp",
   "previewStartingState": {
-    "rotation": 22.31,
+    "rotation": 26.57,
     "velocity": 0
   },
   "useDefaultConstraints": true
