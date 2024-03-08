@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.241770130263907,
-        "y": 5.589805823486292
+        "x": 3.196455281799453,
+        "y": 5.85767504868343
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.978801450480393,
-        "y": 5.531335051274093
+        "x": 2.1826993337348797,
+        "y": 6.290116397158527
       },
       "isLocked": false,
       "linkedName": "3StageEnd"
     },
     {
       "anchor": {
-        "x": 3.019581195857548,
-        "y": 7.1217400554459225
+        "x": 3.0539327745322162,
+        "y": 7.91
       },
       "prevControl": {
-        "x": 1.5928943538798759,
-        "y": 6.373314171129768
+        "x": 1.9280049671210457,
+        "y": 7.140378460756922
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 30.96,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -45,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 30.963756532073543,
+    "rotation": 41.34770049034995,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "4Podium",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 1.5

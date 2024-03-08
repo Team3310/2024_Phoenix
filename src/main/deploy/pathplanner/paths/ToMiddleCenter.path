@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.350992416270551,
+        "x": 2.655684168511195,
         "y": 5.55593454044051
       },
       "isLocked": false,
@@ -16,24 +16,40 @@
     },
     {
       "anchor": {
-        "x": 2.127943684458798,
-        "y": 5.55593454044051
+        "x": 4.356181283791139,
+        "y": 4.881599477484669
       },
       "prevControl": {
-        "x": 1.96668964766501,
-        "y": 5.55593454044051
+        "x": 3.7084164882615482,
+        "y": 5.173872419173409
+      },
+      "nextControl": {
+        "x": 5.00394607932073,
+        "y": 4.589326535795929
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.3791864726586605,
+        "y": 4.089988751406074
+      },
+      "prevControl": {
+        "x": 5.338364962444211,
+        "y": 4.0606698356253865
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2StageLeftPreGrab"
+      "linkedName": "Middle"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -48,5 +64,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

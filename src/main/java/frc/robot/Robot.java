@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // m_robotContainer.getDrivetrain().setDriveMode(DriveMode.JOYSTICK);
+    m_robotContainer.getDrivetrain().setDriveMode(DriveMode.JOYSTICK);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

@@ -9,16 +9,14 @@ import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.ForwardReference;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.ForwardReference;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -554,13 +552,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
         if (!pathDone()) {
-            for (int i = 0; i < this.Modules.length; i++) {
-                this.Modules[i].apply(states[i],
-                        SwerveModule.DriveRequestType.OpenLoopVoltage,
-                        SwerveModule.SteerRequestType.MotionMagic);
-            }
+            SmartDashboard.putBoolean("path done", false);
+            applyRequest(()->driveFieldCentricNoDeadband
+                .withVelocityX(speeds.vxMetersPerSecond)
+                .withVelocityY(speeds.vyMetersPerSecond)
+                .withRotationalRate(speeds.omegaRadiansPerSecond)
+                .withDriveRequestType(DriveRequestType.Velocity)
+            );
         } else {
             // rotationHold();
+            SmartDashboard.putBoolean("path done", true);
+            applyRequest(()->new SwerveDriveBrake());
         }
     }
     
@@ -754,6 +756,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
             Targeting.setTarget(sideMode == SideMode.BLUE ? Target.BLUESPEAKER : Target.REDSPEAKER);
         }
+
+        SmartDashboard.putNumber("odo x", getPose().getX());
+        SmartDashboard.putNumber("odo y", getPose().getY());
 
         SmartDashboard.putString("side", sideMode.toString());
         

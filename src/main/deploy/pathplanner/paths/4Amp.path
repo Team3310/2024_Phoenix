@@ -3,54 +3,48 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.8909454969907094,
-        "y": 5.5196408968316515
+        "x": 2.890235494756704,
+        "y": 5.541275082550166
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.733224207189155,
-        "y": 5.297451962425293
+        "x": 2.157262600239487,
+        "y": 5.4533183352081
       },
       "isLocked": false,
       "linkedName": "3AmpEnd"
     },
     {
       "anchor": {
-        "x": 2.8909454969907094,
-        "y": 4.128036518181299
+        "x": 2.890235494756704,
+        "y": 4.104648209296419
       },
       "prevControl": {
-        "x": 2.294543620426272,
-        "y": 4.268366371490578
+        "x": 1.4829275372836461,
+        "y": 4.324540077651584
       },
       "nextControl": {
-        "x": 2.9478619505077837,
-        "y": 4.1146444114713985
+        "x": 3.167553758339415,
+        "y": 4.061317230611621
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.271155311541392,
-        "y": 4.443778688127177
+        "x": 2.2130499816555194,
+        "y": 4.560720232551576
       },
       "prevControl": {
-        "x": 2.493344245947751,
-        "y": 4.303448834817898
+        "x": 2.113284226568454,
+        "y": 4.456475198664683
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "2StageGrabEnd"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -26.569999999999993,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -65,7 +59,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "4Amp",
   "previewStartingState": {
     "rotation": 0,
     "velocity": 0

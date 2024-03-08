@@ -1,9 +1,8 @@
 package frc.robot.util.Choosers;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.Commands.Auton.DriveTest;
 import frc.robot.Commands.Auton.Amp.FourAmp;
 import frc.robot.Commands.Auton.Amp.ThreeAmp;
 import frc.robot.Commands.Auton.Amp.TwoAmp;
@@ -22,9 +21,10 @@ import frc.robot.Commands.Auton.Stage.TwoStage;
 public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousMode>{
     public AutonomousChooser() {
         super("Autonomous Mode");
-        setDefaultOption(AutonomousMode.FOUR_STAGE);
+        setDefaultOption(AutonomousMode.TEST);
         addOption(AutonomousMode.TWO_STAGE);
         addOption(AutonomousMode.THREE_STAGE);
+        addOption(AutonomousMode.FOUR_STAGE);
         addOption(AutonomousMode.THREE_STAGE_MIDDLE);
         addOption(AutonomousMode.FOUR_STAGE_MIDDLE);
         addOption(AutonomousMode.TWO_STAGE_LEFT);
@@ -57,6 +57,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         THREE_STAGE_LEFT_COUNTER("three stage left counter"),
         FOUR_STAGE_LEFT_COUNTER("four stage left counter"),
         FAST_FOUR("fast four"),
+        TEST("drive test"),
         ;
 
         private String name = "";
@@ -101,7 +102,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                 case FAST_FOUR:
                     return new FastStageFour(RobotContainer.getInstance());
                 default:
-                    return new WaitCommand(0.0);
+                    return new DriveTest(RobotContainer.getInstance());
             }
         }
     }
