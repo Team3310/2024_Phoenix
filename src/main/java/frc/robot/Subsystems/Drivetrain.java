@@ -1,14 +1,24 @@
 package frc.robot.Subsystems;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Orchestra;
-import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.ForwardReference;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -25,17 +35,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.Swerve.SwerveDrivetrain;
-import frc.robot.Swerve.SwerveModule;
-import frc.robot.Swerve.SwerveModule.DriveRequestType;
-import frc.robot.Swerve.SwerveRequest;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
 import frc.robot.util.Camera.Limelight;
@@ -61,6 +67,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
 
+    private PidController holdAngleController = new PidController(new PidConstants(0.05, 0.0, 0.00));
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.0, 0.01));
     private PidController noteTrackController = new PidController(new PidConstants(1.0, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
@@ -74,6 +81,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private final int VISON_COUNTER_MAX = 4;
     private int pidNoteUpdateCounter = 0;
     private final int NOTE_COUNTER_MAX = 4;
+    
+    private boolean isHoldingAngle = false;
+    private double joystickDriveHoldAngleRadians = 0;
 
     private static Function<PathPlannerPath, Command> pathFollowingCommandBuilder;
 
@@ -85,6 +95,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
     
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
+            .withDeadband(Constants.MaxSpeed * STICK_DEADBAND) 
+            .withDriveRequestType(DriveRequestType.Velocity);
+    private final SwerveRequest.FieldCentricFacingAngle driveFieldCentricFacingAngle = new SwerveRequest.FieldCentricFacingAngle()
             .withDeadband(Constants.MaxSpeed * STICK_DEADBAND) 
             .withDriveRequestType(DriveRequestType.Velocity);
     private final SwerveRequest.FieldCentric driveFieldCentricNoDeadband = new SwerveRequest.FieldCentric()
@@ -111,9 +124,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
     private DriveOrientation driveOrientation = DriveOrientation.FIELD_CENTRIC;
 
+    private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
+    private final SwerveRequest.SysIdSwerveRotation RotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+    private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
+
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
 
+        holdAngleController.setContinuous(true);
+        holdAngleController.setInputRange(-Math.PI, Math.PI);
+        holdAngleController.setOutputRange(-1.0, 1.0);
+ 
         aimAtTargetController.setContinuous(true);
         aimAtTargetController.setInputRange(-Math.PI, Math.PI);
         aimAtTargetController.setOutputRange(-1.0, 1.0);
@@ -126,6 +147,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         joystickController.setInputRange(-Math.PI, Math.PI);
         joystickController.setOutputRange(-1.0, 1.0);
         joystickController.setSetpoint(0.0);
+
+        driveFieldCentricFacingAngle.HeadingController.setPID(6.0, 0, 0);
+        driveFieldCentricFacingAngle.ForwardReference = ForwardReference.RedAlliance;
 
         Targeting.setTarget(Target.REDSPEAKER);
 
@@ -141,6 +165,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 Constants.VisionAlignConstants.kD);
         visionPIDController.enableContinuousInput(-Math.PI, Math.PI);
         visionPIDController.setTolerance(0.0);
+
+        ClosedLoopRampsConfigs rampConfigs = new ClosedLoopRampsConfigs();
+        rampConfigs.TorqueClosedLoopRampPeriod = TunerConstants.kTorqueClosedLoopRampPeriod;
+        for (int i = 0; i < this.Modules.length; i++) {
+            StatusCode response = this.Modules[i].getDriveMotor().getConfigurator().apply(rampConfigs);
+            if (!response.isOK()) {
+                System.out.println("TalonFX ID " + this.Modules[i].getDriveMotor().getDeviceID() + " failed config ramp configs with error " + response.toString());
+            }
+        }
 
         double driveBaseRadius = 0;
         for (var moduleLocation : m_moduleLocations) {
@@ -196,9 +229,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             return;
         }
 
+        holdAngleController.integralAccum = 0;
         aimAtTargetController.integralAccum = 0;
         noteTrackController.integralAccum = 0;
         joystickController.integralAccum = 0;
+        isHoldingAngle = false;
+        joystickDriveHoldAngleRadians = getGyroAngleRadians();
 
         if (lockedOn) {
             lockedOn = false;
@@ -207,7 +243,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // Runs once on mode change to JOYSTICK, to set the current field-relative yaw
         // of the robot to the hold angle.
         if (mode == DriveMode.JOYSTICK) {
-            setJoystickDrive_holdAngle(getBotAz_FieldRelative());
             maybeStopSnap(true);
         } else if (mode == DriveMode.AIM_AT_NOTE){
             pidNoteUpdateCounter = NOTE_COUNTER_MAX + 1;
@@ -273,6 +308,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    public void updateDriveFacingAngle(double targetAngleRadians) {
+        this.applyRequest(() -> driveFieldCentricFacingAngle
+            .withVelocityX(getDriveXWithoutDeadband() * Constants.MaxSpeed) 
+            .withVelocityY(getDriveYWithoutDeadband() * Constants.MaxSpeed) 
+            .withTargetDirection(Rotation2d.fromRadians(targetAngleRadians))
+        );
+    }
+
     public void updateDriveStrafe(double yInput) {
         if (driveOrientation == DriveOrientation.FIELD_CENTRIC) {        
             this.applyRequest(() -> driveFieldCentricNoDeadband
@@ -290,16 +333,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-
-    // joystickDrive_holdAngle:
-    // Uses PID to hold robot at its current heading, while allowing translation
-    // movement.
-    // The robot is able to spin by using the right joystick.
-    // When no input on the right joystick, PID will hold latest bearing.
-    private double joystickDrive_holdAngle = 0;
-    public void setJoystickDrive_holdAngle(double radians) {
-        joystickDrive_holdAngle = rolloverConversion_radians(radians);
-    }
+    // public void setJoystickDriveHoldAngle(double radians) {
+    //     joystickDriveHoldAngle = rolloverConversion_radians(radians);
+    // }
 
     public void joystickDrive() {
         //Set rotation to right joystick rotation value
@@ -317,22 +353,38 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // if (Math.abs(getDriveRotation()) == 0.0) {
                 maybeStopSnap(false);
                 rotation = -calculateSnapValue();
+                isHoldingAngle = false;
             // } else {
             //     maybeStopSnap(true);
             // }
-        } else {
-            // if (rotation == 0) {
-            //     drivetrain_state = "JOYSTICKDRIVE_PID";
-            //     double offset = -(getBotAz_FieldRelative() - joystickDrive_holdAngle);
-            //     rotation = joystickController.calculate(offset, 0.005) * Constants.MaxAngularRate;
-            //     SmartDashboard.putNumber("PID Error:", offset);
-            //     SmartDashboard.putNumber("PID Output:", rotation);
-            // } else {
+        } 
+        else {                    
+            if (Math.abs(rotation) < 0.001) {
+                drivetrain_state = "JOYSTICKDRIVE_HOLD_ANGLE";
+                if (isHoldingAngle == false) {
+                    holdAngleController.setSetpoint(joystickDriveHoldAngleRadians);
+                    isHoldingAngle = true;
+                }
+                updateDriveFacingAngle(joystickDriveHoldAngleRadians);
+                return;
+                // rotation = holdAngleController.calculate(getGyroAngleRadians(), 0.005);
+                // SmartDashboard.putNumber("Hold Error", Math.toDegrees(getGyroAngleRadians() - joystickDriveHoldAngleRadians));
+                // SmartDashboard.putNumber("Hold Output", rotation);
+            }
+            else {
                 drivetrain_state = "JOYSTICKDRIVE_OPENLOOP";
-                joystickDrive_holdAngle = getBotAz_FieldRelative();
-            // }
+                isHoldingAngle = false;
+            }
         }
+
+        joystickDriveHoldAngleRadians = getGyroAngleRadians();
         updateDrive(rotation);
+    }
+
+    private double getGyroAngleRadians() {
+        return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation().getRadians();
+//        return m_odometry.getEstimatedPosition().getRotation().getRadians();
+//        return getPigeon2().getRotation2d().getRadians();
     }
 
     // aimAtTarget():
@@ -480,7 +532,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
             pidNoteUpdateCounter++;
             double pidOutput = noteTrackController.calculate(currentAngle, 0.005);
-                
+             
             setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
             updateDriveStrafe(pidOutput);         
         }
@@ -558,6 +610,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 this.m_fieldRelativeOffset.getRadians() - getPose().getRotation().getRadians());
         // return
         // rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getOdoPose().getRotation().getRadians());
+    }
+
+    public double getFieldRelativeGyro() {
+        return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation().getRadians();
     }
 
     public ChassisSpeeds getFieldRelativeVelocites() {
@@ -667,7 +723,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         AIMATTARGET, 
         AIMATTARGET_AUTON,
         AIMATTRAP,
-        AIM_AT_NOTE
+        AIM_AT_NOTE,
+        RESET_GYRO
         // ODOMETRYTRACK,
         ;
     }
@@ -707,7 +764,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putBoolean("is snapping", isSnapping);
 
             SmartDashboard.putString("DriveTrain State", drivetrain_state);
-            SmartDashboard.putNumber("joystickDrive_holdAngle", joystickDrive_holdAngle);
+            SmartDashboard.putNumber("joystickDriveHoldAngle", joystickDriveHoldAngleRadians);
+            SmartDashboard.putNumber("gyroAngle", getGyroAngleRadians());
             SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
             // SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
             // SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
@@ -753,6 +811,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 break;
             case AIM_AT_NOTE:
                 aimAtNote();
+                break;
+            case RESET_GYRO:
+                // Do nothing
                 break;
             // case JOYSTICK_BOTREL:
             //     joystickDrive_RobotRelative();
@@ -814,13 +875,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void startSnap(double snapAngle) {
-        if(mControlMode == DriveMode.AIMATTARGET_AUTON){
-            joystickDrive_holdAngle = Math.toRadians(snapAngle);
+        if (mControlMode == DriveMode.AIMATTARGET_AUTON) {
             snapPIDControllerAuton.reset(getBotAz_FieldRelative());
             snapPIDControllerAuton.setGoal(new TrapezoidProfile.State(Math.toRadians(snapAngle), 0.0));
             isSnapping = true;
-        }else{
-            joystickDrive_holdAngle = Math.toRadians(snapAngle);
+        } else {
             snapPIDController.reset(getBotAz_FieldRelative());
             snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(snapAngle), 0.0));
             isSnapping = true;
@@ -862,6 +921,54 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public DriveOrientation getDriveOrientation() {
         return driveOrientation;
+    }
+
+        /* Use one of these sysidroutines for your particular test */
+    private SysIdRoutine SysIdRoutineTranslation = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(4),
+                    null,
+                    (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> setControl(TranslationCharacterization.withVolts(volts)),
+                    null,
+                    this));
+
+    private final SysIdRoutine SysIdRoutineRotation = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(4),
+                    null,
+                    (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> setControl(RotationCharacterization.withVolts(volts)),
+                    null,
+                    this));
+    private final SysIdRoutine SysIdRoutineSteer = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(7),
+                    null,
+                    (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> setControl(SteerCharacterization.withVolts(volts)),
+                    null,
+                    this));
+
+    /* Change this to the sysid routine you want to test */
+    private final SysIdRoutine RoutineToApply = SysIdRoutineTranslation;
+
+    /*
+     * Both the sysid commands are specific to one particular sysid routine, change
+     * which one you're trying to characterize
+     */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return RoutineToApply.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return RoutineToApply.dynamic(direction);
     }
     
     // private void startSimThread() {

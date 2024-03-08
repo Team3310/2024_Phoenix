@@ -10,15 +10,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Commands.Climber.ClimberAutoZero;
-import frc.robot.Commands.Climber.ClimberPrep;
 import frc.robot.Commands.Climber.ClimberPrepNoAngle;
 import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Climber.SetClimberSpeed;
 import frc.robot.Commands.Climber.SetClimberUpDown;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Drive.SetDriveOrientation;
-import frc.robot.Commands.Drive.SetSnapToCardinal;
 import frc.robot.Commands.Elevator.ElevatorAutoZero;
 import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
@@ -29,7 +28,6 @@ import frc.robot.Commands.Intake.IntakeEject;
 import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.SetLiftOff;
-import frc.robot.Commands.Shooter.ScoreCommand;
 import frc.robot.Commands.Shooter.ScoreOffCommand;
 import frc.robot.Commands.Shooter.ScoreOnCommand;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
@@ -119,7 +117,9 @@ public class RobotContainer {
     // driverController.a().onTrue(new SetSnapToCardinal(Constants.SwerveCardinal.AMP));
 
     // reset buttons
-    driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
+    driverController.start().onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)
+      .andThen(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()))
+      .andThen(new SetDriveMode(DriveMode.JOYSTICK)));
 
     // climber prep
     // driverController.povUp().onTrue(new ClimberPrep(this, 0.0));
@@ -223,7 +223,11 @@ public class RobotContainer {
         SmartDashboard.putData("Snap 0", new InstantCommand(()->drivetrain.startSnap(0)));
         SmartDashboard.putData("Snap 90", new InstantCommand(()->drivetrain.startSnap(90)));
         SmartDashboard.putData("Snap -90", new InstantCommand(()->drivetrain.startSnap(-90)));
-        SmartDashboard.putData("Snap 180", new InstantCommand(()->drivetrain.startSnap(180)));
+
+        SmartDashboard.putData("sysIdQuasistatic Forward", drivetrain.sysIdQuasistatic(Direction.kForward));
+        SmartDashboard.putData("sysIdQuasistatic Reverse", drivetrain.sysIdQuasistatic(Direction.kReverse));
+        SmartDashboard.putData("sysIdDynamic Forward", drivetrain.sysIdDynamic(Direction.kForward));
+        SmartDashboard.putData("sysIdDynamic Reverse", drivetrain.sysIdDynamic(Direction.kReverse));
       }
     }
 

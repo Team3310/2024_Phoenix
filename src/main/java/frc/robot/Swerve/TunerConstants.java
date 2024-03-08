@@ -15,7 +15,7 @@ import frc.robot.Subsystems.Drivetrain;
 // https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
 public class TunerConstants {
 
-    public static boolean isCompbot = false;
+    public static boolean isCompbot = true;
 
     // Both sets of gains need to be tuned to your individual robot.
 
@@ -40,6 +40,9 @@ public class TunerConstants {
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
     private static final double kSlipCurrentA = 60.0;
+
+    // This is set on the modules in Drivetrain (units are in seconds, 0 == off)
+    public static final double kTorqueClosedLoopRampPeriod = 0.02;
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
