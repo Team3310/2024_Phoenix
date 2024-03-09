@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7352951848760846,
+      "y": 6.670053340106681
+    },
+    "rotation": 61.260204708311946
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToAmpMiddleAmp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AmpToON"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AMToAS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ASToAM"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AmpToIN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AMToAS"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
