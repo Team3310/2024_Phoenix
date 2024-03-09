@@ -28,7 +28,7 @@
         "y": 4.589326535795929
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MShoot"
     },
     {
       "anchor": {
@@ -36,8 +36,8 @@
         "y": 4.089988751406074
       },
       "prevControl": {
-        "x": 5.338364962444211,
-        "y": 4.0606698356253865
+        "x": 5.221089299321457,
+        "y": 3.9873725461736647
       },
       "nextControl": null,
       "isLocked": false,
@@ -49,12 +49,12 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 3.0,
     "rotation": 0,
     "rotateFast": false
   },

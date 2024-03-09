@@ -1,0 +1,67 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToMiddleCenter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToAN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToMS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MSToMiddle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToMN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToMS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MSToMiddle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToON"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToMS"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

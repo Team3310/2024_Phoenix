@@ -3,61 +3,56 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.1632658820873205,
-        "y": 1.653261084299946
+        "x": 6.3791864726586605,
+        "y": 4.089988751406074
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.1632658820873205,
-        "y": 1.6532610842999462
+        "x": 7.302732319750354,
+        "y": 4.104648209296419
       },
       "isLocked": false,
-      "linkedName": "3StageMiddleEnd"
+      "linkedName": "Middle"
     },
     {
       "anchor": {
-        "x": 8.328894372074458,
-        "y": 2.433470009797163
+        "x": 8.284915998403426,
+        "y": 5.746507493014986
       },
       "prevControl": {
-        "x": 8.501025681963178,
-        "y": 2.358771516826586
+        "x": 8.270256540513081,
+        "y": 5.042853514278457
       },
       "nextControl": {
-        "x": 7.551943103886208,
-        "y": 2.770637541275083
+        "x": 8.286998879771609,
+        "y": 5.846485798687798
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "InAmpNote"
     },
     {
       "anchor": {
-        "x": 3.593889473493233,
-        "y": 5.511956166769477
+        "x": 6.3791864726586605,
+        "y": 4.089988751406074
       },
       "prevControl": {
-        "x": 4.50603352000355,
-        "y": 4.884857134793635
+        "x": 7.3320512355310425,
+        "y": 4.1632860408577965
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Middle"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 14.83853759958901,
+      "waypointRelativePos": 0.85,
+      "rotationDegrees": 87.8,
       "rotateFast": false
     },
     {
       "waypointRelativePos": 1.25,
-      "rotationDegrees": 15.534858426985624,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.45,
-      "rotationDegrees": 0,
+      "rotationDegrees": 87.8,
       "rotateFast": false
     }
   ],
@@ -70,15 +65,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0,
+    "velocity": 1.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4Middle",
+  "folder": "MiddleNotePaths",
   "previewStartingState": {
-    "rotation": -39.52999999999997,
-    "velocity": 0
+    "rotation": 0,
+    "velocity": 3.0
   },
   "useDefaultConstraints": true
 }
