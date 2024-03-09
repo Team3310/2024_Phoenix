@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -17,12 +18,10 @@ public class Flicker extends SubsystemBase {
     private final TalonFX motor = new TalonFX(Constants.AMP_MOTOR_ID, TunerConstants.kSecondaryCANbusName);
     private final DigitalInput sensor = new DigitalInput(Constants.AMP_SENSOR_PORT);
 
-    private VelocityVoltage control = new VelocityVoltage(0);
-
-    private final double kP = 0.3;
-    private final double kI = 0.5;
-    private final double kD = 0.0001;
-    private final double kV = 0.12;
+    private VelocityDutyCycle control = new VelocityDutyCycle(0);
+ 
+    private final double kP = 1;
+    private final double kI = 0.01;
 
     public static Flicker getInstance() {
         if (instance == null) {
@@ -36,14 +35,12 @@ public class Flicker extends SubsystemBase {
 
         config.Slot0.kP = kP;
         config.Slot0.kI = kI;
-        config.Slot0.kD = kD;
-        config.Slot0.kV = kV;
-
+ 
         config.CurrentLimits.StatorCurrentLimit = 80;
-        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimitEnable = false;
         
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
-        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.SupplyCurrentLimitEnable = false;
 
         motor.getConfigurator().apply(config.Slot0);
 
@@ -57,6 +54,7 @@ public class Flicker extends SubsystemBase {
             motor.setControl(new DutyCycleOut(0.0));
             return;
         }
+        // motor.setControl(new DutyCycleOut((rpm < 0) ? -0.5 : 0.5));
         motor.setControl(control.withVelocity(getRollerToMotorRPM(rpm)));
     }
 
