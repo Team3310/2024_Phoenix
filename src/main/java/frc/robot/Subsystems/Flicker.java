@@ -41,6 +41,9 @@ public class Flicker extends SubsystemBase {
 
         config.CurrentLimits.StatorCurrentLimit = 80;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
+        
+        config.CurrentLimits.SupplyCurrentLimit = 40.0;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
         motor.getConfigurator().apply(config.Slot0);
 

@@ -58,6 +58,9 @@ public class Climber extends SubsystemBase {
         config.CurrentLimits.StatorCurrentLimit = 80.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
+        config.CurrentLimits.SupplyCurrentLimit = 40.0;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+
         config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(18.0); // inches per second
         config.MotionMagic.MotionMagicAcceleration = getInchesToRotations(18.0);
 

@@ -51,6 +51,9 @@ public class Intake extends SubsystemBase {
         config.CurrentLimits.StatorCurrentLimit = 80.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
+        config.CurrentLimits.SupplyCurrentLimit = 40.0;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+
         frontIntake.getConfigurator().apply(config.Slot0);
         topIntake.getConfigurator().apply(config.Slot0);
         bottomIntake.getConfigurator().apply(config.Slot0);

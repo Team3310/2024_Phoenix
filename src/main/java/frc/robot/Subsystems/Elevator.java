@@ -55,6 +55,9 @@ public class Elevator extends SubsystemBase {
         config.CurrentLimits.StatorCurrentLimit = 40.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
+        config.CurrentLimits.SupplyCurrentLimit = 40.0;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+
         config.MotionMagic.MotionMagicCruiseVelocity = 121.0; // rotations per second
         config.MotionMagic.MotionMagicAcceleration = 201.0;
 
