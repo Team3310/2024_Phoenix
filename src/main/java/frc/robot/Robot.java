@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   );
 
   private static final byte[] COMPETITION_BOT_MAC_ADDRESS = new byte[]{
-    0x00, (byte) 0x80, 0x2f, 0x33, (byte) 0xc4, 0x68
+    0x00, (byte) 0x80, 0x2f, 0x36, (byte) 0xfe, 0x54
   };
   private static final byte[] PRACTICE_BOT_MAC_ADDRESS = new byte[]{
     0x00, (byte) 0x80, 0x2f, 0x33, (byte) 0xcf, (byte) 0x65
