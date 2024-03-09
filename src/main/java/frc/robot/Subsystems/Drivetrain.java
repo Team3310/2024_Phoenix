@@ -33,7 +33,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -59,9 +58,6 @@ import frc.robot.util.PathFollowing.FollowPathCommand;
  * so it can be used in command-based projects easily.
  */
 public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateManager.Updatable {
-    private static final double kSimLoopPeriod = 0.005; // 5 ms
-    private Notifier m_simNotifier = null;
-    private double m_lastSimTime;
     private DriveMode mControlMode = DriveMode.JOYSTICK;
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
@@ -135,7 +131,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         super(driveTrainConstants, modules);
 
         holdAngleController.setContinuous(true);
- //       holdAngleController.setInputRange(-Math.PI, Math.PI);
         holdAngleController.setOutputRange(-1.0, 1.0);
  
         aimAtTargetController.setContinuous(true);
@@ -215,9 +210,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 () -> false);
 
         configurePathPlanner();
-        // if (Utils.isSimulation()) {
-        //     startSimThread();
-        // }
     }
 
     //#region DriveTrain things... 
@@ -387,29 +379,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-    // joystickDrive_holdAngle:
-    // Uses PID to hold robot at its current heading, while allowing translation
-    // movement.
-    // The robot is able to spin by using the right joystick.
-    // When no input on the right joystick, PID will hold latest bearing.
-    private double joystickDrive_holdAngle = 0;
-    public void setJoystickDrive_holdAngle(double radians) {
-        joystickDrive_holdAngle = rolloverConversion_radians(radians);
-    }
-
     public void joystickDrive() {
         setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
-
-        //Set rotation to right joystick rotation value
-        //If snapping is occuring, check if joystick is being moved...
-            //If not, then continue following the snaps profile..
-            //If so, force stop the snap profile
-        //Then ... 
-        //If not snapping...
-            //AND the right joystick is NOT being used...
-                //Use the gyro's current angle and joystickDrive_holdAngle in a PID to hold the current angle
-            //else, joystick is moving, so update the hold angle with the current bot angle
-        //Then send rotation command to the joystickDrive_OpenLoop.
         double rotation = getDriveRotationWithDeadband();
         if (isSnapping) {
             // if (Math.abs(getDriveRotation()) == 0.0) {
@@ -482,15 +453,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-    // aimAtTarget():
-    // Combines both OdometryTrack and AprilTagTrack()
-    // If the targeted aprilTag is in view ... aprilTagTrack() is used.
-    // Otherwise, OdometryTrack() is ran, the goal of which is to use
-    // OdometryTrack() to point
-    // ... the limelight at where the targeted april tag should be.
-    // aimAtTarget() needs:
-    // Will need everything that odometryTrack() and aprilTagTrack() need.
-    // As well as the variables listed below...
     public int updateCounter = 0;
     public boolean justChanged = false;
     public boolean lockedOn = false;

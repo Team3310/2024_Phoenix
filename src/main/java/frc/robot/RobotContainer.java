@@ -111,7 +111,7 @@ public class RobotContainer {
     driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.x().onTrue(new ShooterOff(shooter));
     driverController.b().onTrue(new ShooterOn(shooter));
-    driverController.y().onTrue(new SetDriveMode(DriveMode.STRAFE2APRILTAG));
+    // driverController.y().onTrue(new SetDriveMode(DriveMode.STRAFE2APRILTAG));
 
     // snap to cardinal angles
     // driverController.y().onTrue(new SetSnapToCardinal(Constants.SwerveCardinal.SOURCE));
