@@ -9,6 +9,7 @@ import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -65,7 +66,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
 
-    private PidController holdAngleController = new PidController(new PidConstants(0.05, 0.0, 0.00));
+    private PidController holdAngleController = new PidController(new PidConstants(0.3, 0.0, 0.00));
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.0, 0.01));
     private PidController noteTrackController = new PidController(new PidConstants(1.0, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
@@ -130,7 +131,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         super(driveTrainConstants, modules);
 
         holdAngleController.setContinuous(true);
-        holdAngleController.setInputRange(-Math.PI, Math.PI);
+ //       holdAngleController.setInputRange(-Math.PI, Math.PI);
         holdAngleController.setOutputRange(-1.0, 1.0);
  
         aimAtTargetController.setContinuous(true);
@@ -146,7 +147,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         joystickController.setOutputRange(-1.0, 1.0);
         joystickController.setSetpoint(0.0);
 
-        driveFieldCentricFacingAngle.HeadingController.setPID(6.0, 0, 0);
+        driveFieldCentricFacingAngle.HeadingController.setPID(10.0, 0, 0);
         driveFieldCentricFacingAngle.ForwardReference = ForwardReference.RedAlliance;
 
         Targeting.setTarget(Target.REDSPEAKER);
@@ -164,12 +165,19 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         visionPIDController.enableContinuousInput(-Math.PI, Math.PI);
         visionPIDController.setTolerance(0.0);
 
+        CurrentLimitsConfigs currentConfigs = new CurrentLimitsConfigs();
+        currentConfigs.SupplyCurrentLimit = TunerConstants.kSupplyCurrentA;
+
         ClosedLoopRampsConfigs rampConfigs = new ClosedLoopRampsConfigs();
         rampConfigs.TorqueClosedLoopRampPeriod = TunerConstants.kTorqueClosedLoopRampPeriod;
         for (int i = 0; i < this.Modules.length; i++) {
             StatusCode response = this.Modules[i].getDriveMotor().getConfigurator().apply(rampConfigs);
             if (!response.isOK()) {
                 System.out.println("TalonFX ID " + this.Modules[i].getDriveMotor().getDeviceID() + " failed config ramp configs with error " + response.toString());
+            }
+            response = this.Modules[i].getDriveMotor().getConfigurator().apply(currentConfigs);
+            if (!response.isOK()) {
+                System.out.println("TalonFX ID " + this.Modules[i].getDriveMotor().getDeviceID() + " failed config current configs with error " + response.toString());
             }
         }
 
@@ -306,6 +314,23 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    public void updateDrive(double x, double y, double rotation) {
+        if (driveOrientation == DriveOrientation.FIELD_CENTRIC) {        
+            this.applyRequest(() -> driveFieldCentric
+                .withVelocityX(x * Constants.MaxSpeed) 
+                .withVelocityY(y * Constants.MaxSpeed) 
+                .withRotationalRate(rotation * Constants.MaxAngularRate) 
+            );
+        }
+        else {
+            this.applyRequest(() -> driveRobotCentric
+                .withVelocityX(x * Constants.MaxSpeed) 
+                .withVelocityY(y * Constants.MaxSpeed) 
+                .withRotationalRate(rotation * Constants.MaxAngularRate) 
+            );
+        }
+    }
+
     public void updateDriveFacingAngle(double targetAngleRadians) {
         this.applyRequest(() -> driveFieldCentricFacingAngle
             .withVelocityX(getDriveXWithoutDeadband() * Constants.MaxSpeed) 
@@ -336,6 +361,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // }
 
     public void joystickDrive() {
+
         //Set rotation to right joystick rotation value
         //If snapping is occuring, check if joystick is being moved...
             //If not, then continue following the snaps profile..
@@ -356,16 +382,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             //     maybeStopSnap(true);
             // }
         } 
-        else {                    
-            if (Math.abs(rotation) < 0.001) {
+        else {   
+            if (Math.abs(rotation) < 0.001 && Math.abs(getCurrentRobotChassisSpeeds().omegaRadiansPerSecond) < 0.5) {
                 drivetrain_state = "JOYSTICKDRIVE_HOLD_ANGLE";
                 if (isHoldingAngle == false) {
+                    joystickDriveHoldAngleRadians = getGyroAngleRadians();
                     holdAngleController.setSetpoint(joystickDriveHoldAngleRadians);
                     isHoldingAngle = true;
                 }
-                updateDriveFacingAngle(joystickDriveHoldAngleRadians);
-                return;
-                // rotation = holdAngleController.calculate(getGyroAngleRadians(), 0.005);
+                // updateDriveFacingAngle(joystickDriveHoldAngleRadians);
+                // return;
+                rotation = holdAngleController.calculate(getGyroAngleRadians(), 0.005);
                 // SmartDashboard.putNumber("Hold Error", Math.toDegrees(getGyroAngleRadians() - joystickDriveHoldAngleRadians));
                 // SmartDashboard.putNumber("Hold Output", rotation);
             }
@@ -375,14 +402,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
         }
 
-        joystickDriveHoldAngleRadians = getGyroAngleRadians();
         updateDrive(rotation);
     }
 
     private double getGyroAngleRadians() {
-        return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation().getRadians();
+//        return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation().getRadians();
 //        return m_odometry.getEstimatedPosition().getRotation().getRadians();
-//        return getPigeon2().getRotation2d().getRadians();
+        return getPigeon2().getRotation2d().getRadians();
     }
 
     // aimAtTarget():
@@ -529,10 +555,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 pidNoteUpdateCounter = 0;
             }
             pidNoteUpdateCounter++;
-            double pidOutput = noteTrackController.calculate(currentAngle, 0.005);
+            double pidRotationOutput = noteTrackController.calculate(currentAngle, 0.005);
+
+            double xForward = Math.sqrt(getDriveXWithDeadband() * getDriveXWithDeadband() + getDriveYWithDeadband() * getDriveYWithDeadband());
              
-            setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
-            updateDriveStrafe(pidOutput);         
+            setDriveOrientation(DriveOrientation.ROBOT_CENTRIC);
+            updateDrive(xForward, 0.0, pidRotationOutput);         
         }
         else {
             setDriveOrientation(DriveOrientation.FIELD_CENTRIC);

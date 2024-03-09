@@ -72,6 +72,9 @@ public class Shooter extends SubsystemBase {
         configs.TorqueCurrent.PeakReverseTorqueCurrent = -40;
         configs.CurrentLimits.StatorCurrentLimitEnable = false;
 
+        configs.CurrentLimits.SupplyCurrentLimit = 40.0;
+        configs.CurrentLimits.SupplyCurrentLimitEnable = true;
+
         /* Retry config apply up to 5 times, report if failure */
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for (int i = 0; i < 5; ++i) {

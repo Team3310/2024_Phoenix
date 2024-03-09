@@ -93,6 +93,9 @@ public class Lift extends SubsystemBase {
         configs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         configs.Feedback.SensorToMechanismRatio = 1.0;
         configs.Feedback.RotorToSensorRatio = Constants.LIFT_GEAR_RATIO;
+        
+        configs.CurrentLimits.SupplyCurrentLimit = 40.0;
+        configs.CurrentLimits.SupplyCurrentLimitEnable = true;
 
         liftMotor = new TalonFX(Constants.LIFT_MOTOR_ID, TunerConstants.kSecondaryCANbusName);
         StatusCode status = StatusCode.StatusCodeNotInitialized;
