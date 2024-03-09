@@ -66,13 +66,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
 
-    private PidController holdAngleController = new PidController(new PidConstants(0.3, 0.0, 0.00));
+    private PidController holdAngleController = new PidController(new PidConstants(0.5, 0.0, 0.00));
     private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.0, 0.01));
-    private PidController noteTrackController = new PidController(new PidConstants(1.0, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
+    private PidController noteTrackController = new PidController(new PidConstants(0.5, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
 
     private Limelight limelight = new Limelight("front");
-    private Limelight noteLimelight = new Limelight("note");
+    private Limelight noteLimelight = new Limelight("front");
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting odometryTargeting = new Targeting(true);
 
@@ -81,6 +81,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private int pidNoteUpdateCounter = 0;
     private final int NOTE_COUNTER_MAX = 4;
     
+    public boolean isTrackingNote = false;
     private boolean isHoldingAngle = false;
     private double joystickDriveHoldAngleRadians = 0;
 
@@ -250,9 +251,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // of the robot to the hold angle.
         if (mode == DriveMode.JOYSTICK) {
             maybeStopSnap(true);
-        } else if (mode == DriveMode.AIM_AT_NOTE){
+        } else if (mode == DriveMode.AIM_AT_NOTE) {
             pidNoteUpdateCounter = NOTE_COUNTER_MAX + 1;
-        } else if (mode == DriveMode.AIMATTARGET){
+        } else if (mode == DriveMode.AIM_AT_NOTE) {
+             isTrackingNote = false;
+        } else if (mode == DriveMode.AIMATTARGET) {
             // Get JSON Dump from Limelight-front
             LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
 
@@ -361,6 +364,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // }
 
     public void joystickDrive() {
+        setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
 
         //Set rotation to right joystick rotation value
         //If snapping is occuring, check if joystick is being moved...
@@ -383,7 +387,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // }
         } 
         else {   
-            if (Math.abs(rotation) < 0.001 && Math.abs(getCurrentRobotChassisSpeeds().omegaRadiansPerSecond) < 0.5) {
+            if ((Math.abs(rotation) < 0.001 && Math.abs(getCurrentRobotChassisSpeeds().omegaRadiansPerSecond) < 1.0 && isHoldingAngle == false) ||
+                (Math.abs(rotation) < 0.001 && isHoldingAngle == true)) {
                 drivetrain_state = "JOYSTICKDRIVE_HOLD_ANGLE";
                 if (isHoldingAngle == false) {
                     joystickDriveHoldAngleRadians = getGyroAngleRadians();
@@ -541,34 +546,40 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
      public void aimAtNote() {
-        // Get JSON Dump from Limelight-fron
         if(noteLimelight.hasTarget()){
-            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
- 
             drivetrain_state = "NOTE MODE";
+            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
 
-            double currentAngle = getBotAz_FieldRelative();
-            double adjustAngle = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
+            double currentNoteTrackAngle = getBotAz_FieldRelative();
+            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, 0.0, 2 * Math.PI);
 
-            if (pidNoteUpdateCounter > NOTE_COUNTER_MAX) {
-                noteTrackController.setSetpoint(adjustAngle);
-                pidNoteUpdateCounter = 0;
-            }
-            pidNoteUpdateCounter++;
-            double pidRotationOutput = noteTrackController.calculate(currentAngle, 0.005);
+        //    if (pidNoteUpdateCounter > NOTE_COUNTER_MAX) {
+            noteTrackController.setSetpoint(adjustAngle);
+            pidNoteUpdateCounter = 0;
+        //    }
+        //    pidNoteUpdateCounter++;
+            double pidRotationOutput = noteTrackController.calculate(currentNoteTrackAngle, 0.005);
 
             double xForward = Math.sqrt(getDriveXWithDeadband() * getDriveXWithDeadband() + getDriveYWithDeadband() * getDriveYWithDeadband());
              
+            isTrackingNote = true;
             setDriveOrientation(DriveOrientation.ROBOT_CENTRIC);
             updateDrive(xForward, 0.0, pidRotationOutput);         
         }
         else {
-            setDriveOrientation(DriveOrientation.FIELD_CENTRIC);
-            joystickDrive();
+            if (isTrackingNote) {
+                drivetrain_state = "NOTE MODE";
+                double pidRotationOutput = noteTrackController.calculate(getBotAz_FieldRelative(), 0.005);
+                double xForward = Math.sqrt(getDriveXWithDeadband() * getDriveXWithDeadband() + getDriveYWithDeadband() * getDriveYWithDeadband());
+                setDriveOrientation(DriveOrientation.ROBOT_CENTRIC);
+                updateDrive(xForward, 0.0, pidRotationOutput);         
+            }
+            else {
+                joystickDrive();
+            }
         }
     }
 
-    public boolean isTrackingNote = false;
     private void autonDrive(){
         ChassisSpeeds speeds = pathFollower.update();
 
@@ -791,13 +802,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         SmartDashboard.putString("side", sideMode.toString());
         
         SmartDashboard.putNumber("notetx", noteLimelight.getTargetHorizOffset());
+        SmartDashboard.putString("DriveTrain State", drivetrain_state);
 
         if (Constants.debug) {
 
             SmartDashboard.putBoolean("is snapping", isSnapping);
 
-            SmartDashboard.putString("DriveTrain State", drivetrain_state);
-            SmartDashboard.putNumber("joystickDriveHoldAngle", joystickDriveHoldAngleRadians);
+             SmartDashboard.putNumber("joystickDriveHoldAngle", joystickDriveHoldAngleRadians);
             SmartDashboard.putNumber("gyroAngle", getGyroAngleRadians());
             SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
             // SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
@@ -826,6 +837,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
             SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
             SmartDashboard.putNumber("mVisionAlignAdjustment", mVisionAlignAdjustment);
+            SmartDashboard.putNumber("Gyro Rate", getCurrentRobotChassisSpeeds().omegaRadiansPerSecond);     
         }
     }
 
