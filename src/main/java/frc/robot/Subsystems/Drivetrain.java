@@ -752,6 +752,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // }
         LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
+        frontCamera.updateKalmanFilter();
 
         if (sideMode != RobotContainer.getInstance().getSideChooser().getSelected()) {
             sideMode = RobotContainer.getInstance().getSideChooser().getSelected();

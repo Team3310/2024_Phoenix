@@ -2,9 +2,13 @@ package frc.robot.util.Camera;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Swerve.ChassisVelocity;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Interpolable.InterpolatingDouble;
@@ -41,6 +45,7 @@ public class Targeting {
     private static final double speakerHeightInches = 57.0;
     private static final double cameraMountAngleDegrees = 15.0;
     private static final double caneraMountHeightInches = 23.25;
+
     //#endregion
 
     public enum Target {
@@ -307,6 +312,51 @@ public class Targeting {
     public void update() {
         updateBotPos();
         updateTargetAzEl();
+    }
+
+    // Drivetrain drivetrain = TunerConstants.DriveTrain;
+    double KALMAN_ROTATION_MAX_RATE = 2;    //radians per second
+    double KALMAN_MAX_SPEED = 2;            //meters per second
+    double KALMAN_APRILTAG_MAX_RANGE = 4.5; //meters
+    public void updateKalmanFilter(){
+        if (isOdometry) {
+            return; //No Kalman Filter updating with odometry!
+        }
+        SmartDashboard.putBoolean("LimelightHasTarget", limelight.hasTarget());
+        if (limelight.hasTarget()){
+            try {
+                botPos = limelight.getBotPose();
+                if (botPos.length < 3) {
+                    return;
+                }
+            } catch (Exception e) {
+                return;
+            }
+            
+            double limelightDelay = botPos[6];
+
+            double[] targetpose_robotspace = limelight.getTable().getEntry("botpose_targetspace").getDoubleArray(new double[6]);
+            double distanceToTarget = Math.hypot(targetpose_robotspace[0], targetpose_robotspace[1]);
+            Rotation2d botRotation2d = new Rotation2d(Math.toRadians(botPos[5])); //Believe botPos TZ is in degreess... could be wrong...
+            Pose2d botPose2d = new Pose2d(botPos[0], botPos[1], botRotation2d);
+
+            ChassisSpeeds ChassisSpeeds = TunerConstants.DriveTrain.getCurrentRobotChassisSpeeds();
+            double rotationSpeed = ChassisSpeeds.omegaRadiansPerSecond;
+            double xSpeed = ChassisSpeeds.vxMetersPerSecond;
+            double ySpeed = ChassisSpeeds.vyMetersPerSecond;
+            double translationalSpeed = Math.hypot(xSpeed, ySpeed);
+
+            if((rotationSpeed < KALMAN_ROTATION_MAX_RATE) && (translationalSpeed < KALMAN_MAX_SPEED) && (distanceToTarget < KALMAN_APRILTAG_MAX_RANGE)){
+                TunerConstants.DriveTrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp() - limelightDelay);
+                SmartDashboard.putString("KALMAN", "Valid");
+            } else {
+                SmartDashboard.putString("KALMAN", "Invalid");
+            }
+
+            SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
+            SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
+            SmartDashboard.putNumber("translationSpeed", translationalSpeed);
+        }
     }
 
     //#region Getters
