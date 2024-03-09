@@ -45,9 +45,9 @@ public class Shooter extends SubsystemBase {
     private Shooter() {
         TalonFXConfiguration configs = new TalonFXConfiguration();
 
-        shooterRightMain = new TalonFX(Constants.SHOOTER_RIGHT_MASTER_ID, TunerConstants.kSecondaryCANbusName);
-        shooterLeftMain = new TalonFX(Constants.SHOOTER_LEFT_MASTER_ID, TunerConstants.kSecondaryCANbusName);
-        shooterKicker = new TalonFX(Constants.SHOOTER_KICKER_ID, TunerConstants.kSecondaryCANbusName);
+        shooterRightMain = new TalonFX(Constants.SHOOTER_RIGHT_MASTER_ID, TunerConstants.getInstance().kSecondaryCANbusName);
+        shooterLeftMain = new TalonFX(Constants.SHOOTER_LEFT_MASTER_ID, TunerConstants.getInstance().kSecondaryCANbusName);
+        shooterKicker = new TalonFX(Constants.SHOOTER_KICKER_ID, TunerConstants.getInstance().kSecondaryCANbusName);
 
         sensor = new DigitalInput(0);
 

@@ -18,8 +18,8 @@ import frc.robot.util.Camera.Targeting;
 public class Climber extends SubsystemBase {
     private static Climber instance;
 
-    private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID, TunerConstants.kSecondaryCANbusName);
-    private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID, TunerConstants.kSecondaryCANbusName);
+    private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID, TunerConstants.getInstance().kSecondaryCANbusName);
+    private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID, TunerConstants.getInstance().kSecondaryCANbusName);
 
     private final DigitalInput chainSensor = new DigitalInput(Constants.CHAIN_SENSOR_PORT);
 

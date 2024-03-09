@@ -10,7 +10,7 @@ public class SetDriveOrientation extends Command{
     private DriveOrientation orientation;
 
     public SetDriveOrientation(DriveOrientation orientation){
-        this.drivetrain = TunerConstants.DriveTrain;
+        this.drivetrain = TunerConstants.getInstance().DriveTrain;
         this.orientation = orientation;
     }
 

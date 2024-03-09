@@ -14,7 +14,7 @@ import frc.robot.Swerve.TunerConstants;
 public class Flicker extends SubsystemBase {
     private static Flicker instance;
 
-    private final TalonFX motor = new TalonFX(Constants.AMP_MOTOR_ID, TunerConstants.kSecondaryCANbusName);
+    private final TalonFX motor = new TalonFX(Constants.AMP_MOTOR_ID, TunerConstants.getInstance().kSecondaryCANbusName);
     private final DigitalInput sensor = new DigitalInput(Constants.AMP_SENSOR_PORT);
 
     private VelocityVoltage control = new VelocityVoltage(0);

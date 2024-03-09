@@ -26,7 +26,7 @@ public class IntakeAuton extends Command {
         this.shooter = Shooter.getInstance();
         this.lift = Lift.getInstance();
         this.elevator = Elevator.getInstance();
-        this.drive = TunerConstants.DriveTrain;
+        this.drive = TunerConstants.getInstance().DriveTrain;
         this.led = LED.getInstance();
 
         this.trackNote = false;
@@ -39,7 +39,7 @@ public class IntakeAuton extends Command {
         this.shooter = Shooter.getInstance();
         this.lift = Lift.getInstance();
         this.elevator = Elevator.getInstance();
-        this.drive = TunerConstants.DriveTrain;
+        this.drive = TunerConstants.getInstance().DriveTrain;
         this.led = LED.getInstance();
 
         this.trackNote = trackNote;

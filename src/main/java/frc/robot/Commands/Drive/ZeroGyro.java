@@ -11,7 +11,7 @@ public class ZeroGyro extends Command{
     private DriveMode mode;
 
     public ZeroGyro(){
-        this.drivetrain = TunerConstants.DriveTrain;
+        this.drivetrain = TunerConstants.getInstance().DriveTrain;
     }
 
     @Override

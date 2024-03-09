@@ -18,7 +18,7 @@ public class AimLiftWithOdometry extends Command{
 
     public AimLiftWithOdometry(){
         this.lift = Lift.getInstance();
-        this.drive = TunerConstants.DriveTrain;
+        this.drive = TunerConstants.getInstance().DriveTrain;
         this.shooter = Shooter.getInstance();
         this.led = LED.getInstance();
 

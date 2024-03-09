@@ -153,7 +153,7 @@ public class Targeting {
         double distance_XY = Math.hypot(delta_X, delta_Y);
         // SmartDashboard.putNumber("Distance2Target", (distance_XY / 0.0254) / 12.0);
         if (distance_XY != 0) {
-            targetEl = Constants.kLiftAngleMap
+            targetEl = TunerConstants.kLiftAngleMap
                     .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
             leftShooterSpeed = Constants.kLeftShooterMap
                     .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
@@ -181,8 +181,8 @@ public class Targeting {
 
     public void updateBotPos() {
         if (isOdometry) {
-            botPos[0] = TunerConstants.DriveTrain.getPose().getX();
-            botPos[1] = TunerConstants.DriveTrain.getPose().getY();
+            botPos[0] = TunerConstants.getInstance().DriveTrain.getPose().getX();
+            botPos[1] = TunerConstants.getInstance().DriveTrain.getPose().getY();
             botPos[2] = 0.0;
         } else {
             try {
@@ -265,21 +265,21 @@ public class Targeting {
         }
 
         // Elevation Trig
-        // delta_X += TunerConstants.DriveTrain.getFieldRelativeVelocites().vxMetersPerSecond * Constants.SHOOT_TIME;
-        // delta_Y += TunerConstants.DriveTrain.getFieldRelativeVelocites().vyMetersPerSecond * Constants.SHOOT_TIME;
+        // delta_X += TunerConstants.getInstance().DriveTrain.getFieldRelativeVelocites().vxMetersPerSecond * Constants.SHOOT_TIME;
+        // delta_Y += TunerConstants.getInstance().DriveTrain.getFieldRelativeVelocites().vyMetersPerSecond * Constants.SHOOT_TIME;
         distance_XY = Math.hypot(delta_X, delta_Y);
         SmartDashboard.putNumber("Distance2Target", ((distance_XY / 0.0254) / 12.0));
         // distance_XY = getDistanceToTargetInches();
         // SmartDashboard.putNumber("Distance2Target", (distance_XY / 12.0));
  //       SmartDashboard.putNumber("Distance2Target pos", (distance_XY_pos / 0.0254) / 12.0);
         if (distance_XY != 0) {
-            this.targetEl = Constants.kLiftAngleMap
+            this.targetEl = TunerConstants.kLiftAngleMap
                     .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
             this.leftShooterSpeed = Constants.kLeftShooterMap
                     .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
             this.rightShooterSpeed = Constants.kRightShooterMap
                     .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
-            // this.targetEl = Constants.kLiftAngleMap
+            // this.targetEl = TunerConstants.kLiftAngleMap
             //         .getInterpolated(new InterpolatingDouble(distance_XY / 12.0)).value;
             // this.leftShooterSpeed = Constants.kLeftShooterMap
             //         .getInterpolated(new InterpolatingDouble(distance_XY / 12.0)).value;
@@ -314,7 +314,7 @@ public class Targeting {
         updateTargetAzEl();
     }
 
-    // Drivetrain drivetrain = TunerConstants.DriveTrain;
+    // Drivetrain drivetrain = TunerConstants.getInstance().DriveTrain;
     double KALMAN_ROTATION_MAX_RATE = 2;    //radians per second
     double KALMAN_MAX_SPEED = 2;            //meters per second
     double KALMAN_APRILTAG_MAX_RANGE = 4.5; //meters
@@ -340,14 +340,14 @@ public class Targeting {
             Rotation2d botRotation2d = new Rotation2d(Math.toRadians(botPos[5])); //Believe botPos TZ is in degreess... could be wrong...
             Pose2d botPose2d = new Pose2d(botPos[0], botPos[1], botRotation2d);
 
-            ChassisSpeeds ChassisSpeeds = TunerConstants.DriveTrain.getCurrentRobotChassisSpeeds();
+            ChassisSpeeds ChassisSpeeds = TunerConstants.getInstance().DriveTrain.getCurrentRobotChassisSpeeds();
             double rotationSpeed = ChassisSpeeds.omegaRadiansPerSecond;
             double xSpeed = ChassisSpeeds.vxMetersPerSecond;
             double ySpeed = ChassisSpeeds.vyMetersPerSecond;
             double translationalSpeed = Math.hypot(xSpeed, ySpeed);
 
             if((rotationSpeed < KALMAN_ROTATION_MAX_RATE) && (translationalSpeed < KALMAN_MAX_SPEED) && (distanceToTarget < KALMAN_APRILTAG_MAX_RANGE)){
-                TunerConstants.DriveTrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp() - limelightDelay);
+                TunerConstants.getInstance().DriveTrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp() - limelightDelay);
                 SmartDashboard.putString("KALMAN", "Valid");
             } else {
                 SmartDashboard.putString("KALMAN", "Invalid");

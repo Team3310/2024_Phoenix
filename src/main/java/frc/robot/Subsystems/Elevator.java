@@ -15,7 +15,7 @@ import frc.robot.Swerve.TunerConstants;
 public class Elevator extends SubsystemBase {
     private static Elevator instance;
 
-    private final TalonFX elevatorMotor = new TalonFX(Constants.ELEVATOR_MOTOR_ID, TunerConstants.kSecondaryCANbusName);
+    private final TalonFX elevatorMotor = new TalonFX(Constants.ELEVATOR_MOTOR_ID, TunerConstants.getInstance().kSecondaryCANbusName);
 
     private MotionMagicDutyCycle mmDutyCycleControl = new MotionMagicDutyCycle(0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);

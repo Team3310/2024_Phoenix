@@ -13,7 +13,7 @@ public class AimLiftWithOdometryAuton extends Command{
 
     public AimLiftWithOdometryAuton(){
         this.lift = Lift.getInstance();
-        this.drive = TunerConstants.DriveTrain;
+        this.drive = TunerConstants.getInstance().DriveTrain;
         this.shooter = Shooter.getInstance();
 
         addRequirements(lift);

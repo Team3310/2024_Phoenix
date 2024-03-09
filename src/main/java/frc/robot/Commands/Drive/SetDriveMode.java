@@ -11,7 +11,7 @@ public class SetDriveMode extends Command{
     private DriveMode mode;
 
     public SetDriveMode(DriveMode mode){
-        this.drivetrain = TunerConstants.DriveTrain;
+        this.drivetrain = TunerConstants.getInstance().DriveTrain;
         this.mode = mode;
     }
 

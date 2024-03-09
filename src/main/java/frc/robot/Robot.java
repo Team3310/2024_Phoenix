@@ -31,9 +31,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer = new RobotContainer();
 
-  private UpdateManager updateManager = new UpdateManager(
-    TunerConstants.DriveTrain
-  );
+  private UpdateManager updateManager;
+  private TunerConstants tunerConstants;
 
   private static final byte[] COMPETITION_BOT_MAC_ADDRESS = new byte[]{
     0x00, (byte) 0x80, 0x2f, 0x36, (byte) 0xfe, 0x54
@@ -83,6 +82,7 @@ public class Robot extends TimedRobot {
     }
 
       SmartDashboard.putBoolean("Competition Bot", competitionBot);
+      SmartDashboard.putBoolean("Practice Bot", practiceBot);
   }
 
   public static boolean isCompetitionBot() {
@@ -129,6 +129,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    tunerConstants =  TunerConstants.getInstance();
+    
+    updateManager = new UpdateManager(tunerConstants.DriveTrain);
+
     LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
     updateManager.startLoop(0.005);
 
@@ -191,8 +195,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    TunerConstants.DriveTrain.setDriveMode(DriveMode.JOYSTICK);
-    // TunerConstants.DriveTrain.trapQueen();
+    tunerConstants.DriveTrain.setDriveMode(DriveMode.JOYSTICK);
+    // TunerConstants.getInstance().DriveTrain.trapQueen();
   }
 
   @Override

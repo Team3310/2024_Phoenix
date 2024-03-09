@@ -13,7 +13,7 @@ public class FollowPathCommand extends Command{
 
     public FollowPathCommand(PathPlannerPath path){
         this.path = path;
-        drive = TunerConstants.DriveTrain;
+        drive = TunerConstants.getInstance().DriveTrain;
     }
 
     @Override

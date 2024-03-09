@@ -12,7 +12,7 @@ public class SetSnapToCardinal extends Command{
     private SwerveCardinal cardinal;
 
     public SetSnapToCardinal(SwerveCardinal cardinal){
-        this.drivetrain = TunerConstants.DriveTrain;
+        this.drivetrain = TunerConstants.getInstance().DriveTrain;
         this.cardinal = cardinal;
     }
 

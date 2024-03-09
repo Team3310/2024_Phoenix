@@ -57,9 +57,9 @@ public class Lift extends SubsystemBase {
         CANcoderConfiguration canConfig = new CANcoderConfiguration();
         canConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
         canConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        canConfig.MagnetSensor.MagnetOffset = TunerConstants.liftMagnetOffset;
+        canConfig.MagnetSensor.MagnetOffset = TunerConstants.getInstance().liftMagnetOffset;
 
-        canCoder = new CANcoder(Constants.LIFT_CANCODER_ID, TunerConstants.kSecondaryCANbusName);
+        canCoder = new CANcoder(Constants.LIFT_CANCODER_ID, TunerConstants.getInstance().kSecondaryCANbusName);
         canCoder.getConfigurator().apply(canConfig);
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -94,7 +94,7 @@ public class Lift extends SubsystemBase {
         configs.Feedback.SensorToMechanismRatio = 1.0;
         configs.Feedback.RotorToSensorRatio = Constants.LIFT_GEAR_RATIO;
 
-        liftMotor = new TalonFX(Constants.LIFT_MOTOR_ID, TunerConstants.kSecondaryCANbusName);
+        liftMotor = new TalonFX(Constants.LIFT_MOTOR_ID, TunerConstants.getInstance().kSecondaryCANbusName);
         StatusCode status = StatusCode.StatusCodeNotInitialized;
         for (int i = 0; i < 5; ++i) {
             status = liftMotor.getConfigurator().apply(configs);

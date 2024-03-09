@@ -13,7 +13,7 @@ import frc.robot.util.Camera.Targeting;
 public class AimRobot extends Command{
     private Drivetrain drivetrain;
     public AimRobot(){
-        this.drivetrain = TunerConstants.DriveTrain;
+        this.drivetrain = TunerConstants.getInstance().DriveTrain;
     }
 
     @Override

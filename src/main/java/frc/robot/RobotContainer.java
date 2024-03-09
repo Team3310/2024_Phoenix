@@ -87,7 +87,7 @@ public class RobotContainer {
     climber = Climber.getInstance();
     flicker = Flicker.getInstance();
     led = LED.getInstance();
-    drivetrain = TunerConstants.DriveTrain;
+    drivetrain = TunerConstants.getInstance().DriveTrain;
 
     spotChooser = new SpotChooser();
     sideChooser = new SideChooser();

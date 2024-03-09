@@ -83,7 +83,7 @@ public class Constants {
             kLiftAngleMapPractice.put(new InterpolatingDouble(30.0), new InterpolatingDouble(21.7));
         }
 
-        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMap = TunerConstants.isCompbot ? kLiftAngleMapComp : kLiftAngleMapPractice;
+        // public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMap = TunerConstants.isCompbot ? kLiftAngleMapComp : kLiftAngleMapPractice;
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
         static {
