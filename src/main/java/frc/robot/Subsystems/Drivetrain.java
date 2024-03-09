@@ -71,7 +71,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
 
     private Limelight limelight = new Limelight("front");
-    private Limelight noteLimelight = new Limelight("front");
+    private Limelight noteLimelight = new Limelight("note");
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting odometryTargeting = new Targeting(true);
 
@@ -588,6 +588,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //    pidNoteUpdateCounter++;
             double pidRotationOutput = noteTrackController.calculate(currentNoteTrackAngle, 0.005);
 
+            SmartDashboard.putNumber("pidRotationOutput", pidRotationOutput);
+            SmartDashboard.putNumber("noteAdjustAngle", adjustAngle);
             double xForward = Math.sqrt(getDriveXWithDeadband() * getDriveXWithDeadband() + getDriveYWithDeadband() * getDriveYWithDeadband());
              
             isTrackingNote = true;
