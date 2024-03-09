@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.541565368845024,
-        "y": 3.694183388366777
+        "x": 1.5715542092913433,
+        "y": 3.667466057787329
       },
       "isLocked": false,
       "linkedName": "StageStart"
@@ -38,12 +38,12 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 3.0,
     "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4Podium",
+  "folder": "4Stage",
   "previewStartingState": {
     "rotation": -59.35000000000002,
     "velocity": 0

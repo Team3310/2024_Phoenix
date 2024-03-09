@@ -1,0 +1,73 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7352951848760846,
+      "y": 4.41249682499365
+    },
+    "rotation": -58.879999999999995
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToMiddleStage"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToAN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToMS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MSToMiddle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToMN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToMS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MSToMiddle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToON"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToMS"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

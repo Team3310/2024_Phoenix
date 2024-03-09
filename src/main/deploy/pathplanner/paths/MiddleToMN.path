@@ -3,45 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.890235494756704,
-        "y": 5.541275082550166
+        "x": 6.3791864726586605,
+        "y": 4.089988751406074
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.157262600239487,
-        "y": 5.4533183352081
+        "x": 7.3791864726586605,
+        "y": 4.089988751406074
       },
       "isLocked": false,
-      "linkedName": "3AmpEnd"
+      "linkedName": "Middle"
     },
     {
       "anchor": {
-        "x": 2.890235494756704,
-        "y": 4.104648209296419
+        "x": 8.17,
+        "y": 4.089988751406074
       },
       "prevControl": {
-        "x": 1.4829275372836461,
-        "y": 4.324540077651584
+        "x": 7.97,
+        "y": 4.089988751406074
       },
       "nextControl": {
-        "x": 3.167553758339415,
-        "y": 4.061317230611621
+        "x": 8.47,
+        "y": 4.089988751406074
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MiddleNote"
     },
     {
       "anchor": {
-        "x": 2.2130499816555194,
-        "y": 4.560720232551576
+        "x": 6.3791864726586605,
+        "y": 4.089988751406074
       },
       "prevControl": {
-        "x": 2.113284226568454,
-        "y": 4.456475198664683
+        "x": 7.883359338147248,
+        "y": 4.0973184803512455
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2StageGrabEnd"
+      "linkedName": "Middle"
     }
   ],
   "rotationTargets": [],
@@ -49,20 +49,20 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -26.569999999999993,
+    "velocity": 3.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4Amp",
+  "folder": "MiddleNotePaths",
   "previewStartingState": {
     "rotation": 0,
-    "velocity": 0
+    "velocity": 3.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
