@@ -1,5 +1,6 @@
 package frc.robot.util.Camera;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -12,6 +13,7 @@ import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Interpolable.InterpolatingDouble;
 
 public class Targeting {
+    private LinearFilter distanceFilter;
     //#region Static Constants
     // Cartesian Coordinates of Targets
     // Origin is BOTTOM LEFT OF FIELD
@@ -75,12 +77,15 @@ public class Targeting {
         this.limelightHostname = "-" + limelightHostname;
         this.limelight = new Limelight(limelightHostname);
         this.isOdometry = isOdometry;
+        this.distanceFilter = LinearFilter.movingAverage(10);
     }
 
     // Targeting Constructor, Odometry
-    public Targeting(boolean isOdometry) {
+    public Targeting(boolean isOdometry) { 
+        // this("junk", isOdometry);
         this.isOdometry = isOdometry;
         this.limelight = new Limelight();
+        this.distanceFilter = LinearFilter.movingAverage(10);
     }
     //#endregion
 
@@ -166,12 +171,15 @@ public class Targeting {
     //#endregion Static
 
     //#region Non-Static
+    
+
     private double[] botPos = centerOfField;
     private double targetAz = 0;
     private double targetEl = 0;
     private double leftShooterSpeed = 0;
     private double rightShooterSpeed = 0;
     private double distance_XY = 0.0;
+    private double distance_XY_Average = 0.0;
     private double distance_XY_pos = 0.0;
     private String limelightHostname;
     private boolean isOdometry = false;
@@ -208,12 +216,12 @@ public class Targeting {
         double offset = 0;
         for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
             if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
-                offset = (Math.toRadians(aprilTagResults.ty));
+                offset = aprilTagResults.ty;
                 canSeeTarget = true;
             }
         }
 
-        double angleToSpeakerDegrees = cameraMountAngleDegrees + limelight.getTargetVertOffset();
+        double angleToSpeakerDegrees = cameraMountAngleDegrees + offset; //limelight.getTargetVertOffset();
         double heightDelta = speakerHeightInches - caneraMountHeightInches;
         double distance = heightDelta / Math.tan(Math.toRadians(angleToSpeakerDegrees));
 
@@ -243,6 +251,7 @@ public class Targeting {
 
         // If Limelight cannot see any targets... don't calculate, and change latestUpdateSuccesfull to FALSE
         if (!this.hasTarget()) {
+            distanceFilter.reset();
             return;
         }
 
@@ -266,17 +275,20 @@ public class Targeting {
         // delta_X += TunerConstants.DriveTrain.getFieldRelativeVelocites().vxMetersPerSecond * Constants.SHOOT_TIME;
         // delta_Y += TunerConstants.DriveTrain.getFieldRelativeVelocites().vyMetersPerSecond * Constants.SHOOT_TIME;
         distance_XY = Math.hypot(delta_X, delta_Y);
-        SmartDashboard.putNumber("Distance2Target", ((distance_XY / 0.0254) / 12.0));
+
+        distance_XY_Average = distanceFilter.calculate(distance_XY);
+        
+        // SmartDashboard.putNumber("Distance2Target", ((distance_XY / 0.0254) / 12.0));
         // distance_XY = getDistanceToTargetInches();
         // SmartDashboard.putNumber("Distance2Target", (distance_XY / 12.0));
  //       SmartDashboard.putNumber("Distance2Target pos", (distance_XY_pos / 0.0254) / 12.0);
         if (distance_XY != 0) {
             this.targetEl = Constants.kLiftAngleMap
-                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+                    .getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
             this.leftShooterSpeed = Constants.kLeftShooterMap
-                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+                    .getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
             this.rightShooterSpeed = Constants.kRightShooterMap
-                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
+                    .getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
             // this.targetEl = Constants.kLiftAngleMap
             //         .getInterpolated(new InterpolatingDouble(distance_XY / 12.0)).value;
             // this.leftShooterSpeed = Constants.kLeftShooterMap
@@ -323,7 +335,7 @@ public class Targeting {
         SmartDashboard.putBoolean("LimelightHasTarget", limelight.hasTarget());
         if (limelight.hasTarget()){
             try {
-                botPos = limelight.getBotPose();
+                botPos = limelight.getBotPose();//botpose_wpiblue
                 if (botPos.length < 3) {
                     return;
                 }
@@ -366,6 +378,14 @@ public class Targeting {
         } else {
             return this.targetAz;
         }
+    }
+
+    public double getDistance_XY(){
+        return this.distance_XY;
+    }
+
+    public double getDistance_XY_average(){
+        return this.distance_XY_Average;
     }
 
     public double getEl() {

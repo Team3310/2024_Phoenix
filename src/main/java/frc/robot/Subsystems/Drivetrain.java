@@ -822,6 +822,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
         frontCamera.updateKalmanFilter();
+        odometryTargeting.update();
+        
 
         if (sideMode != RobotContainer.getInstance().getSideChooser().getSelected()) {
             sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
@@ -840,18 +842,31 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
             SmartDashboard.putBoolean("is snapping", isSnapping);
 
-             SmartDashboard.putNumber("joystickDriveHoldAngle", joystickDriveHoldAngleRadians);
+            SmartDashboard.putNumber("joystickDriveHoldAngle", joystickDriveHoldAngleRadians);
             SmartDashboard.putNumber("gyroAngle", getGyroAngleRadians());
             SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
-            // SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
-            // SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
-            SmartDashboard.putNumber("limelightTargeting.getEl()", frontCamera.getEl());
-            SmartDashboard.putString("", mControlMode.toString());
+            SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
+            SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
+            SmartDashboard.putNumber("odometryTargeting.getDistance_XY", (odometryTargeting.getDistance_XY() / 0.0254) / 12.0);
+            
+            
+            SmartDashboard.putNumber("frontCamera.getAz()", frontCamera.getAz());
+            SmartDashboard.putNumber("frontCamera.getEl()", frontCamera.getEl());
+            SmartDashboard.putNumber("frontCamera.getDistance_XY", (frontCamera.getDistance_XY() / 0.0254) / 12.0);
 
-            // SmartDashboard.putNumber("getPose().getX()", getPose().getX());
-            // SmartDashboard.putNumber("getPose().getY()", getPose().getY());
-            // SmartDashboard.putNumber("odometryTargeting.getBotPosX()", odometryTargeting.getBotPosX());
-            // SmartDashboard.putNumber("odometryTargeting.getBotPosY()", odometryTargeting.getBotPosY());
+            SmartDashboard.putString("", mControlMode.toString());
+            // SmartDashboard.putNumber("getPose().getX()", getEstimatedPosition().getX());
+            // SmartDashboard.putNumber("getPose().getY()", getEstimatedPosition().getY());
+            SmartDashboard.putNumber("getPose().getX()", getPose().getX());
+            SmartDashboard.putNumber("getPose().getY()", getPose().getY());
+            SmartDashboard.putNumber("odometryTargeting.getBotPosX()", odometryTargeting.getBotPosX());
+            SmartDashboard.putNumber("odometryTargeting.getBotPosY()", odometryTargeting.getBotPosY());
+            SmartDashboard.putNumber("frontCamera.getBotPosX()", frontCamera.getBotPosX());
+            SmartDashboard.putNumber("frontCamera.getBotPosY()", frontCamera.getBotPosY());
+            
+            SmartDashboard.putNumber("frontCamera.getDistance_XY_average()", (frontCamera.getDistance_XY_average() / 0.0254) / 12.0);
+
+            SmartDashboard.putNumber("frontCamera.getDistanceToTargetInches()", frontCamera.getDistanceToTargetInches() / 12);
 
             SmartDashboard.putString("Set Target:", Targeting.getTarget().toString());
             SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(
