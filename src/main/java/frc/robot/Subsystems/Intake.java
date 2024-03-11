@@ -37,9 +37,6 @@ public class Intake extends SubsystemBase {
     }
 
     private Intake() {
-        frontIntake.setInverted(false);
-        topIntake.setInverted(true);
-        bottomIntake.setInverted(false);
 
         TalonFXConfiguration config = new TalonFXConfiguration();
 
@@ -54,9 +51,14 @@ public class Intake extends SubsystemBase {
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-        frontIntake.getConfigurator().apply(config.Slot0);
-        topIntake.getConfigurator().apply(config.Slot0);
-        bottomIntake.getConfigurator().apply(config.Slot0);
+        frontIntake.getConfigurator().apply(config);
+        topIntake.getConfigurator().apply(config);
+        bottomIntake.getConfigurator().apply(config);
+
+        frontIntake.setInverted(false);
+        topIntake.setInverted(true);
+        bottomIntake.setInverted(false);
+
 
         frontIntakeControl.EnableFOC = true;
         frontIntakeControl.Slot = 0;

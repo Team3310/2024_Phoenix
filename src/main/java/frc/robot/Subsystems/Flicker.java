@@ -37,12 +37,12 @@ public class Flicker extends SubsystemBase {
         config.Slot0.kI = kI;
  
         config.CurrentLimits.StatorCurrentLimit = 80;
-        config.CurrentLimits.StatorCurrentLimitEnable = false;
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
         
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
-        config.CurrentLimits.SupplyCurrentLimitEnable = false;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-        motor.getConfigurator().apply(config.Slot0);
+        motor.getConfigurator().apply(config);
 
         motor.setInverted(false);
 
