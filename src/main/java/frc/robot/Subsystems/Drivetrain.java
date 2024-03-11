@@ -10,6 +10,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -173,7 +174,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         visionPIDController.setTolerance(0.0);
 
         CurrentLimitsConfigs currentConfigs = new CurrentLimitsConfigs();
+        currentConfigs.StatorCurrentLimit = TunerConstants.kStatorCurrentA;
+        currentConfigs.StatorCurrentLimitEnable = true;
         currentConfigs.SupplyCurrentLimit = TunerConstants.kSupplyCurrentA;
+        currentConfigs.SupplyCurrentLimitEnable = true;
+
+        // Torque current limits are applied in SwerveModule with kSlipCurrent.
 
         ClosedLoopRampsConfigs rampConfigs = new ClosedLoopRampsConfigs();
         rampConfigs.TorqueClosedLoopRampPeriod = TunerConstants.kTorqueClosedLoopRampPeriod;
