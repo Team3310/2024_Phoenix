@@ -51,6 +51,7 @@ import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Control.PidConstants;
 import frc.robot.util.Control.PidController;
 import frc.robot.util.Control.TimeDelayedBoolean;
+import frc.robot.util.Interpolable.InterpolatingDouble;
 import frc.robot.util.PathFollowing.FollowPathCommand;
 
 /**
@@ -473,9 +474,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // Go through limelight JSON dump, and look for Target ID
         // If ID found, save TX value to offset for targeting.
         double offset = 0;
+        double distance_XY_Average = frontCamera.getDistance_XY_average();
+        double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
         for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
             if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
-                offset = (Math.toRadians(aprilTagResults.tx));
+                offset = (Math.toRadians(aprilTagResults.tx + aimOffset));
                 canSeeTarget = true;
             }
         }

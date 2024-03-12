@@ -111,7 +111,10 @@ public class RobotContainer {
     driverController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker)).onFalse(new ScoreOffCommand(shooter, flicker));
     driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.x().onTrue(new ShooterOff(shooter));
-    driverController.b().onTrue(new ShooterOn(shooter));
+    // driverController.b().onTrue(new ShooterOn(shooter));
+    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(30.0);})); // fender
+    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5500); shooter.setRightMainRPM(3500); lift.setLiftAngle(19.0);})); // far
+    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(60.0);})); // fender
     // driverController.y().onTrue(new SetDriveMode(DriveMode.STRAFE2APRILTAG));
 
     // snap to cardinal angles
@@ -234,8 +237,8 @@ public class RobotContainer {
     }
 
     private void addOffsetButtons(){
-      SmartDashboard.putData("increase lift offset", new InstantCommand(()->lift.adjustLiftOffset(0.5)));
-      SmartDashboard.putData("decrease lift offset", new InstantCommand(()->lift.adjustLiftOffset(-0.5)));
+      SmartDashboard.putData("increase lift offset", new InstantCommand(()->lift.adjustLiftOffset(0.25)));
+      SmartDashboard.putData("decrease lift offset", new InstantCommand(()->lift.adjustLiftOffset(-0.25)));
       SmartDashboard.putData("reset lift offset", new InstantCommand(()->lift.resetLiftOffset()));
 
       SmartDashboard.putData("increase RPM offset", new InstantCommand(()->shooter.adjustRPMOffset(200.0)));
