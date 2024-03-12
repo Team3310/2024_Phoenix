@@ -42,7 +42,7 @@ public class FastStageFour extends AutonCommandBase{
             ),
             new FeederShootCommandAuton(Shooter.getInstance()).withTimeout(0.2),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().THREE_FAST),
+                Follow(Paths.getInstance().THREE_FAST),
                 new IntakeAuton()
             ),
             new ParallelRaceGroup(
@@ -54,7 +54,7 @@ public class FastStageFour extends AutonCommandBase{
             ),
             new FeederShootCommandAuton(Shooter.getInstance()).withTimeout(0.2),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().FOUR_FAST),
+                Follow(Paths.getInstance().FOUR_FAST),
                 new IntakeAuton()
             ),
             new ParallelRaceGroup(
@@ -66,7 +66,7 @@ public class FastStageFour extends AutonCommandBase{
             ),
             new FeederShootCommandAuton(Shooter.getInstance()).withTimeout(0.2),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().FAST_END),
+                Follow(Paths.getInstance().FAST_END),
                 new IntakeAuton()
             ),
             new ParallelRaceGroup(

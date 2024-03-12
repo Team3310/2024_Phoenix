@@ -14,31 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SourceToON"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SMToSS"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SStoSM"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "SourceToIN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SMToSS"
+            "pathName": "SourceToON"
           }
         }
       ]

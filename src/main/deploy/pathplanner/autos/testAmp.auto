@@ -20,31 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "AmpToON"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AMToAS"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ASToAM"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "AmpToIN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "AMToAS"
+            "pathName": "AmpToON"
           }
         }
       ]

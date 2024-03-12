@@ -22,13 +22,13 @@ public class TwoStageLeft extends AutonCommandBase{
 
         this.addCommands(
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().TWO_STAGE_LEFT_PRE_GRAB),
+                Follow(Paths.getInstance().TWO_STAGE_LEFT_PRE_GRAB),
                 new ShooterOn(robotContainer.shooter),
                 new AimLiftWithOdometryAuton()
             ),
             new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.125),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().TWO_STAGE_LEFT_GRAB),
+                Follow(Paths.getInstance().TWO_STAGE_LEFT_GRAB),
                 new IntakeAuton(false)
             ),
             new ParallelRaceGroup(

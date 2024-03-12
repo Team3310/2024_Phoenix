@@ -31,7 +31,7 @@ public class ThreeAmp extends AutonCommandBase{
         this.addCommands(
             new TwoAmp(robotContainer),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().THREE_AMP),
+                Follow(Paths.getInstance().THREE_AMP),
                 new IntakeAuton()
             ),
             new ParallelRaceGroup(

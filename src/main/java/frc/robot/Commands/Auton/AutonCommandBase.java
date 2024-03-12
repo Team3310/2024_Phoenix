@@ -6,8 +6,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
+import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
+import frc.robot.Commands.Shooter.FeederShootCommandAuton;
+import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
@@ -18,7 +24,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
         this.robotContainer = robotContainer;
     }
 
-    protected Command follow(PathPlannerPath path) {
+    protected Command Follow(PathPlannerPath path) {
         return new FollowPathCommand(path);
     }
 
@@ -49,5 +55,19 @@ public class AutonCommandBase extends SequentialCommandGroup {
 
     protected Double getPathTime(String pathName){
         return getPath(pathName).getTrajectory(new ChassisSpeeds(0, 0, 0), Rotation2d.fromDegrees(0)).getTotalTimeSeconds();
+    }
+
+    protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path){
+        return new ParallelDeadlineGroup(Follow(path), new IntakeAuton());
+    }
+
+    protected SequentialCommandGroup AimAndShoot(RobotContainer container){
+        return new SequentialCommandGroup(
+            new ParallelDeadlineGroup(
+                new AimLiftWithOdometryAuton().withTimeout(0.6),
+                new SetDriveMode(DriveMode.AIMATTARGET)
+            ),
+            new FeederShootCommandAuton(container.shooter).withTimeout(0.2)
+        );
     }
 }

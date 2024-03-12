@@ -3,6 +3,8 @@ package frc.robot.util.Choosers;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.DriveTest;
+import frc.robot.Commands.Auton.OneAuton;
+import frc.robot.Commands.Auton.Paths;
 import frc.robot.Commands.Auton.Amp.FourAmp;
 import frc.robot.Commands.Auton.Amp.ThreeAmp;
 import frc.robot.Commands.Auton.Amp.TwoAmp;
@@ -11,6 +13,10 @@ import frc.robot.Commands.Auton.Center.FourStageLeftCounter;
 import frc.robot.Commands.Auton.Center.ThreeStageLeft;
 import frc.robot.Commands.Auton.Center.ThreeStageLeftCounter;
 import frc.robot.Commands.Auton.Center.TwoStageLeft;
+import frc.robot.Commands.Auton.Middle.Stage.StageIN;
+import frc.robot.Commands.Auton.Middle.Stage.StageON;
+import frc.robot.Commands.Auton.Middle.Stage.StageTwoIN;
+import frc.robot.Commands.Auton.Middle.Stage.StageTwoON;
 import frc.robot.Commands.Auton.Stage.FastStageFour;
 import frc.robot.Commands.Auton.Stage.FourStage;
 import frc.robot.Commands.Auton.Stage.FourStageMiddle;
@@ -36,6 +42,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         addOption(AutonomousMode.THREE_STAGE_LEFT_COUNTER);
         addOption(AutonomousMode.FOUR_STAGE_LEFT_COUNTER);
         addOption(AutonomousMode.FAST_FOUR);
+        addOption(AutonomousMode.STAGE_IN)
+        .addOption(AutonomousMode.STAGE_ON)
+        .addOption(AutonomousMode.STAGE_TWO_IN)
+        .addOption(AutonomousMode.STAGE_TWO_ON);
     }
 
     public Command getCommand() {
@@ -57,6 +67,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         THREE_STAGE_LEFT_COUNTER("three stage left counter"),
         FOUR_STAGE_LEFT_COUNTER("four stage left counter"),
         FAST_FOUR("fast four"),
+        STAGE_ON("stage ON"),
+        STAGE_IN("stage IN"),
+        STAGE_TWO_ON("stage two ON"),
+        STAGE_TWO_IN("stage two IN"),
         TEST("drive test"),
         ;
 
@@ -101,8 +115,18 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new FourStageLeftCounter(RobotContainer.getInstance());
                 case FAST_FOUR:
                     return new FastStageFour(RobotContainer.getInstance());
-                default:
+                case STAGE_IN:
+                    return new StageIN(RobotContainer.getInstance());
+                case STAGE_ON:
+                    return new StageON(RobotContainer.getInstance());
+                case STAGE_TWO_IN:
+                    return new StageTwoIN(RobotContainer.getInstance());
+                case STAGE_TWO_ON:
+                    return new StageTwoON(RobotContainer.getInstance());
+                case TEST:
                     return new DriveTest(RobotContainer.getInstance());
+                default:
+                    return new OneAuton(RobotContainer.getInstance(), Paths.getInstance().DRIVE_TEST);
             }
         }
     }

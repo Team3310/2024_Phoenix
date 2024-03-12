@@ -1,16 +1,12 @@
 package frc.robot.Subsystems;
 
-import static edu.wpi.first.units.Units.Volts;
-
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Orchestra;
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
@@ -38,7 +34,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Swerve.TunerConstants;
@@ -125,9 +120,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
     private DriveOrientation driveOrientation = DriveOrientation.FIELD_CENTRIC;
 
-    private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
-    private final SwerveRequest.SysIdSwerveRotation RotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
-    private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
+    // private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
+    // private final SwerveRequest.SysIdSwerveRotation RotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+    // private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
 
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
@@ -201,11 +196,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
         ReplanningConfig replan = new ReplanningConfig();
 
-        HolonomicPathFollowerConfig config = new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+        HolonomicPathFollowerConfig config = new HolonomicPathFollowerConfig(
+                new PIDConstants(10, 0, 0),
                 new PIDConstants(5.0, 0, 0),
                 TunerConstants.kSpeedAt12VoltsMps,
                 driveBaseRadius,
-                new ReplanningConfig());
+                new ReplanningConfig()
+            );
 
         pathFollower = new FollowPathCommand(
                 () -> this.getPose(),
@@ -630,7 +627,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
         if (!pathDone()) {
-            SmartDashboard.putBoolean("path done", false);
+            // SmartDashboard.putBoolean("path done", false);
             applyRequest(()->driveFieldCentricNoDeadband
                 .withVelocityX(speeds.vxMetersPerSecond)
                 .withVelocityY(speeds.vyMetersPerSecond)
@@ -639,7 +636,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             );
         } else {
             // rotationHold();
-            SmartDashboard.putBoolean("path done", true);
+            // SmartDashboard.putBoolean("path done", true);
             applyRequest(()->new SwerveDriveBrake());
         }
     }
@@ -1028,52 +1025,52 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
         /* Use one of these sysidroutines for your particular test */
-    private SysIdRoutine SysIdRoutineTranslation = new SysIdRoutine(
-            new SysIdRoutine.Config(
-                    null,
-                    Volts.of(4),
-                    null,
-                    (state) -> SignalLogger.writeString("state", state.toString())),
-            new SysIdRoutine.Mechanism(
-                    (volts) -> setControl(TranslationCharacterization.withVolts(volts)),
-                    null,
-                    this));
+    // private SysIdRoutine SysIdRoutineTranslation = new SysIdRoutine(
+    //         new SysIdRoutine.Config(
+    //                 null,
+    //                 Volts.of(4),
+    //                 null,
+    //                 (state) -> SignalLogger.writeString("state", state.toString())),
+    //         new SysIdRoutine.Mechanism(
+    //                 (volts) -> setControl(TranslationCharacterization.withVolts(volts)),
+    //                 null,
+    //                 this));
 
-    private final SysIdRoutine SysIdRoutineRotation = new SysIdRoutine(
-            new SysIdRoutine.Config(
-                    null,
-                    Volts.of(4),
-                    null,
-                    (state) -> SignalLogger.writeString("state", state.toString())),
-            new SysIdRoutine.Mechanism(
-                    (volts) -> setControl(RotationCharacterization.withVolts(volts)),
-                    null,
-                    this));
-    private final SysIdRoutine SysIdRoutineSteer = new SysIdRoutine(
-            new SysIdRoutine.Config(
-                    null,
-                    Volts.of(7),
-                    null,
-                    (state) -> SignalLogger.writeString("state", state.toString())),
-            new SysIdRoutine.Mechanism(
-                    (volts) -> setControl(SteerCharacterization.withVolts(volts)),
-                    null,
-                    this));
+    // private final SysIdRoutine SysIdRoutineRotation = new SysIdRoutine(
+    //         new SysIdRoutine.Config(
+    //                 null,
+    //                 Volts.of(4),
+    //                 null,
+    //                 (state) -> SignalLogger.writeString("state", state.toString())),
+    //         new SysIdRoutine.Mechanism(
+    //                 (volts) -> setControl(RotationCharacterization.withVolts(volts)),
+    //                 null,
+    //                 this));
+    // private final SysIdRoutine SysIdRoutineSteer = new SysIdRoutine(
+    //         new SysIdRoutine.Config(
+    //                 null,
+    //                 Volts.of(7),
+    //                 null,
+    //                 (state) -> SignalLogger.writeString("state", state.toString())),
+    //         new SysIdRoutine.Mechanism(
+    //                 (volts) -> setControl(SteerCharacterization.withVolts(volts)),
+    //                 null,
+    //                 this));
 
-    /* Change this to the sysid routine you want to test */
-    private final SysIdRoutine RoutineToApply = SysIdRoutineTranslation;
+    // /* Change this to the sysid routine you want to test */
+    // private final SysIdRoutine RoutineToApply = SysIdRoutineTranslation;
 
-    /*
-     * Both the sysid commands are specific to one particular sysid routine, change
-     * which one you're trying to characterize
-     */
-    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-        return RoutineToApply.quasistatic(direction);
-    }
+    // /*
+    //  * Both the sysid commands are specific to one particular sysid routine, change
+    //  * which one you're trying to characterize
+    //  */
+    // public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    //     return RoutineToApply.quasistatic(direction);
+    // }
 
-    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
-        return RoutineToApply.dynamic(direction);
-    }
+    // public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    //     return RoutineToApply.dynamic(direction);
+    // }
     
     // private void startSimThread() {
     //     m_lastSimTime = Utils.getCurrentTimeSeconds();

@@ -22,7 +22,7 @@ public class FourStage extends AutonCommandBase{
         this.addCommands(
             new ThreeStage(robotContainer),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().FOUR_STAGE).andThen(new WaitCommand(0.5)),
+                Follow(Paths.getInstance().FOUR_STAGE).andThen(new WaitCommand(0.5)),
                 new IntakeAuton()
             ),
             new ParallelRaceGroup(

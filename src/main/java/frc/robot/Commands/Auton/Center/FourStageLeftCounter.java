@@ -28,7 +28,7 @@ public class FourStageLeftCounter extends AutonCommandBase{
         this.addCommands(
             new ThreeStageLeftCounter(robotContainer),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().THREE_STAGE), 
+                Follow(Paths.getInstance().THREE_STAGE), 
                 new IntakeAuton()
             ),
             new ParallelRaceGroup(

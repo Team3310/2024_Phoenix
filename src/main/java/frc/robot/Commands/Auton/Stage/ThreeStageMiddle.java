@@ -19,7 +19,7 @@ public class ThreeStageMiddle extends AutonCommandBase{
         this.addCommands(
             new TwoStage(robotContainer),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().THREE_STAGE_MIDDLE),
+                Follow(Paths.getInstance().THREE_STAGE_MIDDLE),
                 new IntakeAuton()
             ),
             new ParallelDeadlineGroup(

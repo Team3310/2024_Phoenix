@@ -31,7 +31,7 @@ public class TwoAmp extends AutonCommandBase{
                 new FeederShootCommandAuton(robotContainer.shooter)
             ),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().TWO_AMP).andThen(new WaitCommand(0.25)), 
+                Follow(Paths.getInstance().TWO_AMP).andThen(new WaitCommand(0.25)), 
                 new IntakeAuton()
             ),
             new ParallelRaceGroup(

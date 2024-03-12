@@ -20,12 +20,12 @@
         "y": 7.432345150404587
       },
       "prevControl": {
-        "x": 7.615823953651586,
-        "y": 6.60695037886615
+        "x": 7.632395219309034,
+        "y": 6.824421705637649
       },
       "nextControl": {
-        "x": 8.475488950977903,
-        "y": 7.622918102979064
+        "x": 8.49829255214066,
+        "y": 7.596449637343719
       },
       "isLocked": false,
       "linkedName": "OutAmpNote"
@@ -47,33 +47,33 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.9,
-      "rotationDegrees": 60.0,
+      "rotationDegrees": 53.85407950400448,
       "rotateFast": false
     },
     {
       "waypointRelativePos": 1.2,
-      "rotationDegrees": 60.0,
+      "rotationDegrees": 53.385967097517145,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 6.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 1.0,
-    "rotation": 0,
+    "velocity": 0.0,
+    "rotation": 8.48,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "MiddleNotePaths",
   "previewStartingState": {
-    "rotation": 0,
-    "velocity": 3.0
+    "rotation": 8.48,
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }

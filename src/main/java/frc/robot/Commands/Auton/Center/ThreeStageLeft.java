@@ -28,7 +28,7 @@ public class ThreeStageLeft extends AutonCommandBase{
         this.addCommands(
             new TwoStageLeft(robotContainer),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().THREE_STAGE_LEFT), 
+                Follow(Paths.getInstance().THREE_STAGE_LEFT), 
                 new SequentialCommandGroup(
                     new WaitCommand(0.75),
                     new IntakeAuton(false)

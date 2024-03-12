@@ -22,7 +22,7 @@ public class FourAmp extends AutonCommandBase{
         this.addCommands(
             new ThreeAmp(robotContainer),
             new ParallelDeadlineGroup(
-                follow(Paths.getInstance().FOUR_AMP).andThen(new WaitCommand(0.5)),
+                Follow(Paths.getInstance().FOUR_AMP).andThen(new WaitCommand(0.5)),
                 new IntakeAuton()
             ),
             new ParallelRaceGroup(
