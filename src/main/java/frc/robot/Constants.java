@@ -32,11 +32,8 @@ public class Constants {
         public static final double SHOOTER_GEAR_RATIO = 1.0;
         public static final double KICKER_GEAR_RATIO = 2.5;
 
-        public static final int SHOOTER_RIGHT_MASTER_ID = 20;
-        public static final int SHOOTER_RIGHT_SLAVE_ID = 1000;
-
-        public static final int SHOOTER_LEFT_MASTER_ID = 21;
-        public static final int SHOOTER_LEFT_SLAVE_ID = 1001;
+        public static final int SHOOTER_RIGHT_ID = 20;
+        public static final int SHOOTER_LEFT_ID = 21;
 
         public static final int SHOOTER_KICKER_ID = 22;
 
