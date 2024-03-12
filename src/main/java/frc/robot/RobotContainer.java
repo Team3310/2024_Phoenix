@@ -103,18 +103,18 @@ public class RobotContainer {
   //#region controller buttons
   public void configureDriverController(){
     // intake
-    driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
-    // driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE).andThen(new IntakeAuton())).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
+    // driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
+    driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE).andThen(new IntakeAuton())).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
     driverController.leftTrigger(0.5).onTrue(new SetDriveOrientation(DriveOrientation.ROBOT_CENTRIC)).onFalse(new SetDriveOrientation(DriveOrientation.FIELD_CENTRIC));
 
     // shooting 
-    driverController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker)).onFalse(new ScoreOffCommand(shooter, flicker));
+    driverController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker)).onFalse(new ScoreOffCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
     driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.x().onTrue(new ShooterOff(shooter));
-    // driverController.b().onTrue(new ShooterOn(shooter));
-    driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(30.0);})); // fender
-    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5500); shooter.setRightMainRPM(3500); lift.setLiftAngle(19.0);})); // far
-    driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(60.0);})); // fender
+    driverController.b().onTrue(new ShooterOn(shooter));
+    // driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(30.0);})); // fender
+    // driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5500); shooter.setRightMainRPM(3500); lift.setLiftAngle(19.0);})); // far
+    // driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(60.0);})); // fender
     // driverController.y().onTrue(new SetDriveMode(DriveMode.STRAFE2APRILTAG));
 
     // snap to cardinal angles
@@ -171,9 +171,9 @@ public class RobotContainer {
 
     // shooting
     operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
-    operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(40.0);})); // platform
+    operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(39.5);})); // platform
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
-    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2000); lift.setLiftAngle(40.0);})); // pass
+    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3300); shooter.setRightMainRPM(1800); lift.setLiftAngle(40.0);})); // pass
   
     //intake
     // operatorController.a().onTrue(new IntakeUnder());
