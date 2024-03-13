@@ -104,7 +104,7 @@ public class RobotContainer {
   public void configureDriverController(){
     // intake
     // driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
-    driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE).andThen(new IntakeAuton())).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
+    driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
     driverController.leftTrigger(0.5).onTrue(new SetDriveOrientation(DriveOrientation.ROBOT_CENTRIC)).onFalse(new SetDriveOrientation(DriveOrientation.FIELD_CENTRIC));
 
     // shooting 
@@ -157,7 +157,7 @@ public class RobotContainer {
     operatorController.rightStick().onTrue(new IntakeEject()).onFalse(new StopAllIntakes());
 
     // shooting
-    operatorController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker).andThen(new SetLiftOff(lift))).onFalse(new ScoreOffCommand(shooter, flicker));
+    operatorController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker)).onFalse(new ScoreOffCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
     operatorController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
    
     // climb 
