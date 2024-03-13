@@ -642,6 +642,10 @@ public class LimelightHelpers {
     public static void setPipelineIndex(String limelightName, int pipelineIndex) {
         setLimelightNTDouble(limelightName, "pipeline", pipelineIndex);
     }
+    
+    public static void setPriorityId(String limelightName, int id) {
+        setLimelightNTDouble(limelightName, "pipeline", id);
+    }
 
     /**
      * The LEDs will be controlled by Limelight pipeline settings, and not by robot

@@ -15,7 +15,7 @@ import frc.robot.Subsystems.Drivetrain;
 // https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
 public class TunerConstants {
 
-    public static boolean isCompbot = true;
+    public static boolean isCompbot = false;
 
     // Both sets of gains need to be tuned to your individual robot.
 
@@ -35,13 +35,13 @@ public class TunerConstants {
     private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
     // The closed-loop output type to use for the drive motors;
     // This affects the PID/FF gains for the drive motors
-    private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
+    private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
-    private static final double kSlipCurrentA = 120.0;  // TorqueCurrentLimit applied in SwerveModule
-    public static final double kStatorCurrentA = 120.0; // Only used for non-torque control drive modes applied in drivetrain
-    public static final double kSupplyCurrentA = 120.0; // Only used for non-torque control drive modes applied in drivetrain
+    private static final double kSlipCurrentA = 80.0;  // TorqueCurrentLimit applied in SwerveModule
+    public static final double kStatorCurrentA = 80.0; // Only used for non-torque control drive modes applied in drivetrain
+    public static final double kSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
 
     // This is set on the modules in Drivetrain (units are in seconds, 0 == off)
     public static final double kTorqueClosedLoopRampPeriod = 0.05;
