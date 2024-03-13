@@ -611,6 +611,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 updateDrive(xForward, 0.0, pidRotationOutput);         
             }
             else {
+                isTrackingNote = false;
                 joystickDrive();
             }
         }
@@ -625,8 +626,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             speeds.omegaRadiansPerSecond = request*Constants.MaxAngularRate;
         }
 
-        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
         if (!pathDone()) {
+            // var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+            // for (int i = 0; i < this.Modules.length; i++) {
+            //     this.Modules[i].apply(states[i],
+            //             SwerveModule.DriveRequestType.OpenLoopVoltage,
+            //             SwerveModule.SteerRequestType.MotionMagic);
+            // }
             // SmartDashboard.putBoolean("path done", false);
             applyRequest(()->driveFieldCentricNoDeadband
                 .withVelocityX(speeds.vxMetersPerSecond)

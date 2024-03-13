@@ -46,6 +46,11 @@ public class Targeting {
     private static final double cameraMountAngleDegrees = 15.0;
     private static final double caneraMountHeightInches = 23.25;
 
+    private static final int NUMBER_TAPS_MOVING_AVERAGE = 10;
+    private static final double[] distanceFilterInputs = new double[NUMBER_TAPS_MOVING_AVERAGE];
+    private static final double[] distanceFilterOutputs = new double[NUMBER_TAPS_MOVING_AVERAGE];
+    private static boolean distanceFilterNeedsReset = false;
+
     //#endregion
 
     public enum Target {
@@ -77,7 +82,7 @@ public class Targeting {
         this.limelightHostname = "-" + limelightHostname;
         this.limelight = new Limelight(limelightHostname);
         this.isOdometry = isOdometry;
-        this.distanceFilter = LinearFilter.movingAverage(10);
+        this.distanceFilter = LinearFilter.movingAverage(NUMBER_TAPS_MOVING_AVERAGE);
     }
 
     // Targeting Constructor, Odometry
@@ -85,7 +90,7 @@ public class Targeting {
         // this("junk", isOdometry);
         this.isOdometry = isOdometry;
         this.limelight = new Limelight();
-        this.distanceFilter = LinearFilter.movingAverage(10);
+        this.distanceFilter = LinearFilter.movingAverage(NUMBER_TAPS_MOVING_AVERAGE);
     }
     //#endregion
 
@@ -251,7 +256,7 @@ public class Targeting {
 
         // If Limelight cannot see any targets... don't calculate, and change latestUpdateSuccesfull to FALSE
         if (!this.hasTarget()) {
-            distanceFilter.reset();
+            distanceFilterNeedsReset = true;
             return;
         }
 
@@ -276,6 +281,14 @@ public class Targeting {
         // delta_Y += TunerConstants.DriveTrain.getFieldRelativeVelocites().vyMetersPerSecond * Constants.SHOOT_TIME;
         distance_XY = Math.hypot(delta_X, delta_Y);
 
+        if (distanceFilterNeedsReset) {
+            for (int i = 0; i < NUMBER_TAPS_MOVING_AVERAGE; i++) {
+                distanceFilterInputs[i] = distance_XY;
+                distanceFilterOutputs[i] = distance_XY;
+            }
+            distanceFilter.reset(distanceFilterInputs, distanceFilterOutputs);
+            distanceFilterNeedsReset = false;
+        }
         distance_XY_Average = distanceFilter.calculate(distance_XY);
         
         // SmartDashboard.putNumber("Distance2Target", ((distance_XY / 0.0254) / 12.0));
