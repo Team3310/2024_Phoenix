@@ -90,7 +90,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric()
             .withDeadband(Constants.MaxSpeed * STICK_DEADBAND) 
-            .withDriveRequestType(DriveRequestType.Velocity);
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.FieldCentricFacingAngle driveFieldCentricFacingAngle = new SwerveRequest.FieldCentricFacingAngle()
             .withDeadband(Constants.MaxSpeed * STICK_DEADBAND) 
             .withDriveRequestType(DriveRequestType.Velocity);
@@ -636,7 +636,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 .withVelocityX(speeds.vxMetersPerSecond)
                 .withVelocityY(speeds.vyMetersPerSecond)
                 .withRotationalRate(speeds.omegaRadiansPerSecond)
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+                .withDriveRequestType(DriveRequestType.Velocity)
             );
         } else {
             // rotationHold();
