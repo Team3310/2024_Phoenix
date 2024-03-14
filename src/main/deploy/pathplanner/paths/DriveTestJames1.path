@@ -3,38 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2130499816555194,
-        "y": 4.560720232551576
+        "x": 0.7593204075297043,
+        "y": 4.3469364716507215
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3694348920073778,
-        "y": 4.5536310301175575
+        "x": 2.8829057658115325,
+        "y": 2.3801258713628544
       },
       "isLocked": false,
-      "linkedName": "2StageGrabEnd"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.125194028165835,
-        "y": 5.515621031242063
+        "x": 7.970959275251885,
+        "y": 0.7838737899698015
       },
       "prevControl": {
-        "x": 1.820780780306524,
-        "y": 5.600691460450279
+        "x": 5.191770383540766,
+        "y": 1.3397115683120253
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "3StageEnd"
+      "linkedName": "DriveTestJames1"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -44,14 +38,14 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 0,
+    "velocity": 0,
+    "rotation": -11.310000000000002,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4Stage",
+  "folder": "JamesPaths",
   "previewStartingState": {
-    "rotation": -17.180000000000007,
+    "rotation": -58.495733280795825,
     "velocity": 0
   },
   "useDefaultConstraints": true

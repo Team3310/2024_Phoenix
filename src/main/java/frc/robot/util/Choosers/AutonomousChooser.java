@@ -15,8 +15,8 @@ import frc.robot.Commands.Auton.Center.ThreeStageLeftCounter;
 import frc.robot.Commands.Auton.Center.TwoStageLeft;
 import frc.robot.Commands.Auton.Middle.Stage.StageIN;
 import frc.robot.Commands.Auton.Middle.Stage.StageON;
-import frc.robot.Commands.Auton.Middle.Stage.StageTwoIN;
 import frc.robot.Commands.Auton.Middle.Stage.StageTwoON;
+import frc.robot.Commands.Auton.Middle.Stage.StageTwoIN;
 import frc.robot.Commands.Auton.Stage.FastStageFour;
 import frc.robot.Commands.Auton.Stage.FourStage;
 import frc.robot.Commands.Auton.Stage.FourStageMiddle;
@@ -44,7 +44,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         addOption(AutonomousMode.FAST_FOUR);
         addOption(AutonomousMode.STAGE_IN)
         .addOption(AutonomousMode.STAGE_ON)
-        .addOption(AutonomousMode.STAGE_TWO_IN)
+        // .addOption(AutonomousMode.STAGE_TWO_IN)
         .addOption(AutonomousMode.STAGE_TWO_ON);
     }
 
@@ -119,14 +119,14 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new StageIN(RobotContainer.getInstance());
                 case STAGE_ON:
                     return new StageON(RobotContainer.getInstance());
-                case STAGE_TWO_IN:
-                    return new StageTwoIN(RobotContainer.getInstance());
                 case STAGE_TWO_ON:
                     return new StageTwoON(RobotContainer.getInstance());
+                case STAGE_TWO_IN:
+                    return new StageTwoIN(RobotContainer.getInstance());
                 case TEST:
                     return new DriveTest(RobotContainer.getInstance());
                 default:
-                    return new OneAuton(RobotContainer.getInstance(), Paths.getInstance().DRIVE_TEST);
+                    return new OneAuton(RobotContainer.getInstance());
             }
         }
     }

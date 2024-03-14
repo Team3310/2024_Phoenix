@@ -3,77 +3,50 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.5338244009821365,
-        "y": 1.653261084299946
+        "x": 5.505319899528689,
+        "y": 1.639008833573223
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.616995456213135,
-        "y": 1.8100358422939062
+        "x": 6.505319899528689,
+        "y": 1.6390088335732231
       },
       "isLocked": false,
       "linkedName": "SourceMiddle"
     },
     {
       "anchor": {
-        "x": 7.985211525978608,
-        "y": 2.3373691191826826
+        "x": 8.099229531792398,
+        "y": 2.2376033640956168
       },
       "prevControl": {
-        "x": 7.273006196806045,
-        "y": 2.055988969120795
-      },
-      "nextControl": {
-        "x": 8.21858731753565,
-        "y": 2.429571904754962
-      },
-      "isLocked": false,
-      "linkedName": "InSourceNote"
-    },
-    {
-      "anchor": {
-        "x": 5.5338244009821365,
-        "y": 1.653261084299946
-      },
-      "prevControl": {
-        "x": 6.8307792171139905,
-        "y": 1.8385403437473535
+        "x": 7.165937225984152,
+        "y": 1.7435074374912507
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SourceMiddle"
+      "linkedName": "InSourceNote"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.65,
-      "rotationDegrees": 23.614265891897276,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.25,
-      "rotationDegrees": 20.294514522340155,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 3.5,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -33.69,
+    "velocity": 0,
+    "rotation": 46.85,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "MiddleNotePaths",
   "previewStartingState": {
     "rotation": -33.69,
-    "velocity": 0.0
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

@@ -13,14 +13,16 @@ public class AmpON extends AutonCommandBase{
     public AmpON(RobotContainer robotContainer){
         super(robotContainer);
 
+        resetRobotPose(Paths.getInstance().AMP_AM);
+
         this.addCommands(
-            new OneAuton(robotContainer, Paths.getInstance().AMP_AM),
+            new OneAuton(robotContainer),
             Follow(Paths.getInstance().AMP_AM),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().AMP_ON),
                 new IntakeAuton()
             ),
-            Follow(Paths.getInstance().AM_AS),
+            // Follow(Paths.getInstance().AM_AS),
             new AimLiftWithOdometryAuton(),
             new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.2)
         );

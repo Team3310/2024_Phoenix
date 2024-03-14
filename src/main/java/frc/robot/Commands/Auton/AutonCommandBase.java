@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Intake.IntakeAuton;
@@ -64,9 +65,11 @@ public class AutonCommandBase extends SequentialCommandGroup {
     protected SequentialCommandGroup AimAndShoot(RobotContainer container){
         return new SequentialCommandGroup(
             new ParallelDeadlineGroup(
-                new AimLiftWithOdometryAuton().withTimeout(0.6),
-                new SetDriveMode(DriveMode.AIMATTARGET)
+                new WaitCommand(2.0),
+                new AimLiftWithOdometryAuton()
+                // new SetDriveMode(DriveMode.AIMATTARGET)
             ),
+            // new WaitCommand(0.5),
             new FeederShootCommandAuton(container.shooter).withTimeout(0.2)
         );
     }

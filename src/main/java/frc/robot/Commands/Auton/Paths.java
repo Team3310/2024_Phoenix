@@ -31,6 +31,7 @@ public class Paths {
     public final PathPlannerPath FAST_END;
 
     public final PathPlannerPath DRIVE_TEST;
+    public final PathPlannerPath DRIVE_TEST_TWO;
 
     public final PathPlannerPath MIDDLE_AN;
     public final PathPlannerPath MIDDLE_MN;
@@ -41,15 +42,15 @@ public class Paths {
 
     public final PathPlannerPath SOURCE_ON;
     public final PathPlannerPath SOURCE_IN;
-    public final PathPlannerPath SM_SS;
-    public final PathPlannerPath SS_SM;
+    public final PathPlannerPath SM_ON;
+    public final PathPlannerPath SM_IN;
+    public final PathPlannerPath IN_SM;
+    public final PathPlannerPath ON_SM;
     public final PathPlannerPath SOURCE_M;
     public final PathPlannerPath STAGE_SM;
 
     public final PathPlannerPath AMP_IN;
     public final PathPlannerPath AMP_ON;
-    public final PathPlannerPath AM_AS;
-    public final PathPlannerPath AS_AM;
     public final PathPlannerPath AMP_AM;
     public final PathPlannerPath AMP_M;
 
@@ -87,6 +88,7 @@ public class Paths {
             FAST_END = PathPlannerPath.fromPathFile("lastFastMiddle").flipPath();
 
             DRIVE_TEST = PathPlannerPath.fromPathFile("DriveTest").flipPath();
+            DRIVE_TEST_TWO = PathPlannerPath.fromPathFile("test2").flipPath();
 
             MIDDLE_AN = PathPlannerPath.fromPathFile("MiddleToAN").flipPath();
             MIDDLE_MN = PathPlannerPath.fromPathFile("MiddleToMN").flipPath();
@@ -95,17 +97,17 @@ public class Paths {
             MS_MIDDLE = PathPlannerPath.fromPathFile("MSToMiddle").flipPath();
             CENTER_M = PathPlannerPath.fromPathFile("ToMiddleCenter").flipPath();
 
-            SOURCE_ON = PathPlannerPath.fromPathFile("SourceToON").flipPath();
-            SOURCE_IN = PathPlannerPath.fromPathFile("SourceToIN").flipPath();
-            SM_SS = PathPlannerPath.fromPathFile("SMToSS").flipPath();
-            SS_SM = PathPlannerPath.fromPathFile("SSToSM").flipPath();
+            SOURCE_ON = PathPlannerPath.fromPathFile("ToSourceON").flipPath();
+            SOURCE_IN = PathPlannerPath.fromPathFile("ToSourceIN").flipPath();
+            SM_ON = PathPlannerPath.fromPathFile("SourceToON").flipPath();
+            SM_IN = PathPlannerPath.fromPathFile("SourceToIN").flipPath();
+            IN_SM = PathPlannerPath.fromPathFile("test").flipPath();
+            ON_SM = PathPlannerPath.fromPathFile("ON_SM").flipPath();
             SOURCE_M = PathPlannerPath.fromPathFile("ToMiddleStage").flipPath();
             STAGE_SM = PathPlannerPath.fromPathFile("ToFarMiddleStage").flipPath();
 
             AMP_IN = PathPlannerPath.fromPathFile("AmpToIN").flipPath();
             AMP_ON = PathPlannerPath.fromPathFile("AmpToON").flipPath();
-            AM_AS = PathPlannerPath.fromPathFile("AMToAS").flipPath();
-            AS_AM = PathPlannerPath.fromPathFile("ASToAM").flipPath();
             AMP_AM = PathPlannerPath.fromPathFile("ToAmpMiddleAmp").flipPath();
             AMP_M = PathPlannerPath.fromPathFile("ToMiddleAmp").flipPath();
         } else {
@@ -132,6 +134,7 @@ public class Paths {
             FAST_END = PathPlannerPath.fromPathFile("lastFastMiddle");
 
             DRIVE_TEST = PathPlannerPath.fromPathFile("DriveTest");
+            DRIVE_TEST_TWO = PathPlannerPath.fromPathFile("test2");
 
             MIDDLE_AN = PathPlannerPath.fromPathFile("MiddleToAN");
             MIDDLE_MN = PathPlannerPath.fromPathFile("MiddleToMN");
@@ -140,17 +143,17 @@ public class Paths {
             MS_MIDDLE = PathPlannerPath.fromPathFile("MSToMiddle");
             CENTER_M = PathPlannerPath.fromPathFile("ToMiddleCenter");
 
-            SOURCE_ON = PathPlannerPath.fromPathFile("SourceToON");
-            SOURCE_IN = PathPlannerPath.fromPathFile("SourceToIN");
-            SM_SS = PathPlannerPath.fromPathFile("SMToSS");
-            SS_SM = PathPlannerPath.fromPathFile("SSToSM");
+            SOURCE_ON = PathPlannerPath.fromPathFile("ToSourceON");
+            SOURCE_IN = PathPlannerPath.fromPathFile("ToSourceIN");
+            SM_ON = PathPlannerPath.fromPathFile("SourceToON");
+            SM_IN = PathPlannerPath.fromPathFile("SourceToIN");
+            IN_SM = PathPlannerPath.fromPathFile("test");
+            ON_SM = PathPlannerPath.fromPathFile("ON_SM");
             SOURCE_M = PathPlannerPath.fromPathFile("ToMiddleStage");
             STAGE_SM = PathPlannerPath.fromPathFile("ToFarMiddleStage");
 
             AMP_IN = PathPlannerPath.fromPathFile("AmpToIN");
             AMP_ON = PathPlannerPath.fromPathFile("AmpToON");
-            AM_AS = PathPlannerPath.fromPathFile("AMToAS");
-            AS_AM = PathPlannerPath.fromPathFile("ASToAM");
             AMP_AM = PathPlannerPath.fromPathFile("ToAmpMiddleAmp");
             AMP_M = PathPlannerPath.fromPathFile("ToMiddleAmp");
         }
