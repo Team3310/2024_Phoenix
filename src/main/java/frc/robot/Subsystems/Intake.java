@@ -46,7 +46,7 @@ public class Intake extends SubsystemBase {
         config.Slot0.kV = kF;
 
         config.CurrentLimits.StatorCurrentLimit = 80.0;
-        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimitEnable = false;
 
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
