@@ -9,7 +9,18 @@ public class DriveTest extends AutonCommandBase{
         resetRobotPose(Paths.getInstance().DRIVE_TEST);
 
         this.addCommands(
-            Follow(Paths.getInstance().DRIVE_TEST)
+            Follow(Paths.getInstance().DRIVE_TEST),
+            Follow(Paths.getInstance().DRIVE_TEST_TWO),
+            Follow(Paths.getInstance().DRIVE_TEST),
+            Follow(Paths.getInstance().DRIVE_TEST_TWO),
+            Follow(Paths.getInstance().DRIVE_TEST),
+            Follow(Paths.getInstance().DRIVE_TEST_TWO),
+            Follow(Paths.getInstance().DRIVE_TEST),
+            Follow(Paths.getInstance().DRIVE_TEST_TWO),
+            Follow(Paths.getInstance().DRIVE_TEST),
+            Follow(Paths.getInstance().DRIVE_TEST_TWO),
+            Follow(Paths.getInstance().DRIVE_TEST),
+            Follow(Paths.getInstance().DRIVE_TEST_TWO)
         );
     }
 }

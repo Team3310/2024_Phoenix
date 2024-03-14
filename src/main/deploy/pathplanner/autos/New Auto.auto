@@ -8,19 +8,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ToFarMiddleStage"
+            "pathName": "ToSourceON"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "ON_SM"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceToON"
+            "pathName": "SourceToIN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IN_S"
           }
         }
       ]

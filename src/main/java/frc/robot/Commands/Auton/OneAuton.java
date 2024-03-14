@@ -9,10 +9,10 @@ import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
 
 public class OneAuton extends AutonCommandBase{
-    public OneAuton(RobotContainer robotContainer, PathPlannerPath path){
+    public OneAuton(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose(path);
+        // resetRobotPose(path);
 
         this.addCommands(
             AimAndShoot(robotContainer)

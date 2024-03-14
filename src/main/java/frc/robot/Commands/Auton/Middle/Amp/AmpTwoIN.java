@@ -14,12 +14,12 @@ public class AmpTwoIN extends AutonCommandBase{
 
         this.addCommands(
             new AmpON(robotContainer),
-            Follow(Paths.getInstance().AS_AM),
+            // Follow(Paths.getInstance().AS_AM),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().AMP_IN),
                 new IntakeAuton()
             ),
-            Follow(Paths.getInstance().AM_AS),
+            // Follow(Paths.getInstance().AM_AS),
             new AimLiftWithOdometryAuton(),
             new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.2)
         );

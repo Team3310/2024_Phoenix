@@ -9,8 +9,9 @@ public class StageTwoON extends AutonCommandBase{
         super(robotContainer);
 
         this.addCommands(
-            new StageIN(robotContainer),
-            FollowToIntake(Paths.getInstance().SOURCE_ON),
+            new StageON(robotContainer),
+            FollowToIntake(Paths.getInstance().SM_IN),
+            Follow(Paths.getInstance().IN_SM),
             AimAndShoot(robotContainer)
         );
     }

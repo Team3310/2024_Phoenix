@@ -81,8 +81,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private boolean isHoldingAngle = false;
     private double joystickDriveHoldAngleRadians = 0;
 
-    private static Function<PathPlannerPath, Command> pathFollowingCommandBuilder;
-
     private FollowPathCommand pathFollower;
 
     private final CommandXboxController joystick = new CommandXboxController(0);
@@ -632,7 +630,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 .withVelocityX(speeds.vxMetersPerSecond)
                 .withVelocityY(speeds.vyMetersPerSecond)
                 .withRotationalRate(speeds.omegaRadiansPerSecond)
-                .withDriveRequestType(DriveRequestType.Velocity)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
             );
         } else {
             // rotationHold();
@@ -771,7 +769,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                         new PIDConstants(10, 0, 0),
                         TunerConstants.kSpeedAt12VoltsMps,
                         driveBaseRadius,
-                        new ReplanningConfig(true, true, 1.0, 0.25)),
+                        new ReplanningConfig(false, false, 1.0, 0.25)),
                 () -> false, // Change this if the path needs to be flipped on red vs blue
                 this); // Subsystem for requirements
     }
@@ -827,7 +825,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // }
         LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
-        frontCamera.updateKalmanFilter();
+        // frontCamera.updateKalmanFilter();
         odometryTargeting.update();
         
 

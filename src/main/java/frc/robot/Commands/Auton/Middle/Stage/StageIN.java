@@ -9,10 +9,12 @@ public class StageIN extends AutonCommandBase{
     public StageIN(RobotContainer robotContainer){
         super(robotContainer);
 
+        resetRobotPose(Paths.getInstance().SOURCE_IN);
+
         this.addCommands(
-            new OneAuton(robotContainer, Paths.getInstance().STAGE_SM),
-            Follow(Paths.getInstance().STAGE_SM),
+            new OneAuton(robotContainer),
             FollowToIntake(Paths.getInstance().SOURCE_IN),
+            Follow(Paths.getInstance().ON_SM),
             AimAndShoot(robotContainer)
         );
     }
