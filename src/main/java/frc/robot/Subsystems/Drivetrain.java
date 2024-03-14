@@ -199,7 +199,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 new PIDConstants(5.0, 0, 0),
                 TunerConstants.kSpeedAt12VoltsMps,
                 driveBaseRadius,
-                new ReplanningConfig()
+                new ReplanningConfig(true, true)
             );
 
         pathFollower = new FollowPathCommand(

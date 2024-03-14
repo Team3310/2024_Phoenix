@@ -44,7 +44,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         addOption(AutonomousMode.FAST_FOUR);
         addOption(AutonomousMode.STAGE_IN)
         .addOption(AutonomousMode.STAGE_ON)
-        .addOption(AutonomousMode.STAGE_TWO_IN)
+        // .addOption(AutonomousMode.STAGE_TWO_IN)
         .addOption(AutonomousMode.STAGE_TWO_ON);
     }
 

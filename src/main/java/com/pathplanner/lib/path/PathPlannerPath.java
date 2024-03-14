@@ -37,6 +37,7 @@ public class PathPlannerPath {
   private List<PathPoint> allPoints;
   private boolean reversed;
   private Rotation2d previewStartingRotation;
+  private ChassisSpeeds previewStartingSpeeds;
 
   private boolean isChoreoPath = false;
   private PathPlannerTrajectory choreoTrajectory = null;
@@ -67,7 +68,8 @@ public class PathPlannerPath {
       PathConstraints globalConstraints,
       GoalEndState goalEndState,
       boolean reversed,
-      Rotation2d previewStartingRotation) {
+      Rotation2d previewStartingRotation,
+      ChassisSpeeds previewStartingSpeeds) {
     this.bezierPoints = bezierPoints;
     this.rotationTargets = holonomicRotations;
     this.constraintZones = constraintZones;
@@ -77,6 +79,7 @@ public class PathPlannerPath {
     this.reversed = reversed;
     this.allPoints = createPath(this.bezierPoints, this.rotationTargets, this.constraintZones);
     this.previewStartingRotation = previewStartingRotation;
+    this.previewStartingSpeeds = previewStartingSpeeds;
 
     precalcValues();
 
@@ -111,7 +114,8 @@ public class PathPlannerPath {
         globalConstraints,
         goalEndState,
         reversed,
-        Rotation2d.fromDegrees(0));
+        Rotation2d.fromDegrees(0),
+        new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 
   /**
@@ -138,7 +142,8 @@ public class PathPlannerPath {
         constraints,
         goalEndState,
         reversed,
-        Rotation2d.fromDegrees(0));
+        Rotation2d.fromDegrees(0),
+        new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 
   /**
@@ -429,12 +434,15 @@ public class PathPlannerPath {
     }
 
     Rotation2d previewStartingRotation = Rotation2d.fromDegrees(0);
+    ChassisSpeeds previewStartingSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
     if (pathJson.containsKey("previewStartingState")) {
       JSONObject previewStartingStateJson = (JSONObject) pathJson.get("previewStartingState");
       if (previewStartingStateJson != null) {
         previewStartingRotation =
             Rotation2d.fromDegrees(
                 ((Number) previewStartingStateJson.get("rotation")).doubleValue());
+            double velocity = ((Number) previewStartingStateJson.get("velocity")).doubleValue();
+            previewStartingSpeeds = new ChassisSpeeds(velocity*Math.cos(previewStartingRotation.getRadians()), velocity*Math.sin(previewStartingRotation.getRadians()), 0.0);
       }
     }
 
@@ -446,7 +454,8 @@ public class PathPlannerPath {
         globalConstraints,
         goalEndState,
         reversed,
-        previewStartingRotation);
+        previewStartingRotation,
+        previewStartingSpeeds);
   }
 
   private static List<Translation2d> bezierPointsFromWaypointsJson(JSONArray waypointsJson) {
@@ -645,6 +654,10 @@ public class PathPlannerPath {
     return goalEndState;
   }
 
+  public ChassisSpeeds getStartSpeeds(){
+    return previewStartingSpeeds;
+  }
+
   private static double getCurveRadiusAtPoint(int index, List<PathPoint> points) {
     if (points.size() < 3) {
       return Double.POSITIVE_INFINITY;
@@ -764,7 +777,8 @@ public class PathPlannerPath {
           globalConstraints,
           goalEndState,
           reversed,
-          previewStartingRotation);
+          previewStartingRotation,
+          previewStartingSpeeds);
     } else if ((closestPointIdx == 0 && robotNextControl == null)
         || (Math.abs(closestDist - startingPose.getTranslation().getDistance(getPoint(0).position))
                 <= 0.25
@@ -828,7 +842,8 @@ public class PathPlannerPath {
             globalConstraints,
             goalEndState,
             reversed,
-            previewStartingRotation);
+            previewStartingRotation,
+            previewStartingSpeeds);
       }
     }
 
@@ -862,7 +877,8 @@ public class PathPlannerPath {
           globalConstraints,
           goalEndState,
           reversed,
-          previewStartingRotation);
+          previewStartingRotation,
+          previewStartingSpeeds);
     }
 
     if (bezierPoints.isEmpty()) {
@@ -997,7 +1013,8 @@ public class PathPlannerPath {
         globalConstraints,
         goalEndState,
         reversed,
-        previewStartingRotation);
+        previewStartingRotation,
+        previewStartingSpeeds);
   }
 
   /**
@@ -1108,7 +1125,8 @@ public class PathPlannerPath {
         globalConstraints,
         newEndState,
         reversed,
-        newPreviewRot);
+        newPreviewRot,
+        previewStartingSpeeds);
 
     // System.out.println("nf:"+bezierPoints.get(0)+"   f:"+GeometryUtil.flipFieldPosition(bezierPoints.get(0)));    
     // System.out.println(newPath.getPreviewStartingHolonomicPose().getTranslation().toString());    
@@ -1123,7 +1141,8 @@ public class PathPlannerPath {
         globalConstraints,
         newEndState,
         reversed,
-        newPreviewRot);
+        newPreviewRot,
+        previewStartingSpeeds);
   }
 
   /**

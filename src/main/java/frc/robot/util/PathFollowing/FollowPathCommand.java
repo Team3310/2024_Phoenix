@@ -77,7 +77,7 @@ public class FollowPathCommand{
       path = originalPath;
     }
 
-    if(resetPose){
+    if(resetPose || !this.replanningConfig.enableInitialReplanning){
         drivetrain.seedFieldRelative(path.getPreviewStartingHolonomicPose());
     }
 
