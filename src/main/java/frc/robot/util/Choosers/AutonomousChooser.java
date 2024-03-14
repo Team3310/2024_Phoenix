@@ -1,5 +1,7 @@
 package frc.robot.util.Choosers;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.DriveTest;
@@ -46,6 +48,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.STAGE_ON)
         .addOption(AutonomousMode.STAGE_TWO_IN)
         .addOption(AutonomousMode.STAGE_TWO_ON);
+        addOption(AutonomousMode.JAMESAUTO);
     }
 
     public Command getCommand() {
@@ -72,6 +75,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         STAGE_TWO_ON("stage two ON"),
         STAGE_TWO_IN("stage two IN"),
         TEST("drive test"),
+        JAMESAUTO("JamesAuto!")
         ;
 
         private String name = "";
@@ -125,6 +129,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new StageTwoON(RobotContainer.getInstance());
                 case TEST:
                     return new DriveTest(RobotContainer.getInstance());
+                case JAMESAUTO:
+                    return new PathPlannerAuto("S2_N1");
                 default:
                     return new OneAuton(RobotContainer.getInstance(), Paths.getInstance().DRIVE_TEST);
             }

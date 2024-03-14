@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Commands.Auton.AimAndShoot;
+import frc.robot.Commands.Auton.AutonCommandBase;
 import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.ClimberPrepNoAngle;
 import frc.robot.Commands.Climber.SetClimberInches;
@@ -73,6 +77,7 @@ public class RobotContainer {
   private final SideChooser sideChooser;
   private final SpotChooser spotChooser;
 
+
   private static RobotContainer instance;
 
   public RobotContainer() {
@@ -90,6 +95,9 @@ public class RobotContainer {
     spotChooser = new SpotChooser();
     sideChooser = new SideChooser();
     autonomousChooser = new AutonomousChooser();
+
+    NamedCommands.registerCommand("AimAndShoot", AutonCommandBase.AimAndShootCommand(instance));
+    NamedCommands.registerCommand("Intake", new IntakeAuton());
 
     logger = new Telemetry(TunerConstants.kSpeedAt12VoltsMps);
 

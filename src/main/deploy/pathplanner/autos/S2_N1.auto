@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.41,
+      "y": 5.55
+    },
+    "rotation": 0.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "S2_to_N1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "N1_to_N2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "N2_to_N3"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "James",
+  "choreoAuto": false
+}

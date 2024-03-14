@@ -30,6 +30,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -55,7 +57,7 @@ import frc.robot.util.PathFollowing.FollowPathCommand;
  * so it can be used in command-based projects easily.
  */
 public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateManager.Updatable {
-    private DriveMode mControlMode = DriveMode.JOYSTICK;
+    private DriveMode mControlMode = DriveMode.AUTO_DO_NOTHING;
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
 
@@ -218,13 +220,20 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     //#region DriveTrain things... 
     private void fromChassisSpeed(ChassisSpeeds speeds) {
-        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+        // var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
 
-        for (int i = 0; i < this.Modules.length; i++) {
-            this.Modules[i].apply(states[i],
-                    SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
-        }
+        // for (int i = 0; i < this.Modules.length; i++) {
+        //     this.Modules[i].apply(states[i],
+        //             SwerveModule.DriveRequestType.OpenLoopVoltage, SwerveModule.SteerRequestType.MotionMagic);
+        // }
+
+        this.applyRequest(() -> driveRobotCentricNoDeadband
+            .withVelocityX(speeds.vxMetersPerSecond) 
+            .withVelocityY(speeds.vyMetersPerSecond) 
+            .withRotationalRate(speeds.omegaRadiansPerSecond));
     }
+
+    
 
     public boolean canSeeNote(){
         return noteLimelight.hasTarget();
@@ -619,13 +628,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private void autonDrive(){
         ChassisSpeeds speeds = pathFollower.update();
 
-        if(isTrackingNote){
-            double offset = noteLimelight.getTargetHorizOffset();
-            double request = noteTrackController.calculate(offset, 0.005);
-            speeds.omegaRadiansPerSecond = request*Constants.MaxAngularRate;
-        }
+        // if(isTrackingNote){
+        //     double offset = noteLimelight.getTargetHorizOffset();
+        //     double request = noteTrackController.calculate(offset, 0.005);
+        //     speeds.omegaRadiansPerSecond = request*Constants.MaxAngularRate;
+        // }
 
-        var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
+        // var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
         if (!pathDone()) {
             // SmartDashboard.putBoolean("path done", false);
             applyRequest(()->driveFieldCentricNoDeadband
@@ -761,19 +770,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         for (var moduleLocation : m_moduleLocations) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
-
+        SwerveRequest.ApplyChassisSpeeds AutoRequest = new SwerveRequest.ApplyChassisSpeeds(); 
+        //COPY FROM CTRE EXAMPLE!!!
         AutoBuilder.configureHolonomic(
-                () -> this.getState().Pose, // Supplier of current robot pose
-                this::seedFieldRelative, // Consumer for seeding pose against auto
-                this::getCurrentRobotChassisSpeeds,
-                (speeds) -> fromChassisSpeed(speeds), // Consumer of ChassisSpeeds to drive the robot
-                new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                        new PIDConstants(10, 0, 0),
-                        TunerConstants.kSpeedAt12VoltsMps,
-                        driveBaseRadius,
-                        new ReplanningConfig(true, true, 1.0, 0.25)),
-                () -> false, // Change this if the path needs to be flipped on red vs blue
-                this); // Subsystem for requirements
+            ()->this.getState().Pose, // Supplier of current robot pose
+            this::seedFieldRelative,  // Consumer for seeding pose against auto
+            this::getCurrentRobotChassisSpeeds,
+            // (speeds)->AutoRequest.withSpeeds(speeds), // Consumer of ChassisSpeeds to drive the robot
+            (speeds)->fromChassisSpeed(speeds),
+            new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+                                            new PIDConstants(10, 0, 0),
+                                            TunerConstants.kSpeedAt12VoltsMps,
+                                            driveBaseRadius,
+                                            new ReplanningConfig()),
+            () -> (getSideMode()==SideMode.RED), // Assume the path needs to be flipped for Red vs Blue, this is normally the case
+            this); // Subsystem for requirements
     }
 
     public Command getAutoPath(String pathName) {
@@ -803,7 +814,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         AIM_AT_NOTE,
         RESET_GYRO,
         // ODOMETRYTRACK,
-        STRAFE2APRILTAG,
+        STRAFE2APRILTAG, AUTO_DO_NOTHING,
         ;
     }
 
@@ -827,7 +838,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // }
         LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
-        frontCamera.updateKalmanFilter();
+        // frontCamera.updateKalmanFilter();
         odometryTargeting.update();
         
 
@@ -924,6 +935,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             //     break;
             case AUTON:
                 autonDrive();
+                break;
+            case AUTO_DO_NOTHING:
                 break;
         }
     }

@@ -7,10 +7,13 @@
     "4Middle",
     "4Stage",
     "Crazy",
-    "MiddleNotePaths"
+    "MiddleNotePaths",
+    "James"
   ],
-  "autoFolders": [],
-  "defaultMaxVel": 4.0,
+  "autoFolders": [
+    "James"
+  ],
+  "defaultMaxVel": 1.0,
   "defaultMaxAccel": 3.5,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,

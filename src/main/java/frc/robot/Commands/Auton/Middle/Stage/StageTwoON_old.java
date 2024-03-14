@@ -4,8 +4,8 @@ import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
 import frc.robot.Commands.Auton.Paths;
 
-public class StageTwoON extends AutonCommandBase{
-    public StageTwoON(RobotContainer robotContainer){
+public class StageTwoON_old extends AutonCommandBase{
+    public StageTwoON_old(RobotContainer robotContainer){
         super(robotContainer);
 
         this.addCommands(
