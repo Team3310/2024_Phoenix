@@ -173,7 +173,7 @@ public class RobotContainer {
     operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(39.5);})); // platform
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
-    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3300); shooter.setRightMainRPM(1800); lift.setLiftAngle(40.0);})); // pass
+    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3200); shooter.setRightMainRPM(1700); lift.setLiftAngle(42.0);})); // pass
   
     //intake
     // operatorController.a().onTrue(new IntakeUnder());
