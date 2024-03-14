@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;

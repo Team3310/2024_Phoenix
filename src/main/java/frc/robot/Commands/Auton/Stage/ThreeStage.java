@@ -28,7 +28,8 @@ public class ThreeStage extends AutonCommandBase{
     public ThreeStage(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose(getPath("2Stage"));
+ //       resetRobotPose(Paths.getInstance().TWO_STAGE);
+//        resetRobotPose(getPath("2Stage"));
 
         this.addCommands(
             new TwoStage(robotContainer),

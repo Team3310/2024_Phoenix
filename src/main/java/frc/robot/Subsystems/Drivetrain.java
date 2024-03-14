@@ -632,7 +632,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             //             SwerveModule.SteerRequestType.MotionMagic);
             // }
             // SmartDashboard.putBoolean("path done", false);
-            applyRequest(()->driveFieldCentricNoDeadband
+            applyRequest(()->driveRobotCentricNoDeadband
                 .withVelocityX(speeds.vxMetersPerSecond)
                 .withVelocityY(speeds.vyMetersPerSecond)
                 .withRotationalRate(speeds.omegaRadiansPerSecond)

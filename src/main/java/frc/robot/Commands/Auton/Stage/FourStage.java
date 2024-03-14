@@ -19,6 +19,8 @@ public class FourStage extends AutonCommandBase{
     public FourStage(RobotContainer robotContainer){
         super(robotContainer);
 
+//        resetRobotPose(Paths.getInstance().TWO_STAGE);
+
         this.addCommands(
             new ThreeStage(robotContainer),
             new ParallelDeadlineGroup(

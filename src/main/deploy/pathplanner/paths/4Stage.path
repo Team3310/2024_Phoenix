@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1114380801012618,
-        "y": 5.948062379717159
+        "x": 2.023056721789147,
+        "y": 5.515621031242063
       },
       "isLocked": false,
       "linkedName": "3StageEnd"
@@ -20,26 +20,26 @@
         "y": 6.955098354641154
       },
       "prevControl": {
-        "x": 1.699968955493467,
-        "y": 6.185476815398076
+        "x": 1.6145207505656536,
+        "y": 6.3285212261898245
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "rahhh"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 27.349875780069834,
+    "rotation": 27.35,
     "rotateFast": false
   },
   "reversed": false,

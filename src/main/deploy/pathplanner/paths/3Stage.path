@@ -20,26 +20,20 @@
         "y": 5.515621031242063
       },
       "prevControl": {
-        "x": 1.820780780306524,
-        "y": 5.600691460450279
+        "x": 1.7332184027221964,
+        "y": 5.515621031242063
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "3StageEnd"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
