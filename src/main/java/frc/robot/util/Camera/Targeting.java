@@ -47,8 +47,8 @@ public class Targeting {
     private static final double caneraMountHeightInches = 23.25;
 
     private static final int NUMBER_TAPS_MOVING_AVERAGE = 10;
-    private static final double[] distanceFilterInputs = new double[NUMBER_TAPS_MOVING_AVERAGE];
-    private static final double[] distanceFilterOutputs = new double[NUMBER_TAPS_MOVING_AVERAGE];
+    // private static final double[] distanceFilterInputs = new double[NUMBER_TAPS_MOVING_AVERAGE];
+    // private static final double[] distanceFilterOutputs = new double[NUMBER_TAPS_MOVING_AVERAGE];
     private static boolean distanceFilterNeedsReset = false;
 
     //#endregion
@@ -282,11 +282,10 @@ public class Targeting {
         distance_XY = Math.hypot(delta_X, delta_Y);
 
         if (distanceFilterNeedsReset) {
+            distanceFilter.reset();
             for (int i = 0; i < NUMBER_TAPS_MOVING_AVERAGE; i++) {
-                distanceFilterInputs[i] = distance_XY;
-                distanceFilterOutputs[i] = distance_XY;
+                distanceFilter.calculate(distance_XY);
             }
-            distanceFilter.reset(distanceFilterInputs, distanceFilterOutputs);
             distanceFilterNeedsReset = false;
         }
         distance_XY_Average = distanceFilter.calculate(distance_XY);
