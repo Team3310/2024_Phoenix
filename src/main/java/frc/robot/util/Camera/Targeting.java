@@ -255,7 +255,7 @@ public class Targeting {
         double delta_Z = targetPos[2] - this.botPos[2];
 
         // If Limelight cannot see any targets... don't calculate, and change latestUpdateSuccesfull to FALSE
-        if (!this.hasTarget()) {
+        if (!isOdometry && !this.hasTarget()) {
             distanceFilterNeedsReset = true;
             return;
         }

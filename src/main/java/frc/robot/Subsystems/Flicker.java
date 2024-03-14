@@ -37,7 +37,7 @@ public class Flicker extends SubsystemBase {
         config.Slot0.kI = kI;
  
         config.CurrentLimits.StatorCurrentLimit = 80;
-        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimitEnable = false;
         
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;

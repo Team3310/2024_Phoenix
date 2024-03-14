@@ -136,13 +136,13 @@ public class Lift extends SubsystemBase {
         targetLiftAngleDegrees = degrees;
 
         switch (liftClosedLoopOutput) {
-        case Voltage:
-            liftMotor.setControl(liftControlVoltage.withPosition(getLiftDegreesToRevs(degrees)));
-            break;
+            case Voltage:
+                liftMotor.setControl(liftControlVoltage.withPosition(getLiftDegreesToRevs(degrees)));
+                break;
 
-        case TorqueCurrentFOC:
-            liftMotor.setControl(liftControlTorqueFOC.withPosition(getLiftDegreesToRevs(degrees)));
-            break;
+            case TorqueCurrentFOC:
+                liftMotor.setControl(liftControlTorqueFOC.withPosition(getLiftDegreesToRevs(degrees)));
+                break;
         }
     }
     
@@ -202,5 +202,7 @@ public class Lift extends SubsystemBase {
             SmartDashboard.putNumber("Lift Angle Deg", getLiftDegrees());
             SmartDashboard.putNumber("Lift Offset", offset);
         }
+
+        SmartDashboard.putNumber("commanded degrees", targetLiftAngleDegrees);
     }
 }

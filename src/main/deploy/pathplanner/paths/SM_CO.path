@@ -3,50 +3,50 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.505319899528689,
-        "y": 1.639008833573223
+        "x": 5.063500127000255,
+        "y": 1.4537295741258143
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.801665920792161,
-        "y": 1.6536682914635665
+        "x": 6.063500127000255,
+        "y": 1.4537295741258145
       },
       "isLocked": false,
       "linkedName": "SourceMiddle"
     },
     {
       "anchor": {
-        "x": 4.883921767843536,
-        "y": 2.0523241046482092
+        "x": 8.14198628397257,
+        "y": 3.8623599469421164
       },
       "prevControl": {
-        "x": 5.353024420334556,
-        "y": 1.6711781994992572
+        "x": 7.814675302683941,
+        "y": 3.064641113409211
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "SShoot"
+      "linkedName": "SCO"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -29.25,
+    "velocity": 0,
+    "rotation": 68.5,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4Stage",
+  "folder": "MiddleNotePaths",
   "previewStartingState": {
-    "rotation": 0,
-    "velocity": 1.0
+    "rotation": -39.81,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

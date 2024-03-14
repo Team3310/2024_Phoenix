@@ -60,7 +60,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private String drivetrain_state = "INIT";
 
     private PidController holdAngleController = new PidController(new PidConstants(0.5, 0.0, 0.00));
-    private PidController aimAtTargetController = new PidController(new PidConstants(1.0, 0.0, 0.01));
+    private PidController aimAtTargetController = new PidController(new PidConstants(0.5, 0.0, 0.01));
     private PidController noteTrackController = new PidController(new PidConstants(0.5, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
     private PidController strafeTxController = new PidController(new PidConstants(1.0, 0.00, 0.02));
@@ -269,9 +269,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             pidVisionUpdateCounter = VISON_COUNTER_MAX + 1;
             boolean canSeeTarget = false;
             double offset = 0;
+            double distance_XY_Average = frontCamera.getDistance_XY_average();
+            double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
             for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
                 if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
-                    offset = -(Math.toRadians(aprilTagResults.tx));
+                    offset = -(Math.toRadians(aprilTagResults.tx+aimOffset));
                     canSeeTarget = true;
                 }
             }

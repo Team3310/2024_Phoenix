@@ -15,6 +15,7 @@ import frc.robot.Commands.Intake.FullIntakeGo;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftFromPathEnd;
+import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
@@ -35,7 +36,11 @@ public class ThreeStage extends AutonCommandBase{
             new TwoStage(robotContainer),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().THREE_STAGE),
-                new IntakeAuton()
+                new SequentialCommandGroup(
+                    new IntakeAuton(),
+                    new WaitCommand(0.1),
+                    new AimLiftWithOdometry()
+                )
             ),
             new ParallelRaceGroup(
                 new AimLiftWithOdometryAuton(),

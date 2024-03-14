@@ -54,6 +54,12 @@ public class Paths {
     public final PathPlannerPath AMP_AM;
     public final PathPlannerPath AMP_M;
 
+    public final PathPlannerPath CLOSE_STAGE_END;
+
+    public final PathPlannerPath SM_CO;
+    public final PathPlannerPath CO_SM;
+
+
     private static Paths instance;
 
     public static Paths getInstance() {
@@ -101,7 +107,7 @@ public class Paths {
             SOURCE_IN = PathPlannerPath.fromPathFile("ToSourceIN").flipPath();
             SM_ON = PathPlannerPath.fromPathFile("SourceToON").flipPath();
             SM_IN = PathPlannerPath.fromPathFile("SourceToIN").flipPath();
-            IN_SM = PathPlannerPath.fromPathFile("test").flipPath();
+            IN_SM = PathPlannerPath.fromPathFile("IN_SM").flipPath();
             ON_SM = PathPlannerPath.fromPathFile("ON_SM").flipPath();
             SOURCE_M = PathPlannerPath.fromPathFile("ToMiddleStage").flipPath();
             STAGE_SM = PathPlannerPath.fromPathFile("ToFarMiddleStage").flipPath();
@@ -110,6 +116,11 @@ public class Paths {
             AMP_ON = PathPlannerPath.fromPathFile("AmpToON").flipPath();
             AMP_AM = PathPlannerPath.fromPathFile("ToAmpMiddleAmp").flipPath();
             AMP_M = PathPlannerPath.fromPathFile("ToMiddleAmp").flipPath();
+
+            CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd").flipPath(); 
+
+            SM_CO = PathPlannerPath.fromPathFile("SM_CO").flipPath();
+            CO_SM = PathPlannerPath.fromPathFile("CO_SM").flipPath();
         } else {
             TWO_STAGE = PathPlannerPath.fromPathFile("2Stage");
             THREE_STAGE = PathPlannerPath.fromPathFile("3Stage");
@@ -156,6 +167,11 @@ public class Paths {
             AMP_ON = PathPlannerPath.fromPathFile("AmpToON");
             AMP_AM = PathPlannerPath.fromPathFile("ToAmpMiddleAmp");
             AMP_M = PathPlannerPath.fromPathFile("ToMiddleAmp");
+
+            CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd");
+
+            SM_CO = PathPlannerPath.fromPathFile("SM_CO");
+            CO_SM = PathPlannerPath.fromPathFile("CO_SM");
         }
     }
 

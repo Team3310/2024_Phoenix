@@ -15,6 +15,7 @@ import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
+import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Commands.Shooter.ShooterOn;
 import frc.robot.Subsystems.Lift;
 
@@ -25,14 +26,23 @@ public class TwoStage extends AutonCommandBase{
         resetRobotPose(Paths.getInstance().TWO_STAGE);
 
         this.addCommands(
-            new AimLiftWithOdometryAuton(),
+            new ParallelDeadlineGroup(
+                new SetLiftAngle(robotContainer.lift, 60.0)
+                    .andThen(new WaitUntilCommand(()->robotContainer.lift.isFinished())), 
+                new SetLeftShooterRPM(robotContainer.shooter, 3000),
+                new SetRightShooterRPM(robotContainer.shooter, 2000)
+            ),
             new ParallelDeadlineGroup(
                 new WaitCommand(0.2), 
                 new FeederShootCommandAuton(robotContainer.shooter)
             ),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().TWO_STAGE).andThen(new WaitCommand(0.25)), 
-                new IntakeAuton()
+                new SequentialCommandGroup(
+                    new IntakeAuton(),
+                    new WaitCommand(0.1),
+                    new AimLiftWithOdometry()
+                )
             ),
             new ParallelRaceGroup(
                 new AimLiftWithOdometryAuton(),

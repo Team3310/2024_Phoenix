@@ -9,7 +9,10 @@ import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
 import frc.robot.Commands.Auton.Paths;
 import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Elevator.AmpPrep;
+import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
@@ -25,7 +28,11 @@ public class FourStage extends AutonCommandBase{
             new ThreeStage(robotContainer),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().FOUR_STAGE).andThen(new WaitCommand(0.5)),
-                new IntakeAuton()
+                new SequentialCommandGroup(
+                    new IntakeAuton(),
+                    new WaitCommand(0.1),
+                    new AimLiftWithOdometry()
+                )
             ),
             new ParallelRaceGroup(
                 new AimLiftWithOdometryAuton(),
@@ -37,6 +44,13 @@ public class FourStage extends AutonCommandBase{
             new ParallelDeadlineGroup(
                 new WaitCommand(0.25), 
                 new FeederShootCommandAuton(robotContainer.shooter)
+            ),
+            new ParallelDeadlineGroup(
+                Follow(Paths.getInstance().CLOSE_STAGE_END),
+                new SequentialCommandGroup(
+                    new IntakeAmp(),
+                    new AmpPrep(robotContainer)
+                )
             )
         );
     }
