@@ -17,15 +17,15 @@ public class ScoreCommand extends Command {
   private final Shooter shooter;
   private final Flicker flicker;
   private final Elevator elevator;
-  private LED led;
+  // private LED led;
 
-  private final Timer timer = new Timer();
+  // private final Timer timer = new Timer();
 
   public ScoreCommand(Shooter shooter, Flicker flicker) {
     this.shooter = shooter;
     this.flicker = flicker;
     this.elevator = Elevator.getInstance();
-    this.led = LED.getInstance();
+    // this.led = LED.getInstance();
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.shooter);
@@ -35,8 +35,8 @@ public class ScoreCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.reset();
-    timer.start();
+    // timer.reset();
+    // timer.start();
 
     shooter.setKickerRPM(Constants.KICKER_SCORE_RPM);
 
@@ -55,14 +55,15 @@ public class ScoreCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(2.0);
+    return true;
+    // return timer.hasElapsed(2.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setKickerOff();
-    flicker.setRPM(0);
-    led.setOff();
+    // shooter.setKickerOff();
+    // flicker.setRPM(0);
+    // led.setOff();
   }
 }

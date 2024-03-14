@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -37,7 +37,7 @@ public class Constants {
 
         public static final int SHOOTER_KICKER_ID = 22;
 
-        public static final double KICKER_INTAKE_RPM = 600.0;
+        public static final double KICKER_INTAKE_RPM = 800.0;
         public static final double KICKER_EJECT_RPM = -800.0;
         public static final double KICKER_SCORE_RPM = 1000.0;
 
@@ -76,10 +76,10 @@ public class Constants {
             kLiftAngleMapPractice.put(new InterpolatingDouble(4.7), new InterpolatingDouble(60.0));
             kLiftAngleMapPractice.put(new InterpolatingDouble(8.2), new InterpolatingDouble(42.5));
             kLiftAngleMapPractice.put(new InterpolatingDouble(12.0), new InterpolatingDouble(35.0));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(16.0), new InterpolatingDouble(27.0));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(20.0), new InterpolatingDouble(23.0));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.5));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(28.0), new InterpolatingDouble(17.5));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(16.0), new InterpolatingDouble(28.0));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(20.0), new InterpolatingDouble(24.0));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(24.0), new InterpolatingDouble(21.5));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(28.0), new InterpolatingDouble(19.5));
         }
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kAutoAimOffset = new InterpolatingTreeMap<>();
