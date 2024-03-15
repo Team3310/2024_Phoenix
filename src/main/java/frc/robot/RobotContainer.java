@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -197,6 +200,9 @@ public class RobotContainer {
     addTestButtons();
     configureDriverController();
     configureOperatorController();
+
+    // SmartDashboard.putString("red start pose", PathPlannerPath.fromPathFile("2Amp").flipPath().getPreviewStartingHolonomicPose().getRotation().plus(new Rotation2d(Math.PI)).toString());
+    // SmartDashboard.putString("blue start pose", PathPlannerPath.fromPathFile("2Amp").getPreviewStartingHolonomicPose().getRotation().toString());
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }

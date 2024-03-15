@@ -18,6 +18,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -913,6 +914,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public void seedFieldRelativeWithOffset(Rotation2d offset) {
         try {
             m_stateLock.writeLock().lock();
+            if(getSideMode()==SideMode.RED){
+                offset = new Rotation2d(Math.PI).plus(offset);
+            }
             m_fieldRelativeOffset = getState().Pose.getRotation().minus(offset);
         } finally {
             m_stateLock.writeLock().unlock();
