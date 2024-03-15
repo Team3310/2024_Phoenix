@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.127943684458798,
-        "y": 5.55593454044051
+        "x": 0.9,
+        "y": 4.4
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1279436844588027,
-        "y": 5.55593454044051
+        "x": 1.9000000000000048,
+        "y": 4.4
       },
       "isLocked": false,
       "linkedName": "2StageLeftPreGrab"

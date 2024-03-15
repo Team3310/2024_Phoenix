@@ -16,6 +16,8 @@ import frc.robot.Commands.Auton.Center.TwoStageLeft;
 import frc.robot.Commands.Auton.Middle.Stage.StageIN;
 import frc.robot.Commands.Auton.Middle.Stage.StageON;
 import frc.robot.Commands.Auton.Middle.Stage.StageThreeIN;
+import frc.robot.Commands.Auton.Middle.Stage.StageThreeMIN;
+import frc.robot.Commands.Auton.Middle.Stage.StageThreeMON;
 import frc.robot.Commands.Auton.Middle.Stage.StageThreeON;
 import frc.robot.Commands.Auton.Middle.Stage.StageTwoIN;
 import frc.robot.Commands.Auton.Middle.Stage.StageTwoON;
@@ -50,6 +52,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.STAGE_TWO_ON)
         .addOption(AutonomousMode.STAGE_THREE_IN)
         .addOption(AutonomousMode.STAGE_THREE_ON)
+        .addOption(AutonomousMode.STAGE_THREE_MIN)
+        .addOption(AutonomousMode.STAGE_THREE_MON)
         .addOption(AutonomousMode.DRIVE_TEST)
         .addOption(AutonomousMode.GYRO_TEST)
         ;
@@ -81,6 +85,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         STAGE_TWO_IN("stage two 1.IN->2.ON"),
         STAGE_THREE_ON("stage three 1.ON->2.IN->"),
         STAGE_THREE_IN("stage three 1.IN->2.ON->"),
+        STAGE_THREE_MON("stage three 1.ON->2.IN->3.CN"),
+        STAGE_THREE_MIN("stage three 1.IN->2.ON->3.CN"),
         DRIVE_TEST("drive test"),
         GYRO_TEST("gyro test"),
         ;
@@ -138,6 +144,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new StageThreeIN(RobotContainer.getInstance());
                 case STAGE_THREE_ON:
                     return new StageThreeON(RobotContainer.getInstance());
+                case STAGE_THREE_MON:
+                    return new StageThreeMON(RobotContainer.getInstance());
+                case STAGE_THREE_MIN:
+                    return new StageThreeMIN(RobotContainer.getInstance());
                 case GYRO_TEST:
                     return new TestGyroInit(RobotContainer.getInstance());
                 case DRIVE_TEST:

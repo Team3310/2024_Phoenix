@@ -15,7 +15,7 @@ public class SetLiftOff extends Command{
 
     @Override
     public void initialize(){
-        lift.setLiftAngle(Constants.LIFT_MIN_DEGREES + 5.0);
+        lift.setLiftAngle(Constants.LIFT_MAX_DEGREES-10.0);
     }
 
     @Override
@@ -30,6 +30,6 @@ public class SetLiftOff extends Command{
 
     @Override
     public void end(boolean interrupted){
-        lift.setLiftOff();
+        // lift.setLiftOff();
     }
 }

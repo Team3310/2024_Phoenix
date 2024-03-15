@@ -199,10 +199,9 @@ public class Lift extends SubsystemBase {
             //         System.out.println("Fused sensor out of sync sticky-faulted");
             //     }
             // }
-            SmartDashboard.putNumber("Lift Angle Deg", getLiftDegrees());
+            SmartDashboard.putNumber("commanded degrees", targetLiftAngleDegrees);
             SmartDashboard.putNumber("Lift Offset", offset);
         }
-
-        SmartDashboard.putNumber("commanded degrees", targetLiftAngleDegrees);
+        SmartDashboard.putNumber("Lift Angle Deg", getLiftDegrees());
     }
 }

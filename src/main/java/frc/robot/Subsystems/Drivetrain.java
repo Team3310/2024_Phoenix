@@ -270,7 +270,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             boolean canSeeTarget = false;
             double offset = 0;
             double distance_XY_Average = frontCamera.getDistance_XY_average();
-            double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+            double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
             for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
                 if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
                     offset = -(Math.toRadians(aprilTagResults.tx+aimOffset));
@@ -472,7 +472,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // If ID found, save TX value to offset for targeting.
         double offset = 0;
         double distance_XY_Average = frontCamera.getDistance_XY_average();
-        double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+        double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
         for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
             if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
                 offset = (Math.toRadians(aprilTagResults.tx + aimOffset));
