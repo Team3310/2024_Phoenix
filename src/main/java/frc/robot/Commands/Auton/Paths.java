@@ -16,7 +16,10 @@ public class Paths {
     public final PathPlannerPath FOUR_STAGE_MIDDLE;
 
     public final PathPlannerPath TWO_AMP;
+    public final PathPlannerPath TWO_AMP_SOLO;
+    public final PathPlannerPath TWO_AMP_SOLO2;
     public final PathPlannerPath THREE_AMP;
+    public final PathPlannerPath THREE_AMP_SOLO;
     public final PathPlannerPath FOUR_AMP;
 
     public final PathPlannerPath TWO_STAGE_LEFT_PRE_GRAB;
@@ -84,7 +87,10 @@ public class Paths {
             FOUR_STAGE_MIDDLE = PathPlannerPath.fromPathFile("4StageMiddle").flipPath();
 
             TWO_AMP = PathPlannerPath.fromPathFile("2Amp").flipPath();
+            TWO_AMP_SOLO = PathPlannerPath.fromPathFile("2AmpSolo").flipPath();
+            TWO_AMP_SOLO2 = PathPlannerPath.fromPathFile("2AmpSolo2").flipPath();
             THREE_AMP = PathPlannerPath.fromPathFile("3Amp").flipPath();
+            THREE_AMP_SOLO = PathPlannerPath.fromPathFile("3AmpSolo").flipPath();
             FOUR_AMP = PathPlannerPath.fromPathFile("4Amp").flipPath();
 
             TWO_STAGE_LEFT_PRE_GRAB = PathPlannerPath.fromPathFile("2StageLeftPreGrab").flipPath();
@@ -140,7 +146,10 @@ public class Paths {
             FOUR_STAGE_MIDDLE = PathPlannerPath.fromPathFile("4StageMiddle");
 
             TWO_AMP = PathPlannerPath.fromPathFile("2Amp");
+            TWO_AMP_SOLO = PathPlannerPath.fromPathFile("2AmpSolo");
+            TWO_AMP_SOLO2 = PathPlannerPath.fromPathFile("2AmpSolo2");
             THREE_AMP = PathPlannerPath.fromPathFile("3Amp");
+            THREE_AMP_SOLO = PathPlannerPath.fromPathFile("3AmpSolo");
             FOUR_AMP = PathPlannerPath.fromPathFile("4Amp");
 
             TWO_STAGE_LEFT_PRE_GRAB = PathPlannerPath.fromPathFile("2StageLeftPreGrab");

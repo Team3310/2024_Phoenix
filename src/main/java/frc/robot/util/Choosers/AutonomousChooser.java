@@ -4,10 +4,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.DriveTest;
 import frc.robot.Commands.Auton.OneAuton;
-import frc.robot.Commands.Auton.Paths;
 import frc.robot.Commands.Auton.Amp.FourAmp;
-import frc.robot.Commands.Auton.Amp.ThreeAmp;
-import frc.robot.Commands.Auton.Amp.TwoAmp;
+import frc.robot.Commands.Auton.Amp.ThreeAmpSolo;
+import frc.robot.Commands.Auton.Amp.TwoAmpSolo;
 import frc.robot.Commands.Auton.Center.FourStageLeft;
 import frc.robot.Commands.Auton.Center.FourStageLeftCounter;
 import frc.robot.Commands.Auton.Center.ThreeStageLeft;
@@ -29,22 +28,22 @@ import frc.robot.Commands.Auton.Stage.TwoStage;
 public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousMode>{
     public AutonomousChooser() {
         super("Autonomous Mode");
-        setDefaultOption(AutonomousMode.TEST);
-        addOption(AutonomousMode.TWO_STAGE);
-        addOption(AutonomousMode.THREE_STAGE);
-        addOption(AutonomousMode.FOUR_STAGE);
-        addOption(AutonomousMode.THREE_STAGE_MIDDLE);
-        addOption(AutonomousMode.FOUR_STAGE_MIDDLE);
-        addOption(AutonomousMode.TWO_STAGE_LEFT);
-        addOption(AutonomousMode.THREE_STAGE_LEFT);
-        addOption(AutonomousMode.FOUR_STAGE_LEFT);
-        addOption(AutonomousMode.TWO_AMP);
-        addOption(AutonomousMode.THREE_AMP);
-        addOption(AutonomousMode.FOUR_AMP);
-        addOption(AutonomousMode.THREE_STAGE_LEFT_COUNTER);
-        addOption(AutonomousMode.FOUR_STAGE_LEFT_COUNTER);
-        addOption(AutonomousMode.FAST_FOUR);
-        addOption(AutonomousMode.STAGE_IN)
+        setDefaultOption(AutonomousMode.TEST)
+        .addOption(AutonomousMode.TWO_STAGE)
+        .addOption(AutonomousMode.THREE_STAGE)
+        .addOption(AutonomousMode.FOUR_STAGE)
+        // .addOption(AutonomousMode.THREE_STAGE_MIDDLE)
+        // .addOption(AutonomousMode.FOUR_STAGE_MIDDLE)
+        // .addOption(AutonomousMode.TWO_STAGE_LEFT)
+        // .addOption(AutonomousMode.THREE_STAGE_LEFT)
+        // .addOption(AutonomousMode.FOUR_STAGE_LEFT)
+        .addOption(AutonomousMode.TWO_AMP)
+        .addOption(AutonomousMode.THREE_AMP)
+        .addOption(AutonomousMode.FOUR_AMP)
+        // .addOption(AutonomousMode.THREE_STAGE_LEFT_COUNTER)
+        // .addOption(AutonomousMode.FOUR_STAGE_LEFT_COUNTER)
+        .addOption(AutonomousMode.FAST_FOUR)
+        .addOption(AutonomousMode.STAGE_IN)
         .addOption(AutonomousMode.STAGE_ON)
         .addOption(AutonomousMode.STAGE_TWO_IN)
         .addOption(AutonomousMode.STAGE_TWO_ON)
@@ -110,9 +109,9 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                 case FOUR_STAGE_LEFT:
                     return new FourStageLeft(RobotContainer.getInstance());   
                 case TWO_AMP:
-                    return new TwoAmp(RobotContainer.getInstance());
+                    return new TwoAmpSolo(RobotContainer.getInstance());
                 case THREE_AMP:
-                    return new ThreeAmp(RobotContainer.getInstance());
+                    return new ThreeAmpSolo(RobotContainer.getInstance());
                 case FOUR_AMP:
                     return new FourAmp(RobotContainer.getInstance());     
                 case THREE_STAGE_LEFT_COUNTER:
