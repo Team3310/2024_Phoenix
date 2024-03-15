@@ -3,6 +3,7 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
@@ -12,6 +13,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -109,6 +111,10 @@ public class Lift extends SubsystemBase {
         }
 
         liftMotor.setInverted(false);
+        
+        MotorOutputConfigs outputConfigs = new MotorOutputConfigs();
+        outputConfigs.NeutralMode = NeutralModeValue.Brake;
+        liftMotor.getConfigurator().apply(outputConfigs);
 
         liftControlVoltage.EnableFOC = true;
         liftControlVoltage.Slot = 0;

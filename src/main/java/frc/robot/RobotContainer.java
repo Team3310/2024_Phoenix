@@ -23,6 +23,7 @@ import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
 import frc.robot.Commands.Flicker.SetFlickerRPM;
 import frc.robot.Commands.Intake.IntakeAmp;
+import frc.robot.Commands.Intake.IntakeAmpToShooter;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Intake.IntakeEject;
 import frc.robot.Commands.Intake.StopAllIntakes;
@@ -224,13 +225,13 @@ public class RobotContainer {
         // SmartDashboard.putNumber("I", 0);
         // SmartDashboard.putNumber("D", 0);
 
-        SmartDashboard.putNumber("set hood degrees", 20.0);
+        // SmartDashboard.putNumber("set hood degrees", 20.0);
 
-        SmartDashboard.putData("shooter wheels go", new SetLeftShooterRPM(shooter, 5000).alongWith(new SetRightShooterRPM(shooter, 3000)));
+        // SmartDashboard.putData("shooter wheels go", new SetLeftShooterRPM(shooter, 5000).alongWith(new SetRightShooterRPM(shooter, 3000)));
 
-        SmartDashboard.putData("Snap 0", new InstantCommand(()->drivetrain.startSnap(0)));
-        SmartDashboard.putData("Snap 90", new InstantCommand(()->drivetrain.startSnap(90)));
-        SmartDashboard.putData("Snap -90", new InstantCommand(()->drivetrain.startSnap(-90)));
+        // SmartDashboard.putData("Snap 0", new InstantCommand(()->drivetrain.startSnap(0)));
+        // SmartDashboard.putData("Snap 90", new InstantCommand(()->drivetrain.startSnap(90)));
+        // SmartDashboard.putData("Snap -90", new InstantCommand(()->drivetrain.startSnap(-90)));
 
         // SmartDashboard.putData("sysIdQuasistatic Forward", drivetrain.sysIdQuasistatic(Direction.kForward));
         // SmartDashboard.putData("sysIdQuasistatic Reverse", drivetrain.sysIdQuasistatic(Direction.kReverse));
@@ -252,36 +253,37 @@ public class RobotContainer {
     private void addIntakeTestButtons() {
       // SmartDashboard.putData("Intake Top +rpm", new InstantCommand(()->intake.setTopIntakeRPM(Constants.IN_INTAKE_RPM)));
       // SmartDashboard.putData("Intake Top -rpm", new InstantCommand(()->intake.setTopIntakeRPM(-Constants.IN_INTAKE_RPM)));
-      SmartDashboard.putData("Intake Top 0 rpm", new InstantCommand(()->intake.setTopIntakeRPM(0)));
+      // SmartDashboard.putData("Intake Top 0 rpm", new InstantCommand(()->intake.setTopIntakeRPM(0)));
       // SmartDashboard.putData("Intake Bottom +rpm", new InstantCommand(()->intake.setBottomIntakeRPM(Constants.IN_INTAKE_RPM)));
       // SmartDashboard.putData("Intake Bottom -rpm", new InstantCommand(()->intake.setBottomIntakeRPM(-Constants.IN_INTAKE_RPM)));
-      SmartDashboard.putData("Intake Bottom 0 rpm", new InstantCommand(()->intake.setBottomIntakeRPM(0)));
+      // SmartDashboard.putData("Intake Bottom 0 rpm", new InstantCommand(()->intake.setBottomIntakeRPM(0)));
       // SmartDashboard.putData("Intake Front +rpm", new InstantCommand(()->intake.setFrontIntakeRPM(Constants.IN_INTAKE_RPM)));
       // SmartDashboard.putData("Intake Front -rpm", new InstantCommand(()->intake.setFrontIntakeRPM(-Constants.IN_INTAKE_RPM)));
-      SmartDashboard.putData("Intake Front 0 rpm", new InstantCommand(()->intake.setFrontIntakeRPM(0)));
-      SmartDashboard.putData("set amp +rpm", new SetFlickerRPM(flicker, 1000));
-      SmartDashboard.putData("set amp -rpm", new SetFlickerRPM(flicker,-1000));
-      SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0));
+      // SmartDashboard.putData("Intake Front 0 rpm", new InstantCommand(()->intake.setFrontIntakeRPM(0)));
+      // SmartDashboard.putData("set amp +rpm", new SetFlickerRPM(flicker, 1000));
+      // SmartDashboard.putData("set amp -rpm", new SetFlickerRPM(flicker,-1000));
+      // SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0));
+      SmartDashboard.putData("Amp To Shooter", new IntakeAmpToShooter());
     }
 
     private void addFlickerTestButtons() {
-      SmartDashboard.putData("set amp +rpm", new SetFlickerRPM(flicker, Constants.AMP_SCORE_RPM));
-      SmartDashboard.putData("set amp -rpm", new SetFlickerRPM(flicker, -Constants.AMP_SCORE_RPM));
-      SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0.0));
+      // SmartDashboard.putData("set amp +rpm", new SetFlickerRPM(flicker, Constants.AMP_SCORE_RPM));
+      // SmartDashboard.putData("set amp -rpm", new SetFlickerRPM(flicker, -Constants.AMP_SCORE_RPM));
+      // SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0.0));
     }
 
    private void addClimberTestButtons() {
-      SmartDashboard.putData("set climber max", new SetClimberInches(climber, Constants.CLIMBER_MAX_INCHES));
-      SmartDashboard.putData("set climber min", new SetClimberInches(climber, Constants.CLIMBER_MIN_INCHES));
-      SmartDashboard.putData("set climber speed", new SetClimberSpeed(climber, Constants.CLIMBER_AUTO_ZERO_SPEED));
+      // SmartDashboard.putData("set climber max", new SetClimberInches(climber, Constants.CLIMBER_MAX_INCHES));
+      // SmartDashboard.putData("set climber min", new SetClimberInches(climber, Constants.CLIMBER_MIN_INCHES));
+      // SmartDashboard.putData("set climber speed", new SetClimberSpeed(climber, Constants.CLIMBER_AUTO_ZERO_SPEED));
       SmartDashboard.putData("auto zero climber", new ClimberAutoZero(climber));
     }
 
     private void addElevatorTestButtons() {
-      SmartDashboard.putData("elevator amp score", new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES));
-      SmartDashboard.putData("elevator trap score", new SetElevatorInches(elevator, Constants.TRAP_SCORE_INCHES));
-      SmartDashboard.putData("elevator zero", new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
-      SmartDashboard.putData("auto zero elevator", new ElevatorAutoZero(elevator));
+      // SmartDashboard.putData("elevator amp score", new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES));
+      // SmartDashboard.putData("elevator trap score", new SetElevatorInches(elevator, Constants.TRAP_SCORE_INCHES));
+      // SmartDashboard.putData("elevator zero", new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
+      // SmartDashboard.putData("auto zero elevator", new ElevatorAutoZero(elevator));
     }
 
     public void addShooterTestButtons(){

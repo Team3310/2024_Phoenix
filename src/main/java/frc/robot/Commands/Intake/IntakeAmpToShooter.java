@@ -7,25 +7,28 @@ import frc.robot.Constants;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Elevator;
+import frc.robot.Subsystems.Flicker;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.TunerConstants;
 
-public class IntakeAuton extends Command {
+public class IntakeAmpToShooter extends Command {
     private Intake intake;
     private Shooter shooter;
     private Lift lift;
+    private Flicker flicker;
     private Elevator elevator;
     private Drivetrain drive;
     private LED led;
     private boolean trackNote;
 
-    public IntakeAuton(){
-        this(false);
+    public IntakeAmpToShooter(){
+       this(false);
     } 
 
-    public IntakeAuton(boolean trackNote){
+    public IntakeAmpToShooter(boolean trackNote){
+        this.flicker = Flicker.getInstance();
         this.intake = Intake.getInstance();
         this.shooter = Shooter.getInstance();
         this.lift = Lift.getInstance();
@@ -35,14 +38,17 @@ public class IntakeAuton extends Command {
 
         this.trackNote = trackNote;
 
-        addRequirements(intake, shooter, lift, elevator, led);
+        addRequirements(intake, shooter, lift, elevator, flicker);
     } 
 
     @Override
     public void initialize() {
         // if (!shooter.isNoteLoaded()) {
-            intake.setFrontIntakeRPM(Constants.FRONT_IN_INTAKE_RPM);
+            flicker.setRPM(Constants.AMP_EJECT_RPM);
+            intake.setFrontIntakeRPM(Constants.FRONT_EJECT_INTAKE_RPM);
+            
             intake.setBackIntakeRPM(Constants.BACK_IN_INTAKE_RPM);
+            intake.setTopIntakeRPM(Constants.UP_INTAKE_RPM);
             shooter.setKickerRPM(Constants.KICKER_INTAKE_RPM);
             // elevator.setPosition(2.0);
             lift.setLiftAngle(Constants.LIFT_INTAKE_DEGREES);
@@ -63,8 +69,9 @@ public class IntakeAuton extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        // intake.setFrontIntakeRPM(0.0);
-        // intake.setBackIntakeRPM(0.0);
+        intake.setFrontIntakeRPM(0.0);
+        intake.setBackIntakeRPM(0.0);
+        intake.setTopIntakeRPM(0.0);
         shooter.setKickerRPM(0.0);
         elevator.setPosition(0.0);
         drive.isTrackingNote = false;

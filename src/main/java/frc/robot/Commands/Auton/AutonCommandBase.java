@@ -42,7 +42,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
         Pose2d start = path.getPreviewStartingHolonomicPose();
         
         TunerConstants.DriveTrain.seedFieldRelative(start);   
-        // TunerConstants.DriveTrain.seedFieldRelative();  
+        TunerConstants.DriveTrain.seedFieldRelativeWithOffset(start.getRotation());  
     }
 
     protected boolean getFlip(){

@@ -907,6 +907,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putNumber("mVisionAlignAdjustment", mVisionAlignAdjustment);
             SmartDashboard.putNumber("Gyro Rate", getCurrentRobotChassisSpeeds().omegaRadiansPerSecond);     
         }
+        SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
+    }
+
+    public void seedFieldRelativeWithOffset(Rotation2d offset) {
+        try {
+            m_stateLock.writeLock().lock();
+            m_fieldRelativeOffset = getState().Pose.getRotation().minus(offset);
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
     }
 
     @Override

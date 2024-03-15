@@ -191,7 +191,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    TunerConstants.DriveTrain.setDriveMode(DriveMode.JOYSTICK);
+    // TunerConstants.DriveTrain.setDriveMode(DriveMode.JOYSTICK);
 //    TunerConstants.DriveTrain.trapQueen();
   }
 
