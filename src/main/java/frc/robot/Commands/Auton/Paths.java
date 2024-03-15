@@ -43,9 +43,12 @@ public class Paths {
     public final PathPlannerPath SOURCE_ON;
     public final PathPlannerPath SOURCE_IN;
     public final PathPlannerPath SM_ON;
+    public final PathPlannerPath SM_ON3;
     public final PathPlannerPath SM_IN;
     public final PathPlannerPath IN_SM;
     public final PathPlannerPath ON_SM;
+    public final PathPlannerPath ON_SM3;
+    public final PathPlannerPath IN_SM3;
     public final PathPlannerPath SOURCE_M;
     public final PathPlannerPath STAGE_SM;
 
@@ -58,6 +61,8 @@ public class Paths {
 
     public final PathPlannerPath SM_CO;
     public final PathPlannerPath CO_SM;
+
+    public final PathPlannerPath SM_GRAB_CLOSE;
 
 
     private static Paths instance;
@@ -106,9 +111,12 @@ public class Paths {
             SOURCE_ON = PathPlannerPath.fromPathFile("ToSourceON").flipPath();
             SOURCE_IN = PathPlannerPath.fromPathFile("ToSourceIN").flipPath();
             SM_ON = PathPlannerPath.fromPathFile("SourceToON").flipPath();
+            SM_ON3 = PathPlannerPath.fromPathFile("SourceToON3").flipPath();
             SM_IN = PathPlannerPath.fromPathFile("SourceToIN").flipPath();
             IN_SM = PathPlannerPath.fromPathFile("IN_SM").flipPath();
             ON_SM = PathPlannerPath.fromPathFile("ON_SM").flipPath();
+            IN_SM3 = PathPlannerPath.fromPathFile("IN_SM3").flipPath();
+            ON_SM3 = PathPlannerPath.fromPathFile("ON_SM3").flipPath();
             SOURCE_M = PathPlannerPath.fromPathFile("ToMiddleStage").flipPath();
             STAGE_SM = PathPlannerPath.fromPathFile("ToFarMiddleStage").flipPath();
 
@@ -121,6 +129,8 @@ public class Paths {
 
             SM_CO = PathPlannerPath.fromPathFile("SM_CO").flipPath();
             CO_SM = PathPlannerPath.fromPathFile("CO_SM").flipPath();
+
+            SM_GRAB_CLOSE = PathPlannerPath.fromPathFile("SMGrabClose").flipPath();
         } else {
             TWO_STAGE = PathPlannerPath.fromPathFile("2Stage");
             THREE_STAGE = PathPlannerPath.fromPathFile("3Stage");
@@ -157,9 +167,12 @@ public class Paths {
             SOURCE_ON = PathPlannerPath.fromPathFile("ToSourceON");
             SOURCE_IN = PathPlannerPath.fromPathFile("ToSourceIN");
             SM_ON = PathPlannerPath.fromPathFile("SourceToON");
+            SM_ON3 = PathPlannerPath.fromPathFile("SourceToON3");
             SM_IN = PathPlannerPath.fromPathFile("SourceToIN");
-            IN_SM = PathPlannerPath.fromPathFile("test");
+            IN_SM = PathPlannerPath.fromPathFile("IN_SM");
             ON_SM = PathPlannerPath.fromPathFile("ON_SM");
+            IN_SM3 = PathPlannerPath.fromPathFile("IN_SM3");
+            ON_SM3 = PathPlannerPath.fromPathFile("ON_SM3");
             SOURCE_M = PathPlannerPath.fromPathFile("ToMiddleStage");
             STAGE_SM = PathPlannerPath.fromPathFile("ToFarMiddleStage");
 
@@ -172,6 +185,8 @@ public class Paths {
 
             SM_CO = PathPlannerPath.fromPathFile("SM_CO");
             CO_SM = PathPlannerPath.fromPathFile("CO_SM");
+
+            SM_GRAB_CLOSE = PathPlannerPath.fromPathFile("SMGrabClose");
         }
     }
 

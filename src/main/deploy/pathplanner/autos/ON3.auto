@@ -26,7 +26,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "IN_SM"
+            "pathName": "IN_SM3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SMGrabClose"
           }
         }
       ]

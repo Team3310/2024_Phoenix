@@ -15,6 +15,8 @@ import frc.robot.Commands.Auton.Center.ThreeStageLeftCounter;
 import frc.robot.Commands.Auton.Center.TwoStageLeft;
 import frc.robot.Commands.Auton.Middle.Stage.StageIN;
 import frc.robot.Commands.Auton.Middle.Stage.StageON;
+import frc.robot.Commands.Auton.Middle.Stage.StageThreeIN;
+import frc.robot.Commands.Auton.Middle.Stage.StageThreeON;
 import frc.robot.Commands.Auton.Middle.Stage.StageTwoON;
 import frc.robot.Commands.Auton.Middle.Stage.StageTwoIN;
 import frc.robot.Commands.Auton.Stage.FastStageFour;
@@ -45,7 +47,9 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         addOption(AutonomousMode.STAGE_IN)
         .addOption(AutonomousMode.STAGE_ON)
         .addOption(AutonomousMode.STAGE_TWO_IN)
-        .addOption(AutonomousMode.STAGE_TWO_ON);
+        .addOption(AutonomousMode.STAGE_TWO_ON)
+        .addOption(AutonomousMode.STAGE_THREE_IN)
+        .addOption(AutonomousMode.STAGE_THREE_ON);
     }
 
     public Command getCommand() {
@@ -69,8 +73,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         FAST_FOUR("fast four"),
         STAGE_ON("stage ON"),
         STAGE_IN("stage IN"),
-        STAGE_TWO_ON("stage two ON"),
-        STAGE_TWO_IN("stage two IN"),
+        STAGE_TWO_ON("stage two 1.ON->2.IN"),
+        STAGE_TWO_IN("stage two 1.IN->2.ON"),
+        STAGE_THREE_ON("stage three 1.ON->2.IN->"),
+        STAGE_THREE_IN("stage three 1.IN->2.ON->"),
         TEST("drive test"),
         ;
 
@@ -125,6 +131,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new StageTwoIN(RobotContainer.getInstance());
                 case TEST:
                     return new DriveTest(RobotContainer.getInstance());
+                case STAGE_THREE_IN:
+                    return new StageThreeIN(RobotContainer.getInstance());
+                case STAGE_THREE_ON:
+                    return new StageThreeON(RobotContainer.getInstance());
                 default:
                     return new OneAuton(RobotContainer.getInstance());
             }

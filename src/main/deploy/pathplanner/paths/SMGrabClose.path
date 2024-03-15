@@ -3,59 +3,48 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9114102672649795,
-        "y": 6.955098354641154
+        "x": 2.0489663771350335,
+        "y": 4.432084533684738
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.894815567408913,
-        "y": 6.9978551068213255
+        "x": 2.2594611570989516,
+        "y": 4.32449831281429
       },
       "isLocked": false,
-      "linkedName": "4StageEnd"
+      "linkedName": "SMGrabClose"
     },
     {
       "anchor": {
-        "x": 8.3053390038404,
-        "y": 7.098351746561043
+        "x": 2.7459379819044534,
+        "y": 4.137391841735251
       },
       "prevControl": {
-        "x": 7.336185954423189,
-        "y": 6.984333740747254
+        "x": 2.5588315108254145,
+        "y": 4.207556768389891
       },
       "nextControl": {
-        "x": 9.27449205325761,
-        "y": 7.2123697523748325
+        "x": 2.9330444529834923,
+        "y": 4.067226915080612
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.8567437134874274,
-        "y": 7.610701888070444
+        "x": 2.0255780682501534,
+        "y": 4.443778688127177
       },
       "prevControl": {
-        "x": 5.476815398075241,
-        "y": 7.197386616995457
+        "x": 2.2101934528655383,
+        "y": 4.3668556112041
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.9,
-      "rotationDegrees": 4.96,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.5,
-      "rotationDegrees": 4.96,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -66,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": -25.19999999999999,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "4Stage",
+  "folder": "MiddleNotePaths",
   "previewStartingState": {
-    "rotation": 27.35,
+    "rotation": -25.19999999999999,
     "velocity": 0
   },
   "useDefaultConstraints": true
