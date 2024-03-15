@@ -207,6 +207,9 @@ public class RobotContainer {
       //always want these offset buttons for comp
       addOffsetButtons();
 
+      SmartDashboard.putData("test drive train", new SetDriveMode(DriveMode.TEST));
+      SmartDashboard.putData("stop test drive train", new SetDriveMode(DriveMode.JOYSTICK));
+
       //only want these if you're testing things
       if(Constants.debug){
         addIntakeTestButtons();
@@ -217,9 +220,9 @@ public class RobotContainer {
         addElevatorTestButtons();
         addFlickerTestButtons();
 
-        SmartDashboard.putNumber("P", 1.0);
-        SmartDashboard.putNumber("I", 0);
-        SmartDashboard.putNumber("D", 0);
+        // SmartDashboard.putNumber("P", 1.0);
+        // SmartDashboard.putNumber("I", 0);
+        // SmartDashboard.putNumber("D", 0);
 
         SmartDashboard.putNumber("set hood degrees", 20.0);
 

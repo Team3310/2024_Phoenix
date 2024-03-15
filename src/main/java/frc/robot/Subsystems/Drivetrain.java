@@ -646,6 +646,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             applyRequest(()->new SwerveDriveBrake());
         }
     }
+
+    private void testDrive(){
+        applyRequest(()->driveFieldCentricNoDeadband
+            .withVelocityX(0.35)
+            .withVelocityY(0.0)
+            .withRotationalRate(0.0)
+        );
+    }
     
     //#endregion
 
@@ -810,6 +818,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         RESET_GYRO,
         // ODOMETRYTRACK,
         STRAFE2APRILTAG,
+        TEST
         ;
     }
 
@@ -931,6 +940,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             case AUTON:
                 autonDrive();
                 break;
+            case TEST:
+                testDrive();
         }
     }
 
