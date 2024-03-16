@@ -13,7 +13,8 @@ import frc.robot.Commands.Auton.Center.FourStageLeftCounter;
 import frc.robot.Commands.Auton.Center.ThreeStageLeft;
 import frc.robot.Commands.Auton.Center.ThreeStageLeftCounter;
 import frc.robot.Commands.Auton.Center.TwoStageLeft;
-import frc.robot.Commands.Auton.Middle.Counter.Anti3005;
+import frc.robot.Commands.Auton.Middle.Counter.Anti3005Inside;
+import frc.robot.Commands.Auton.Middle.Counter.Anti3005Outside;
 import frc.robot.Commands.Auton.Middle.Stage.StageThreeIN;
 import frc.robot.Commands.Auton.Middle.Stage.StageThreeMIN;
 import frc.robot.Commands.Auton.Middle.Stage.StageThreeMON;
@@ -55,7 +56,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.STAGE_THREE_ON)
         .addOption(AutonomousMode.STAGE_THREE_MIN)
         .addOption(AutonomousMode.STAGE_THREE_MON)
-        .addOption(AutonomousMode.ANTI_3005)
+        .addOption(AutonomousMode.ANTI_3005O)
+        .addOption(AutonomousMode.ANTI_3005I)
         .addOption(AutonomousMode.DRIVE_TEST)
         .addOption(AutonomousMode.GYRO_TEST)
         ;
@@ -91,8 +93,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         STAGE_THREE_MIN("stage three 1.IN->2.ON->3.CN"),
         DRIVE_TEST("drive test"),
         GYRO_TEST("gyro test"),
-        ANTI_3005("anti 3005"),
-
+        ANTI_3005O("anti 3005 1.outside->2.CN"),
+        ANTI_3005I("anti 3005 1.inside->2.CN"),
         ;
 
         private String name = "";
@@ -152,8 +154,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new StageThreeMON(RobotContainer.getInstance());
                 case STAGE_THREE_MIN:
                     return new StageThreeMIN(RobotContainer.getInstance());
-                case ANTI_3005:
-                    return new Anti3005(RobotContainer.getInstance());
+                case ANTI_3005O:
+                    return new Anti3005Outside(RobotContainer.getInstance());
+                case ANTI_3005I:
+                    return new Anti3005Inside(RobotContainer.getInstance());
                 case GYRO_TEST:
                     return new TestGyroInit(RobotContainer.getInstance());
                 case DRIVE_TEST:

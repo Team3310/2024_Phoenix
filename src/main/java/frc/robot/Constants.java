@@ -86,8 +86,8 @@ public class Constants {
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(1.0));
             kAutoAimOffset.put(new InterpolatingDouble(8.0), new InterpolatingDouble(1.0));
-            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(3.0));
-            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(3.0));
+            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(3.0+2.0));
+            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(3.0+2.0));
         }
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMap = TunerConstants.isCompbot ? kLiftAngleMapComp : kLiftAngleMapPractice;
@@ -157,7 +157,7 @@ public class Constants {
         public static final int CLIMBER_LEFT_ID = 60;
         public static final int CLIMBER_RIGHT_ID = 61;
 
-        public static final double CLIMBER_MAX_INCHES = 22.0-1.5;
+        public static final double CLIMBER_MAX_INCHES = 22.0-3.0;
         public static final double CLIMBER_MIN_INCHES = 0.0;
         public static final double CLIMBER_AUTO_ZERO_SPEED = -0.1;
         public static final double CLIMBER_AUTO_ZERO_MOTOR_CURRENT = 5.0;

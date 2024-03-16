@@ -29,9 +29,10 @@ public class TwoStage extends AutonCommandBase{
             new ParallelDeadlineGroup(
                 new SetLiftAngle(robotContainer.lift, 60.0)
                     .andThen(new WaitUntilCommand(()->robotContainer.lift.isFinished())), 
-                new SetLeftShooterRPM(robotContainer.shooter, 3000),
-                new SetRightShooterRPM(robotContainer.shooter, 2000)
+                new SetLeftShooterRPM(robotContainer.shooter, 3200),
+                new SetRightShooterRPM(robotContainer.shooter, 2200)
             ),
+            new WaitCommand(0.25),
             new ParallelDeadlineGroup(
                 new WaitCommand(0.2), 
                 new FeederShootCommandAuton(robotContainer.shooter)

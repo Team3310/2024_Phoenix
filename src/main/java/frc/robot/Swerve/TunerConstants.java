@@ -102,7 +102,7 @@ public class TunerConstants {
     private static final int kFrontLeftDriveMotorId = 0;
     private static final int kFrontLeftSteerMotorId = 4;
     private static final int kFrontLeftEncoderId = 0;
-    private static final double kFrontLeftEncoderOffset = isCompbot ? 0.158203125 : -0.1767578125;
+    private static final double kFrontLeftEncoderOffset = isCompbot ? 0.157470703125/*0.158203125*/ : -0.1767578125;
 
     private static final double kFrontLeftXPosInches = 12.125;
     private static final double kFrontLeftYPosInches = 12.125;
@@ -111,7 +111,7 @@ public class TunerConstants {
     private static final int kFrontRightDriveMotorId = 1;
     private static final int kFrontRightSteerMotorId = 5;
     private static final int kFrontRightEncoderId = 1;
-    private static final double kFrontRightEncoderOffset = isCompbot ?  0.0498046875 : -0.26806640625;
+    private static final double kFrontRightEncoderOffset = isCompbot ?   0.052734375/*0.0498046875*/ : -0.26806640625;
 
     private static final double kFrontRightXPosInches = 12.125;
     private static final double kFrontRightYPosInches = -12.125;
@@ -120,7 +120,7 @@ public class TunerConstants {
     private static final int kBackLeftDriveMotorId = 2;
     private static final int kBackLeftSteerMotorId = 6;
     private static final int kBackLeftEncoderId = 2;
-    private static final double kBackLeftEncoderOffset = isCompbot ? 0.294677734375 : 0.1513671875;
+    private static final double kBackLeftEncoderOffset = isCompbot ? 0.294921875/*0.294677734375*/ : 0.1513671875;
 
     private static final double kBackLeftXPosInches = -12.125;
     private static final double kBackLeftYPosInches = 12.125;
@@ -129,7 +129,7 @@ public class TunerConstants {
     private static final int kBackRightDriveMotorId = 3;
     private static final int kBackRightSteerMotorId = 7;
     private static final int kBackRightEncoderId = 3;
-    private static final double kBackRightEncoderOffset = isCompbot ?  -0.499267578125 : 0.100830078125;
+    private static final double kBackRightEncoderOffset = isCompbot ?  -0.49951171875/*-0.499267578125*/ : 0.100830078125;
 
     private static final double kBackRightXPosInches = -12.125;
     private static final double kBackRightYPosInches = -12.125;

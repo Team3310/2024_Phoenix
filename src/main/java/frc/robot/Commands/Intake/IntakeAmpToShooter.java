@@ -75,6 +75,7 @@ public class IntakeAmpToShooter extends Command {
         shooter.setKickerRPM(0.0);
         elevator.setPosition(0.0);
         drive.isTrackingNote = false;
+        flicker.setRPM(0.0);
         if(!interrupted){
             led.setSolid(new Color(243, 204, 20));
             led.setSolid(new Color(243, 204, 20));

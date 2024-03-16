@@ -59,6 +59,7 @@ import frc.robot.util.Choosers.SideChooser;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Choosers.SpotChooser;
 import frc.robot.util.Choosers.SpotChooser.SpotMode;
+import frc.robot.util.Interpolable.InterpolatingDouble;
 
 public class RobotContainer {
   private final CommandXboxController driverController = new CommandXboxController(0);
@@ -104,6 +105,8 @@ public class RobotContainer {
 
     configureBindings();
     DriverReadout.addChoosers(spotChooser, sideChooser, autonomousChooser);
+
+    SmartDashboard.putNumber("angle from 21", Constants.kLiftAngleMapComp.getInterpolated(new InterpolatingDouble(6.427/0.0254/12.0)).value);
   }
 
   //#region controller buttons
@@ -176,7 +179,7 @@ public class RobotContainer {
     operatorController.povDown().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
 
     // shooting
-    operatorController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
+    operatorController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(39.5);})); // platform
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
     operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3200); shooter.setRightMainRPM(1700); lift.setLiftAngle(42.0);})); // pass
@@ -215,6 +218,8 @@ public class RobotContainer {
     public void addTestButtons(){
       //always want these offset buttons for comp
       addOffsetButtons();
+
+      // SmartDashboard.putData("Amp To Shooter", new IntakeAmpToShooter());
 
       SmartDashboard.putData("test drive train", new SetDriveMode(DriveMode.TEST));
       SmartDashboard.putData("stop test drive train", new SetDriveMode(DriveMode.JOYSTICK));
@@ -271,7 +276,7 @@ public class RobotContainer {
       // SmartDashboard.putData("set amp +rpm", new SetFlickerRPM(flicker, 1000));
       // SmartDashboard.putData("set amp -rpm", new SetFlickerRPM(flicker,-1000));
       // SmartDashboard.putData("set amp 0", new SetFlickerRPM(flicker, 0));
-      SmartDashboard.putData("Amp To Shooter", new IntakeAmpToShooter());
+      
     }
 
     private void addFlickerTestButtons() {

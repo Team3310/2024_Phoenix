@@ -6,8 +6,8 @@ import frc.robot.Commands.Auton.Middle.Stage.Base.SMCO;
 import frc.robot.Commands.Auton.Middle.Stage.Base.SMIN;
 import frc.robot.Commands.Auton.Middle.Stage.Base.StageON;
 
-public class Anti3005 extends AutonCommandBase{
-    public Anti3005(RobotContainer robotContainer){
+public class Anti3005Outside extends AutonCommandBase{
+    public Anti3005Outside(RobotContainer robotContainer){
         super(robotContainer);
 
         this.addCommands(

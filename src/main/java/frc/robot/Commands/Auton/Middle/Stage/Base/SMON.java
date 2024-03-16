@@ -1,8 +1,12 @@
 package frc.robot.Commands.Auton.Middle.Stage.Base;
 
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
 import frc.robot.Commands.Auton.Paths;
+import frc.robot.Commands.Lift.SetLiftAngle;
+import frc.robot.Subsystems.Lift;
 
 public class SMON extends AutonCommandBase{
     public SMON(RobotContainer container){
@@ -10,7 +14,10 @@ public class SMON extends AutonCommandBase{
 
         this.addCommands(
             FollowToIntake(Paths.getInstance().SM_ON),
-            Follow(Paths.getInstance().ON_SM),
+            new ParallelDeadlineGroup(
+                Follow(Paths.getInstance().ON_SM),
+                new SetLiftAngle(Lift.getInstance(), Constants.LIFT_MIN_DEGREES)
+            ),
             AimAndShoot(robotContainer)
         );
     }
