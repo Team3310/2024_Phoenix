@@ -5,6 +5,8 @@ import com.pathplanner.lib.path.PathPoint;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.GeometryUtil;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class Paths {
@@ -78,6 +80,7 @@ public class Paths {
     }
 
     private Paths(SideMode side) {
+        SmartDashboard.putString("Alliance from DS", DriverStation.getAlliance().get().name());
         if (side == SideMode.RED) {
             TWO_STAGE = PathPlannerPath.fromPathFile("2Stage").flipPath();
             THREE_STAGE = PathPlannerPath.fromPathFile("3Stage").flipPath();

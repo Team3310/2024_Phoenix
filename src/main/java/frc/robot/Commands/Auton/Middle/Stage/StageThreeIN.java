@@ -3,6 +3,7 @@ package frc.robot.Commands.Auton.Middle.Stage;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
 import frc.robot.Commands.Auton.Paths;
+import frc.robot.Commands.Auton.Middle.Stage.Base.StageIN;
 
 public class StageThreeIN extends AutonCommandBase{
     public StageThreeIN(RobotContainer robotContainer){

@@ -1,4 +1,4 @@
-package frc.robot.Commands.Auton.Middle.Stage;
+package frc.robot.Commands.Auton.Middle.Stage.Base;
 
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;

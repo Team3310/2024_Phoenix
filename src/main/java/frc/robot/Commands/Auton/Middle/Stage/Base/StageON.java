@@ -1,4 +1,4 @@
-package frc.robot.Commands.Auton.Middle.Stage;
+package frc.robot.Commands.Auton.Middle.Stage.Base;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;

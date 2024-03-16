@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
 import frc.robot.Commands.Auton.Paths;
+import frc.robot.Commands.Auton.Middle.Stage.Base.StageON;
 import frc.robot.Commands.Shooter.SetLeftShooterRPM;
 import frc.robot.Commands.Shooter.SetRightShooterRPM;
 

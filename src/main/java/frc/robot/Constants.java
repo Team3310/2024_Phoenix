@@ -62,7 +62,7 @@ public class Constants {
         static {
             kLiftAngleMapComp.put(new InterpolatingDouble(3.0), new InterpolatingDouble(60.0));
             kLiftAngleMapComp.put(new InterpolatingDouble(4.7), new InterpolatingDouble(60.0));
-            kLiftAngleMapComp.put(new InterpolatingDouble(8.2), new InterpolatingDouble(42.5));
+            kLiftAngleMapComp.put(new InterpolatingDouble(8.2), new InterpolatingDouble(43.0));
             kLiftAngleMapComp.put(new InterpolatingDouble(12.0), new InterpolatingDouble(33.0));
             kLiftAngleMapComp.put(new InterpolatingDouble(16.0), new InterpolatingDouble(26.0));
             kLiftAngleMapComp.put(new InterpolatingDouble(20.0), new InterpolatingDouble(22.0));
@@ -94,10 +94,10 @@ public class Constants {
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
         static {
-            kRightShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(2500.0));
-            kRightShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(2500.0));
-            kRightShooterMap.put(new InterpolatingDouble(8.2), new InterpolatingDouble(2500.0));
-            kRightShooterMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(2500.0));
+            kRightShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(2700.0));
+            kRightShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(2700.0));
+            kRightShooterMap.put(new InterpolatingDouble(8.2), new InterpolatingDouble(2700.0));
+            kRightShooterMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(2700.0));
             kRightShooterMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(3000.0));
             kRightShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(3000.0));
             kRightShooterMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(3500.0));
@@ -106,9 +106,9 @@ public class Constants {
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLeftShooterMap = new InterpolatingTreeMap<>();
         static {
-            kLeftShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(3500.0));
-            kLeftShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(3500.0));
-            kLeftShooterMap.put(new InterpolatingDouble(8.2), new InterpolatingDouble(3500.0));
+            kLeftShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(3700.0));
+            kLeftShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(3700.0));
+            kLeftShooterMap.put(new InterpolatingDouble(8.2), new InterpolatingDouble(3700.0));
             kLeftShooterMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(3500.0));
             kLeftShooterMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(5000.0));
             kLeftShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(5000.0));
@@ -157,7 +157,7 @@ public class Constants {
         public static final int CLIMBER_LEFT_ID = 60;
         public static final int CLIMBER_RIGHT_ID = 61;
 
-        public static final double CLIMBER_MAX_INCHES = 22.0;
+        public static final double CLIMBER_MAX_INCHES = 22.0-1.5;
         public static final double CLIMBER_MIN_INCHES = 0.0;
         public static final double CLIMBER_AUTO_ZERO_SPEED = -0.1;
         public static final double CLIMBER_AUTO_ZERO_MOTOR_CURRENT = 5.0;

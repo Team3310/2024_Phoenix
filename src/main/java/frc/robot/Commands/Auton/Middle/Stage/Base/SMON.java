@@ -1,16 +1,14 @@
-package frc.robot.Commands.Auton.Middle.Stage;
+package frc.robot.Commands.Auton.Middle.Stage.Base;
 
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Auton.AutonCommandBase;
 import frc.robot.Commands.Auton.Paths;
-import frc.robot.Commands.Auton.Middle.Stage.Base.StageIN;
 
-public class StageTwoIN extends AutonCommandBase{
-    public StageTwoIN(RobotContainer robotContainer){
-        super(robotContainer);
+public class SMON extends AutonCommandBase{
+    public SMON(RobotContainer container){
+        super(container);
 
         this.addCommands(
-            new StageIN(robotContainer),
             FollowToIntake(Paths.getInstance().SM_ON),
             Follow(Paths.getInstance().ON_SM),
             AimAndShoot(robotContainer)
