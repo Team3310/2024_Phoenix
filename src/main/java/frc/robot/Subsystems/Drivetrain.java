@@ -21,6 +21,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PPLibTelemetry;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
@@ -845,6 +846,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
         // frontCamera.updateKalmanFilter();
+        frontCamera.updatePoseEstimatorWithVisionBotPose();
         odometryTargeting.update();
         
 
@@ -884,9 +886,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putNumber("getPose().getY()", getPose().getY());
             SmartDashboard.putNumber("odometryTargeting.getBotPosX()", odometryTargeting.getBotPosX());
             SmartDashboard.putNumber("odometryTargeting.getBotPosY()", odometryTargeting.getBotPosY());
+            SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
             SmartDashboard.putNumber("frontCamera.getBotPosX()", frontCamera.getBotPosX());
             SmartDashboard.putNumber("frontCamera.getBotPosY()", frontCamera.getBotPosY());
-            
+            SmartDashboard.putNumber("frontCamera.getAz()", frontCamera.getAz());
             SmartDashboard.putNumber("frontCamera.getDistance_XY_average()", (frontCamera.getDistance_XY_average() / 0.0254) / 12.0);
 
             SmartDashboard.putNumber("frontCamera.getDistanceToTargetInches()", frontCamera.getDistanceToTargetInches() / 12);
@@ -910,6 +913,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putNumber("Gyro Rate", getCurrentRobotChassisSpeeds().omegaRadiansPerSecond);     
         }
         SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
+
+        PPLibTelemetry.setCurrentPose(getPose());
+        // PPLibTelemetry.setTargetPose(limelight.getBotPosePose());
     }
 
     public void seedFieldRelativeWithOffset(Rotation2d offset) {

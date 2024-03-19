@@ -1,5 +1,8 @@
 package frc.robot.util.Camera;
 
+import com.pathplanner.lib.util.PPLibTelemetry;
+
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Swerve.TunerConstants;
+import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Interpolable.InterpolatingDouble;
 
@@ -200,15 +204,15 @@ public class Targeting {
                 botPos = limelight.getBotPose();
 
                 if (botPos.length < 3) {
-                    System.err.println(botPos.length);
-                    System.err.println("Targeting Error: " + limelightHostname);
-                    System.err.println("Targeting Error: updateBotPos failed, Limelight gave BAD data, zeroed botPos");
+                    // System.err.println(botPos.length);
+                    // System.err.println("Targeting Error: " + limelightHostname);
+                    // System.err.println("Targeting Error: updateBotPos failed, Limelight gave BAD data, zeroed botPos");
                     botPos = new double[] { 0, 0, 0, 0, 0, 0 };
                 }
 
             } catch (Exception e) {
-                System.err.println("Targeting Error: " + limelightHostname);
-                System.err.println("Targeting Error: updateBotPos failed to get Limelight Data");
+                // System.err.println("Targeting Error: " + limelightHostname);
+                // System.err.println("Targeting Error: updateBotPos failed to get Limelight Data");
                 botPos = new double[] { 0, 0, 0, 0, 0, 0 };
             }
         }
@@ -344,6 +348,9 @@ public class Targeting {
         if (isOdometry) {
             return; //No Kalman Filter updating with odometry!
         }
+
+        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight" + limelightHostname);
+
         SmartDashboard.putBoolean("LimelightHasTarget", limelight.hasTarget());
         if (limelight.hasTarget()){
             try {
@@ -354,8 +361,6 @@ public class Targeting {
             } catch (Exception e) {
                 return;
             }
-            
-            double limelightDelay = botPos[6];
 
             double[] targetpose_robotspace = limelight.getTable().getEntry("botpose_targetspace").getDoubleArray(new double[6]);
             double distanceToTarget = Math.hypot(targetpose_robotspace[0], targetpose_robotspace[1]);
@@ -368,9 +373,11 @@ public class Targeting {
             double ySpeed = ChassisSpeeds.vyMetersPerSecond;
             double translationalSpeed = Math.hypot(xSpeed, ySpeed);
 
-            if((rotationSpeed < KALMAN_ROTATION_MAX_RATE) && (translationalSpeed < KALMAN_MAX_SPEED) && (distanceToTarget < KALMAN_APRILTAG_MAX_RANGE)){
-                TunerConstants.DriveTrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp() - limelightDelay);
+            if((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && (distanceToTarget < KALMAN_APRILTAG_MAX_RANGE)){
+                TunerConstants.DriveTrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp());
                 SmartDashboard.putString("KALMAN", "Valid");
+                PPLibTelemetry.setTargetPose(botPose2d)
+                ;
             } else {
                 SmartDashboard.putString("KALMAN", "Invalid");
             }
@@ -380,6 +387,60 @@ public class Targeting {
             SmartDashboard.putNumber("translationSpeed", translationalSpeed);
         }
     }
+    
+    public void updatePoseEstimatorWithVisionBotPose() {
+        if(isOdometry){
+            return;
+        }
+
+        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight" + limelightHostname);
+
+        // invalid LL data
+        if (botPoseEstimate.pose.getX() == 0.0) {
+            return;
+        }
+
+        // distance from current pose to vision estimated pose
+        double poseDifference = TunerConstants.DriveTrain.getPose().getTranslation()
+                .getDistance(botPoseEstimate.pose.getTranslation());
+
+        ChassisSpeeds ChassisSpeeds = TunerConstants.DriveTrain.getCurrentRobotChassisSpeeds();
+        double rotationSpeed = ChassisSpeeds.omegaRadiansPerSecond;
+        double xSpeed = ChassisSpeeds.vxMetersPerSecond;
+        double ySpeed = ChassisSpeeds.vyMetersPerSecond;
+        double translationalSpeed = Math.hypot(xSpeed, ySpeed);
+        
+        if ((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && (botPoseEstimate.avgTagDist < KALMAN_APRILTAG_MAX_RANGE)) {
+            double xyStds;
+            double degStds;
+            // multiple targets detected
+            if (botPoseEstimate.tagCount >= 1) {
+                xyStds = 0.5;
+                degStds = 6;
+            }
+            // 1 target with large area and close to estimated pose
+            else if (botPoseEstimate.avgTagArea > 0.8 && poseDifference < 0.5) {
+                xyStds = 1.0;
+                degStds = 12;
+            }
+            // 1 target farther away and estimated pose is close
+            else if (botPoseEstimate.avgTagArea > 0.1 && poseDifference < 0.3) {
+                xyStds = 2.0;
+                degStds = 30;
+            }
+            // conditions don't match to add a vision measurement
+            else {
+                return;
+            }
+
+            TunerConstants.DriveTrain.setVisionMeasurementStdDevs(
+                    VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds)));
+            TunerConstants.DriveTrain.addVisionMeasurement(botPoseEstimate.pose,
+                    Timer.getFPGATimestamp());
+            PPLibTelemetry.setTargetPose(botPoseEstimate.pose);
+        }
+    }
+
 
     //#region Getters
     public double getAz() {

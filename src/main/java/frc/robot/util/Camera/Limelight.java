@@ -2,6 +2,8 @@ package frc.robot.util.Camera;
 
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -104,6 +106,11 @@ public final class Limelight {
 
     public double[] getBotPose(){
         return bp.getDoubleArray(new double[6]);
+    }
+
+    public Pose2d getBotPosePose(){
+        double[] pos = bp.getDoubleArray(new double[6]);
+        return new Pose2d(pos[0], pos[1], Rotation2d.fromDegrees(pos[5]));
     }
 
 
