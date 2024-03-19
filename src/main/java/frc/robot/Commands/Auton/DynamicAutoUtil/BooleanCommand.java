@@ -23,4 +23,23 @@ public class BooleanCommand extends SequentialCommandGroup{
             );
         }
     }
+
+    public BooleanCommand(Command command, boolean end, BooleanSupplier supplier, double waitTimeToEnd){
+        if(end){
+            this.addCommands(
+                new ParallelRaceGroup(
+                    command,
+                    new SequentialCommandGroup(
+                        new WaitUntilCommand(waitTimeToEnd),
+                        new WaitUntilCommand(supplier)
+                    )
+                )
+            );
+        }else{
+            this.addCommands(
+                new WaitUntilCommand(supplier),
+                command
+            );
+        }
+    }
 }

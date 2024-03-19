@@ -21,6 +21,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PPLibTelemetry;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
@@ -622,10 +624,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private void autonDrive(){
         ChassisSpeeds speeds = pathFollower.update();
 
-        if(isTrackingNote){
-            double offset = noteLimelight.getTargetHorizOffset();
-            double request = noteTrackController.calculate(offset, 0.005);
-            speeds.omegaRadiansPerSecond = request*Constants.MaxAngularRate;
+        if(isTrackingNote && noteLimelight.hasTarget()){
+            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
+            System.out.println("TRACKING!!!!");
+
+            double currentNoteTrackAngle = getBotAz_FieldRelative();
+            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, 0.0, 2 * Math.PI);
+            noteTrackController.setSetpoint(adjustAngle);
+            double pidRotationOutput = noteTrackController.calculate(getBotAz_FieldRelative(), 0.005);
+            applyRequest(()->driveRobotCentricNoDeadband
+                .withVelocityX(2.0)
+                .withVelocityY(0.0)
+                .withRotationalRate(pidRotationOutput*Constants.MaxSpeed)
+                .withDriveRequestType(DriveRequestType.Velocity)
+            );
+            return;
         }
 
         if (!pathDone()) {
@@ -909,7 +922,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putNumber("mVisionAlignAdjustment", mVisionAlignAdjustment);
             SmartDashboard.putNumber("Gyro Rate", getCurrentRobotChassisSpeeds().omegaRadiansPerSecond);     
         }
-        SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
+        // SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
+        PPLibTelemetry.setCurrentPose(getPose());
+
+        SmartDashboard.putBoolean("is tracking note", isTrackingNote);
     }
 
     public void seedFieldRelativeWithOffset(Rotation2d offset) {

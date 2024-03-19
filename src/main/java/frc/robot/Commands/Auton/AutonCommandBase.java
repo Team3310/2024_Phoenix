@@ -6,19 +6,24 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Commands.Auton.DynamicAutoUtil.BooleanCommand;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeAuton;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
+import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
+import frc.robot.Subsystems.Lift;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
@@ -63,21 +68,40 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path){
-        return new ParallelDeadlineGroup(Follow(path), new IntakeAuton());
+        return FollowToIntake(path, false);
+    }
+
+    protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path, boolean track){
+        return new ParallelDeadlineGroup(Follow(path), new IntakeAuton(track));
     }
 
     protected ParallelDeadlineGroup FollowToAmpIntake(PathPlannerPath path){
         return new ParallelDeadlineGroup(Follow(path), new IntakeAmp());
     }
 
-    protected SequentialCommandGroup AimAndShoot(RobotContainer container){
+    protected Command GoToShoot(RobotContainer container, PathPlannerPath path){
+        return 
+            new BooleanCommand(
+                new SequentialCommandGroup(
+                    new ParallelDeadlineGroup(
+                        Follow(path),
+                        new SetLiftAngle(Lift.getInstance(), Constants.LIFT_MIN_DEGREES)
+                    ),
+                    AimAndShoot(robotContainer)
+                ),
+                true, ()->!robotContainer.intake.hasNote(), 0.75
+            );
+    }
+
+    protected Command AimAndShoot(RobotContainer container){
         return new SequentialCommandGroup(
                 new ParallelDeadlineGroup(
                     new AimLiftWithOdometryAuton(),
                     new SetDriveMode(DriveMode.AIMATTARGET).andThen(new WaitUntilCommand(()->container.getDrivetrain().snapComplete()))
                 ),
                 new WaitCommand(0.1),
-                new FeederShootCommandAuton(container.shooter).withTimeout(0.2)
+                new FeederShootCommandAuton(container.shooter).withTimeout(0.2),
+                new InstantCommand(()->container.intake.setNoteIn(false))
             );
     }
 }

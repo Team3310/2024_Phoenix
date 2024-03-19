@@ -18,7 +18,16 @@
       "/SmartDashboard/increase RPM offset": "Command",
       "/SmartDashboard/increase lift offset": "Command",
       "/SmartDashboard/reset RPM offset": "Command",
-      "/SmartDashboard/reset lift offset": "Command"
+      "/SmartDashboard/reset lift offset": "Command",
+      "/SmartDashboard/stop test drive train": "Command",
+      "/SmartDashboard/test drive train": "Command"
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "open": true
+      }
     }
   },
   "NetworkTables Info": {

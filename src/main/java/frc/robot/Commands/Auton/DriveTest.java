@@ -1,6 +1,8 @@
 package frc.robot.Commands.Auton;
 
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.RobotContainer;
+import frc.robot.Commands.Intake.IntakeAuton;
 
 public class DriveTest extends AutonCommandBase{
     public DriveTest(RobotContainer robotContainer){
@@ -9,18 +11,10 @@ public class DriveTest extends AutonCommandBase{
         resetRobotPose(Paths.getInstance().DRIVE_TEST);
 
         this.addCommands(
-            Follow(Paths.getInstance().DRIVE_TEST),
-            Follow(Paths.getInstance().DRIVE_TEST_TWO),
-            Follow(Paths.getInstance().DRIVE_TEST),
-            Follow(Paths.getInstance().DRIVE_TEST_TWO),
-            Follow(Paths.getInstance().DRIVE_TEST),
-            Follow(Paths.getInstance().DRIVE_TEST_TWO),
-            Follow(Paths.getInstance().DRIVE_TEST),
-            Follow(Paths.getInstance().DRIVE_TEST_TWO),
-            Follow(Paths.getInstance().DRIVE_TEST),
-            Follow(Paths.getInstance().DRIVE_TEST_TWO),
-            Follow(Paths.getInstance().DRIVE_TEST),
-            Follow(Paths.getInstance().DRIVE_TEST_TWO)
+            new ParallelRaceGroup(
+                Follow(Paths.getInstance().DRIVE_TEST),
+                new IntakeAuton(true)
+            )
         );
     }
 }
