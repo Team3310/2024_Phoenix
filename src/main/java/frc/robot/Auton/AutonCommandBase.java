@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.DynamicAutoUtil.BooleanCommand;
+import frc.robot.Auton.DynamicAutoUtil.DoCommandsUntil;
+import frc.robot.Auton.DynamicAutoUtil.FollowPathUntilCommandWithDelay;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeAuton;
@@ -81,7 +83,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
 
     protected Command GoToShoot(RobotContainer container, PathPlannerPath path){
         return 
-            new BooleanCommand(
+            new DoCommandsUntil(
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
                         Follow(path),
@@ -89,14 +91,14 @@ public class AutonCommandBase extends SequentialCommandGroup {
                     ),
                     AimAndShoot(robotContainer)
                 ),
-                true, ()->!robotContainer.intake.hasNote(), 0.75
+                ()->!robotContainer.intake.hasNote(), 0.75
             );
     }
 
     protected Command AimAndShoot(RobotContainer container){
         return new SequentialCommandGroup(
                 new ParallelDeadlineGroup(
-                    new AimLiftWithOdometryAuton(),
+                    new AimLiftWithOdometryAuton().withTimeout(1.0),
                     new SetDriveMode(DriveMode.AIMATTARGET).andThen(new WaitUntilCommand(()->container.getDrivetrain().snapComplete()))
                 ),
                 new WaitCommand(0.1),

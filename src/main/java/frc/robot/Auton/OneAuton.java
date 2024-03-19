@@ -21,7 +21,7 @@ public class OneAuton extends AutonCommandBase{
         this.addCommands(
             new ParallelDeadlineGroup(
                 new SetLiftAngle(robotContainer.lift, 60.0)
-                    .andThen(new WaitUntilCommand(()->robotContainer.lift.isFinished())), 
+                    .andThen(new WaitUntilCommand(()->robotContainer.lift.isFinished()).withTimeout(1.0)), 
                 new SetLeftShooterRPM(robotContainer.shooter, 3200),
                 new SetRightShooterRPM(robotContainer.shooter, 2200)
             ),

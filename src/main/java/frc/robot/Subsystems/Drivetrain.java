@@ -923,7 +923,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putNumber("Gyro Rate", getCurrentRobotChassisSpeeds().omegaRadiansPerSecond);     
         }
         // SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
-        PPLibTelemetry.setCurrentPose(getPose());
+        // PPLibTelemetry.setCurrentPose(getPose());
 
         SmartDashboard.putBoolean("is tracking note", isTrackingNote);
     }

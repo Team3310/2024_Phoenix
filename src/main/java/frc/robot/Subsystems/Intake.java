@@ -145,6 +145,8 @@ public class Intake extends SubsystemBase {
             SmartDashboard.putNumber("Top Intake AMP", topIntake.getTorqueCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Bottom Intake AMP", bottomIntake.getTorqueCurrent().getValueAsDouble());
         }
+
+        SmartDashboard.putBoolean("has note", hasNote());
     }
 
     public void setNoteIn(boolean hasNote) {
