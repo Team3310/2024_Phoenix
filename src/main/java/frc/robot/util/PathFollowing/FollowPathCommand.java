@@ -144,7 +144,7 @@ public class FollowPathCommand{
     double currentVel =
         Math.hypot(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
 
-    PPLibTelemetry.setCurrentPose(currentPose);
+        PPLibTelemetry.setCurrentPose(currentPose);
     PathPlannerLogging.logCurrentPose(currentPose);
 
     if (controller.isHolonomic()) {

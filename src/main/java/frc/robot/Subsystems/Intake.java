@@ -29,6 +29,8 @@ public class Intake extends SubsystemBase {
     private final double kI = 0.012;
     private final double kD = 0.0;
 
+    private boolean hasNote = false;
+
     public static Intake getInstance() {
         if (instance == null) {
             instance = new Intake();
@@ -143,5 +145,15 @@ public class Intake extends SubsystemBase {
             SmartDashboard.putNumber("Top Intake AMP", topIntake.getTorqueCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Bottom Intake AMP", bottomIntake.getTorqueCurrent().getValueAsDouble());
         }
+
+        SmartDashboard.putBoolean("has note", hasNote());
+    }
+
+    public void setNoteIn(boolean hasNote) {
+        this.hasNote = hasNote; 
+    }
+
+    public boolean hasNote() {
+        return this.hasNote;
     }
 }
