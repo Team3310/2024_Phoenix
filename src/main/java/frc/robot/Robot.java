@@ -196,7 +196,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    TunerConstants.DriveTrain.getFrontTargeting().updatePoseEstimatorWithVisionBotPose();
+  }
 
   @Override
   public void teleopExit() {}
