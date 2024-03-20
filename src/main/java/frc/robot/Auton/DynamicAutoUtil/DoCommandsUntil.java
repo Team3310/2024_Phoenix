@@ -22,7 +22,7 @@ public class DoCommandsUntil extends SequentialCommandGroup{
         this.addCommands(
             new ParallelRaceGroup(
                 base,
-                new WaitUntilCommand(condition).andThen(new WaitCommand(delay))
+                new WaitCommand(delay).andThen(new WaitUntilCommand(condition))
             )
         );
     }

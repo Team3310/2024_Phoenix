@@ -1,5 +1,7 @@
 package frc.robot.Commands.Drive;
 
+import com.pathplanner.lib.util.GeometryUtil;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
@@ -11,8 +13,13 @@ public class WaitUntilAtXBoundary extends Command{
     private final Drivetrain drive;
 
     public WaitUntilAtXBoundary(double xBoundary, RobotContainer container){
-        this.xBoundary = xBoundary;
         this.drive = container.drivetrain;
+        
+        if(drive.getSideMode()==SideMode.RED){
+            this.xBoundary = GeometryUtil.flipFieldPosition(new Translation2d(xBoundary, xBoundary)).getX();
+        }else{
+            this.xBoundary = xBoundary;
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ package frc.robot.Commands.Shooter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Shooter;
 
 /** An example command that uses an example subsystem. */
@@ -43,6 +44,7 @@ public class FeederShootCommandAuton extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Intake.getInstance().setNoteIn(false);
     m_subsystem.setKickerOff();
   }
 

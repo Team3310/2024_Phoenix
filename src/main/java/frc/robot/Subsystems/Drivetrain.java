@@ -820,6 +820,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
         return false;
     }
+
+    public Targeting getFrontTargeting(){
+        return frontCamera;
+    }
     //#endregion auto stuff
 
     public enum DriveMode {
@@ -858,7 +862,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
         // frontCamera.updateKalmanFilter();
-        frontCamera.updatePoseEstimatorWithVisionBotPose();
         odometryTargeting.update();
         
 

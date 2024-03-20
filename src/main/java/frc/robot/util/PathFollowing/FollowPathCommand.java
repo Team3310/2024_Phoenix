@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.RobotContainer;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
+import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
 import java.util.*;
@@ -140,6 +141,9 @@ public class FollowPathCommand{
     }
 
     ChassisSpeeds targetSpeeds = controller.calculateRobotRelativeSpeeds(currentPose, targetState);
+
+    // TunerConstants.DriveTrain.seedFieldRelative(targetState.getTargetHolonomicPose());
+    // TunerConstants.DriveTrain.seedFieldRelativeWithOffset(targetState.getTargetHolonomicPose().getRotation());
 
     double currentVel =
         Math.hypot(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);

@@ -193,6 +193,7 @@ public class Robot extends TimedRobot {
     }
     // TunerConstants.DriveTrain.setDriveMode(DriveMode.JOYSTICK);
 //    TunerConstants.DriveTrain.trapQueen();
+    TunerConstants.DriveTrain.getFrontTargeting().updatePoseEstimatorWithVisionBotPose();
   }
 
   @Override

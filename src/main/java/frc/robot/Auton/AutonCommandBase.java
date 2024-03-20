@@ -7,30 +7,29 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.Auton.DynamicAutoUtil.BooleanCommand;
-import frc.robot.Auton.DynamicAutoUtil.DoCommandsUntil;
-import frc.robot.Auton.DynamicAutoUtil.FollowPathUntilCommandWithDelay;
 import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Drive.WaitUntilAtXBoundary;
 import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeAuton;
-import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
+import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class AutonCommandBase extends SequentialCommandGroup {
     protected RobotContainer robotContainer;
+    private final double NOTE_DECISION_LINE = 6.55;
 
     protected AutonCommandBase(RobotContainer robotContainer){
         this.robotContainer = robotContainer;
@@ -74,7 +73,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path, boolean track){
-        return new ParallelDeadlineGroup(Follow(path), new IntakeAuton(track));
+        return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Intake.getInstance().hasNote()).withTimeout(1.0)), new IntakeAuton(true));
     }
 
     protected ParallelDeadlineGroup FollowToAmpIntake(PathPlannerPath path){
@@ -82,8 +81,8 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected Command GoToShoot(RobotContainer container, PathPlannerPath path){
-        return 
-            new DoCommandsUntil(
+        return
+            new ParallelRaceGroup( 
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
                         Follow(path),
@@ -91,7 +90,10 @@ public class AutonCommandBase extends SequentialCommandGroup {
                     ),
                     AimAndShoot(robotContainer)
                 ),
-                ()->!robotContainer.intake.hasNote(), 0.75
+                new SequentialCommandGroup(
+                    new WaitCommand(1.0),
+                    new WaitUntilCommand(()->!container.intake.hasNote())
+                )
             );
     }
 
@@ -102,8 +104,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
                     new SetDriveMode(DriveMode.AIMATTARGET).andThen(new WaitUntilCommand(()->container.getDrivetrain().snapComplete()))
                 ),
                 new WaitCommand(0.1),
-                new FeederShootCommandAuton(container.shooter).withTimeout(0.2),
-                new InstantCommand(()->container.intake.setNoteIn(false))
+                new FeederShootCommandAuton(container.shooter).withTimeout(0.2)
             );
     }
 }
