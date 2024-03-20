@@ -24,15 +24,19 @@ public class Targeting {
     // X, Y, Z (Inches)
     private static final double[] blueSpeaker =     { -0.2000000, 5.5478680, 2.0432395 };
     private static final double[] blueAmp =         { 14.7007580, 8.2042000, 0.8891270 };
-    private static final double[] blueTrap1 =       { 4.6413420, 4.4983400, 1.6414750 };
-    private static final double[] blueTrap2 =       { 4.6413420, 3.7132260, 1.6414750 };
-    private static final double[] blueTrap3 =       { 5.3207920, 4.1051480, 1.6414750 };
-    private static final double[] redSpeaker =      { 16.700000, 5.5478680, 2.0432395 };
-    private static final double[] redAmp =          { 1.8415000, 8.2042000, 0.8891270 };
+    private static final double[] blueTrap1 =       {  4.6413420, 4.4983400, 1.6414750 };
+    private static final double[] blueTrap2 =       {  4.6413420, 3.7132260, 1.6414750 };
+    private static final double[] blueTrap3 =       {  5.3207920, 4.1051480, 1.6414750 };
+    private static final double[] redSpeaker =      { 16.700000,  5.5478680, 2.0432395 };
+    private static final double[] redAmp =          {  1.8415000, 8.2042000, 0.8891270 };
     private static final double[] redTrap1 =        { 11.9047260, 3.7132260, 1.6414750 };
     private static final double[] redTrap2 =        { 11.9047260, 4.4983400, 1.6414750 };
     private static final double[] redTrap3 =        { 11.2201960, 4.1051480, 1.6414750 };
-    private static final double[] centerOfField =   { 5.3207920, 4.1067482, 0.0000000 };
+    private static final double[] centerOfField =   {  5.3207920, 4.1067482, 0.0000000 };
+    private static final double[] blueCenterPass =  {  3.8973780, 7.0000000, 0.0000000 }; 
+    private static final double[] redCenterPass =   {  6.7442060, 7.0000000, 0.0000000 };
+    private static final double[] blueCornerPass =  {  1.0000000, 7.0000000, 0.0000000 };
+    private static final double[] redCornerPass =   { 15.5000000, 7.0000000, 0.0000000 };
 
     private static final double blueSpeakerID = 7;
     private static final double blueAmpID = 6;
@@ -61,7 +65,8 @@ public class Targeting {
         BLUESPEAKER(blueSpeaker, blueSpeakerID), BLUAMP(blueAmp, blueAmpID), BLUTRAP1(blueTrap1, blueTrap1ID),
         BLUTRAP2(blueTrap2, blueTrap2ID), BLUTRAP3(blueTrap3, blueTrap3ID), REDSPEAKER(redSpeaker, redSpeakerID),
         REDAMP(redAmp, redAmpID), REDTRAP1(redTrap1, redTrap1ID), REDTRAP2(redTrap2, redTrap2ID),
-        REDTRAP3(redTrap3, redTrap3ID), NONE(centerOfField, nullID);
+        REDTRAP3(redTrap3, redTrap3ID), NONE(centerOfField, nullID), BLUECENTERPASS(blueCenterPass, nullID),
+        REDCENTERPASS(redCenterPass, nullID), BLUECORNERPASS(blueCornerPass, nullID), REDCORNERPPASS(redCornerPass, nullID);
 
         private double[] pos;
         private double id;
