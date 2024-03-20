@@ -66,7 +66,7 @@ public class Targeting {
         BLUTRAP2(blueTrap2, blueTrap2ID), BLUTRAP3(blueTrap3, blueTrap3ID), REDSPEAKER(redSpeaker, redSpeakerID),
         REDAMP(redAmp, redAmpID), REDTRAP1(redTrap1, redTrap1ID), REDTRAP2(redTrap2, redTrap2ID),
         REDTRAP3(redTrap3, redTrap3ID), NONE(centerOfField, nullID), BLUECENTERPASS(blueCenterPass, nullID),
-        REDCENTERPASS(redCenterPass, nullID), BLUECORNERPASS(blueCornerPass, nullID), REDCORNERPPASS(redCornerPass, nullID);
+        REDCENTERPASS(redCenterPass, nullID), BLUECORNERPASS(blueCornerPass, nullID), REDCORNERPASS(redCornerPass, nullID);
 
         private double[] pos;
         private double id;
@@ -83,6 +83,12 @@ public class Targeting {
         public double getID() {
             return id;
         }
+    }
+
+    public enum TargetSimple{
+        SPEAKER,
+        CORNERPASS,
+        CENTERPASS;
     }
 
     //#region Constructors
