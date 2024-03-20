@@ -414,7 +414,7 @@ public class Targeting {
             double xyStds;
             double degStds;
             // multiple targets detected
-            if (botPoseEstimate.tagCount >= 1) {
+            if (botPoseEstimate.tagCount >= 2) {
                 xyStds = 0.5;
                 degStds = 6;
             }
