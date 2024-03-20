@@ -623,10 +623,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private void autonDrive(){
         ChassisSpeeds speeds = pathFollower.update();
 
-        if(isTrackingNote){
-            double offset = noteLimelight.getTargetHorizOffset();
-            double request = noteTrackController.calculate(offset, 0.005);
-            speeds.omegaRadiansPerSecond = request*Constants.MaxAngularRate;
+        if(isTrackingNote && noteLimelight.hasTarget()){
+            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
+            // System.out.println("TRACKING!!!!");
+
+            double currentNoteTrackAngle = getBotAz_FieldRelative();
+            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, 0.0, 2 * Math.PI);
+            noteTrackController.setSetpoint(adjustAngle);
+            double pidRotationOutput = noteTrackController.calculate(getBotAz_FieldRelative(), 0.005);
+            applyRequest(()->driveRobotCentricNoDeadband
+                .withVelocityX(2.0)
+                .withVelocityY(0.0)
+                .withRotationalRate(pidRotationOutput*Constants.MaxSpeed)
+                .withDriveRequestType(DriveRequestType.Velocity)
+            );
+            return;
         }
 
         if (!pathDone()) {
@@ -811,10 +822,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
         }
         return false;
-    }
-
-    public Targeting getFrontTargeting(){
-        return frontCamera;
     }
     //#endregion auto stuff
 
