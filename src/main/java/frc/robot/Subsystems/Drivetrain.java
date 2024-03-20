@@ -45,6 +45,7 @@ import frc.robot.util.Camera.Limelight;
 import frc.robot.util.Camera.LimelightHelpers;
 import frc.robot.util.Camera.Targeting;
 import frc.robot.util.Camera.Targeting.Target;
+import frc.robot.util.Camera.Targeting.TargetSimple;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Control.PidConstants;
 import frc.robot.util.Control.PidController;
@@ -155,7 +156,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         driveFieldCentricFacingAngle.HeadingController.setPID(10.0, 0, 0);
         driveFieldCentricFacingAngle.ForwardReference = ForwardReference.RedAlliance;
 
-        Targeting.setTarget(Target.REDSPEAKER);
+        Targeting.setTargetSimple(TargetSimple.SPEAKER);
 
         snapPIDController = new ProfiledPIDController(Constants.SnapConstants.kP, Constants.SnapConstants.kI,
                 Constants.SnapConstants.kD, Constants.SnapConstants.kThetaControllerConstraints);
@@ -264,6 +265,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         } else if (mode == DriveMode.AIM_AT_NOTE) {
              isTrackingNote = false;
         } else if (mode == DriveMode.AIMATTARGET) {
+            Targeting.setTargetSimple(Targeting.getTargetSimple());
+
             // Get JSON Dump from Limelight-front
             LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
 
@@ -287,10 +290,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 }
             }
             else {
+                distance_XY_Average = odometryTargeting.getDistance_XY_average();
+                aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                 odosnap = true;
                 drivetrain_state = "ODO SNAP";
                 SmartDashboard.putNumber("snapcommand", Math.toDegrees(odometryTargeting.getAz() + Math.PI));
-                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI));
+                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) + aimOffset);
             }
         }
 
@@ -464,7 +469,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public boolean justChanged = false;
     public boolean lockedOn = false;
     public int timeout_counter = 0;
-
     public void aimAtTarget() {
         // Get JSON Dump from Limelight-front
         LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
@@ -555,6 +559,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void aimAtTargetAuton() {
+        Targeting.setTargetSimple(Targeting.getTargetSimple());
         if(isSnapping){
             maybeStopSnap(false);
 
@@ -839,35 +844,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void periodic() {
-        // if (mControlMode != DriveMode.AUTON && mControlMode != DriveMode.AIMATTARGET_AUTON) {
-        //     odometryTargeting.update();
-        //     frontCamera.update();
-
-        //     //#region Odometry reSeeds with Limelight BotPos periodically
-        //     if (periodicCounter == 100) {
-        //         odometryBotPosUpdaterMethodFlag = true;
-        //     }
-        //     periodicCounter++;
-        //     if (odometryBotPosUpdater()) {
-        //         periodicCounter = 0;
-        //         odometryBotPosUpdaterMethodFlag = false;
-        //     }
-        //     //#endregion 
-
-        // }
         LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
         odometryTargeting.update();
-
-        // frontCamera.updateKalmanFilter();
-        // frontCamera.updatePoseEstimatorWithVisionBotPose();
         
-        
-
-        if (sideMode != RobotContainer.getInstance().getSideChooser().getSelected()) {
-            sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
-            Targeting.setTarget(sideMode == SideMode.BLUE ? Target.BLUESPEAKER : Target.REDSPEAKER);
-        }
+        // if (sideMode != RobotContainer.getInstance().getSideChooser().getSelected()) {
+        //     sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
+        //     Targeting.setTarget(sideMode == SideMode.BLUE ? Target.BLUESPEAKER : Target.REDSPEAKER);
+        // }
 
         SmartDashboard.putNumber("odo x", getPose().getX());
         SmartDashboard.putNumber("odo y", getPose().getY());

@@ -88,7 +88,7 @@ public class Targeting {
     public enum TargetSimple{
         SPEAKER,
         CORNERPASS,
-        CENTERPASS;
+        CENTERPASS, NONE;
     }
 
     //#region Constructors
@@ -113,15 +113,57 @@ public class Targeting {
     private static double[] targetPos = centerOfField;
     private static double targetID = nullID;
     private static Target target = Target.NONE;
+    private static TargetSimple targetSimple = TargetSimple.SPEAKER;
 
     public static void setTarget(Target toTarget) {
         target = toTarget;
         targetPos = target.getPos();
         targetID = target.getID();
     }
+
+    public static void setTargetSimple(TargetSimple toTargetSimple) {
+        targetSimple = toTargetSimple;
+        if(TunerConstants.DriveTrain.getSideMode() == SideMode.BLUE){
+            switch (targetSimple){
+                case SPEAKER:
+                    target = target.BLUESPEAKER;
+                    break;
+                case CENTERPASS:
+                    target = target.BLUECENTERPASS;
+                    break;
+                case CORNERPASS:
+                    target = target.BLUECORNERPASS;
+                    break;
+                case NONE:
+                    target = target.NONE;
+                    break;
+            }
+        } else {
+            switch (targetSimple) {
+                case SPEAKER:
+                    target = target.REDSPEAKER;
+                    break;
+                case CENTERPASS:
+                    target = target.REDCENTERPASS;
+                    break;
+                case CORNERPASS:
+                    target = target.REDCORNERPASS;
+                    break;
+                case NONE:
+                    target = target.NONE;
+                    break;
+            }
+        }
+        setTarget(target);
+    }
+
     //#region Static Getters
     public static Target getTarget() {
         return target;
+    }
+
+    public static TargetSimple getTargetSimple() {
+        return targetSimple;
     }
 
     public static double getTargetID() {

@@ -23,6 +23,7 @@ import frc.robot.Commands.Climber.SetClimberSpeed;
 import frc.robot.Commands.Climber.SetClimberUpDown;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Drive.SetDriveOrientation;
+import frc.robot.Commands.Drive.SetTarget;
 import frc.robot.Commands.Elevator.ElevatorAutoZero;
 import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
@@ -53,6 +54,8 @@ import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.Telemetry;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.DriverReadout;
+import frc.robot.util.Camera.Targeting;
+import frc.robot.util.Camera.Targeting.TargetSimple;
 import frc.robot.util.Choosers.AutonomousChooser;
 import frc.robot.util.Choosers.AutonomousChooser.AutonomousMode;
 import frc.robot.util.Choosers.SideChooser;
@@ -121,6 +124,12 @@ public class RobotContainer {
     driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.x().onTrue(new ShooterOff(shooter));
     driverController.b().onTrue(new ShooterOn(shooter));
+    
+    //Adding target swapping controls for testing -JB
+    driverController.povLeft().onTrue(new SetTarget(TargetSimple.CENTERPASS));
+    driverController.povRight().onTrue(new SetTarget(TargetSimple.CORNERPASS));
+    driverController.povUp().onTrue(new SetTarget(TargetSimple.SPEAKER));
+    
     // driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(30.0);})); // fender
     // driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5500); shooter.setRightMainRPM(3500); lift.setLiftAngle(19.0);})); // far
     // driverController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(60.0);})); // fender
