@@ -436,7 +436,7 @@ public class Targeting {
             TunerConstants.DriveTrain.setVisionMeasurementStdDevs(
                     VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds)));
             TunerConstants.DriveTrain.addVisionMeasurement(botPoseEstimate.pose,
-                    Timer.getFPGATimestamp());
+                    Timer.getFPGATimestamp() - botPoseEstimate.latency / 1000.0);
             PPLibTelemetry.setTargetPose(botPoseEstimate.pose);
         }
     }

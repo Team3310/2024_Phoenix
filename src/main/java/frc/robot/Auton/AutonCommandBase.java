@@ -73,7 +73,11 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path, boolean track){
+<<<<<<< HEAD
         return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Intake.getInstance().hasNote()).withTimeout(1.0)), new IntakeAuton(true));
+=======
+        return new ParallelDeadlineGroup(Follow(path), new IntakeAuton(true));
+>>>>>>> ba48db452971eee8c7a99423e8bacdd71152c8d2
     }
 
     protected ParallelDeadlineGroup FollowToAmpIntake(PathPlannerPath path){
