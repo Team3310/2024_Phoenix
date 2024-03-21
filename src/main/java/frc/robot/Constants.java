@@ -82,6 +82,18 @@ public class Constants {
             kLiftAngleMapPractice.put(new InterpolatingDouble(28.0), new InterpolatingDouble(19.5));
         }
 
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kPassLiftAngleMapComp = new InterpolatingTreeMap<>();
+        static{
+            kPassLiftAngleMapComp.put(new InterpolatingDouble(1.0), new InterpolatingDouble(42.0));
+            kPassLiftAngleMapComp.put(new InterpolatingDouble(60.0), new InterpolatingDouble(42.0));
+        }
+
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kPassLiftAngleMapPractice = new InterpolatingTreeMap<>();
+        static{
+            kPassLiftAngleMapPractice.put(new InterpolatingDouble(1.0), new InterpolatingDouble(42.0));
+            kPassLiftAngleMapPractice.put(new InterpolatingDouble(60.0), new InterpolatingDouble(42.0));
+        }
+
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kAutoAimOffset = new InterpolatingTreeMap<>();
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(1.0));
@@ -91,6 +103,7 @@ public class Constants {
         }
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMap = TunerConstants.isCompbot ? kLiftAngleMapComp : kLiftAngleMapPractice;
+        public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kPassLiftAngleMap = TunerConstants.isCompbot ? kPassLiftAngleMapComp : kPassLiftAngleMapPractice;
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
         static {
@@ -115,6 +128,7 @@ public class Constants {
             kLeftShooterMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(5500.0));
             kLeftShooterMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(5500.0));
         }
+
 
         public static final double FENDER_SHOT_ANGLE = 60.0;
     //#endregion    
