@@ -33,6 +33,7 @@ public class ClimberAutoZero extends Command {
 		encoderCountLeft = 0;
 		testRight = false;
 		testLeft = false;
+		climber.setZeroing(true);
 		climber.setSpeed(speedLeft, speedRight);
 		System.out.println("speedLeft = " + speedLeft + ", speedRight = " + speedRight);
 	}
@@ -95,6 +96,7 @@ public class ClimberAutoZero extends Command {
 	public void end(boolean interrupted) {
 		System.out.println("Climber zero set");
 		climber.setSpeed(0, 0);
+		climber.setZeroing(false);
 		climber.setClimberZero(Constants.CLIMBER_MIN_INCHES);
 		climber.setPosition(Constants.CLIMBER_MIN_INCHES);
 	}

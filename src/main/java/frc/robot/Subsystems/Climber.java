@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -13,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Swerve.TunerConstants;
-import frc.robot.util.Camera.Targeting;
 
 public class Climber extends SubsystemBase {
     private static Climber instance;
@@ -25,6 +25,17 @@ public class Climber extends SubsystemBase {
 
     private MotionMagicDutyCycle control = new MotionMagicDutyCycle(0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);
+
+    public enum ClimbControlMode{
+        MANUAL, MOTION_MAGIC
+    }
+
+    private ClimbControlMode controlModeLeft = ClimbControlMode.MANUAL;
+    private ClimbControlMode controlModeRight = ClimbControlMode.MANUAL;
+    private boolean isZeroing = false;
+
+    private double manualRightSpeed = 0;
+    private double manualLeftSpeed = 0;
 
     // private SimpleDifferentialMechanism mechanism = new
     // SimpleDifferentialMechanism(climberMaster, climberSlave, true);
@@ -79,16 +90,74 @@ public class Climber extends SubsystemBase {
         // climberSlave.setControl(new Follower(climberMaster.getDeviceID(), true));
     }
 
+    public void setControlModeLeft(ClimbControlMode controlMode){
+        this.controlModeLeft = controlMode;
+    }
+
+    public ClimbControlMode getControlModeLeft(){
+        return controlModeLeft;
+    }
+
+    public void setControlModeRight(ClimbControlMode controlMode){
+        this.controlModeRight = controlMode;
+    }
+
+    public ClimbControlMode getControlModeRight(){
+        return controlModeRight;
+    }
+
+    public void setZeroing(boolean zeroing) {
+        isZeroing = zeroing;
+    }
+
     public void setSpeed(double leftSpeed, double rightSpeed) {
         climberRight.setControl(speedControl.withOutput(rightSpeed));
         climberLeft.setControl(speedControl.withOutput(leftSpeed));
     }
 
+    public void setLeftSpeed(double speed) {
+        if(!isZeroing) {
+            manualLeftSpeed = speed;
+
+            controlModeLeft = ClimbControlMode.MANUAL;
+            if (getLeftPositionInches() < Constants.CLIMBER_MIN_INCHES && speed < 0.0) {
+                setHoldLeftClimber();;
+            } else if (getLeftPositionInches() > Constants.CLIMBER_MAX_INCHES && speed > 0.0) {
+                setHoldLeftClimber();;
+            } else {
+                climberLeft.setControl(speedControl.withOutput(speed));
+            }
+        }
+    }
+
+    public void setRightSpeed(double speed) {
+        if(!isZeroing) {
+            manualRightSpeed = speed;
+
+            controlModeRight = ClimbControlMode.MANUAL;
+            if (getRightPositionInches() < Constants.CLIMBER_MIN_INCHES && speed < 0.0) {
+                setHoldRightClimber();
+            } else if (getRightPositionInches() > Constants.CLIMBER_MAX_INCHES && speed > 0.0) {
+                setHoldRightClimber();
+            } else {
+                climberRight.setControl(speedControl.withOutput(speed));
+            }
+        }
+    }
+
     public void setPosition(double inches) {
-        // mechanism.setControl()
-        climberRight.setControl(control.withPosition(getInchesToRotations(inches)));
+        setLeftPositionInches(inches);
+        setRightPositionInches(inches);
+    }
+
+    public void setLeftPositionInches(double inches) {
+        controlModeLeft = ClimbControlMode.MOTION_MAGIC;
         climberLeft.setControl(control.withPosition(getInchesToRotations(inches)));
-        // climberSlave.setControl(control.withPosition(getInchesToRotations(inches)));
+    }
+
+    public void setRightPositionInches(double inches) {
+        controlModeRight = ClimbControlMode.MOTION_MAGIC;
+        climberRight.setControl(control.withPosition(getInchesToRotations(inches)));
     }
 
     public void setClimberZero(double inches) {
@@ -102,8 +171,7 @@ public class Climber extends SubsystemBase {
         } else if (inches < Constants.CLIMBER_MIN_INCHES) {
             inches = Constants.CLIMBER_MIN_INCHES;
         }
-        SmartDashboard.putNumber("Commanded Rotations",
-                inches * Constants.CLIMBER_GEAR_RATIO / (Math.PI * Constants.CLIMBER_PULLEY_DIAMETER));
+        // SmartDashboard.putNumber("Commanded Rotations", inches * Constants.CLIMBER_GEAR_RATIO / (Math.PI * Constants.CLIMBER_PULLEY_DIAMETER));
         return inches * Constants.CLIMBER_GEAR_RATIO / (Math.PI * Constants.CLIMBER_PULLEY_DIAMETER);
     }
 
@@ -127,6 +195,20 @@ public class Climber extends SubsystemBase {
         return climberLeft.getTorqueCurrent().getValueAsDouble();
     }
 
+    public synchronized void setHoldLeftClimber(){
+        if(!isZeroing) {
+            controlModeLeft = ClimbControlMode.MOTION_MAGIC;
+            setLeftPositionInches(getLeftPositionInches());
+        }
+    }
+
+    public synchronized void setHoldRightClimber(){
+        if(!isZeroing) {
+            controlModeRight = ClimbControlMode.MOTION_MAGIC;
+            setRightPositionInches(getRightPositionInches());
+        }
+    }
+
     public boolean isChainDetected() {
         return chainSensor.get();
     }
@@ -136,6 +218,24 @@ public class Climber extends SubsystemBase {
         if (Constants.debug) {
             SmartDashboard.putNumber("Climber Left Inches", getLeftPositionInches());
             SmartDashboard.putNumber("Climber Right Inches", getRightPositionInches());
+        }
+
+        if(!isZeroing) {
+            if (controlModeLeft == ClimbControlMode.MANUAL) {
+                if (getLeftPositionInches() < Constants.CLIMBER_MIN_INCHES && manualLeftSpeed < 0.0) {
+                    setHoldLeftClimber();
+                } else if (getLeftPositionInches() > Constants.CLIMBER_MAX_INCHES && manualLeftSpeed > 0.0) {
+                    setHoldLeftClimber();
+                }
+            }
+
+            if (controlModeRight == ClimbControlMode.MANUAL) {
+               if (getRightPositionInches() < Constants.CLIMBER_MIN_INCHES && manualRightSpeed < 0.0) {
+                    setHoldRightClimber();
+                } else if (getRightPositionInches() > Constants.CLIMBER_MAX_INCHES && manualRightSpeed > 0.0) {
+                    setHoldRightClimber();
+                }
+            }
         }
     }
 }

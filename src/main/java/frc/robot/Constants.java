@@ -175,6 +175,8 @@ public class Constants {
         public static final double CLIMBER_MIN_INCHES = 0.0;
         public static final double CLIMBER_AUTO_ZERO_SPEED = -0.1;
         public static final double CLIMBER_AUTO_ZERO_MOTOR_CURRENT = 5.0;
+
+        public static final double CLIMBER_MIN_PERCENT_BUS = 0.1;
    //#endregion
 
     //drivetrain

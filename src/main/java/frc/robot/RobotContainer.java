@@ -4,30 +4,22 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.path.PathPlannerPath;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Commands.Climber.ClimbControlJoysticks;
 import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.ClimberPrepNoAngle;
-import frc.robot.Commands.Climber.SetClimberInches;
-import frc.robot.Commands.Climber.SetClimberSpeed;
 import frc.robot.Commands.Climber.SetClimberUpDown;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Drive.SetDriveOrientation;
 import frc.robot.Commands.Drive.SetTarget;
-import frc.robot.Commands.Elevator.ElevatorAutoZero;
 import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
-import frc.robot.Commands.Flicker.SetFlickerRPM;
 import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeAmpToShooter;
 import frc.robot.Commands.Intake.IntakeAuton;
@@ -37,8 +29,6 @@ import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.SetLiftOff;
 import frc.robot.Commands.Shooter.ScoreOffCommand;
 import frc.robot.Commands.Shooter.ScoreOnCommand;
-import frc.robot.Commands.Shooter.SetLeftShooterRPM;
-import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Commands.Shooter.ShooterOff;
 import frc.robot.Commands.Shooter.ShooterOn;
 import frc.robot.Subsystems.Climber;
@@ -193,6 +183,8 @@ public class RobotContainer {
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
     operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3200); shooter.setRightMainRPM(1700); lift.setLiftAngle(42.0);})); // pass
   
+    CommandScheduler.getInstance().setDefaultCommand(climber, new ClimbControlJoysticks(climber, operatorController));
+
     //intake
     // operatorController.a().onTrue(new IntakeUnder());
     // operatorController.y().onTrue(new IntakeUp());
