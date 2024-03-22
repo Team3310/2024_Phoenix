@@ -33,6 +33,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -1159,6 +1160,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         if(Constants.debug){
             SmartDashboard.putNumber("PID Output:", request/Constants.MaxAngularRate);
             SmartDashboard.putNumber("PID Error:", offset);  
+        }
+    }
+
+    public void setSideMode(Alliance side) {
+        switch (side) {
+            case Red:
+                this.sideMode = SideMode.RED;
+                break;
+            case Blue:
+                this.sideMode = SideMode.BLUE;
+            default:
+                break;
         }
     }
 

@@ -1,5 +1,7 @@
 package frc.robot.util.Choosers;
 
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 public class SideChooser extends ChooserBase<SideChooser.SideMode>{
 
     public SideChooser() {
@@ -25,6 +27,17 @@ public class SideChooser extends ChooserBase<SideChooser.SideMode>{
         @Override
         public String toString(){
             return side;
+        }
+
+        public Alliance getAlliance() {
+            switch (this) {
+                case RED:
+                    return Alliance.Red;
+                case BLUE:
+                    return Alliance.Blue;
+                default:
+                    return Alliance.Red;
+            }
         }
     }
 }

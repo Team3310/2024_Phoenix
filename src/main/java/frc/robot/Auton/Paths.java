@@ -3,7 +3,9 @@ package frc.robot.Auton;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class Paths {
@@ -66,19 +68,25 @@ public class Paths {
 
     public final PathPlannerPath SM_GRAB_CLOSE;
 
+    private static Alliance side = Alliance.Red;
+
 
     private static Paths instance;
 
     public static Paths getInstance() {
         if (instance == null) {
-            instance = new Paths(SideMode.RED);
+            instance = new Paths(SideMode.RED.getAlliance());
         }
         return instance;
     }
 
-    private Paths(SideMode side) {
+    private Paths(Alliance passedSide) {
         // SmartDashboard.putString("Alliance from DS", DriverStation.getAlliance().get().name());
-        if (side == SideMode.RED) {
+        SmartDashboard.putString("passed side", passedSide.name());
+        if (passedSide == Alliance.Red) {
+            side = Alliance.Red;
+            TunerConstants.DriveTrain.setSideMode(side);
+
             TWO_STAGE = PathPlannerPath.fromPathFile("2Stage").flipPath();
             THREE_STAGE = PathPlannerPath.fromPathFile("3Stage").flipPath();
             FOUR_STAGE = PathPlannerPath.fromPathFile("4Stage").flipPath();
@@ -138,6 +146,9 @@ public class Paths {
 
             SM_GRAB_CLOSE = PathPlannerPath.fromPathFile("SMGrabClose").flipPath();
         } else {
+            side = Alliance.Blue;
+            TunerConstants.DriveTrain.setSideMode(side);
+            
             TWO_STAGE = PathPlannerPath.fromPathFile("2Stage");
             THREE_STAGE = PathPlannerPath.fromPathFile("3Stage");
             FOUR_STAGE = PathPlannerPath.fromPathFile("4Stage");
@@ -199,7 +210,13 @@ public class Paths {
         }
     }
 
-    public void flip(SideMode sideMode) {
-        instance = new Paths(sideMode);
+    public void flip() {
+        SmartDashboard.putString("ds side", DriverStation.getAlliance().get().name());
+        SmartDashboard.putString("last side", side.name());
+
+        if(DriverStation.getAlliance().get() != side){
+            instance = new Paths(DriverStation.getAlliance().get());
+            SmartDashboard.putString("set side", side.name());
+        }
     }
 }

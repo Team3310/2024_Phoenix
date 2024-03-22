@@ -27,7 +27,6 @@ import frc.robot.util.Choosers.SideChooser.SideMode;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private final boolean useLimelight = false;
-  private SideMode lastSideMode = SideMode.RED;
 
   private RobotContainer m_robotContainer = new RobotContainer();
 
@@ -161,10 +160,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    if(m_robotContainer.drivetrain.getSideMode()!=lastSideMode){
-      Paths.getInstance().flip(m_robotContainer.drivetrain.getSideMode());
-      lastSideMode = m_robotContainer.drivetrain.getSideMode();
-    }
+    Paths.getInstance().flip();
   }
 
   @Override
