@@ -97,7 +97,9 @@ public class Intake extends SubsystemBase {
             return;
         }
 
-        rpm*=1.50;
+        if(!TunerConstants.isCompbot){
+            rpm*=1.50;
+        }
 
         topIntake.setControl(topIntakeControl.withVelocity(getRPMtoMotorRPS(rpm)));
     }
