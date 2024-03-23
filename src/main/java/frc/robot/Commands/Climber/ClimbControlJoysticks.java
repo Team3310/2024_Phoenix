@@ -17,7 +17,7 @@ public class ClimbControlJoysticks extends Command {
 
     @Override
     public void execute() {
-        double speed = controller.getLeftY();
+        double speed = -controller.getLeftY();
 
         if (Math.abs(speed) > Constants.CLIMBER_MIN_PERCENT_BUS) {
             climber.setLeftSpeed(speed);
