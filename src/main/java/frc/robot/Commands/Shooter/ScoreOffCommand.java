@@ -29,8 +29,14 @@ public class ScoreOffCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setKickerOff();
-    flicker.setRPM(0);
+    if(shooter.hasNote()){
+      shooter.setKickerOff();
+      shooter.setNoteIn(false);
+    }
+    if(flicker.hasNote()){
+      flicker.setRPM(0);
+      flicker.setNoteIn(false);
+    }
     led.setOff();
   }
 

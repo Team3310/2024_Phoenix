@@ -15,7 +15,9 @@ import frc.robot.Auton.Center.ThreeStageLeftCounter;
 import frc.robot.Auton.Center.TwoStageLeft;
 import frc.robot.Auton.Middle.Counter.Anti3005Inside;
 import frc.robot.Auton.Middle.Counter.Anti3005Outside;
+import frc.robot.Auton.Middle.Stage.StageThreeCNMiddle;
 import frc.robot.Auton.Middle.Stage.StageThreeIN;
+import frc.robot.Auton.Middle.Stage.StageThreeINMiddle;
 import frc.robot.Auton.Middle.Stage.StageThreeMIN;
 import frc.robot.Auton.Middle.Stage.StageThreeMON;
 import frc.robot.Auton.Middle.Stage.StageThreeON;
@@ -60,6 +62,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.ANTI_3005I)
         .addOption(AutonomousMode.DRIVE_TEST)
         .addOption(AutonomousMode.GYRO_TEST)
+        .addOption(AutonomousMode.STAGE_THREE_MMCN)
+        .addOption(AutonomousMode.STAGE_THREE_MMIN)
         ;
     }
 
@@ -95,6 +99,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         GYRO_TEST("gyro test"),
         ANTI_3005O("anti 3005 1.outside->2.CN"),
         ANTI_3005I("anti 3005 1.inside->2.CN"),
+        STAGE_THREE_MMCN("stage three 1.ON->2.CN_MM->3.IN_MM"),
+        STAGE_THREE_MMIN("stage three 1.ON->2.IN_MM->3.CN_MM"),
         ;
 
         private String name = "";
@@ -154,6 +160,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new StageThreeMON(RobotContainer.getInstance());
                 case STAGE_THREE_MIN:
                     return new StageThreeMIN(RobotContainer.getInstance());
+                case STAGE_THREE_MMCN:
+                    return new StageThreeCNMiddle(RobotContainer.getInstance());
+                case STAGE_THREE_MMIN:
+                    return new StageThreeINMiddle(RobotContainer.getInstance());
                 case ANTI_3005O:
                     return new Anti3005Outside(RobotContainer.getInstance());
                 case ANTI_3005I:
