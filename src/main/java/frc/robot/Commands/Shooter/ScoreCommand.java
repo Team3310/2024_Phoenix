@@ -65,5 +65,11 @@ public class ScoreCommand extends Command {
     // shooter.setKickerOff();
     // flicker.setRPM(0);
     // led.setOff();
+    if (shooter.hasNote()) {
+      shooter.setNoteIn(false);
+    }
+    if (flicker.hasNote()) {
+      flicker.setNoteIn(false);
+    }
   }
 }

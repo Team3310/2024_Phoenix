@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -15,15 +14,14 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Drive.SetDriveMode;
-import frc.robot.Commands.Drive.WaitUntilAtXBoundary;
 import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
-import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.Lift;
+import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
@@ -73,7 +71,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path, boolean track){
-        return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Intake.getInstance().hasNote()).withTimeout(1.0)), new IntakeShooter(true));
+        return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Shooter.getInstance().hasNote()).withTimeout(1.0)), new IntakeShooter(true));
     }
 
     protected ParallelDeadlineGroup FollowToAmpIntake(PathPlannerPath path){
@@ -92,7 +90,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
                 ),
                 new SequentialCommandGroup(
                     new WaitCommand(1.0),
-                    new WaitUntilCommand(()->!container.intake.hasNote())
+                    new WaitUntilCommand(()->!container.shooter.hasNote())
                 )
             );
     }

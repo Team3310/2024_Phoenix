@@ -70,7 +70,7 @@ public class IntakeShooter extends Command {
         if(!interrupted){
             led.setSolid(new Color(243, 204, 20));
             led.setSolid(new Color(243, 204, 20));
-            intake.setNoteIn(true);
+            shooter.setNoteIn(true);
         }
     }
 }

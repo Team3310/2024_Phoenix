@@ -79,6 +79,8 @@ public class IntakeAmpToShooter extends Command {
         if(!interrupted){
             led.setSolid(new Color(243, 204, 20));
             led.setSolid(new Color(243, 204, 20));
+            flicker.setNoteIn(true);
+            shooter.setNoteIn(false);
         }
     }
 }

@@ -47,6 +47,7 @@ public class IntakeAmp extends Command{
         if(!interrupted){
             led.setSolid(new Color(0, 0, 255));
             led.setSolid(new Color(0, 0, 255));
+            flicker.setNoteIn(true);
         }
     }
 }

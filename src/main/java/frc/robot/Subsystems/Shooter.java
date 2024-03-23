@@ -35,6 +35,8 @@ public class Shooter extends SubsystemBase {
 
     private double offset = 0.0;
 
+    private boolean hasNote = false;
+
     public static Shooter getInstance() {
         if (instance == null) {
             instance = new Shooter();
@@ -187,6 +189,14 @@ public class Shooter extends SubsystemBase {
         offset = 0.0;
     }
 
+    public void setNoteIn(boolean hasNote) {
+        this.hasNote = hasNote; 
+    }
+
+    public boolean hasNote() {
+        return this.hasNote;
+    }
+
     @Override
     public void periodic() {
         if (Constants.debug) {
@@ -197,5 +207,6 @@ public class Shooter extends SubsystemBase {
         }
 
         SmartDashboard.putNumber("Shooter RPM Offset", offset);
+        SmartDashboard.putBoolean("Shooter has note", hasNote());
     }
 }

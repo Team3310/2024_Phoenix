@@ -23,6 +23,8 @@ public class Flicker extends SubsystemBase {
     private final double kP = 1;
     private final double kI = 0.01;
 
+    private boolean hasNote = false;
+
     public static Flicker getInstance() {
         if (instance == null) {
             instance = new Flicker();
@@ -65,6 +67,14 @@ public class Flicker extends SubsystemBase {
     public boolean isNoteLoaded() {
         return sensor.get();
     }
+    
+    public void setNoteIn(boolean hasNote) {
+        this.hasNote = hasNote; 
+    }
+
+    public boolean hasNote() {
+        return this.hasNote;
+    }
 
     @Override
     public void periodic() {
@@ -72,5 +82,7 @@ public class Flicker extends SubsystemBase {
             SmartDashboard.putBoolean("is note in amp", isNoteLoaded());
             SmartDashboard.putNumber("Flicker RPM", motor.getVelocity().getValueAsDouble());
         }
+
+        SmartDashboard.putBoolean("Amp has note", hasNote());
     }
 }
