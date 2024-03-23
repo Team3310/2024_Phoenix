@@ -44,6 +44,7 @@ import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
 import frc.robot.util.Camera.Limelight;
 import frc.robot.util.Camera.LimelightHelpers;
+import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
 import frc.robot.util.Camera.Targeting;
 import frc.robot.util.Camera.Targeting.Target;
 import frc.robot.util.Camera.Targeting.TargetSimple;
@@ -181,7 +182,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // Torque current limits are applied in SwerveModule with kSlipCurrent.
 
         ClosedLoopRampsConfigs rampConfigs = new ClosedLoopRampsConfigs();
-        rampConfigs.TorqueClosedLoopRampPeriod = TunerConstants.kTorqueClosedLoopRampPeriod;
+        rampConfigs.VoltageClosedLoopRampPeriod = TunerConstants.kVelocityClosedLoopRampPeriod;
         for (int i = 0; i < this.Modules.length; i++) {
             StatusCode response = this.Modules[i].getDriveMotor().getConfigurator().apply(rampConfigs);
             if (!response.isOK()) {
@@ -269,18 +270,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             Targeting.setTargetSimple(Targeting.getTargetSimple());
 
             // Get JSON Dump from Limelight-front
-            LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
+            // LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
 
             // Go through limelight JSON dump, and look for Target ID
             // If ID found, save TX value to offset for targeting.
             pidVisionUpdateCounter = VISON_COUNTER_MAX + 1;
             boolean canSeeTarget = false;
             double offset = 0;
-            double distance_XY_Average = frontCamera.getDistance_XY_average();
-            double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-            for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
-                if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
-                    offset = -(Math.toRadians(aprilTagResults.tx+aimOffset));
+            double distance_XY_Average = odometryTargeting.getDistance_XY_average();
+            // double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+            double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+
+            PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
+            for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
+                if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
+                    offset = -(Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
                     canSeeTarget = true;
                 }
             }
@@ -292,7 +296,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
             else {
                 distance_XY_Average = odometryTargeting.getDistance_XY_average();
-                aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+                // aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+                aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                 odosnap = true;
                 drivetrain_state = "ODO SNAP";
                 SmartDashboard.putNumber("snapcommand", Math.toDegrees(odometryTargeting.getAz() + Math.PI));
@@ -480,10 +485,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // If ID found, save TX value to offset for targeting.
         double offset = 0;
         double distance_XY_Average = frontCamera.getDistance_XY_average();
-        double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-        for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
-            if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
-                offset = (Math.toRadians(aprilTagResults.tx + aimOffset));
+//        double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+        double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+        
+        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
+        for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
+            if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
+                offset = (Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
                 canSeeTarget = true;
             }
         }
@@ -817,10 +825,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public boolean canSeeTargetTag(){
-        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
-
-        for (var aprilTagResults : llresults.targetingResults.targets_Fiducials) {
-            if (aprilTagResults.fiducialID == Targeting.getTargetID()) {
+        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
+        for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
+            if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
                 return true;
             }
         }
@@ -890,6 +897,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putNumber("frontCamera.getBotPosY()", frontCamera.getBotPosY());
             SmartDashboard.putNumber("frontCamera.getAz()", frontCamera.getAz());
             SmartDashboard.putNumber("frontCamera.getDistance_XY_average()", (frontCamera.getDistance_XY_average() / 0.0254) / 12.0);
+            SmartDashboard.putNumber("odometry.getDistance_XY_average()", (odometryTargeting.getDistance_XY_average() / 0.0254) / 12.0);
 
             SmartDashboard.putNumber("frontCamera.getDistanceToTargetInches()", frontCamera.getDistanceToTargetInches() / 12);
 
