@@ -55,6 +55,10 @@ public class Paths {
     public final PathPlannerPath IN_SM3;
     public final PathPlannerPath SOURCE_M;
     public final PathPlannerPath STAGE_SM;
+    public final PathPlannerPath IN_MM;
+    public final PathPlannerPath CN_MM;
+    public final PathPlannerPath MM_IN;
+    public final PathPlannerPath MM_CN;
 
     public final PathPlannerPath AMP_IN;
     public final PathPlannerPath AMP_ON;
@@ -133,6 +137,10 @@ public class Paths {
             ON_SM3 = PathPlannerPath.fromPathFile("ON_SM3").flipPath();
             SOURCE_M = PathPlannerPath.fromPathFile("ToMiddleStage").flipPath();
             STAGE_SM = PathPlannerPath.fromPathFile("ToFarMiddleStage").flipPath();
+            IN_MM = PathPlannerPath.fromPathFile("IN_MM").flipPath();
+            CN_MM = PathPlannerPath.fromPathFile("CN_MM").flipPath();
+            MM_IN = PathPlannerPath.fromPathFile("MM_IN").flipPath();
+            MM_CN = PathPlannerPath.fromPathFile("MM_CN").flipPath();
 
             AMP_IN = PathPlannerPath.fromPathFile("AmpToIN").flipPath();
             AMP_ON = PathPlannerPath.fromPathFile("AmpToON").flipPath();
@@ -195,6 +203,10 @@ public class Paths {
             ON_SM3 = PathPlannerPath.fromPathFile("ON_SM3");
             SOURCE_M = PathPlannerPath.fromPathFile("ToMiddleStage");
             STAGE_SM = PathPlannerPath.fromPathFile("ToFarMiddleStage");
+            IN_MM = PathPlannerPath.fromPathFile("IN_MM");
+            CN_MM = PathPlannerPath.fromPathFile("CN_MM");
+            MM_IN = PathPlannerPath.fromPathFile("MM_IN");
+            MM_CN = PathPlannerPath.fromPathFile("MM_CN");
 
             AMP_IN = PathPlannerPath.fromPathFile("AmpToIN");
             AMP_ON = PathPlannerPath.fromPathFile("AmpToON");

@@ -25,7 +25,7 @@ public class DriverReadout {
         }else{
             SmartDashboard.putData("Autonomous Mode", container.getAutonomousChooser());
             // SmartDashboard.putData("Side", container.getSideChooser());
-            SmartDashboard.putData("Spot", container.getSpotChooser());
+            // SmartDashboard.putData("Spot", container.getSpotChooser());
         }                   
     }
 
