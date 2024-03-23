@@ -44,7 +44,7 @@ public class TunerConstants {
     public static final double kSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
 
     // This is set on the modules in Drivetrain (units are in seconds, 0 == off)
-    public static final double kTorqueClosedLoopRampPeriod = 0.05;
+    public static final double kVelocityClosedLoopRampPeriod = 0.05;
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot

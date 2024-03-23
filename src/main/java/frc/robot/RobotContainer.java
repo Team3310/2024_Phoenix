@@ -23,6 +23,7 @@ import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeAmpThenToShooter;
 import frc.robot.Commands.Intake.IntakeAmpToShooter;
 import frc.robot.Commands.Intake.IntakeEject;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.SetLiftOff;
@@ -104,14 +105,17 @@ public class RobotContainer {
   public void configureDriverController(){
     // intake
     // driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
-    driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
-    driverController.leftTrigger(0.5).onTrue(new SetDriveOrientation(DriveOrientation.ROBOT_CENTRIC)).onFalse(new SetDriveOrientation(DriveOrientation.FIELD_CENTRIC));
+    // driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
+    driverController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
+    driverController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
+    // driverController.leftTrigger(0.5).onTrue(new SetDriveOrientation(DriveOrientation.ROBOT_CENTRIC)).onFalse(new SetDriveOrientation(DriveOrientation.FIELD_CENTRIC));
 
     // shooting 
     driverController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker)).onFalse(new ScoreOffCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
     driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.x().onTrue(new ShooterOff(shooter));
     driverController.b().onTrue(new ShooterOn(shooter));
+    driverController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
     
     //Adding target swapping controls for testing -JB
     driverController.povLeft().onTrue(new SetTarget(TargetSimple.CENTERPASS));

@@ -448,7 +448,7 @@ public class Targeting {
         }
 
         PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight" + limelightHostname);
-
+       
         // invalid LL data
         if (botPoseEstimate.pose.getX() == 0.0) {
             return;
@@ -464,7 +464,10 @@ public class Targeting {
         double ySpeed = ChassisSpeeds.vyMetersPerSecond;
         double translationalSpeed = Math.hypot(xSpeed, ySpeed);
         
-        if ((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && (botPoseEstimate.avgTagDist < KALMAN_APRILTAG_MAX_RANGE)) {
+        if ((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && 
+            (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && 
+            (botPoseEstimate.avgTagDist < KALMAN_APRILTAG_MAX_RANGE || botPoseEstimate.tagCount > 2)
+        ) {
             double xyStds;
             double degStds;
             // multiple targets detected

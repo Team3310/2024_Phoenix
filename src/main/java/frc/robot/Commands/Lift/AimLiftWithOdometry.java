@@ -37,11 +37,14 @@ public class AimLiftWithOdometry extends Command{
     public void execute(){ 
         TargetSimple targetSimple = Targeting.getTargetSimple();
         if(targetSimple == TargetSimple.SPEAKER){
+            lift.setLiftAngle(drive.getOdoTargeting().getEl());
+            shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
+            shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
             if (drive.canSeeTargetTag()) {
                 // drive.getLimelightTargeting().update();
-                lift.setLiftAngle(drive.getLimelightTargeting().getEl());
-                shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
-                shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
+                // lift.setLiftAngle(drive.getLimelightTargeting().getEl());
+                // shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
+                // shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
 
                 // if(drive.snapComplete() && lift.isFinished()){
                     led.setSolid(new Color(0,255,0));
