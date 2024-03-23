@@ -73,6 +73,11 @@ public class Intake extends SubsystemBase {
             frontIntake.setControl(new DutyCycleOut(0.0));
             return;
         }
+
+        if(TunerConstants.isCompbot){
+            rpm *= 2.0/3.0;
+        }
+
         frontIntake.setControl(frontIntakeControl.withVelocity(getRPMtoMotorRPS(rpm)));
     }
 
@@ -86,6 +91,11 @@ public class Intake extends SubsystemBase {
             bottomIntake.setControl(new DutyCycleOut(0.0));
             return;
         }
+
+        if(TunerConstants.isCompbot){
+            rpm *= 2.0/3.0;
+        }
+
         bottomIntake.setControl(bottomIntakeControl.withVelocity(getRPMtoMotorRPS(rpm)));
     }
 

@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 8.2,
-        "y": 0.72
+        "y": 0.52
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.145333446222447,
-        "y": 0.7057477492732758
+        "y": 0.5057477492732758
       },
       "isLocked": false,
       "linkedName": "OutSourceNote"

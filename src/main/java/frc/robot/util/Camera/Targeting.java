@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
 import frc.robot.util.Choosers.SideChooser.SideMode;
@@ -443,7 +444,7 @@ public class Targeting {
     }
     
     public void updatePoseEstimatorWithVisionBotPose() {
-        if(isOdometry){
+        if(isOdometry || TunerConstants.DriveTrain.getDriveMode()==DriveMode.AUTON){
             return;
         }
 
