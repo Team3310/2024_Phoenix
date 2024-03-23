@@ -9,7 +9,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.Paths;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Lift.SetLiftAngle;
@@ -40,7 +40,7 @@ public class TwoStage extends AutonCommandBase{
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().TWO_STAGE).andThen(new WaitCommand(0.25)), 
                 new SequentialCommandGroup(
-                    new IntakeAuton(),
+                    new IntakeShooter(),
                     new WaitCommand(0.1),
                     new AimLiftWithOdometry()
                 )

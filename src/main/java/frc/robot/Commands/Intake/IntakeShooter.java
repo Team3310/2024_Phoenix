@@ -2,17 +2,16 @@ package frc.robot.Commands.Intake;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.LED;
+import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.TunerConstants;
 
-public class IntakeAuton extends Command {
+public class IntakeShooter extends Command {
     private Intake intake;
     private Shooter shooter;
     private Lift lift;
@@ -21,11 +20,11 @@ public class IntakeAuton extends Command {
     private LED led;
     private boolean trackNote;
 
-    public IntakeAuton(){
+    public IntakeShooter(){
         this(false);
     } 
 
-    public IntakeAuton(boolean trackNote){
+    public IntakeShooter(boolean trackNote){
         this.intake = Intake.getInstance();
         this.shooter = Shooter.getInstance();
         this.lift = Lift.getInstance();

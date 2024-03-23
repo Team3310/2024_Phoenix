@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.Paths;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftFromPathEnd;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Lift.SetLiftAngle;
@@ -31,7 +31,7 @@ public class ThreeStageLeft extends AutonCommandBase{
                 Follow(Paths.getInstance().THREE_STAGE_LEFT), 
                 new SequentialCommandGroup(
                     new WaitCommand(0.75),
-                    new IntakeAuton(false)
+                    new IntakeShooter(false)
                 )
             ),
             new ParallelRaceGroup(

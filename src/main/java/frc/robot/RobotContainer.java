@@ -22,7 +22,7 @@ import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
 import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeAmpToShooter;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Intake.IntakeEject;
 import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
@@ -160,7 +160,7 @@ public class RobotContainer {
 
   public void configureOperatorController(){
     // intake
-    operatorController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new StopAllIntakes());
+    operatorController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
     operatorController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
     operatorController.rightStick().onTrue(new IntakeEject()).onFalse(new StopAllIntakes());
 

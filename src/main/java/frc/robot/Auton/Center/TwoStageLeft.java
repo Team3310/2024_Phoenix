@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.Paths;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
 import frc.robot.Commands.Shooter.ShooterOn;
@@ -29,7 +29,7 @@ public class TwoStageLeft extends AutonCommandBase{
             new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.125),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().TWO_STAGE_LEFT_GRAB),
-                new IntakeAuton(false)
+                new IntakeShooter(false)
             ),
             new ParallelRaceGroup(
                 new AimLiftWithOdometryAuton(),

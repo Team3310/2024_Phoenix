@@ -9,7 +9,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.Paths;
 import frc.robot.Commands.Drive.SetDriveMode;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
@@ -23,7 +23,7 @@ public class FourAmp extends AutonCommandBase{
             new ThreeAmp(robotContainer),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().FOUR_AMP).andThen(new WaitCommand(0.5)),
-                new IntakeAuton()
+                new IntakeShooter()
             ),
             new ParallelRaceGroup(
                 new AimLiftWithOdometryAuton(),

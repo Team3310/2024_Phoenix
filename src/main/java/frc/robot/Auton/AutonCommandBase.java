@@ -17,7 +17,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Drive.WaitUntilAtXBoundary;
 import frc.robot.Commands.Intake.IntakeAmp;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Lift.SetLiftAngle;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
@@ -73,7 +73,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path, boolean track){
-        return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Intake.getInstance().hasNote()).withTimeout(1.0)), new IntakeAuton(true));
+        return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Intake.getInstance().hasNote()).withTimeout(1.0)), new IntakeShooter(true));
     }
 
     protected ParallelDeadlineGroup FollowToAmpIntake(PathPlannerPath path){

@@ -6,7 +6,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.Paths;
 import frc.robot.Commands.Drive.AimRobot;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftFromPathEnd;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
@@ -20,7 +20,7 @@ public class FourStageMiddle extends AutonCommandBase{
             new ThreeStageMiddle(robotContainer),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().FOUR_STAGE_MIDDLE),
-                new IntakeAuton()
+                new IntakeShooter()
             ),
             new ParallelDeadlineGroup(
                 new AimRobot().andThen(new WaitCommand(0.25)),

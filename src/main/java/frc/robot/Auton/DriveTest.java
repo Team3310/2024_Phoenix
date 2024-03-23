@@ -2,7 +2,7 @@ package frc.robot.Auton;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.RobotContainer;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 
 public class DriveTest extends AutonCommandBase{
     public DriveTest(RobotContainer robotContainer){
@@ -13,7 +13,7 @@ public class DriveTest extends AutonCommandBase{
         this.addCommands(
             new ParallelRaceGroup(
                 Follow(Paths.getInstance().DRIVE_TEST),
-                new IntakeAuton(true)
+                new IntakeShooter(true)
             )
         );
     }

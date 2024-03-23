@@ -15,7 +15,7 @@ import frc.robot.Auton.DynamicAutoUtil.DynamicPathCommand;
 import frc.robot.Auton.DynamicAutoUtil.DynamicAutonGenerator.CompositionType;
 import frc.robot.Auton.DynamicAutoUtil.DynamicPathCommand.DecisionPoint;
 import frc.robot.Commands.Intake.IntakeAmp;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 public class DynamicStageMiddle extends AutonCommandBase{
     private boolean changedPath = false;
 
@@ -29,10 +29,10 @@ public class DynamicStageMiddle extends AutonCommandBase{
                 DecisionPoint.LIMELIGHT.setEndPoint(0.65)
             ).setSecondStop(DecisionPoint.NULL), 
             new SequentialCommandGroup(
-                new IntakeAuton()
+                new IntakeShooter()
             ),
             new SequentialCommandGroup(
-                new IntakeAuton()
+                new IntakeShooter()
             ),
             CompositionType.PARALLEL_DEADLINE
         );

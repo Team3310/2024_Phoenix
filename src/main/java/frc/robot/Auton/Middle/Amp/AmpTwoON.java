@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.Paths;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
 
@@ -17,7 +17,7 @@ public class AmpTwoON extends AutonCommandBase{
             // Follow(Paths.getInstance().AS_AM),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().AMP_ON),
-                new IntakeAuton()
+                new IntakeShooter()
             ),
             // Follow(Paths.getInstance().AM_AS),
             new AimLiftWithOdometryAuton(),

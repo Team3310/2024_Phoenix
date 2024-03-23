@@ -14,7 +14,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.Paths;
 import frc.robot.Commands.Intake.FullIntakeGo;
-import frc.robot.Commands.Intake.IntakeAuton;
+import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftFromPathEnd;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
@@ -43,7 +43,7 @@ public class FastStageFour extends AutonCommandBase{
             new FeederShootCommandAuton(Shooter.getInstance()).withTimeout(0.2),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().THREE_FAST),
-                new IntakeAuton()
+                new IntakeShooter()
             ),
             new ParallelRaceGroup(
                 new AimLiftWithOdometryAuton(),
@@ -55,7 +55,7 @@ public class FastStageFour extends AutonCommandBase{
             new FeederShootCommandAuton(Shooter.getInstance()).withTimeout(0.2),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().FOUR_FAST),
-                new IntakeAuton()
+                new IntakeShooter()
             ),
             new ParallelRaceGroup(
                 new AimLiftWithOdometryAuton(),
@@ -67,7 +67,7 @@ public class FastStageFour extends AutonCommandBase{
             new FeederShootCommandAuton(Shooter.getInstance()).withTimeout(0.2),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().FAST_END),
-                new IntakeAuton()
+                new IntakeShooter()
             ),
             new ParallelRaceGroup(
                 new AimLiftWithOdometryAuton(),
