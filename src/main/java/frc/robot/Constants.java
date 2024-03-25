@@ -74,14 +74,16 @@ public class Constants {
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMapPractice = new InterpolatingTreeMap<>();
         static {
-            kLiftAngleMapPractice.put(new InterpolatingDouble(3.0), new InterpolatingDouble(60.0));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(4.7), new InterpolatingDouble(60.0));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(8.2), new InterpolatingDouble(42.5));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(12.0), new InterpolatingDouble(35.0));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(16.0), new InterpolatingDouble(28.0));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(20.0), new InterpolatingDouble(24.0));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(24.0), new InterpolatingDouble(21.5));
-            kLiftAngleMapPractice.put(new InterpolatingDouble(28.0), new InterpolatingDouble(19.5));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(3.0), new InterpolatingDouble(62.0));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(4.7), new InterpolatingDouble(62.0));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(8.0), new InterpolatingDouble(46.0));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(12.0), new InterpolatingDouble(33.0));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(16.0), new InterpolatingDouble(26.0));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(20.0), new InterpolatingDouble(23.0));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.25));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(28.0), new InterpolatingDouble(18.75));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(32.0), new InterpolatingDouble(18.5));
+            kLiftAngleMapPractice.put(new InterpolatingDouble(40.0), new InterpolatingDouble(19.0));
         }
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kPassLiftAngleMapComp = new InterpolatingTreeMap<>();
@@ -96,7 +98,7 @@ public class Constants {
             kPassLiftAngleMapPractice.put(new InterpolatingDouble(60.0), new InterpolatingDouble(42.0));
         }
 
-        
+
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kAutoAimOffset = new InterpolatingTreeMap<>();
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
