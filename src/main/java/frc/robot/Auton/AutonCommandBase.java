@@ -90,6 +90,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
                     AimAndShoot(robotContainer)
                 ),
                 new SequentialCommandGroup(
+                    //TODO ADD THIS BACK
                     new WaitCommand(9999),
                     new WaitUntilCommand(()->!container.shooter.hasNote())
                 )
