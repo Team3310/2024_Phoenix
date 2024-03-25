@@ -269,12 +269,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         } else if (mode == DriveMode.AIMATTARGET) {
             Targeting.setTargetSimple(Targeting.getTargetSimple());
 
-            // Get JSON Dump from Limelight-front
-            // LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
-
-            // Go through limelight JSON dump, and look for Target ID
-            // If ID found, save TX value to offset for targeting.
-            pidVisionUpdateCounter = VISON_COUNTER_MAX + 1;
+            // pidVisionUpdateCounter = VISON_COUNTER_MAX + 1;
             boolean canSeeTarget = false;
             double offset = 0;
             double distance_XY_Average = odometryTargeting.getDistance_XY_average();
@@ -286,22 +281,17 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
                     offset = -(Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
                     canSeeTarget = true;
+                    break;
                 }
             }
-            if (canSeeTarget) {
-                if (Math.abs(Math.toDegrees(offset)) > 3.0) {
+
+            if (Math.abs(Math.toDegrees(offset)) > 3.0) {
+                if (canSeeTarget) {
                     drivetrain_state = "LIME SNAP";
-                    startSnap(Math.toDegrees(getBotAz_FieldRelative() -  offset));
+                } else {
+                    drivetrain_state = "ODO SNAP";
                 }
-            }
-            else {
-                distance_XY_Average = odometryTargeting.getDistance_XY_average();
-                // aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-                aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-                odosnap = true;
-                drivetrain_state = "ODO SNAP";
-                SmartDashboard.putNumber("snapcommand", Math.toDegrees(odometryTargeting.getAz() + Math.PI));
-                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) + aimOffset);
+                startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
             }
         }
 
@@ -475,86 +465,57 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public boolean justChanged = false;
     public boolean lockedOn = false;
     public int timeout_counter = 0;
+
     public void aimAtTarget() {
-        // Get JSON Dump from Limelight-front
-        LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("limelight-front");
-
-        boolean canSeeTarget = false;
-
-        // Go through limelight JSON dump, and look for Target ID
-        // If ID found, save TX value to offset for targeting.
-        double offset = 0;
-        double distance_XY_Average = frontCamera.getDistance_XY_average();
-//        double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-        double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-        
-        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
-        for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
-            if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
-                offset = (Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
-                canSeeTarget = true;
-            }
-        }
         if (isSnapping) {
-            // if(canSeeTarget && odosnap){
-            //     if((Math.abs(Math.toDegrees(offset)) < 5)){
-            //         maybeStopSnap(true);
-            //     } else {
-            //         updateDrive(-calculateSnapValue());
-            //     }
-            // }else{
-                maybeStopSnap(false);
-                updateDrive(-calculateSnapValue());
-            // }
+            maybeStopSnap(false);
+            updateDrive(-calculateSnapValue());
         } else {
-            // // If TargetID cant be seen by Limelight, use odometryTrack()
-            // if ((!canSeeTarget) && (!lockedOn)){
-            //     drivetrain_state = "ODOMETRYTRACK";
-            //     odometryTrack();
-            //     if (justChanged) {
-            //         justChanged = false;
-            //     }
-            // }else if((!canSeeTarget) && (lockedOn)){
-            //     drivetrain_state = "LIME LOST MODE";
-            //     isHoldingAngle = false;
-            //     joystickDrive();
-            // }else { // If TargetID can be seen, use Limelight TX tracking
-                if (canSeeTarget) {
-                    if (!justChanged) { // When changing modes, clear integral accumulation
-                        aimAtTargetController.integralAccum = 0;
-                        justChanged = true;
-                        lockedOn = true;
-                    }
-                    drivetrain_state = "LIME MODE";
+            boolean canSeeTarget = false;
+            double offset = 0;
+            double distance_XY_Average = frontCamera.getDistance_XY_average();
+            double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
 
-                    double currentAngle = getBotAz_FieldRelative();
-                    double targetOffset = offset;
-                    mLimelightVisionAlignGoal = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
-                    
-                    if (pidVisionUpdateCounter > VISON_COUNTER_MAX) {
-                        aimAtTargetController.setSetpoint(mLimelightVisionAlignGoal);
-                        pidVisionUpdateCounter = 0;
-                    }
-                    pidVisionUpdateCounter++;
-                    mVisionAlignAdjustment = aimAtTargetController.calculate(currentAngle, 0.005);
-
-                    // joystickDrive_holdAngle = getBotAz_FieldRelative();
-                    // aprilTagTack(), but offset is grabbed earlier due to this drive methoed
-                    // needing to determine if target is in view.
-                    
-                    Double rotation = mVisionAlignAdjustment;
-
-                    SmartDashboard.putNumber("PID Output:", rotation);
-                    SmartDashboard.putNumber("PID Error:", offset);
-
-                    updateDrive(rotation);
-                }
-                else {
-                    isHoldingAngle = false;
-                    joystickDrive();
+            PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
+            for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
+                if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
+                    offset = (Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
+                    canSeeTarget = true;
+                    break;
                 }
             }
+            
+            if (canSeeTarget) {
+                if (!justChanged) { // When changing modes, clear integral accumulation
+                    aimAtTargetController.integralAccum = 0;
+                    justChanged = true;
+                    lockedOn = true;
+                }
+                drivetrain_state = "LIME MODE";
+
+                double currentAngle = getBotAz_FieldRelative();
+                double targetOffset = offset;
+                mLimelightVisionAlignGoal = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
+                
+                // if (pidVisionUpdateCounter > VISON_COUNTER_MAX) {
+                    aimAtTargetController.setSetpoint(mLimelightVisionAlignGoal);
+                //     pidVisionUpdateCounter = 0;
+                // }
+                // pidVisionUpdateCounter++;
+                mVisionAlignAdjustment = aimAtTargetController.calculate(currentAngle, 0.005);
+                Double rotation = mVisionAlignAdjustment;
+
+                SmartDashboard.putNumber("PID Output:", rotation);
+                SmartDashboard.putNumber("PID Error:", offset);
+
+                updateDrive(rotation);
+            }
+            else {
+                isHoldingAngle = false;
+                joystickDrive();
+            }
         }
+    }
 
     public void trapQueen(){
         Orchestra trapQUEEN = new Orchestra();
