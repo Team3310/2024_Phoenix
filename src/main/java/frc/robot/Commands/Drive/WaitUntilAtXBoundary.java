@@ -32,7 +32,7 @@ public class WaitUntilAtXBoundary extends Command{
 
     @Override
     public boolean isFinished(){
-        return drive.getSideMode()==SideMode.BLUE?drive.getPose().getX()>xBoundary:drive.getPose().getX()<xBoundary;
+        return drive.getSideMode()==SideMode.BLUE?drive.getPose().getX()<xBoundary:drive.getPose().getX()>xBoundary;
     }
 
     @Override
