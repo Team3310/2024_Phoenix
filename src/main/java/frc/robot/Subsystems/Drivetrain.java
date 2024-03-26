@@ -109,10 +109,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private final SwerveRequest.RobotCentric driveRobotCentricNoDeadband = new SwerveRequest.RobotCentric()
             .withDriveRequestType(DriveRequestType.Velocity);
 
+    public int updateCounter = 0;
+    public boolean firstTimeInAimAtTarget = true;
+    public boolean hasPreviouslyLockedOnTarget = false;
+    public int timeout_counter = 0;
+
     private boolean isSnapping;
     private double mLimelightVisionAlignGoal;
-    private double mGoalTrackVisionAlignGoal;
-    private double mVisionAlignAdjustment;
+    // private double mGoalTrackVisionAlignGoal;
+    // private double mVisionAlignAdjustment;
 
     private ProfiledPIDController snapPIDController;
     private ProfiledPIDController snapPIDControllerAuton;
@@ -254,9 +259,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         isHoldingAngle = false;
         joystickDriveHoldAngleRadians = getGyroAngleRadians();
 
-        if (lockedOn) {
-            lockedOn = false;
-        }
+        firstTimeInAimAtTarget = true;
+        hasPreviouslyLockedOnTarget = false;
 
         // Runs once on mode change to JOYSTICK, to set the current field-relative yaw
         // of the robot to the hold angle.
@@ -293,7 +297,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             } else {
                 drivetrain_state = "ODO SNAP";
                 SmartDashboard.putNumber("snapcommand", Math.toDegrees(odometryTargeting.getAz() + Math.PI));
-                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) + aimOffset);
+                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
             }
         }
 
@@ -463,11 +467,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-    public int updateCounter = 0;
-    public boolean justChanged = false;
-    public boolean lockedOn = false;
-    public int timeout_counter = 0;
-
     public void aimAtTarget() {
         if (isSnapping) {
             maybeStopSnap(false);
@@ -486,26 +485,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     break;
                 }
             }
+
+            if (firstTimeInAimAtTarget) { // When changing modes, clear integral accumulation
+                aimAtTargetController.integralAccum = 0;
+                firstTimeInAimAtTarget = false;
+            }
             
             if (canSeeTarget) {
-                if (!justChanged) { // When changing modes, clear integral accumulation
-                    aimAtTargetController.integralAccum = 0;
-                    justChanged = true;
-                    lockedOn = true;
-                }
                 drivetrain_state = "LIME MODE";
+                hasPreviouslyLockedOnTarget = true;
 
-                double currentAngle = getBotAz_FieldRelative();
-                double targetOffset = offset;
-                mLimelightVisionAlignGoal = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
-                
-                // if (pidVisionUpdateCounter > VISON_COUNTER_MAX) {
-                    aimAtTargetController.setSetpoint(mLimelightVisionAlignGoal);
-                //     pidVisionUpdateCounter = 0;
-                // }
-                // pidVisionUpdateCounter++;
-                mVisionAlignAdjustment = aimAtTargetController.calculate(currentAngle, 0.005);
-                Double rotation = mVisionAlignAdjustment;
+                double currentAngleRadians = getBotAz_FieldRelative();
+                double alignAngleRadians = MathUtil.inputModulus(currentAngleRadians - offset, 0.0, 2 * Math.PI);
+                aimAtTargetController.setSetpoint(alignAngleRadians);
+
+                double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
 
                 SmartDashboard.putNumber("PID Output:", rotation);
                 SmartDashboard.putNumber("PID Error:", offset);
@@ -513,8 +507,26 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 updateDrive(rotation);
             }
             else {
-                isHoldingAngle = false;
-                joystickDrive();
+                // If you have already locked onto a target don't go back to odo mode
+                if (hasPreviouslyLockedOnTarget) {
+                    isHoldingAngle = false;
+                    joystickDrive();
+                    return;
+                }
+
+                drivetrain_state = "ODO MODE";
+
+                double currentAngleRadians = getBotAz_FieldRelative();
+                // double alignAngleRadians = MathUtil.inputModulus(odometryTargeting.getAz() + Math.PI - Math.toRadians(aimOffset), 0.0, 2 * Math.PI);
+                double alignAngleRadians = odometryTargeting.getAz() + Math.PI - Math.toRadians(aimOffset);
+                aimAtTargetController.setSetpoint(alignAngleRadians);
+
+                double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
+
+                SmartDashboard.putNumber("PID Output:", rotation);
+                SmartDashboard.putNumber("PID Error:", offset);
+
+                updateDrive(rotation);
             }
         }
     }
@@ -879,8 +891,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // }
 
             SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
-            SmartDashboard.putNumber("mVisionAlignAdjustment", mVisionAlignAdjustment);
-            SmartDashboard.putNumber("Gyro Rate", getCurrentRobotChassisSpeeds().omegaRadiansPerSecond);     
         }
         SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
 
@@ -902,7 +912,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void update(double time, double dt) {
-        chooseVisionAlignGoal();
+        // chooseVisionAlignGoal();
         switch (mControlMode) {
             case AIMATTARGET:
                 aimAtTarget();
@@ -948,34 +958,33 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     //#region 1678 Snap/Camera Code    
-    public void visionAlignDrive(Translation2d translation2d, boolean fieldRelative) {
-        // drive(translation2d, mVisionAlignAdjustment, fieldRelative, false);
-    }
+    // public void visionAlignDrive(Translation2d translation2d, boolean fieldRelative) {
+    //     // drive(translation2d, mVisionAlignAdjustment, fieldRelative, false);
+    // }
 
-    public void angleAlignDrive(Translation2d translation2d, double targetHeading, boolean fieldRelative) {
-        snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(targetHeading), 0.0));
-        double angleAdjustment = snapPIDController.calculate(getBotAz_FieldRelative());
-        // drive(translation2d, angleAdjustment, fieldRelative, false);
-    }
+    // public void angleAlignDrive(Translation2d translation2d, double targetHeading, boolean fieldRelative) {
+    //     snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(targetHeading), 0.0));
+    //     double angleAdjustment = snapPIDController.calculate(getBotAz_FieldRelative());
+    //     // drive(translation2d, angleAdjustment, fieldRelative, false);
+    // }
 
-    public void acceptLatestGoalTrackVisionAlignGoal(double vision_goal) {
-        mGoalTrackVisionAlignGoal = vision_goal;
-    }
+    // public void acceptLatestGoalTrackVisionAlignGoal(double vision_goal) {
+    //     mGoalTrackVisionAlignGoal = vision_goal;
+    // }
 
-    public void chooseVisionAlignGoal() {
-        double currentAngle = getBotAz_FieldRelative();
-        if (limelight.hasTarget()) {
-            double targetOffset = frontCamera.getAz();
-            mLimelightVisionAlignGoal = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
-            visionPIDController.setSetpoint(mLimelightVisionAlignGoal);
-        } else {
-            visionPIDController.setSetpoint(mGoalTrackVisionAlignGoal);
-        }
+    // public void chooseVisionAlignGoal() {
+    //     double currentAngle = getBotAz_FieldRelative();
+    //     if (limelight.hasTarget()) {
+    //         double targetOffset = frontCamera.getAz();
+    //         mLimelightVisionAlignGoal = MathUtil.inputModulus(currentAngle - targetOffset, 0.0, 2 * Math.PI);
+    //         visionPIDController.setSetpoint(mLimelightVisionAlignGoal);
+    //     } else {
+    //         visionPIDController.setSetpoint(mGoalTrackVisionAlignGoal);
+    //     }
 
-        mVisionAlignAdjustment = visionPIDController.calculate(currentAngle);
-    }
+    //     mVisionAlignAdjustment = visionPIDController.calculate(currentAngle);
+    // }
     
-
     public double calculateSnapValue() {
         if(mControlMode == DriveMode.AIMATTARGET_AUTON){
             return snapPIDControllerAuton.calculate(getBotAz_FieldRelative());
