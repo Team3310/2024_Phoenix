@@ -502,9 +502,9 @@ public class Targeting {
 
     //#region Getters
     public double getAz() {
-        if (RobotContainer.getInstance().getSide() == SideMode.RED) {
+        if (TunerConstants.DriveTrain.getSideMode() == SideMode.RED) {
             return rolloverConversion_radians(this.targetAz + (Math.PI / 2));
-        } else if (RobotContainer.getInstance().getSide() == SideMode.BLUE) {
+        } else if (TunerConstants.DriveTrain.getSideMode() == SideMode.BLUE) {
             return rolloverConversion_radians(this.targetAz - (Math.PI / 2));
         } else {
             return this.targetAz;
@@ -534,7 +534,7 @@ public class Targeting {
     //getTrapAz will use botPos to determine which 'region' the bot is in and return the angle needed to face the trap in radians
     //The angle returned is already calculated with the red/blue gyro zero in mind.
     public double getTrapAz() {
-        if (RobotContainer.getInstance().getSide() == SideMode.BLUE) { //+PI/2
+        if (TunerConstants.DriveTrain.getSideMode() == SideMode.BLUE) { //+PI/2
             if (botPos[0] < 5.7706260) {
                 if (botPos[1] > 4.1056560) {
                     return ((2 / 6) * Math.PI); //60 degrees

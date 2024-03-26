@@ -16,16 +16,8 @@ public class DriverReadout {
             tab.add("Autonomous Mode", container.getAutonomousChooser())
                 .withSize(2, 1)
                 .withPosition(2, 0);
-            tab.add("Side", container.getSideChooser())
-                .withSize(2, 1)
-                .withPosition(2, 1);
-            tab.add("Spot", container.getSpotChooser())
-                .withSize(2, 1)
-                .withPosition(2, 2);     
         }else{
             SmartDashboard.putData("Autonomous Mode", container.getAutonomousChooser());
-            // SmartDashboard.putData("Side", container.getSideChooser());
-            // SmartDashboard.putData("Spot", container.getSpotChooser());
         }                   
     }
 

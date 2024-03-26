@@ -285,13 +285,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 }
             }
 
-            if (Math.abs(Math.toDegrees(offset)) > 3.0) {
-                if (canSeeTarget) {
+            if (canSeeTarget) {
+                if (Math.abs(Math.toDegrees(offset)) > 3.0) {
                     drivetrain_state = "LIME SNAP";
-                } else {
-                    drivetrain_state = "ODO SNAP";
+                    startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
                 }
-                startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
+            } else {
+                drivetrain_state = "ODO SNAP";
+                SmartDashboard.putNumber("snapcommand", Math.toDegrees(odometryTargeting.getAz() + Math.PI));
+                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) + aimOffset);
             }
         }
 
@@ -301,7 +303,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public void snapToAngleAuton(double angle){
         if (sideMode == SideMode.RED) {
             angle = rolloverConversion_radians(angle + (Math.PI / 2));
-        } else if (RobotContainer.getInstance().getSide() == SideMode.BLUE) {
+        } else if (getSideMode() == SideMode.BLUE) {
             angle = rolloverConversion_radians(angle - (Math.PI / 2));
         }
         setDriveMode(DriveMode.AIMATTARGET_AUTON);
@@ -1139,8 +1141,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 break;
             case Blue:
                 this.sideMode = SideMode.BLUE;
-            default:
                 break;
+            default:
+                 System.out.println("ERROR setting side");
         }
     }
 

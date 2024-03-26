@@ -49,10 +49,6 @@ public class AutonCommandBase extends SequentialCommandGroup {
         TunerConstants.DriveTrain.seedFieldRelativeWithOffset(start.getRotation());  
     }
 
-    protected boolean getFlip(){
-        return robotContainer.getSide() == SideMode.RED;
-    }
-
     protected PathPlannerPath getPath(String pathName){
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
         if(robotContainer.getDrivetrain().getSideMode() == SideMode.RED){

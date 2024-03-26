@@ -18,7 +18,7 @@ public class SetSnapToCardinal extends Command{
 
     @Override
     public void initialize() {
-        double redBlue = RobotContainer.getInstance().getSide() == SideMode.RED ? 1.0 : -1.0;
+        double redBlue =TunerConstants.DriveTrain.getSideMode() == SideMode.RED ? 1.0 : -1.0;
         drivetrain.startSnap(Math.copySign(cardinal.degrees, redBlue));
     }
 

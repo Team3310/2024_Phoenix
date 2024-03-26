@@ -23,7 +23,6 @@ import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeAmpThenToShooter;
 import frc.robot.Commands.Intake.IntakeAmpToShooter;
 import frc.robot.Commands.Intake.IntakeEject;
-import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Intake.StopAllIntakes;
 import frc.robot.Commands.Lift.AimLiftWithOdometry;
 import frc.robot.Commands.Lift.SetLiftOff;
@@ -47,10 +46,6 @@ import frc.robot.util.DriverReadout;
 import frc.robot.util.Camera.Targeting.TargetSimple;
 import frc.robot.util.Choosers.AutonomousChooser;
 import frc.robot.util.Choosers.AutonomousChooser.AutonomousMode;
-import frc.robot.util.Choosers.SideChooser;
-import frc.robot.util.Choosers.SideChooser.SideMode;
-import frc.robot.util.Choosers.SpotChooser;
-import frc.robot.util.Choosers.SpotChooser.SpotMode;
 import frc.robot.util.Interpolable.InterpolatingDouble;
 
 public class RobotContainer {
@@ -69,8 +64,6 @@ public class RobotContainer {
   private final Telemetry logger;
 
   private final AutonomousChooser autonomousChooser;
-  private final SideChooser sideChooser;
-  private final SpotChooser spotChooser;
 
   private static RobotContainer instance;
 
@@ -86,8 +79,6 @@ public class RobotContainer {
     led = LED.getInstance();
     drivetrain = TunerConstants.DriveTrain;
 
-    spotChooser = new SpotChooser();
-    sideChooser = new SideChooser();
     autonomousChooser = new AutonomousChooser();
 
     logger = new Telemetry(TunerConstants.kSpeedAt12VoltsMps);
@@ -96,7 +87,7 @@ public class RobotContainer {
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
 
     configureBindings();
-    DriverReadout.addChoosers(spotChooser, sideChooser, autonomousChooser);
+    DriverReadout.addChoosers(autonomousChooser);
 
     SmartDashboard.putNumber("angle from 21", Constants.kLiftAngleMapComp.getInterpolated(new InterpolatingDouble(6.427/0.0254/12.0)).value);
   }
@@ -376,22 +367,6 @@ public class RobotContainer {
       public Command getAutonomousCommand() {
         /* First put the drivetrain into auto run mode, then run the auto */
         return autonomousChooser.getCommand();
-      }
-
-      public SideMode getSide() {
-        return sideChooser.getSide();
-      }
-
-      public SpotMode getSpot(){
-        return spotChooser.getSpot();
-      }
-
-      public SendableChooser<SideMode> getSideChooser() {
-        return sideChooser.getSendable();
-      }
-
-      public SendableChooser<SpotMode> getSpotChooser() {
-        return spotChooser.getSendable();
       }
 
       public SendableChooser<AutonomousMode> getAutonomousChooser() {
