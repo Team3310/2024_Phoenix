@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Commands.Drive.SetDriveMode;
+import frc.robot.Commands.Drive.WaitUntilAtXBoundary;
 import frc.robot.Commands.Intake.IntakeAmp;
 import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
@@ -27,7 +28,7 @@ import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class AutonCommandBase extends SequentialCommandGroup {
     protected RobotContainer robotContainer;
-    private final double NOTE_DECISION_LINE = 6.55;
+    private final double NOTE_DECISION_LINE = 7.25; //meters on blue side
 
     protected AutonCommandBase(RobotContainer robotContainer){
         this.robotContainer = robotContainer;
@@ -86,8 +87,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
                     AimAndShoot(robotContainer)
                 ),
                 new SequentialCommandGroup(
-                    //TODO ADD THIS BACK
-                    new WaitCommand(9999),
+                    new WaitUntilAtXBoundary(NOTE_DECISION_LINE, container),
                     new WaitUntilCommand(()->!container.shooter.hasNote())
                 )
             );

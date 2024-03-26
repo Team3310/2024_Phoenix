@@ -11,7 +11,7 @@
     "JamesPaths"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 5.0,
+  "defaultMaxVel": 5.5,
   "defaultMaxAccel": 3.75,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
