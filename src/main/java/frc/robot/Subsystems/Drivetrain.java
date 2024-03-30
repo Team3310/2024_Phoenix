@@ -296,7 +296,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 }
             } else {
                 drivetrain_state = "ODO SNAP";
-                SmartDashboard.putNumber("snapcommand", Math.toDegrees(odometryTargeting.getAz() + Math.PI));
+                SmartDashboard.putNumber("ODO Snap Angle", Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
                 startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
             }
         }
@@ -474,7 +474,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         } else {
             boolean canSeeTarget = false;
             double offset = 0;
-            double distance_XY_Average = frontCamera.getDistance_XY_average();
+            double distance_XY_Average = odometryTargeting.getDistance_XY_average();
             double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
 
             PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
@@ -517,16 +517,20 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 drivetrain_state = "ODO MODE";
 
                 double currentAngleRadians = getBotAz_FieldRelative();
-                // double alignAngleRadians = MathUtil.inputModulus(odometryTargeting.getAz() + Math.PI - Math.toRadians(aimOffset), 0.0, 2 * Math.PI);
-                double alignAngleRadians = odometryTargeting.getAz() + Math.PI - Math.toRadians(aimOffset);
-                aimAtTargetController.setSetpoint(alignAngleRadians);
+                double angleCalc = odometryTargeting.getAz() + Math.PI - Math.toRadians(aimOffset);
+                double alignAngleRadians = MathUtil.inputModulus(angleCalc, -Math.PI,  Math.PI);
+    
+                aimAtTargetController.setSetpoint(angleCalc);
 
                 double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
+     
+                SmartDashboard.putNumber("ODO Angle:", Math.toDegrees(angleCalc));
+                SmartDashboard.putNumber("ODO Angle with Modulus:", Math.toDegrees(alignAngleRadians));
 
                 SmartDashboard.putNumber("PID Output:", rotation);
                 SmartDashboard.putNumber("PID Error:", offset);
 
-                updateDrive(rotation);
+                updateDrive(-rotation);
             }
         }
     }
@@ -795,9 +799,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // return new PathPlannerAuto(pathName);
     }
 
-    public Targeting getFrontTargeting(){
-        return frontCamera;
-    }
+    // public Targeting getFrontTargeting(){
+    //     return frontCamera;
+    // }
 
     public boolean canSeeTargetTag(){
         PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
@@ -827,7 +831,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void periodic() {
-        LimelightHelpers.getLatestResults("limelight-front");
+        // LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
         odometryTargeting.update();
         
@@ -850,7 +854,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
             SmartDashboard.putNumber("joystickDriveHoldAngle", joystickDriveHoldAngleRadians);
             SmartDashboard.putNumber("gyroAngle", getGyroAngleRadians());
-            SmartDashboard.putNumber("getBotAz_FieldRelative()", getBotAz_FieldRelative());
+            SmartDashboard.putNumber("getBotAz_FieldRelative()", Math.toDegrees(getBotAz_FieldRelative()));
             SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
             SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
             SmartDashboard.putNumber("odometryTargeting.getDistance_XY", (odometryTargeting.getDistance_XY() / 0.0254) / 12.0);
@@ -874,7 +878,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putNumber("frontCamera.getDistance_XY_average()", (frontCamera.getDistance_XY_average() / 0.0254) / 12.0);
             SmartDashboard.putNumber("odometry.getDistance_XY_average()", (odometryTargeting.getDistance_XY_average() / 0.0254) / 12.0);
 
-            SmartDashboard.putNumber("frontCamera.getDistanceToTargetInches()", frontCamera.getDistanceToTargetInches() / 12);
+            // SmartDashboard.putNumber("frontCamera.getDistanceToTargetInches()", frontCamera.getDistanceToTargetInches() / 12);
 
             SmartDashboard.putString("Set Target:", Targeting.getTarget().toString());
             SmartDashboard.putNumber("Bot Azimuth:", rolloverConversion_radians(

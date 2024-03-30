@@ -4,6 +4,7 @@ import java.lang.annotation.Target;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Lift;
@@ -12,6 +13,7 @@ import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Camera.Targeting;
 import frc.robot.util.Camera.Targeting.TargetSimple;
+import frc.robot.util.Interpolable.InterpolatingDouble;
 
 public class AimLiftWithOdometry extends Command{
     private Lift lift;
@@ -61,9 +63,16 @@ public class AimLiftWithOdometry extends Command{
             //     shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
             // }
         } else if((targetSimple == TargetSimple.CENTERPASS) || (targetSimple == TargetSimple.CORNERPASS)) {
-            lift.setLiftAngle(42.0);
-            shooter.setLeftMainRPM(3200);
-            shooter.setRightMainRPM(1700);
+            double passLiftAngle = Constants.kPassLiftAngleMap
+                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            double passLeftShooterSpeed = Constants.kPassLeftShooterMap
+                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            double passRightShooterSpeed = Constants.kPassRightShooterMap
+                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+
+            lift.setLiftAngle(passLiftAngle);
+            shooter.setLeftMainRPM(passLeftShooterSpeed);
+            shooter.setRightMainRPM(passRightShooterSpeed);
         }
     }
 

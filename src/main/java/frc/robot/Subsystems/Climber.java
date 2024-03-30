@@ -66,7 +66,7 @@ public class Climber extends SubsystemBase {
         config.SoftwareLimitSwitch.ReverseSoftLimitEnable = false;
         outputConfigs.NeutralMode = NeutralModeValue.Brake;
 
-        config.CurrentLimits.StatorCurrentLimit = 80.0;
+        config.CurrentLimits.StatorCurrentLimit = 20.0;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
 
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
