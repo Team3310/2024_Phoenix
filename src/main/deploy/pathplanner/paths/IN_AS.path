@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7593204075297043,
-        "y": 4.3469364716507215
+        "x": 7.96240792481585,
+        "y": 5.966399361370152
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8829057658115325,
-        "y": 2.3801258713628544
+        "x": 7.038862077724155,
+        "y": 6.464820929641859
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AIN"
     },
     {
       "anchor": {
-        "x": 7.970959275251885,
-        "y": 0.7838737899698015
+        "x": 5.9540621938386735,
+        "y": 6.845966834790812
       },
       "prevControl": {
-        "x": 5.191770383540766,
-        "y": 1.3397115683120253
+        "x": 6.525781051562102,
+        "y": 6.7580100874487465
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DriveTestJames1"
+      "linkedName": "AS"
     }
   ],
   "rotationTargets": [],
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -11.310000000000002,
+    "rotation": 12.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "JamesPaths",
+  "folder": "AmpMiddlePaths",
   "previewStartingState": {
-    "rotation": -58.495733280795825,
+    "rotation": -29.54000000000002,
     "velocity": 0
   },
   "useDefaultConstraints": true

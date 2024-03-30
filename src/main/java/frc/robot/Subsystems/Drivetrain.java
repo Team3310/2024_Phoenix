@@ -225,6 +225,29 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         configurePathPlanner();
     }
 
+    public void setTeleopCurrentLimits(){
+        CurrentLimitsConfigs currentConfigs = new CurrentLimitsConfigs();
+        currentConfigs.StatorCurrentLimit = TunerConstants.kStatorCurrentA;
+        currentConfigs.StatorCurrentLimitEnable = true;
+        currentConfigs.SupplyCurrentLimit = TunerConstants.kSupplyCurrentA;
+        currentConfigs.SupplyCurrentLimitEnable = true;
+
+        // Torque current limits are applied in SwerveModule with kSlipCurrent.
+
+        ClosedLoopRampsConfigs rampConfigs = new ClosedLoopRampsConfigs();
+        rampConfigs.VoltageClosedLoopRampPeriod = TunerConstants.kVelocityClosedLoopRampPeriod;
+        for (int i = 0; i < this.Modules.length; i++) {
+            StatusCode response = this.Modules[i].getDriveMotor().getConfigurator().apply(rampConfigs);
+            if (!response.isOK()) {
+                System.out.println("TalonFX ID " + this.Modules[i].getDriveMotor().getDeviceID() + " failed config ramp configs with error " + response.toString());
+            }
+            response = this.Modules[i].getDriveMotor().getConfigurator().apply(currentConfigs);
+            if (!response.isOK()) {
+                System.out.println("TalonFX ID " + this.Modules[i].getDriveMotor().getDeviceID() + " failed config current configs with error " + response.toString());
+            }
+        }
+    }
+
     //#region DriveTrain things... 
     private void fromChassisSpeed(ChassisSpeeds speeds) {
         var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());

@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "MiddleNotePaths",
+  "folder": "SourceMiddleNotePaths",
   "previewStartingState": {
     "rotation": 68.5,
     "velocity": 0
