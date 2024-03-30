@@ -1,6 +1,5 @@
 package frc.robot.Subsystems;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Orchestra;
@@ -18,7 +17,6 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.SwerveDriveBrake;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PPLibTelemetry;
@@ -31,7 +29,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -39,14 +36,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
 import frc.robot.util.Camera.Limelight;
+import frc.robot.util.Camera.Limelight.LedMode;
 import frc.robot.util.Camera.LimelightHelpers;
 import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
 import frc.robot.util.Camera.Targeting;
-import frc.robot.util.Camera.Targeting.Target;
 import frc.robot.util.Camera.Targeting.TargetSimple;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Control.PidConstants;
@@ -261,6 +257,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         firstTimeInAimAtTarget = true;
         hasPreviouslyLockedOnTarget = false;
+        noteLimelight.setLedMode(LedMode.OFF);
 
         // Runs once on mode change to JOYSTICK, to set the current field-relative yaw
         // of the robot to the hold angle.
@@ -268,6 +265,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             maybeStopSnap(true);
         } else if (mode == DriveMode.AIM_AT_NOTE) {
             pidNoteUpdateCounter = NOTE_COUNTER_MAX + 1;
+            noteLimelight.setLedMode(LedMode.ON);
         } else if (mode == DriveMode.AIM_AT_NOTE) {
              isTrackingNote = false;
         } else if (mode == DriveMode.AIMATTARGET) {
@@ -492,19 +490,24 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
             
             if (canSeeTarget) {
-                drivetrain_state = "LIME MODE";
-                hasPreviouslyLockedOnTarget = true;
+                if (Math.abs(Math.toDegrees(offset)) > 3.0) {
+                    drivetrain_state = "LIME SNAP";
+                    startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
+                } else {
+                    drivetrain_state = "LIME MODE";
+                    hasPreviouslyLockedOnTarget = true;
 
-                double currentAngleRadians = getBotAz_FieldRelative();
-                double alignAngleRadians = MathUtil.inputModulus(currentAngleRadians - offset, 0.0, 2 * Math.PI);
-                aimAtTargetController.setSetpoint(alignAngleRadians);
+                    double currentAngleRadians = getBotAz_FieldRelative();
+                    double alignAngleRadians = MathUtil.inputModulus(currentAngleRadians - offset, -Math.PI,  Math.PI);
+                    aimAtTargetController.setSetpoint(alignAngleRadians);
 
-                double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
+                    double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
 
-                SmartDashboard.putNumber("PID Output:", rotation);
-                SmartDashboard.putNumber("PID Error:", offset);
+                    // SmartDashboard.putNumber("PID Output:", rotation);
+                    // SmartDashboard.putNumber("PID Error:", offset);
 
-                updateDrive(rotation);
+                    updateDrive(rotation);
+                }
             }
             else {
                 // If you have already locked onto a target don't go back to odo mode
@@ -520,15 +523,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 double angleCalc = odometryTargeting.getAz() + Math.PI - Math.toRadians(aimOffset);
                 double alignAngleRadians = MathUtil.inputModulus(angleCalc, -Math.PI,  Math.PI);
     
-                aimAtTargetController.setSetpoint(angleCalc);
+                aimAtTargetController.setSetpoint(alignAngleRadians);
 
                 double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
      
-                SmartDashboard.putNumber("ODO Angle:", Math.toDegrees(angleCalc));
-                SmartDashboard.putNumber("ODO Angle with Modulus:", Math.toDegrees(alignAngleRadians));
+                // SmartDashboard.putNumber("ODO Angle:", Math.toDegrees(angleCalc));
+                // SmartDashboard.putNumber("ODO Angle with Modulus:", Math.toDegrees(alignAngleRadians));
 
-                SmartDashboard.putNumber("PID Output:", rotation);
-                SmartDashboard.putNumber("PID Error:", offset);
+                // SmartDashboard.putNumber("PID Output:", rotation);
+                // SmartDashboard.putNumber("PID Error:", offset);
 
                 updateDrive(-rotation);
             }
@@ -573,12 +576,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
      public void aimAtNote() {
-        if(noteLimelight.hasTarget()){
+        if(noteLimelight.hasTarget()) {
             drivetrain_state = "NOTE MODE";
             double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
 
             double currentNoteTrackAngle = getBotAz_FieldRelative();
-            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, 0.0, 2 * Math.PI);
+            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, -Math.PI, Math.PI);
 
         //    if (pidNoteUpdateCounter > NOTE_COUNTER_MAX) {
             noteTrackController.setSetpoint(adjustAngle);
