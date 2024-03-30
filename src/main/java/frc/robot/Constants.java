@@ -55,7 +55,7 @@ public class Constants {
 
         public static final double LIFT_MAX_DEGREES = 70.0;
         public static final double LIFT_MIN_DEGREES = 18.6;
-        public static final double LIFT_INTAKE_DEGREES = 20.0;
+        public static final double LIFT_INTAKE_DEGREES = 45.0;
         public static final double LIFT_START_DEGREES = 18.0;
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMapComp = new InterpolatingTreeMap<>();
