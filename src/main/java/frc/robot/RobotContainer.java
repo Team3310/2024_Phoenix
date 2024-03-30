@@ -169,13 +169,14 @@ public class RobotContainer {
     operatorController.povUp().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MAX_INCHES).alongWith(new LoadAmp(flicker)));
     operatorController.povRight().onTrue(new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES).alongWith(new LoadAmp(flicker)));
     operatorController.povDown().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
+    operatorController.povLeft().onTrue(new SetTarget(TargetSimple.CORNERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
 
     // shooting
     operatorController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(39.5);})); // platform
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
     // operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3200); shooter.setRightMainRPM(1700); lift.setLiftAngle(42.0);})); // pass
-    operatorController.b().onTrue(new SetTarget(TargetSimple.CORNERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
+    operatorController.b().onTrue(new SetTarget(TargetSimple.CENTERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
  
     CommandScheduler.getInstance().setDefaultCommand(climber, new ClimbControlJoysticks(climber, operatorController));
 
