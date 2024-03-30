@@ -64,6 +64,15 @@ public class Paths {
     public final PathPlannerPath AMP_ON;
     public final PathPlannerPath AMP_AM;
     public final PathPlannerPath AMP_M;
+    public final PathPlannerPath AN_ON;
+    public final PathPlannerPath AN_IN;
+    public final PathPlannerPath ON_AS;
+    public final PathPlannerPath IN_AS;
+    public final PathPlannerPath ON_AN2;
+    public final PathPlannerPath IN_AN2;
+    public final PathPlannerPath AS_ON;
+    public final PathPlannerPath AS_IN;
+    public final PathPlannerPath AN2_GRAB;
 
     public final PathPlannerPath CLOSE_STAGE_END;
 
@@ -146,6 +155,15 @@ public class Paths {
             AMP_ON = PathPlannerPath.fromPathFile("AmpToON").flipPath();
             AMP_AM = PathPlannerPath.fromPathFile("ToAmpMiddleAmp").flipPath();
             AMP_M = PathPlannerPath.fromPathFile("ToMiddleAmp").flipPath();
+            AN_ON = PathPlannerPath.fromPathFile("AN_ON").flipPath();
+            AN_IN = PathPlannerPath.fromPathFile("AN_IN").flipPath();
+            ON_AS = PathPlannerPath.fromPathFile("ON_AS").flipPath();
+            IN_AS = PathPlannerPath.fromPathFile("IN_AS").flipPath();
+            ON_AN2 = PathPlannerPath.fromPathFile("ON_AN2").flipPath();
+            IN_AN2 = PathPlannerPath.fromPathFile("IN_AN2").flipPath();
+            AS_ON = PathPlannerPath.fromPathFile("AS_ON").flipPath();
+            AS_IN = PathPlannerPath.fromPathFile("AS_IN").flipPath();
+            AN2_GRAB = PathPlannerPath.fromPathFile("AN2_GRAB").flipPath();
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd").flipPath(); 
 
@@ -212,6 +230,15 @@ public class Paths {
             AMP_ON = PathPlannerPath.fromPathFile("AmpToON");
             AMP_AM = PathPlannerPath.fromPathFile("ToAmpMiddleAmp");
             AMP_M = PathPlannerPath.fromPathFile("ToMiddleAmp");
+            AN_ON = PathPlannerPath.fromPathFile("AN_ON");
+            AN_IN = PathPlannerPath.fromPathFile("AN_IN");
+            ON_AS = PathPlannerPath.fromPathFile("ON_AS");
+            IN_AS = PathPlannerPath.fromPathFile("IN_AS");
+            ON_AN2 = PathPlannerPath.fromPathFile("ON_AN2");
+            IN_AN2 = PathPlannerPath.fromPathFile("IN_AN2");
+            AS_ON = PathPlannerPath.fromPathFile("AS_ON");
+            AS_IN = PathPlannerPath.fromPathFile("AS_IN");
+            AN2_GRAB = PathPlannerPath.fromPathFile("AN2_GRAB");
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd");
 
