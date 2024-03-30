@@ -281,6 +281,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         firstTimeInAimAtTarget = true;
         hasPreviouslyLockedOnTarget = false;
         noteLimelight.setLedMode(LedMode.OFF);
+        isTrackingNote = false;
 
         // Runs once on mode change to JOYSTICK, to set the current field-relative yaw
         // of the robot to the hold angle.
@@ -599,7 +600,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
      public void aimAtNote() {
-        if (noteLimelight.hasTarget()) {
+        if (noteLimelight.hasTarget() && Math.abs(noteLimelight.getTargetHorizOffset()) < 20.0) {
             drivetrain_state = "NOTE MODE";
             double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
 
@@ -627,7 +628,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 double pidRotationOutput = noteTrackController.calculate(getBotAz_FieldRelative(), 0.005);
                 double xForward = Math.sqrt(getDriveXWithDeadband() * getDriveXWithDeadband() + getDriveYWithDeadband() * getDriveYWithDeadband());
                 setDriveOrientation(DriveOrientation.ROBOT_CENTRIC);
-                updateDrive(xForward, 0.0, pidRotationOutput);         
+                updateDrive(xForward, 0.0, 0.0);         
             }
             else {
                 isTrackingNote = false;
