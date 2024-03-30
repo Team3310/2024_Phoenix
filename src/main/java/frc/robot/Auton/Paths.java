@@ -72,6 +72,7 @@ public class Paths {
     public final PathPlannerPath IN_AN2;
     public final PathPlannerPath AS_ON;
     public final PathPlannerPath AS_IN;
+    public final PathPlannerPath AN2_GRAB;
 
     public final PathPlannerPath CLOSE_STAGE_END;
 
@@ -162,6 +163,7 @@ public class Paths {
             IN_AN2 = PathPlannerPath.fromPathFile("IN_AN2").flipPath();
             AS_ON = PathPlannerPath.fromPathFile("AS_ON").flipPath();
             AS_IN = PathPlannerPath.fromPathFile("AS_IN").flipPath();
+            AN2_GRAB = PathPlannerPath.fromPathFile("AN2_GRAB").flipPath();
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd").flipPath(); 
 
@@ -236,6 +238,7 @@ public class Paths {
             IN_AN2 = PathPlannerPath.fromPathFile("IN_AN2");
             AS_ON = PathPlannerPath.fromPathFile("AS_ON");
             AS_IN = PathPlannerPath.fromPathFile("AS_IN");
+            AN2_GRAB = PathPlannerPath.fromPathFile("AN2_GRAB");
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd");
 
