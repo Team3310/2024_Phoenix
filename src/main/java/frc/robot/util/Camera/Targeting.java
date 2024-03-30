@@ -35,8 +35,8 @@ public class Targeting {
     private static final double[] redTrap2 =        { 11.9047260, 4.4983400, 1.6414750 };
     private static final double[] redTrap3 =        { 11.2201960, 4.1051480, 1.6414750 };
     private static final double[] centerOfField =   {  5.3207920, 4.1067482, 0.0000000 };
-    private static final double[] blueCenterPass =  {  3.8973780, 7.0000000, 0.0000000 }; 
-    private static final double[] redCenterPass =   {  6.7442060, 7.0000000, 0.0000000 };
+    private static final double[] blueCenterPass =  {  6.6300000, 7.0000000, 0.0000000 }; 
+    private static final double[] redCenterPass =   {  9.8600000, 11.0000000, 0.0000000 };
     private static final double[] blueCornerPass =  {  1.0000000, 7.0000000, 0.0000000 };
     private static final double[] redCornerPass =   { 15.5000000, 7.0000000, 0.0000000 };
 
