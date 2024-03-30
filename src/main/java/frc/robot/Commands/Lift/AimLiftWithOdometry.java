@@ -62,7 +62,7 @@ public class AimLiftWithOdometry extends Command{
             //     shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
             //     shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
             // }
-        } else if((targetSimple == TargetSimple.CENTERPASS) || (targetSimple == TargetSimple.CORNERPASS)) {
+        } else if(targetSimple == TargetSimple.CORNERPASS) {
             double passLiftAngle = Constants.kPassLiftAngleMap
                     .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
             double passLeftShooterSpeed = Constants.kPassLeftShooterMap
@@ -73,6 +73,17 @@ public class AimLiftWithOdometry extends Command{
             lift.setLiftAngle(passLiftAngle);
             shooter.setLeftMainRPM(passLeftShooterSpeed);
             shooter.setRightMainRPM(passRightShooterSpeed);
+        } else if(targetSimple == TargetSimple.CENTERPASS) {
+            double centerLiftAngle = Constants.kCenterLiftAngleMap
+                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            double centerLeftShooterSpeed = Constants.kCenterLeftShooterMap
+                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            double centerRightShooterSpeed = Constants.kCenterRightShooterMap
+                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+
+            lift.setLiftAngle(centerLiftAngle);
+            shooter.setLeftMainRPM(centerLeftShooterSpeed);
+            shooter.setRightMainRPM(centerRightShooterSpeed);
         }
     }
 
