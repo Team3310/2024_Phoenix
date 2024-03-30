@@ -15,7 +15,7 @@ import frc.robot.Subsystems.Drivetrain;
 // https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
 public class TunerConstants {
 
-    public static boolean isCompbot = false;
+    public static boolean isCompbot = true;
 
     // Both sets of gains need to be tuned to your individual robot.
 
@@ -70,7 +70,7 @@ public class TunerConstants {
     private static final int kPigeonId = 0;
 
     //in revolutions
-    public static final double liftMagnetOffset = isCompbot ? 0.254980390625 : 0.74129667-(2.0/360.0);
+    public static final double liftMagnetOffset = isCompbot ? 0.254980390625 : 0.74129667-(6.0/360.0);
 
     // These are only used for simulation
     private static final double kSteerInertia = 0.00001;

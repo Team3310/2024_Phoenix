@@ -502,6 +502,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
             for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
                 if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
+                    distance_XY_Average = frontCamera.getDistance_XY_average();
+                    aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                     offset = (Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
                     canSeeTarget = true;
                     break;
@@ -514,10 +516,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             }
             
             if (canSeeTarget) {
-                if (Math.abs(Math.toDegrees(offset)) > 3.0) {
-                    drivetrain_state = "LIME SNAP";
-                    startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
-                } else {
+                // if (Math.abs(Math.toDegrees(offset)) > 3.0) {
+                //     drivetrain_state = "LIME SNAP";
+                //     startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
+                // } else {
                     drivetrain_state = "LIME MODE";
                     hasPreviouslyLockedOnTarget = true;
 
@@ -531,11 +533,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     // SmartDashboard.putNumber("PID Error:", offset);
 
                     updateDrive(rotation);
-                }
+                // }
             }
             else {
                 // If you have already locked onto a target don't go back to odo mode
-                if (hasPreviouslyLockedOnTarget) {
+                if (Targeting.getTargetSimple() == TargetSimple.SPEAKER || hasPreviouslyLockedOnTarget) {
                     isHoldingAngle = false;
                     joystickDrive();
                     return;

@@ -15,7 +15,7 @@ public class SetClimberUpDown extends Command {
 
     @Override
     public void initialize() {
-        if (climber.getRightPositionInches() < (Constants.CLIMBER_MIN_INCHES + 2.0)) {
+        if (climber.getRightPositionInches() < (Constants.CLIMBER_MAX_INCHES - 3.0)) {
             climber.setPosition(Constants.CLIMBER_MAX_INCHES);
         }
         else if (climber.getRightPositionInches() > (Constants.CLIMBER_MAX_INCHES - 2.0)) {

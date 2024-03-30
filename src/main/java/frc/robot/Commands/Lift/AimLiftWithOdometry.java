@@ -2,6 +2,7 @@ package frc.robot.Commands.Lift;
 
 import java.lang.annotation.Target;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -39,14 +40,16 @@ public class AimLiftWithOdometry extends Command{
     public void execute(){ 
         TargetSimple targetSimple = Targeting.getTargetSimple();
         if(targetSimple == TargetSimple.SPEAKER){
-            lift.setLiftAngle(drive.getOdoTargeting().getEl());
-            shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
-            shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
+            // lift.setLiftAngle(drive.getOdoTargeting().getEl());
+            // shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
+            // shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
             if (drive.canSeeTargetTag()) {
-                // drive.getLimelightTargeting().update();
-                // lift.setLiftAngle(drive.getLimelightTargeting().getEl());
-                // shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
-                // shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
+                drive.getLimelightTargeting().update();
+                double liftAngle = drive.getLimelightTargeting().getEl();
+                SmartDashboard.putNumber("AimLift Angle", liftAngle);
+                lift.setLiftAngle(liftAngle);
+                shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
+                shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
 
                 // if(drive.snapComplete() && lift.isFinished()){
                     led.setSolid(new Color(0,255,0));

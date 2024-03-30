@@ -211,8 +211,8 @@ public class Constants {
         public static final int CLIMBER_LEFT_ID = 60;
         public static final int CLIMBER_RIGHT_ID = 61;
 
-        public static final double CLIMBER_MAX_INCHES = 22.0-3.0;
-        public static final double CLIMBER_MIN_INCHES = 0.0;
+        public static final double CLIMBER_MAX_INCHES = 5.0; // 19.0
+        public static final double CLIMBER_MIN_INCHES = -12.0;
         public static final double CLIMBER_AUTO_ZERO_SPEED = -0.1;
         public static final double CLIMBER_AUTO_ZERO_MOTOR_CURRENT = 5.0;
 
