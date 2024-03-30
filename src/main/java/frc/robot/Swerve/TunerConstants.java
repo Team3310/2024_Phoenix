@@ -66,7 +66,7 @@ public class TunerConstants {
     public static final String kSecondaryCANbusName = isCompbot ? "Drivetrain" : "rio";
     private static final int kPigeonId = 0;
 
-    public static final double liftMagnetOffset = isCompbot ? 0.254980390625 : 0.74129667;
+    public static final double liftMagnetOffset = isCompbot ? 0.254980390625 : 0.74129667-(5.0/360.0);
 
     // These are only used for simulation
     private static final double kSteerInertia = 0.00001;
