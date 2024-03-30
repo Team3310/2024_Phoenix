@@ -28,12 +28,15 @@ public class ScoreOnCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setKickerRPM(Constants.KICKER_SCORE_RPM);
+    if(shooter.hasNote())
+      shooter.setKickerRPM(Constants.KICKER_SCORE_RPM);
 
-    if(elevator.getPositionInches()>Constants.ELEVATOR_MAX_INCHES-2.0){
-      flicker.setRPM(Constants.TRAP_SCORE_RPM);
-    }else{
-      flicker.setRPM(Constants.AMP_SCORE_RPM);
+    if(flicker.hasNote()){
+      if(elevator.getPositionInches()>Constants.ELEVATOR_MAX_INCHES-2.0){
+        flicker.setRPM(Constants.TRAP_SCORE_RPM);
+      }else{
+        flicker.setRPM(Constants.AMP_SCORE_RPM);
+      }
     }
   }
 
