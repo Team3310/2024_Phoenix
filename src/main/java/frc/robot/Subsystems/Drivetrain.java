@@ -576,7 +576,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
      public void aimAtNote() {
-        if(noteLimelight.hasTarget()) {
+        if (noteLimelight.hasTarget()) {
             drivetrain_state = "NOTE MODE";
             double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
 
