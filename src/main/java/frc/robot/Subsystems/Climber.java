@@ -72,8 +72,8 @@ public class Climber extends SubsystemBase {
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = getInchesToRotations(18.0); // inches per second
-        config.MotionMagic.MotionMagicAcceleration = getInchesToRotations(18.0);
+        config.MotionMagic.MotionMagicCruiseVelocity = 60.0; // inches per second
+        config.MotionMagic.MotionMagicAcceleration = 60.0;
 
         climberRight.getConfigurator().apply(config);
         climberRight.getConfigurator().apply(outputConfigs);

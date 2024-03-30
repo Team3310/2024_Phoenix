@@ -162,7 +162,7 @@ public class RobotContainer {
     operatorController.leftBumper().onTrue(new SetTarget(TargetSimple.SPEAKER).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
    
     // climb 
-    operatorController.back().onTrue(new SetClimberUpDown(climber).alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
+    operatorController.back().onTrue(new SetClimberUpDown(climber).alongWith(new SetDriveMode(DriveMode.JOYSTICK)).alongWith(new SetLiftOff(lift)).alongWith(new ShooterOff(shooter)));
     operatorController.start().onTrue(new ClimberPrepNoAngle(this));
 
     // elevator
@@ -178,7 +178,7 @@ public class RobotContainer {
     // operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3200); shooter.setRightMainRPM(1700); lift.setLiftAngle(42.0);})); // pass
     operatorController.b().onTrue(new SetTarget(TargetSimple.CENTERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
  
-    CommandScheduler.getInstance().setDefaultCommand(climber, new ClimbControlJoysticks(climber, operatorController));
+    // CommandScheduler.getInstance().setDefaultCommand(climber, new ClimbControlJoysticks(climber, operatorController));
 
     //intake
     // operatorController.a().onTrue(new IntakeUnder());
