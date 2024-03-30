@@ -58,6 +58,8 @@ public class Constants {
         public static final double LIFT_INTAKE_DEGREES = 30.0;
         public static final double LIFT_START_DEGREES = 18.0;
 
+        public static final double PASS_FIELD_RELATIVE_ANGLE_DEG = 38.0;
+
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMapComp = new InterpolatingTreeMap<>();
         static {
             kLiftAngleMapComp.put(new InterpolatingDouble(3.0), new InterpolatingDouble(62.0));
@@ -86,6 +88,7 @@ public class Constants {
             kLiftAngleMapPractice.put(new InterpolatingDouble(40.0), new InterpolatingDouble(19.0));
         }
 
+        public static double kPassLiftAngleFixed = 60.0;
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kPassLiftAngleMap = new InterpolatingTreeMap<>();
         static{
             kPassLiftAngleMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(60.0));
@@ -94,6 +97,7 @@ public class Constants {
             kPassLiftAngleMap.put(new InterpolatingDouble(35.0), new InterpolatingDouble(60.0)); // 42.0
         }
 
+        public static double kPassRightShooterFixed = 2000.0;
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kPassRightShooterMap = new InterpolatingTreeMap<>();
         static{
             kPassRightShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(2000.0));
@@ -102,6 +106,7 @@ public class Constants {
             kPassRightShooterMap.put(new InterpolatingDouble(35.0), new InterpolatingDouble(2000.0)); // 2100.0
         }
 
+        public static double kPassLeftShooterFixed = 3000.0;
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kPassLeftShooterMap = new InterpolatingTreeMap<>();
         static{
             kPassLeftShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(3000.0));
@@ -110,18 +115,21 @@ public class Constants {
             kPassLeftShooterMap.put(new InterpolatingDouble(36.0), new InterpolatingDouble(3000.0)); // 38000.0
         }
 
+        public static double kCenterLiftAngleFixed = 50.0;
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kCenterLiftAngleMap = new InterpolatingTreeMap<>();
         static{
             kCenterLiftAngleMap.put(new InterpolatingDouble(0.0), new InterpolatingDouble(50.0));
             kCenterLiftAngleMap.put(new InterpolatingDouble(50.0), new InterpolatingDouble(50.0));
         }
 
+        public static double kCenterRightShooterFixed = 2200.0;
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kCenterRightShooterMap = new InterpolatingTreeMap<>();
         static{
             kCenterRightShooterMap.put(new InterpolatingDouble(0.0), new InterpolatingDouble(2200.0));
             kCenterRightShooterMap.put(new InterpolatingDouble(50.0), new InterpolatingDouble(2200.0)); 
         }
 
+        public static double kCenterLeftShooterFixed = 3200.0;
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kCenterLeftShooterMap = new InterpolatingTreeMap<>();
         static{
             kCenterLeftShooterMap.put(new InterpolatingDouble(0.0), new InterpolatingDouble(3200.0));

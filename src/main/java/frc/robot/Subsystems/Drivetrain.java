@@ -82,6 +82,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public boolean isTrackingNote = false;
     private boolean isHoldingAngle = false;
     private double joystickDriveHoldAngleRadians = 0;
+    private double passFieldRelativeAngleDeg = 0;
 
     private FollowPathCommand pathFollower;
 
@@ -294,32 +295,38 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
              isTrackingNote = false;
         } else if (mode == DriveMode.AIMATTARGET) {
             Targeting.setTargetSimple(Targeting.getTargetSimple());
-
-            // pidVisionUpdateCounter = VISON_COUNTER_MAX + 1;
-            boolean canSeeTarget = false;
-            double offset = 0;
-            double distance_XY_Average = odometryTargeting.getDistance_XY_average();
-            // double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-            double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-
-            PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
-            for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
-                if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
-                    offset = -(Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
-                    canSeeTarget = true;
-                    break;
-                }
-            }
-
-            if (canSeeTarget) {
-                if (Math.abs(Math.toDegrees(offset)) > 3.0) {
-                    drivetrain_state = "LIME SNAP";
-                    startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
-                }
+            if (Targeting.getTargetSimple() == TargetSimple.CENTERPASS || Targeting.getTargetSimple() == TargetSimple.CORNERPASS) {
+                    drivetrain_state = "CENTER-CORNER SNAP";
+                    passFieldRelativeAngleDeg = getSideMode() == SideMode.RED ? -Constants.PASS_FIELD_RELATIVE_ANGLE_DEG : Constants.PASS_FIELD_RELATIVE_ANGLE_DEG;
+                    startSnap(passFieldRelativeAngleDeg);
             } else {
-                drivetrain_state = "ODO SNAP";
-                SmartDashboard.putNumber("ODO Snap Angle", Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
-                startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
+                // pidVisionUpdateCounter = VISON_COUNTER_MAX + 1;
+                boolean canSeeTarget = false;
+                double offset = 0;
+                double distance_XY_Average = odometryTargeting.getDistance_XY_average();
+                // double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+                double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+
+                PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
+                for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
+                    if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
+                        offset = -(Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
+                        canSeeTarget = true;
+                        break;
+                    }
+                }
+
+                if (canSeeTarget) {
+                    if (Math.abs(Math.toDegrees(offset)) > 3.0) {
+                        drivetrain_state = "LIME SNAP";
+                        startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
+                    }
+                } 
+                // else {
+                //     drivetrain_state = "ODO SNAP";
+                //     SmartDashboard.putNumber("ODO Snap Angle", Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
+                //     startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
+                // }
             }
         }
 
@@ -493,6 +500,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         if (isSnapping) {
             maybeStopSnap(false);
             updateDrive(-calculateSnapValue());
+        } else if (Targeting.getTargetSimple() == TargetSimple.CENTERPASS || Targeting.getTargetSimple() == TargetSimple.CORNERPASS) {
+            drivetrain_state = "CENTER-CORNER MODE";
+            aimAtTargetController.setSetpoint(Math.toRadians(passFieldRelativeAngleDeg));
+            double rotation = aimAtTargetController.calculate(getBotAz_FieldRelative(), 0.005);
+            updateDrive(rotation);
         } else {
             boolean canSeeTarget = false;
             double offset = 0;
@@ -536,30 +548,33 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 // }
             }
             else {
-                // If you have already locked onto a target don't go back to odo mode
-                if (Targeting.getTargetSimple() == TargetSimple.SPEAKER || hasPreviouslyLockedOnTarget) {
-                    isHoldingAngle = false;
-                    joystickDrive();
-                    return;
-                }
+                isHoldingAngle = false;
+                joystickDrive();
 
-                drivetrain_state = "ODO MODE";
+                // // If you have already locked onto a target don't go back to odo mode
+                // if (Targeting.getTargetSimple() == TargetSimple.SPEAKER || hasPreviouslyLockedOnTarget) {
+                //     isHoldingAngle = false;
+                //     joystickDrive();
+                //     return;
+                // }
 
-                double currentAngleRadians = getBotAz_FieldRelative();
-                double angleCalc = odometryTargeting.getAz() + Math.PI - Math.toRadians(aimOffset);
-                double alignAngleRadians = MathUtil.inputModulus(angleCalc, -Math.PI,  Math.PI);
+                // drivetrain_state = "ODO MODE";
+
+                // double currentAngleRadians = getBotAz_FieldRelative();
+                // double angleCalc = odometryTargeting.getAz() + Math.PI - Math.toRadians(aimOffset);
+                // double alignAngleRadians = MathUtil.inputModulus(angleCalc, -Math.PI,  Math.PI);
     
-                aimAtTargetController.setSetpoint(alignAngleRadians);
+                // aimAtTargetController.setSetpoint(alignAngleRadians);
 
-                double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
+                // double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
      
-                // SmartDashboard.putNumber("ODO Angle:", Math.toDegrees(angleCalc));
-                // SmartDashboard.putNumber("ODO Angle with Modulus:", Math.toDegrees(alignAngleRadians));
+                // // SmartDashboard.putNumber("ODO Angle:", Math.toDegrees(angleCalc));
+                // // SmartDashboard.putNumber("ODO Angle with Modulus:", Math.toDegrees(alignAngleRadians));
 
-                // SmartDashboard.putNumber("PID Output:", rotation);
-                // SmartDashboard.putNumber("PID Error:", offset);
+                // // SmartDashboard.putNumber("PID Output:", rotation);
+                // // SmartDashboard.putNumber("PID Error:", offset);
 
-                updateDrive(-rotation);
+                // updateDrive(-rotation);
             }
         }
     }
@@ -730,8 +745,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public double getBotAz_FieldRelative() {
         // Note from James to Zac, I'm changing this back to the 'old' one to see if it
         // works...
-        return rolloverConversion_radians(
-                this.m_fieldRelativeOffset.getRadians() - getPose().getRotation().getRadians());
+        // return rolloverConversion_radians(
+        return this.m_fieldRelativeOffset.getRadians() - getPose().getRotation().getRadians();
         // return
         // rolloverConversion_radians(this.m_fieldRelativeOffset.getRadians()-getOdoPose().getRotation().getRadians());
     }

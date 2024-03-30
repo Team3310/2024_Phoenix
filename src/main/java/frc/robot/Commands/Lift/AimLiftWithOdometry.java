@@ -66,23 +66,29 @@ public class AimLiftWithOdometry extends Command{
             //     shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
             // }
         } else if(targetSimple == TargetSimple.CORNERPASS) {
-            double passLiftAngle = Constants.kPassLiftAngleMap
-                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
-            double passLeftShooterSpeed = Constants.kPassLeftShooterMap
-                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
-            double passRightShooterSpeed = Constants.kPassRightShooterMap
-                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            // double passLiftAngle = Constants.kPassLiftAngleMap
+            //         .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            // double passLeftShooterSpeed = Constants.kPassLeftShooterMap
+            //         .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            // double passRightShooterSpeed = Constants.kPassRightShooterMap
+            //         .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            double passLiftAngle = Constants.kPassLiftAngleFixed;
+            double passLeftShooterSpeed = Constants.kPassLeftShooterFixed;
+            double passRightShooterSpeed = Constants.kPassRightShooterFixed;
 
             lift.setLiftAngle(passLiftAngle);
             shooter.setLeftMainRPM(passLeftShooterSpeed);
             shooter.setRightMainRPM(passRightShooterSpeed);
         } else if(targetSimple == TargetSimple.CENTERPASS) {
-            double centerLiftAngle = Constants.kCenterLiftAngleMap
-                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
-            double centerLeftShooterSpeed = Constants.kCenterLeftShooterMap
-                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
-            double centerRightShooterSpeed = Constants.kCenterRightShooterMap
-                    .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            // double centerLiftAngle = Constants.kCenterLiftAngleMap
+            //         .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            // double centerLeftShooterSpeed = Constants.kCenterLeftShooterMap
+            //         .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            // double centerRightShooterSpeed = Constants.kCenterRightShooterMap
+            //         .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
+            double centerLiftAngle = Constants.kCenterLiftAngleFixed;
+            double centerLeftShooterSpeed = Constants.kCenterLeftShooterFixed;
+            double centerRightShooterSpeed = Constants.kCenterRightShooterFixed;
 
             lift.setLiftAngle(centerLiftAngle);
             shooter.setLeftMainRPM(centerLeftShooterSpeed);
