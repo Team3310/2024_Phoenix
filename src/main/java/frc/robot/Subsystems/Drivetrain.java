@@ -62,7 +62,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private String drivetrain_state = "INIT";
 
     private PidController holdAngleController = new PidController(new PidConstants(0.5, 0.0, 0.00));
-    private PidController aimAtTargetController = new PidController(new PidConstants(0.5, 0.0, 0.01));
+    private PidController aimAtTargetController = new PidController(new PidConstants(0.7, 0.0, 0.01));
     private PidController noteTrackController = new PidController(new PidConstants(0.5, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
     private PidController strafeTxController = new PidController(new PidConstants(1.0, 0.00, 0.02));
