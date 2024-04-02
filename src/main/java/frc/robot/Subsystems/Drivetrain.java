@@ -295,9 +295,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
              isTrackingNote = false;
         } else if (mode == DriveMode.AIMATTARGET) {
             Targeting.setTargetSimple(Targeting.getTargetSimple());
-            if (Targeting.getTargetSimple() == TargetSimple.CENTERPASS || Targeting.getTargetSimple() == TargetSimple.CORNERPASS) {
-                    drivetrain_state = "CENTER-CORNER SNAP";
-                    passFieldRelativeAngleDeg = getSideMode() == SideMode.RED ? -Constants.PASS_FIELD_RELATIVE_ANGLE_DEG : Constants.PASS_FIELD_RELATIVE_ANGLE_DEG;
+            if (Targeting.getTargetSimple() == TargetSimple.CENTERPASS) {
+                    drivetrain_state = "CENTER SNAP";
+                    passFieldRelativeAngleDeg = getSideMode() == SideMode.RED ? -Constants.CENTER_FIELD_RELATIVE_ANGLE_DEG : Constants.CENTER_FIELD_RELATIVE_ANGLE_DEG;
+                    startSnap(passFieldRelativeAngleDeg);
+            } else if (Targeting.getTargetSimple() == TargetSimple.CORNERPASS) {
+                    drivetrain_state = "CORNER SNAP";
+                    passFieldRelativeAngleDeg = getSideMode() == SideMode.RED ? -Constants.CORNER_FIELD_RELATIVE_ANGLE_DEG : Constants.CORNER_FIELD_RELATIVE_ANGLE_DEG;
                     startSnap(passFieldRelativeAngleDeg);
             } else {
                 // pidVisionUpdateCounter = VISON_COUNTER_MAX + 1;

@@ -72,9 +72,9 @@ public class AimLiftWithOdometry extends Command{
             //         .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
             // double passRightShooterSpeed = Constants.kPassRightShooterMap
             //         .getInterpolated(new InterpolatingDouble((drive.getOdoTargeting().getDistance_XY_average() / 0.0254) / 12.0)).value;
-            double passLiftAngle = Constants.kPassLiftAngleFixed;
-            double passLeftShooterSpeed = Constants.kPassLeftShooterFixed;
-            double passRightShooterSpeed = Constants.kPassRightShooterFixed;
+            double passLiftAngle = Constants.kCornerLiftAngleFixed;
+            double passLeftShooterSpeed = Constants.kCornerLeftShooterFixed;
+            double passRightShooterSpeed = Constants.kCornerRightShooterFixed;
 
             lift.setLiftAngle(passLiftAngle);
             shooter.setLeftMainRPM(passLeftShooterSpeed);

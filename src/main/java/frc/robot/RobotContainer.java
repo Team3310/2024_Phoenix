@@ -88,8 +88,6 @@ public class RobotContainer {
 
     configureBindings();
     DriverReadout.addChoosers(autonomousChooser);
-
-    SmartDashboard.putNumber("angle from 21", Constants.kLiftAngleMapComp.getInterpolated(new InterpolatingDouble(6.427/0.0254/12.0)).value);
   }
 
   //#region controller buttons
