@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0489663771350335,
-        "y": 4.432084533684738
+        "x": 2.05,
+        "y": 4.8
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2594611570989516,
-        "y": 4.32449831281429
+        "x": 2.260494779963918,
+        "y": 4.692413779129552
       },
       "isLocked": false,
       "linkedName": "SMGrabClose"
     },
     {
       "anchor": {
-        "x": 2.7459379819044534,
-        "y": 4.137391841735251
+        "x": 3.1,
+        "y": 4.14
       },
       "prevControl": {
-        "x": 2.5588315108254145,
-        "y": 4.207556768389891
+        "x": 2.912893528920961,
+        "y": 4.210164926654639
       },
       "nextControl": {
-        "x": 2.9330444529834923,
-        "y": 4.067226915080612
+        "x": 3.287106471079039,
+        "y": 4.06983507334536
       },
       "isLocked": false,
       "linkedName": null
@@ -33,18 +33,29 @@
     {
       "anchor": {
         "x": 2.0255780682501534,
-        "y": 4.443778688127177
+        "y": 4.8
       },
       "prevControl": {
         "x": 2.2101934528655383,
-        "y": 4.3668556112041
+        "y": 4.723076923076923
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -6.871370458045148,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.6,
+      "rotationDegrees": -7.228665627986073,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {

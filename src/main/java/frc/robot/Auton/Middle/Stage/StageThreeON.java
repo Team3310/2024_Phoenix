@@ -12,7 +12,7 @@ public class StageThreeON extends AutonCommandBase{
         this.addCommands(
             new StageON(robotContainer),
             FollowToIntake(Paths.getInstance().SM_IN),
-            GoToShoot(robotContainer, Paths.getInstance().IN_SM3),
+            GoToShoot(robotContainer, Paths.getInstance().IN_SM3, false),
             FollowToIntake(Paths.getInstance().SM_GRAB_CLOSE),
             AimAndShoot(robotContainer)
         );

@@ -82,13 +82,32 @@ public class AutonCommandBase extends SequentialCommandGroup {
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
                         Follow(path),
-                        new SetLiftAngle(Lift.getInstance(), Constants.LIFT_MIN_DEGREES)
+                        // new SetLiftAngle(Lift.getInstance(), Constants.LIFT_MIN_DEGREES)
+                        new WaitUntilCommand(()->!container.shooter.hasNote()).andThen(new IntakeShooter())
                     ),
                     AimAndShoot(robotContainer)
                 ),
                 new SequentialCommandGroup(
                     new WaitUntilAtXBoundary(NOTE_DECISION_LINE, container),
                     new WaitUntilCommand(()->!container.shooter.hasNote())
+                )
+            );
+    }
+
+    protected Command GoToShoot(RobotContainer container, PathPlannerPath path, boolean end){
+        return
+            new ParallelRaceGroup( 
+                new SequentialCommandGroup(
+                    new ParallelDeadlineGroup(
+                        Follow(path),
+                        // new SetLiftAngle(Lift.getInstance(), Constants.LIFT_MIN_DEGREES)
+                        new WaitUntilCommand(()->!container.shooter.hasNote()).andThen(new IntakeShooter())
+                    ),
+                    AimAndShoot(robotContainer)
+                ),
+                new SequentialCommandGroup(
+                    new WaitUntilAtXBoundary(NOTE_DECISION_LINE, container),
+                    new WaitUntilCommand(()->(!container.shooter.hasNote() && end))
                 )
             );
     }
