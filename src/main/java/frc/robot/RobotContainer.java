@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Auton.DriveTest;
 import frc.robot.Commands.Climber.ClimbControlJoysticks;
 import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.ClimberPrepNoAngle;
@@ -106,7 +107,7 @@ public class RobotContainer {
     driverController.x().onTrue(new ShooterOff(shooter));
     driverController.b().onTrue(new ShooterOn(shooter));
     driverController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
-    
+    // driverController.a().onTrue(new DriveTest(this)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
     //Adding target swapping controls for testing -JB
     driverController.povLeft().onTrue(new SetTarget(TargetSimple.CENTERPASS));
     driverController.povRight().onTrue(new SetTarget(TargetSimple.CORNERPASS));

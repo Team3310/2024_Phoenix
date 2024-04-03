@@ -73,6 +73,19 @@ public class Paths {
     public final PathPlannerPath AS_ON;
     public final PathPlannerPath AS_IN;
     public final PathPlannerPath AN2_GRAB;
+    public final PathPlannerPath AN3_GRAB;
+    public final PathPlannerPath AS_CN;
+    public final PathPlannerPath CN_AS;
+    public final PathPlannerPath SNEAK5;
+    public final PathPlannerPath CN_S;
+
+    public final PathPlannerPath C_N;
+    public final PathPlannerPath CN_CCN;
+    public final PathPlannerPath CS_AIN;
+    public final PathPlannerPath CS_SIN;
+    public final PathPlannerPath AIN_CS;
+    public final PathPlannerPath SIN_CS;
+
 
     public final PathPlannerPath CLOSE_STAGE_END;
 
@@ -164,6 +177,18 @@ public class Paths {
             AS_ON = PathPlannerPath.fromPathFile("AS_ON").flipPath();
             AS_IN = PathPlannerPath.fromPathFile("AS_IN").flipPath();
             AN2_GRAB = PathPlannerPath.fromPathFile("AN2_GRAB").flipPath();
+            AN3_GRAB = PathPlannerPath.fromPathFile("AN3_GRAB").flipPath();
+            AS_CN = PathPlannerPath.fromPathFile("AS_CN").flipPath();
+            CN_AS = PathPlannerPath.fromPathFile("CN_AS").flipPath();
+            SNEAK5 = PathPlannerPath.fromPathFile("5AmpSneak").flipPath();
+            CN_S = PathPlannerPath.fromPathFile("CN_S").flipPath();
+
+            C_N = PathPlannerPath.fromPathFile("C_N").flipPath();
+            CN_CCN = PathPlannerPath.fromPathFile("CN_CCN").flipPath();
+            CS_AIN = PathPlannerPath.fromPathFile("CS_AIN").flipPath();
+            CS_SIN = PathPlannerPath.fromPathFile("CS_SIN").flipPath();
+            AIN_CS = PathPlannerPath.fromPathFile("AIN_CS").flipPath();
+            SIN_CS = PathPlannerPath.fromPathFile("SIN_CS").flipPath();
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd").flipPath(); 
 
@@ -239,6 +264,18 @@ public class Paths {
             AS_ON = PathPlannerPath.fromPathFile("AS_ON");
             AS_IN = PathPlannerPath.fromPathFile("AS_IN");
             AN2_GRAB = PathPlannerPath.fromPathFile("AN2_GRAB");
+            AN3_GRAB = PathPlannerPath.fromPathFile("AN3_GRAB");
+            AS_CN = PathPlannerPath.fromPathFile("AS_CN");
+            CN_AS = PathPlannerPath.fromPathFile("CN_AS");
+            SNEAK5 = PathPlannerPath.fromPathFile("5AmpSneak").flipPath();
+            CN_S = PathPlannerPath.fromPathFile("CN_S").flipPath();
+
+            C_N = PathPlannerPath.fromPathFile("C_N");
+            CN_CCN = PathPlannerPath.fromPathFile("CN_CCN");
+            CS_AIN = PathPlannerPath.fromPathFile("CS_AIN");
+            CS_SIN = PathPlannerPath.fromPathFile("CS_SIN");
+            AIN_CS = PathPlannerPath.fromPathFile("AIN_CS");
+            SIN_CS = PathPlannerPath.fromPathFile("SIN_CS");
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd");
 

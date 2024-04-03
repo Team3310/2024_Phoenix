@@ -731,6 +731,7 @@ public class PathPlannerPath {
               currentFieldRelativeSpeeds.vyMetersPerSecond);
       robotNextControl =
           startingPose.getTranslation().plus(new Translation2d(stoppingDistance, heading));
+      //next control is esentially a control point for the bezier curve to lerp on
     }
 
     int closestPointIdx = 0;
@@ -738,6 +739,7 @@ public class PathPlannerPath {
         (robotNextControl != null) ? robotNextControl : startingPose.getTranslation();
     double closestDist = positionDelta(comparePoint, getPoint(closestPointIdx).position);
 
+    //loops through all points which has about 20 per "segment" which is between waypoints
     for (int i = 1; i < numPoints(); i++) {
       double d = positionDelta(comparePoint, getPoint(i).position);
 
@@ -747,6 +749,8 @@ public class PathPlannerPath {
       }
     }
 
+    //note these if statements when true return
+    //if closest point is the end
     if (closestPointIdx == numPoints() - 1) {
       Rotation2d heading = getPoint(numPoints() - 1).position.minus(comparePoint).getAngle();
 
@@ -779,10 +783,13 @@ public class PathPlannerPath {
           reversed,
           previewStartingRotation,
           previewStartingSpeeds);
-    } else if ((closestPointIdx == 0 && robotNextControl == null)
+    } else if (
+        (closestPointIdx == 0 && robotNextControl == null)//closest is start of path and starting velocity is low
         || (Math.abs(closestDist - startingPose.getTranslation().getDistance(getPoint(0).position))
                 <= 0.25
-            && linearVel < 0.1)) {
+            && linearVel < 0.1)) 
+        //or distance to closest path point is close to start and start velocity is low
+      {
       double distToStart = startingPose.getTranslation().getDistance(getPoint(0).position);
 
       Rotation2d heading = getPoint(0).position.minus(startingPose.getTranslation()).getAngle();
@@ -846,8 +853,12 @@ public class PathPlannerPath {
             previewStartingSpeeds);
       }
     }
+    //otherwise if closest point is somewhere were else in the middle
 
     int joinAnchorIdx = numPoints() - 1;
+    //checks where along the path distance wise after the closest point
+    //coincides with the the distance along the path + closest distance
+    //to see which point to join the path at
     for (int i = closestPointIdx; i < numPoints(); i++) {
       if (getPoint(i).distanceAlongPath
           >= getPoint(closestPointIdx).distanceAlongPath + closestDist) {
@@ -859,11 +870,13 @@ public class PathPlannerPath {
     Translation2d joinPrevControl = getPoint(closestPointIdx).position;
     Translation2d joinAnchor = getPoint(joinAnchorIdx).position;
 
-    if (robotNextControl == null) {
-      double robotToJoinDelta = startingPose.getTranslation().getDistance(joinAnchor);
+    if (robotNextControl == null) {//if starting velocity is low
+      double robotToJoinDelta = startingPose.getTranslation().getDistance(joinAnchor); //delta pos from start to point where joining
       Rotation2d heading = joinPrevControl.minus(startingPose.getTranslation()).getAngle();
       robotNextControl =
           startingPose.getTranslation().plus(new Translation2d(robotToJoinDelta / 3.0, heading));
+      //sets new next control point, the /3.0 seems arbitary. it affects the effective "strength" of the control point.
+      //I guess because the velocity is low you can go straight towards it then start to correct towards the actual path
     }
 
     if (joinAnchorIdx == numPoints() - 1) {
@@ -879,6 +892,9 @@ public class PathPlannerPath {
           reversed,
           previewStartingRotation,
           previewStartingSpeeds);
+      //note upon looking at this it doesn't actually replan in accordance with starting speeds and rotation
+      //which is weird might not actually affect much but I could see potential issues
+      //the join is the end in this case so it should matter what your starting speed is
     }
 
     if (bezierPoints.isEmpty()) {
@@ -893,6 +909,10 @@ public class PathPlannerPath {
       return PathPlannerPath.fromPathPoints(replannedPoints, globalConstraints, goalEndState);
     }
 
+    //lines 916-1025 basically just do what the contructor would do but because it has to recalc
+    //bezier points it also checks all the rotation targets, constraints zones, and event markers
+
+    //lines 916-948 recalc the bezier control points
     // We can reference bezier points
     int nextWaypointIdx = (int) Math.ceil((joinAnchorIdx + 1) * PathSegment.RESOLUTION);
     int bezierPointIdx = nextWaypointIdx * 3;
@@ -927,6 +947,7 @@ public class PathPlannerPath {
             nextWaypointPrevControl));
     replannedBezier.addAll(bezierPoints.subList(bezierPointIdx, bezierPoints.size()));
 
+    //lines 951-975 lerp along new bezier points to get the path
     double segment1Length = 0;
     Translation2d lastSegment1Pos = startingPose.getTranslation();
     double segment2Length = 0;
@@ -953,6 +974,7 @@ public class PathPlannerPath {
 
     double segment1Pct = segment1Length / (segment1Length + segment2Length);
 
+    //lines 978-1025 takes the new lerped path and match rotation targets, constraints zones, and event markers along it
     List<RotationTarget> mappedTargets = new ArrayList<>();
     List<ConstraintsZone> mappedZones = new ArrayList<>();
     List<EventMarker> mappedMarkers = new ArrayList<>();
@@ -1015,6 +1037,7 @@ public class PathPlannerPath {
         reversed,
         previewStartingRotation,
         previewStartingSpeeds);
+    //again doesn't change starting rotation and speeds which may or may not have an effect
   }
 
   /**

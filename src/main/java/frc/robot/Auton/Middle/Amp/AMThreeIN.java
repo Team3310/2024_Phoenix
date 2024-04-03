@@ -11,7 +11,7 @@ public class AMThreeIN extends AutonCommandBase{
         this.addCommands(
             new AMTwoIN(robotContainer),
             FollowToIntake(Paths.getInstance().AS_ON),
-            GoToShoot(robotContainer,Paths.getInstance().ON_AN2)
+            GoToShoot(robotContainer,Paths.getInstance().ON_AN2, false)
         );
     }
 }
