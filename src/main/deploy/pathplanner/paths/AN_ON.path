@@ -16,24 +16,30 @@
     },
     {
       "anchor": {
-        "x": 8.211618708951704,
-        "y": 7.447004608294931
+        "x": 8.18474303615274,
+        "y": 7.510936132983377
       },
       "prevControl": {
-        "x": 7.1854566566276,
-        "y": 7.373707318843208
+        "x": 7.158580983828636,
+        "y": 7.437638843531655
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "AON"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 3.75,
+    "maxVelocity": 4.5,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -48,5 +54,5 @@
     "rotation": 30.7,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

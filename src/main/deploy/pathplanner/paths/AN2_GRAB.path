@@ -4,28 +4,44 @@
     {
       "anchor": {
         "x": 3.799121883958054,
-        "y": 5.570593998330854
+        "y": 5.47
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5991218839580537,
-        "y": 5.570593998330854
+        "x": 3.1524152402107117,
+        "y": 5.47
       },
       "isLocked": false,
       "linkedName": "AN2"
     },
     {
       "anchor": {
-        "x": 2.597046336949817,
-        "y": 5.570593998330854
+        "x": 1.6144554511331248,
+        "y": 5.47
       },
       "prevControl": {
-        "x": 2.7970463369498173,
-        "y": 5.570593998330854
+        "x": 1.407436121264887,
+        "y": 5.47
+      },
+      "nextControl": {
+        "x": 1.995993464964025,
+        "y": 5.47
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.170293229475348,
+        "y": 5.47
+      },
+      "prevControl": {
+        "x": 2.070293229475348,
+        "y": 5.47
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "AN2_GRAB_END"
     }
   ],
   "rotationTargets": [],
@@ -33,13 +49,13 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.75,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
+    "rotation": 0.0,
     "rotateFast": false
   },
   "reversed": false,

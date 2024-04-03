@@ -1,20 +1,15 @@
 package frc.robot.Auton;
 
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.RobotContainer;
-import frc.robot.Commands.Intake.IntakeShooter;
 
 public class DriveTest extends AutonCommandBase{
     public DriveTest(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose(Paths.getInstance().DRIVE_TEST);
+        resetRobotPose(Paths.getInstance().DRIVE_TEST_TWO);
 
         this.addCommands(
-            new ParallelRaceGroup(
-                Follow(Paths.getInstance().DRIVE_TEST),
-                new IntakeShooter(true)
-            )
+            Follow(Paths.getInstance().DRIVE_TEST_TWO)
         );
     }
 }

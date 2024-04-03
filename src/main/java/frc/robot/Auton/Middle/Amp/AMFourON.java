@@ -10,7 +10,7 @@ public class AMFourON extends AutonCommandBase{
 
         this.addCommands(
             new AMThreeON(robotContainer),
-            FollowToIntake(Paths.getInstance().AN2_GRAB),
+            FollowToAmpIntake(Paths.getInstance().AN2_GRAB),
             AimAndShoot(robotContainer)
         );
     }

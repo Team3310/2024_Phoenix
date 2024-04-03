@@ -13,8 +13,14 @@ import frc.robot.Auton.Center.FourStageLeftCounter;
 import frc.robot.Auton.Center.ThreeStageLeft;
 import frc.robot.Auton.Center.ThreeStageLeftCounter;
 import frc.robot.Auton.Center.TwoStageLeft;
+import frc.robot.Auton.Middle.Amp.AMFiveIN;
+import frc.robot.Auton.Middle.Amp.AMFiveON;
 import frc.robot.Auton.Middle.Amp.AMFourIN;
+import frc.robot.Auton.Middle.Amp.AMFourMIN;
+import frc.robot.Auton.Middle.Amp.AMFourMON;
 import frc.robot.Auton.Middle.Amp.AMFourON;
+import frc.robot.Auton.Middle.Center.CenterFiveAIN;
+import frc.robot.Auton.Middle.Center.CenterFiveSIN;
 import frc.robot.Auton.Middle.Counter.Anti3005Inside;
 import frc.robot.Auton.Middle.Counter.Anti3005Outside;
 import frc.robot.Auton.Middle.Stage.StageThreeCNMiddle;
@@ -68,6 +74,12 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.STAGE_THREE_MMIN)
         .addOption(AutonomousMode.AMP_FIVE_IN)
         .addOption(AutonomousMode.AMP_FIVE_ON)
+        .addOption(AutonomousMode.AMP_FIVE_MIN)
+        .addOption(AutonomousMode.AMP_FIVE_MON)
+        .addOption(AutonomousMode.AMP_SIX_IN)
+        .addOption(AutonomousMode.AMP_SIX_ON)
+        .addOption(AutonomousMode.CENTER_FIVE_SIN)
+        .addOption(AutonomousMode.CENTER_FIVE_AIN)
         ;
     }
 
@@ -106,7 +118,13 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         STAGE_THREE_MMCN("stage three 1.ON->2.CN_MM->3.IN_MM"),
         STAGE_THREE_MMIN("stage three 1.ON->2.IN_MM->3.CN_MM"),
         AMP_FIVE_ON("Amp 5 1.ON->IN"),
-        AMP_FIVE_IN("Amp 5 1.IN->ON")
+        AMP_FIVE_IN("Amp 5 1.IN->ON"),
+        AMP_FIVE_MON("Amp 5 1.ON->IN->CN"),
+        AMP_FIVE_MIN("Amp 5 1.IN->ON->CN"),
+        AMP_SIX_ON("Amp 6 1.ON->IN"),
+        AMP_SIX_IN("Amp 6 1.IN->ON"),
+        CENTER_FIVE_SIN("Center 5 SIN"),
+        CENTER_FIVE_AIN("Center 5 AIN"),
         ;
 
         private String name = "";
@@ -178,6 +196,18 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new AMFourIN(RobotContainer.getInstance());
                 case AMP_FIVE_ON:
                     return new AMFourON(RobotContainer.getInstance());
+                case AMP_FIVE_MIN:
+                    return new AMFourMIN(RobotContainer.getInstance());
+                case AMP_FIVE_MON:
+                    return new AMFourMON(RobotContainer.getInstance());
+                case AMP_SIX_IN:
+                    return new AMFiveIN(RobotContainer.getInstance());
+                case AMP_SIX_ON:
+                    return new AMFiveON(RobotContainer.getInstance());
+                case CENTER_FIVE_AIN:
+                    return new CenterFiveAIN(RobotContainer.getInstance());
+                case CENTER_FIVE_SIN:
+                    return new CenterFiveSIN(RobotContainer.getInstance());
                 case GYRO_TEST:
                     return new TestGyroInit(RobotContainer.getInstance());
                 case DRIVE_TEST:

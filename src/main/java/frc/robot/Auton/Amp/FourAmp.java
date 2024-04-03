@@ -8,11 +8,9 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.Paths;
-import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
-import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Subsystems.Lift;
 
 public class FourAmp extends AutonCommandBase{
@@ -35,7 +33,9 @@ public class FourAmp extends AutonCommandBase{
             new ParallelDeadlineGroup(
                 new WaitCommand(0.25), 
                 new FeederShootCommandAuton(robotContainer.shooter)
-            )
+            ),
+            FollowToIntake(Paths.getInstance().SNEAK5),
+            GoToShoot(robotContainer, Paths.getInstance().CN_S)
         );
     }
 }

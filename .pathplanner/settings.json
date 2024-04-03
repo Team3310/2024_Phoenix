@@ -6,13 +6,14 @@
     "4Amp",
     "4Middle",
     "4Stage",
-    "Crazy",
     "AmpMiddlePaths",
+    "Crazy",
+    "CenterMiddlePaths",
     "SourceMiddleNotePaths"
   ],
   "autoFolders": [],
   "defaultMaxVel": 4.0,
-  "defaultMaxAccel": 3.75,
+  "defaultMaxAccel": 4.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 6.21

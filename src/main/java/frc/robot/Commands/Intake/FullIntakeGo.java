@@ -13,12 +13,14 @@ public class FullIntakeGo extends Command {
     private Shooter shooter;
     private Lift lift;
     private Elevator elevator;
+    private boolean end;
 
-    public FullIntakeGo(){
+    public FullIntakeGo(boolean end){
         this.intake = Intake.getInstance();
         this.shooter = Shooter.getInstance();
         this.lift = Lift.getInstance();
         this.elevator = Elevator.getInstance();
+        this.end = end;
 
         addRequirements(intake, shooter, lift, elevator);
     } 
@@ -27,10 +29,10 @@ public class FullIntakeGo extends Command {
     public void initialize() {
         // if (!shooter.isNoteLoaded()) {
             intake.setFrontIntakeRPM(Constants.FRONT_IN_INTAKE_RPM);
-            intake.setBackIntakeRPM(Constants.BACK_IN_INTAKE_RPM);
+            intake.setBackIntakeRPM(Constants.FRONT_IN_INTAKE_RPM);
             shooter.setKickerRPM(Constants.KICKER_INTAKE_RPM);
-            elevator.setPosition(2.0);
-            lift.setLiftAngle(20.0);
+            // elevator.setPosition(2.0);
+            lift.setLiftAngle(Constants.LIFT_INTAKE_DEGREES);
         // }
     }
 
@@ -40,7 +42,7 @@ public class FullIntakeGo extends Command {
 
     @Override
     public boolean isFinished(){
-        return false;
+        return end && shooter.isNoteLoaded();
     }
 
     @Override
@@ -49,5 +51,8 @@ public class FullIntakeGo extends Command {
         intake.setBackIntakeRPM(0.0);
         shooter.setKickerRPM(0.0);
         elevator.setPosition(0.0);
+
+        if(!interrupted)
+            shooter.setNoteIn(true);
     }
 }

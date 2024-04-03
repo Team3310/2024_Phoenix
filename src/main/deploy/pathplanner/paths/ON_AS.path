@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.211618708951704,
-        "y": 7.447004608294931
+        "x": 8.18474303615274,
+        "y": 7.510936132983377
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.126818825066221,
-        "y": 7.153815450488043
+        "x": 7.099943152267257,
+        "y": 7.21774697517649
       },
       "isLocked": false,
       "linkedName": "AON"
@@ -33,7 +33,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
-    "maxAcceleration": 3.75,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

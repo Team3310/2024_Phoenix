@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
@@ -68,7 +69,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path, boolean track){
-        return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Shooter.getInstance().hasNote()||!TunerConstants.DriveTrain.isTrackingNote).withTimeout(1.0)), new IntakeShooter(track));
+        return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Shooter.getInstance().hasNote()||!TunerConstants.DriveTrain.isTrackingNote).withTimeout(0.15)), new IntakeShooter(track));
     }
 
     protected ParallelDeadlineGroup FollowToAmpIntake(PathPlannerPath path){
@@ -115,11 +116,11 @@ public class AutonCommandBase extends SequentialCommandGroup {
     protected Command AimAndShoot(RobotContainer container){
         return new SequentialCommandGroup(
                 new ParallelDeadlineGroup(
-                    new AimLiftWithOdometryAuton().withTimeout(1.0),
+                    new AimLiftWithOdometryAuton().withTimeout(0.25),
                     new SetDriveMode(DriveMode.AIMATTARGET).andThen(new WaitUntilCommand(()->container.getDrivetrain().snapComplete()))
                 ),
                 new WaitCommand(0.1),
-                new FeederShootCommandAuton(container.shooter).withTimeout(0.2)
+                new FeederShootCommandAuton(container.shooter).withTimeout(0.15)
             );
     }
 }
