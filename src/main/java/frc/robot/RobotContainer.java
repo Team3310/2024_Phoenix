@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Climber.ClimbControlJoysticks;
 import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.ClimberPrepNoAngle;
+import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Climber.SetClimberUpDown;
 import frc.robot.Commands.Drive.SetDriveMode;
 import frc.robot.Commands.Drive.SetDriveOrientation;
@@ -160,8 +161,8 @@ public class RobotContainer {
     operatorController.leftBumper().onTrue(new SetTarget(TargetSimple.SPEAKER).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
    
     // climb 
-    operatorController.back().onTrue(new SetClimberUpDown(climber).alongWith(new SetDriveMode(DriveMode.JOYSTICK)).alongWith(new SetLiftOff(lift)).alongWith(new ShooterOff(shooter)));
-    operatorController.start().onTrue(new ClimberPrepNoAngle(this));
+    operatorController.back().onTrue(new SetClimberInches(climber, Constants.CLIMBER_MAX_INCHES).alongWith(new SetDriveMode(DriveMode.JOYSTICK)).alongWith(new SetLiftOff(lift)).alongWith(new ShooterOff(shooter)));
+    operatorController.start().onTrue(new SetClimberInches(climber, Constants.CLIMBER_MIN_INCHES).alongWith(new SetDriveMode(DriveMode.JOYSTICK)).alongWith(new SetLiftOff(lift)).alongWith(new ShooterOff(shooter)));
 
     // elevator
     operatorController.povUp().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MAX_INCHES).alongWith(new LoadAmp(flicker)));
@@ -173,8 +174,8 @@ public class RobotContainer {
     operatorController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(39.5);})); // platform
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
-    // operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3200); shooter.setRightMainRPM(1700); lift.setLiftAngle(42.0);})); // pass
-    operatorController.b().onTrue(new SetTarget(TargetSimple.CENTERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
+    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3400); shooter.setRightMainRPM(2200); lift.setLiftAngle(45.0);})); // pass
+ //   operatorController.b().onTrue(new SetTarget(TargetSimple.CENTERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
  
     // CommandScheduler.getInstance().setDefaultCommand(climber, new ClimbControlJoysticks(climber, operatorController));
 
