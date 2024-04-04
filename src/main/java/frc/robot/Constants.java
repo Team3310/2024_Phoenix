@@ -74,7 +74,7 @@ public class Constants {
             kLiftAngleMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(46.0));
             kLiftAngleMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(33.0));
             kLiftAngleMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(26.0));
-            kLiftAngleMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(23.0));
+            kLiftAngleMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(23.0+0.5));
             kLiftAngleMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.25+0.5));
             kLiftAngleMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(18.75));
             kLiftAngleMap.put(new InterpolatingDouble(32.0), new InterpolatingDouble(18.5));

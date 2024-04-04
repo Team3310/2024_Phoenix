@@ -19,6 +19,8 @@ import frc.robot.Auton.Paths;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
+import frc.robot.util.Camera.Targeting;
+import frc.robot.util.Camera.Targeting.TargetSimple;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -159,6 +161,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     Paths.getInstance().flip();
+    Targeting.setTargetSimple(TargetSimple.SPEAKER);
   }
 
   @Override
