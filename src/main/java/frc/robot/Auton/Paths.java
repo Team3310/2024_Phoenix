@@ -266,8 +266,8 @@ public class Paths {
             AN3_GRAB = PathPlannerPath.fromPathFile("AN3_GRAB");
             AS_CN = PathPlannerPath.fromPathFile("AS_CN");
             CN_AS = PathPlannerPath.fromPathFile("CN_AS");
-            SNEAK5 = PathPlannerPath.fromPathFile("5AmpSneak").flipPath();
-            CN_S = PathPlannerPath.fromPathFile("CN_S").flipPath();
+            SNEAK5 = PathPlannerPath.fromPathFile("5AmpSneak");
+            CN_S = PathPlannerPath.fromPathFile("CN_S");
 
             C_N = PathPlannerPath.fromPathFile("C_N");
             CN_CCN = PathPlannerPath.fromPathFile("CN_CCN");

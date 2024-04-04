@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
+import frc.robot.Swerve.TunerConstants;
 
 /** Base command for following a path */
 public class FollowPathCommand{
@@ -166,6 +167,8 @@ public class FollowPathCommand{
     // if(RobotContainer.getInstance().getSide() == SideMode.RED){
     //   targetSpeeds.vyMetersPerSecond *= -1;
     // }
+
+    TunerConstants.DriveTrain.seedFieldRelative(targetState.getDifferentialPose());
 
     return targetSpeeds;
   }

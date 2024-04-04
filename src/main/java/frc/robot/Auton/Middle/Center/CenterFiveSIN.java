@@ -8,7 +8,7 @@ public class CenterFiveSIN extends AutonCommandBase{
     public CenterFiveSIN(RobotContainer robotContainer){
         super(robotContainer);
 
-        resetRobotPose(Paths.getInstance().TWO_AMP);
+        // resetRobotPose(Paths.getInstance().TWO_AMP);
 
         this.addCommands(
             new CenterFourSIN(robotContainer),
