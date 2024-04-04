@@ -14,18 +14,18 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3Amp"
+            "pathName": "2AmpSolo"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4Amp"
+            "pathName": "2AmpSolo2"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Amp",
   "choreoAuto": false
 }

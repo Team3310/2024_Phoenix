@@ -8,36 +8,48 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ToSourceON"
+            "pathName": "2Amp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ON_SM"
+            "pathName": "AN_ON"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceToIN"
+            "pathName": "ON_AS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "IN_SM3"
+            "pathName": "AS_IN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SMGrabClose"
+            "pathName": "IN_AS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS_CN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CN_AS"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Amp",
   "choreoAuto": false
 }

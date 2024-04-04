@@ -8,60 +8,48 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ToMiddleCenter"
+            "pathName": "2Amp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToAN"
+            "pathName": "AN_IN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToMS"
+            "pathName": "IN_AS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MSToMiddle"
+            "pathName": "AS_ON"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToMN"
+            "pathName": "ON_AS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToMS"
+            "pathName": "AS_CN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MSToMiddle"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MiddleToON"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MiddleToMS"
+            "pathName": "CN_AS"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Amp",
   "choreoAuto": false
 }

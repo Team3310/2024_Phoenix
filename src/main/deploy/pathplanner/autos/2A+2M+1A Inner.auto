@@ -8,30 +8,42 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2StageLeftPreGrab"
+            "pathName": "2Amp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2StageLeftGrab"
+            "pathName": "AN_IN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3StageLeftCounter"
+            "pathName": "IN_AS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3StageLeft"
+            "pathName": "AS_ON"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ON_AN2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AN2_GRAB"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Amp",
   "choreoAuto": false
 }

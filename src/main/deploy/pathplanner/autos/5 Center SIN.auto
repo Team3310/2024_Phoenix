@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.7352951848760846,
-      "y": 6.670053340106681
-    },
-    "rotation": 59.826479970355656
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,60 +8,48 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ToMiddleAmp"
+            "pathName": "C_N"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToAN"
+            "pathName": "CN_CCN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToMS"
+            "pathName": "CN_S"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MSToMiddle"
+            "pathName": "CS_SIN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToMN"
+            "pathName": "SIN_CS"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleToMS"
+            "pathName": "CS_AIN"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MSToMiddle"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MiddleToON"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MiddleToMS"
+            "pathName": "AIN_CS"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Center",
   "choreoAuto": false
 }

@@ -8,24 +8,30 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2Stage"
+            "pathName": "2Amp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "3Stage"
+            "pathName": "3Amp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4Stage"
+            "pathName": "3AmpSolo"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2AmpSolo2"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Amp",
   "choreoAuto": false
 }

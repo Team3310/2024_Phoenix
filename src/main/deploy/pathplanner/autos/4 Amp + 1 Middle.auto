@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.7352951848760846,
-      "y": 6.670053340106681
-    },
-    "rotation": 61.260204708311946
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,24 +8,36 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ToAmpMiddleAmp"
+            "pathName": "2Amp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "AmpToIN"
+            "pathName": "3Amp"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "AmpToON"
+            "pathName": "4Amp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "5AmpSneak"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CN_S"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Amp",
   "choreoAuto": false
 }

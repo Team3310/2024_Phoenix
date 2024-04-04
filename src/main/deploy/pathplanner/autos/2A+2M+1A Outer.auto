@@ -14,18 +14,36 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2AmpSolo"
+            "pathName": "AN_ON"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "2AmpSolo2"
+            "pathName": "ON_AS"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AS_IN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "IN_AN2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "AN2_GRAB"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Amp",
   "choreoAuto": false
 }
