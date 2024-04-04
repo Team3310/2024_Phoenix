@@ -64,8 +64,8 @@ public class Constants {
 
         public static final double CENTER_FIELD_RELATIVE_ANGLE_DEG = 43.0;
         public static double kCenterLiftAngleFixed = 50.0;
-        public static double kCenterRightShooterFixed = 2200.0;
-        public static double kCenterLeftShooterFixed = 3400.0;
+        public static double kCenterRightShooterFixed = 2200.0-200.0;
+        public static double kCenterLeftShooterFixed = 3400.0-200.0;
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLiftAngleMap = new InterpolatingTreeMap<>();
         static {
