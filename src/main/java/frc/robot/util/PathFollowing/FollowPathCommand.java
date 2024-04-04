@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.Utils;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -164,11 +165,9 @@ public class FollowPathCommand{
         targetSpeeds.omegaRadiansPerSecond);
     PPLibTelemetry.setPathInaccuracy(controller.getPositionalError());
 
-    // if(RobotContainer.getInstance().getSide() == SideMode.RED){
-    //   targetSpeeds.vyMetersPerSecond *= -1;
-    // }
-
-    TunerConstants.DriveTrain.seedFieldRelative(targetState.getDifferentialPose());
+    if(Utils.isSimulation()){
+      TunerConstants.DriveTrain.seedFieldRelative(targetState.getDifferentialPose());
+    }
 
     return targetSpeeds;
   }
