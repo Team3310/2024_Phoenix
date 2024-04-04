@@ -3,7 +3,6 @@ package frc.robot.Subsystems;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.DynamicMotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 // import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
@@ -26,7 +25,7 @@ public class Climber extends SubsystemBase {
 
     private final DigitalInput chainSensor = new DigitalInput(Constants.CHAIN_SENSOR_PORT);
 
-    private DynamicMotionMagicDutyCycle control = new DynamicMotionMagicDutyCycle(0.0, 0.0, 0.0, 0.0);
+    private MotionMagicDutyCycle control = new MotionMagicDutyCycle(0.0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);
 
     public enum ClimbControlMode{
@@ -78,8 +77,8 @@ public class Climber extends SubsystemBase {
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-        // config.MotionMagic.MotionMagicCruiseVelocity = 60.0; // rotations per second
-        // config.MotionMagic.MotionMagicAcceleration = 60.0;
+        config.MotionMagic.MotionMagicCruiseVelocity = 60.0; // rotations per second
+        config.MotionMagic.MotionMagicAcceleration = 60.0;
 
         climberRight.getConfigurator().apply(config);
         climberRight.getConfigurator().apply(outputConfigs);
@@ -154,13 +153,13 @@ public class Climber extends SubsystemBase {
     }
 
     public void setPosition(double inches) {
-        if (inches < (getLeftPositionInches() + getRightPositionInches()) / 2.0) {
-            control.Velocity = DOWN_VELOCITY;
-            control.Acceleration = DOWN_ACCEL;
-        } else {
-            control.Velocity = UP_VELOCITY;
-            control.Acceleration = UP_ACCEL;
-        }
+        // if (inches < (getLeftPositionInches() + getRightPositionInches()) / 2.0) {
+        //     control.Velocity = DOWN_VELOCITY;
+        //     control.Acceleration = DOWN_ACCEL;
+        // } else {
+        //     control.Velocity = UP_VELOCITY;
+        //     control.Acceleration = UP_ACCEL;
+        // }
 
         setLeftPositionInches(inches);
         setRightPositionInches(inches);

@@ -1,11 +1,10 @@
 package frc.robot.Commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
 
 public class FullIntakeGo extends Command {
