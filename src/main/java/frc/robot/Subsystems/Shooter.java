@@ -204,9 +204,9 @@ public class Shooter extends SubsystemBase {
             SmartDashboard.putNumber("Shooter Left RPM", getLeftMainRPM());
             SmartDashboard.putNumber("Kicker RPM", getKickerRPM());
             SmartDashboard.putBoolean("isNoteLoaded", isNoteLoaded());
+            SmartDashboard.putNumber("Shooter RPM Offset", offset);
         }
 
-        SmartDashboard.putNumber("Shooter RPM Offset", offset);
         SmartDashboard.putBoolean("Shooter has note", hasNote());
     }
 }

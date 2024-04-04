@@ -7,7 +7,6 @@ import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.TunerConstants;
-import frc.robot.util.Interpolable.InterpolatingDouble;
 
 public class AimLiftWithOdometryAuton extends Command{
     private Lift lift;
@@ -28,16 +27,22 @@ public class AimLiftWithOdometryAuton extends Command{
 
     @Override
     public void execute(){ 
-        SmartDashboard.putBoolean("has target", drive.hasTarget());
+        if(Constants.debug){
+            SmartDashboard.putBoolean("has target", drive.hasTarget());
+        }
         if (drive.hasTarget()) {
-            SmartDashboard.putNumber("targeting dist", drive.getLimelightTargeting().getDistance_XY_average());
+            if(Constants.debug){
+                SmartDashboard.putNumber("targeting dist", drive.getLimelightTargeting().getDistance_XY_average());
+            }
             drive.getLimelightTargeting().update();
             // double angle = dist!=0.0?drive.getLimelightTargeting().getEl():Constants.kLiftAngleMapComp.getInterpolated(new InterpolatingDouble(dist)).value;
             lift.setLiftAngle(drive.getLimelightTargeting().getEl());
             shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
             shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
         }else{
-            SmartDashboard.putNumber("targeting odo dist", drive.getOdoTargeting().getDistance_XY_average());
+            if(Constants.debug){
+                SmartDashboard.putNumber("targeting odo dist", drive.getOdoTargeting().getDistance_XY_average());
+            }
             drive.getOdoTargeting().update();  
             lift.setLiftAngle(drive.getOdoTargeting().getEl());
             shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());

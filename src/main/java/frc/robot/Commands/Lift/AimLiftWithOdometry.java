@@ -1,20 +1,17 @@
 package frc.robot.Commands.Lift;
 
-import java.lang.annotation.Target;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Subsystems.Drivetrain;
+import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
-import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Camera.Targeting;
 import frc.robot.util.Camera.Targeting.TargetSimple;
-import frc.robot.util.Interpolable.InterpolatingDouble;
 
 public class AimLiftWithOdometry extends Command{
     private Lift lift;
@@ -46,7 +43,9 @@ public class AimLiftWithOdometry extends Command{
             if (drive.canSeeTargetTag()) {
                 drive.getLimelightTargeting().update();
                 double liftAngle = drive.getLimelightTargeting().getEl();
-                SmartDashboard.putNumber("AimLift Angle", liftAngle);
+                if(Constants.debug){
+                    SmartDashboard.putNumber("AimLift Angle", liftAngle);
+                }
                 lift.setLiftAngle(liftAngle);
                 shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
                 shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());

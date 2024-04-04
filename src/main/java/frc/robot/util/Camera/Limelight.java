@@ -1,6 +1,5 @@
 package frc.robot.util.Camera;
 
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;

@@ -169,7 +169,8 @@ public class RobotContainer {
     operatorController.povUp().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MAX_INCHES).alongWith(new LoadAmp(flicker)));
     operatorController.povRight().onTrue(new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES).alongWith(new LoadAmp(flicker)));
     operatorController.povDown().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
-    operatorController.povLeft().onTrue(new SetTarget(TargetSimple.CORNERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
+    // operatorController.povLeft().onTrue(new SetTarget(TargetSimple.CORNERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
+    operatorController.povLeft().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(23.0);})); // amp wing
 
     // shooting
     operatorController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
@@ -198,9 +199,13 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    addTestButtons();
+    if(Constants.debug){
+      addTestButtons();
+    }
     configureDriverController();
     configureOperatorController();
+    //always want these offset buttons for comp
+    addOffsetButtons();
 
     // SmartDashboard.putString("red start pose", PathPlannerPath.fromPathFile("2Amp").flipPath().getPreviewStartingHolonomicPose().getRotation().plus(new Rotation2d(Math.PI)).toString());
     // SmartDashboard.putString("blue start pose", PathPlannerPath.fromPathFile("2Amp").getPreviewStartingHolonomicPose().getRotation().toString());
@@ -212,41 +217,37 @@ public class RobotContainer {
 
   //#region smartdashboard buttons
     public void addTestButtons(){
-      //always want these offset buttons for comp
-      addOffsetButtons();
 
       // SmartDashboard.putData("Amp To Shooter", new IntakeAmpToShooter());
 
       SmartDashboard.putData("test drive train", new SetDriveMode(DriveMode.TEST));
       SmartDashboard.putData("stop test drive train", new SetDriveMode(DriveMode.JOYSTICK));
 
-      //only want these if you're testing things
-      if(Constants.debug){
-        addIntakeTestButtons();
-        addShooterTestButtons();
-        addLiftTestButtons();
-        addDrivemodeTestButtons();
-        addClimberTestButtons();
-        addElevatorTestButtons();
-        addFlickerTestButtons();
+      addIntakeTestButtons();
+      addShooterTestButtons();
+      addLiftTestButtons();
+      addDrivemodeTestButtons();
+      addClimberTestButtons();
+      addElevatorTestButtons();
+      addFlickerTestButtons();
 
-        // SmartDashboard.putNumber("P", 1.0);
-        // SmartDashboard.putNumber("I", 0);
-        // SmartDashboard.putNumber("D", 0);
+      // SmartDashboard.putNumber("P", 1.0);
+      // SmartDashboard.putNumber("I", 0);
+      // SmartDashboard.putNumber("D", 0);
 
-        // SmartDashboard.putNumber("set hood degrees", 20.0);
+      // SmartDashboard.putNumber("set hood degrees", 20.0);
 
-        // SmartDashboard.putData("shooter wheels go", new SetLeftShooterRPM(shooter, 5000).alongWith(new SetRightShooterRPM(shooter, 3000)));
+      // SmartDashboard.putData("shooter wheels go", new SetLeftShooterRPM(shooter, 5000).alongWith(new SetRightShooterRPM(shooter, 3000)));
 
-        // SmartDashboard.putData("Snap 0", new InstantCommand(()->drivetrain.startSnap(0)));
-        // SmartDashboard.putData("Snap 90", new InstantCommand(()->drivetrain.startSnap(90)));
-        // SmartDashboard.putData("Snap -90", new InstantCommand(()->drivetrain.startSnap(-90)));
+      // SmartDashboard.putData("Snap 0", new InstantCommand(()->drivetrain.startSnap(0)));
+      // SmartDashboard.putData("Snap 90", new InstantCommand(()->drivetrain.startSnap(90)));
+      // SmartDashboard.putData("Snap -90", new InstantCommand(()->drivetrain.startSnap(-90)));
 
-        // SmartDashboard.putData("sysIdQuasistatic Forward", drivetrain.sysIdQuasistatic(Direction.kForward));
-        // SmartDashboard.putData("sysIdQuasistatic Reverse", drivetrain.sysIdQuasistatic(Direction.kReverse));
-        // SmartDashboard.putData("sysIdDynamic Forward", drivetrain.sysIdDynamic(Direction.kForward));
-        // SmartDashboard.putData("sysIdDynamic Reverse", drivetrain.sysIdDynamic(Direction.kReverse));
-      }
+      // SmartDashboard.putData("sysIdQuasistatic Forward", drivetrain.sysIdQuasistatic(Direction.kForward));
+      // SmartDashboard.putData("sysIdQuasistatic Reverse", drivetrain.sysIdQuasistatic(Direction.kReverse));
+      // SmartDashboard.putData("sysIdDynamic Forward", drivetrain.sysIdDynamic(Direction.kForward));
+      // SmartDashboard.putData("sysIdDynamic Reverse", drivetrain.sysIdDynamic(Direction.kReverse));
+      
     }
 
     private void addOffsetButtons(){
@@ -254,9 +255,11 @@ public class RobotContainer {
       SmartDashboard.putData("decrease lift offset", new InstantCommand(()->lift.adjustLiftOffset(-0.25)));
       SmartDashboard.putData("reset lift offset", new InstantCommand(()->lift.resetLiftOffset()));
 
-      SmartDashboard.putData("increase RPM offset", new InstantCommand(()->shooter.adjustRPMOffset(200.0)));
-      SmartDashboard.putData("decrease RPM offset", new InstantCommand(()->shooter.adjustRPMOffset(-200.0)));
-      SmartDashboard.putData("reset RPM offset", new InstantCommand(()->shooter.resetRPMOffset()));
+      if(Constants.debug){
+        SmartDashboard.putData("increase RPM offset", new InstantCommand(()->shooter.adjustRPMOffset(200.0)));
+        SmartDashboard.putData("decrease RPM offset", new InstantCommand(()->shooter.adjustRPMOffset(-200.0)));
+        SmartDashboard.putData("reset RPM offset", new InstantCommand(()->shooter.resetRPMOffset()));
+      }
     }
 
     private void addIntakeTestButtons() {

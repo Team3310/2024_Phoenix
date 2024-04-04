@@ -1,14 +1,12 @@
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix.led.StrobeAnimation;
-import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.Animation;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdleConfiguration;
+import com.ctre.phoenix.led.StrobeAnimation;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Swerve.TunerConstants;
 
 public class LED extends SubsystemBase{
     private CANdle candle;

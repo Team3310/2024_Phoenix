@@ -5,8 +5,6 @@
 package frc.robot.Commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Flicker;
 import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Shooter;

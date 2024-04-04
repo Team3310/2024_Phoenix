@@ -1,9 +1,9 @@
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.DynamicMotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.hardware.TalonFX;
 // import com.ctre.phoenix6.mechanisms.SimpleDifferentialMechanism;
@@ -21,9 +21,12 @@ public class Climber extends SubsystemBase {
     private final TalonFX climberRight = new TalonFX(Constants.CLIMBER_LEFT_ID, TunerConstants.kSecondaryCANbusName);
     private final TalonFX climberLeft = new TalonFX(Constants.CLIMBER_RIGHT_ID, TunerConstants.kSecondaryCANbusName);
 
+    private TalonFXConfiguration config = new TalonFXConfiguration();
+    private MotorOutputConfigs outputConfigs = new MotorOutputConfigs();
+
     private final DigitalInput chainSensor = new DigitalInput(Constants.CHAIN_SENSOR_PORT);
 
-    private MotionMagicDutyCycle control = new MotionMagicDutyCycle(0);
+    private DynamicMotionMagicDutyCycle control = new DynamicMotionMagicDutyCycle(0.0, 0.0, 0.0, 0.0);
     private DutyCycleOut speedControl = new DutyCycleOut(0);
 
     public enum ClimbControlMode{
@@ -45,6 +48,11 @@ public class Climber extends SubsystemBase {
     private final double kI = 0.0;
     private final double kD = 0.0;
 
+    private static final double UP_VELOCITY = 60; // motor rps
+    private static final double UP_ACCEL = 60.0;
+    private static final double DOWN_VELOCITY = 90; // motor rps
+    private static final double DOWN_ACCEL = 90.0;
+
     public static Climber getInstance() {
         if (instance == null) {
             instance = new Climber();
@@ -53,8 +61,6 @@ public class Climber extends SubsystemBase {
     }
 
     private Climber() {
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        MotorOutputConfigs outputConfigs = new MotorOutputConfigs();
         config.Slot0.kP = kP;
         config.Slot0.kI = kI;
         config.Slot0.kD = kD;
@@ -72,8 +78,8 @@ public class Climber extends SubsystemBase {
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = 60.0; // inches per second
-        config.MotionMagic.MotionMagicAcceleration = 60.0;
+        // config.MotionMagic.MotionMagicCruiseVelocity = 60.0; // rotations per second
+        // config.MotionMagic.MotionMagicAcceleration = 60.0;
 
         climberRight.getConfigurator().apply(config);
         climberRight.getConfigurator().apply(outputConfigs);
@@ -81,6 +87,8 @@ public class Climber extends SubsystemBase {
         climberLeft.getConfigurator().apply(config);
         climberLeft.getConfigurator().apply(outputConfigs);
         climberLeft.setInverted(true);
+
+        // updateMotionMagicApplyConfigs(UP_VELOCITY, UP_ACCEL);
 
         control.EnableFOC = true;
 
@@ -146,6 +154,14 @@ public class Climber extends SubsystemBase {
     }
 
     public void setPosition(double inches) {
+        if (inches < (getLeftPositionInches() + getRightPositionInches()) / 2.0) {
+            control.Velocity = DOWN_VELOCITY;
+            control.Acceleration = DOWN_ACCEL;
+        } else {
+            control.Velocity = UP_VELOCITY;
+            control.Acceleration = UP_ACCEL;
+        }
+
         setLeftPositionInches(inches);
         setRightPositionInches(inches);
     }

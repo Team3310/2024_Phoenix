@@ -102,6 +102,8 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elevator Inches", getPositionInches());
+        if(Constants.debug){
+            SmartDashboard.putNumber("Elevator Inches", getPositionInches());
+        }
     }
 }

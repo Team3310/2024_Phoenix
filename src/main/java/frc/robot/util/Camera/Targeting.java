@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
@@ -406,7 +405,9 @@ public class Targeting {
 
         PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight" + limelightHostname);
 
-        SmartDashboard.putBoolean("LimelightHasTarget", limelight.hasTarget());
+        if(Constants.debug){
+            SmartDashboard.putBoolean("LimelightHasTarget", limelight.hasTarget());
+        }
         if (limelight.hasTarget()){
             try {
                 botPos = limelight.getBotPose();//botpose_wpiblue
@@ -430,16 +431,22 @@ public class Targeting {
 
             if((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && (distanceToTarget < KALMAN_APRILTAG_MAX_RANGE)){
                 TunerConstants.DriveTrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp());
-                SmartDashboard.putString("KALMAN", "Valid");
+                if(Constants.debug){
+                    SmartDashboard.putString("KALMAN", "Valid");
+                }
                 PPLibTelemetry.setTargetPose(botPose2d)
                 ;
             } else {
-                SmartDashboard.putString("KALMAN", "Invalid");
+                if(Constants.debug){
+                    SmartDashboard.putString("KALMAN", "Invalid");
+                }
             }
 
-            SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
-            SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
-            SmartDashboard.putNumber("translationSpeed", translationalSpeed);
+            if(Constants.debug){
+                SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
+                SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
+                SmartDashboard.putNumber("translationSpeed", translationalSpeed);
+            }
         }
     }
     

@@ -108,7 +108,7 @@ public class Paths {
 
     private Paths(Alliance passedSide) {
         // SmartDashboard.putString("Alliance from DS", DriverStation.getAlliance().get().name());
-        SmartDashboard.putString("passed side", passedSide.name());
+        // SmartDashboard.putString("passed side", passedSide.name());
         if (passedSide == Alliance.Red) {
             side = Alliance.Red;
             TunerConstants.DriveTrain.setSideMode(side);
@@ -287,12 +287,12 @@ public class Paths {
     }
 
     public void flip() {
-        SmartDashboard.putString("ds side", DriverStation.getAlliance().get().name());
-        SmartDashboard.putString("last side", side.name());
+        // SmartDashboard.putString("ds side", DriverStation.getAlliance().get().name());
+        // SmartDashboard.putString("last side", side.name());
 
         if(DriverStation.getAlliance().get() != side){
             instance = new Paths(DriverStation.getAlliance().get());
-            SmartDashboard.putString("set side", side.name());
+            // SmartDashboard.putString("set side", side.name());
         }
     }
 }

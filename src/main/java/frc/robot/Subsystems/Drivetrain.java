@@ -344,7 +344,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             angle = rolloverConversion_radians(angle - (Math.PI / 2));
         }
         setDriveMode(DriveMode.AIMATTARGET_AUTON);
-        SmartDashboard.putNumber("snap auton angle", Math.toDegrees(rolloverConversion_radians(angle+Math.PI)));
+        if(Constants.debug){
+            SmartDashboard.putNumber("snap auton angle", Math.toDegrees(rolloverConversion_radians(angle+Math.PI)));
+        }
         startSnap(Math.toDegrees(rolloverConversion_radians(angle+Math.PI)));
     }
 
@@ -480,11 +482,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             double tx_pidOutput = strafeTxController.calculate(tx_targetOffset, 0.005);
             double rotate_pidOutput = strafeRotateController.calculate(rotate_targetOffset, 0.005);
             
-            SmartDashboard.putNumber("ROT PID Error:", rotate_targetOffset);
-            SmartDashboard.putNumber("ROT PID Output:", rotate_pidOutput);
+            if(Constants.debug){
+                SmartDashboard.putNumber("ROT PID Error:", rotate_targetOffset);
+                SmartDashboard.putNumber("ROT PID Output:", rotate_pidOutput);
 
-            SmartDashboard.putNumber("TX PID Error:", tx_targetOffset);
-            SmartDashboard.putNumber("TX PID Output:", tx_pidOutput);
+                SmartDashboard.putNumber("TX PID Error:", tx_targetOffset);
+                SmartDashboard.putNumber("TX PID Output:", tx_pidOutput);
+            }
 
             setDriveOrientation(DriveOrientation.ROBOT_CENTRIC);
             updateDriveStrafeRotate(tx_pidOutput, rotate_pidOutput);   
@@ -635,8 +639,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //    pidNoteUpdateCounter++;
             double pidRotationOutput = noteTrackController.calculate(currentNoteTrackAngle, 0.005);
 
-            SmartDashboard.putNumber("pidRotationOutput", pidRotationOutput);
-            SmartDashboard.putNumber("noteAdjustAngle", adjustAngle);
+            if(Constants.debug){
+                SmartDashboard.putNumber("pidRotationOutput", pidRotationOutput);
+                SmartDashboard.putNumber("noteAdjustAngle", adjustAngle);
+            }
             double xForward = Math.sqrt(getDriveXWithDeadband() * getDriveXWithDeadband() + getDriveYWithDeadband() * getDriveYWithDeadband());
              
             isTrackingNote = true;
@@ -888,15 +894,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //     Targeting.setTarget(sideMode == SideMode.BLUE ? Target.BLUESPEAKER : Target.REDSPEAKER);
         // }
 
-        SmartDashboard.putNumber("odo x", getPose().getX());
-        SmartDashboard.putNumber("odo y", getPose().getY());
+        
 
         SmartDashboard.putString("side", sideMode.toString());
-        
-        SmartDashboard.putNumber("notetx", noteLimelight.getTargetHorizOffset());
-        SmartDashboard.putString("DriveTrain State", drivetrain_state);
 
         if (Constants.debug) {
+            SmartDashboard.putNumber("odo x", getPose().getX());
+            SmartDashboard.putNumber("odo y", getPose().getY());
+
+            SmartDashboard.putNumber("notetx", noteLimelight.getTargetHorizOffset());
+            SmartDashboard.putString("DriveTrain State", drivetrain_state);
 
             SmartDashboard.putBoolean("is snapping", isSnapping);
 
@@ -943,10 +950,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // }
 
             SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
+            SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
+            PPLibTelemetry.setCurrentPose(getPose());
         }
-        SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
-
-        PPLibTelemetry.setCurrentPose(getPose());
+        
         // PPLibTelemetry.setTargetPose(limelight.getBotPosePose());
     }
 

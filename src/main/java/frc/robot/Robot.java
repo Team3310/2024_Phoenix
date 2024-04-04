@@ -11,10 +11,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,8 +19,6 @@ import frc.robot.Auton.Paths;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
-import frc.robot.util.Camera.LimelightHelpers;
-import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -74,15 +69,17 @@ public class Robot extends TimedRobot {
         .map(Robot::macToString)
         .toArray(String[]::new);
 
-      SmartDashboard.putStringArray("MAC Addresses", macAddressStrings);
-      SmartDashboard.putString("Competition Bot MAC Address", macToString(COMPETITION_BOT_MAC_ADDRESS));
-      SmartDashboard.putString("Practice Bot MAC Address", macToString(PRACTICE_BOT_MAC_ADDRESS));
-
+      if(Constants.debug){
+        SmartDashboard.putStringArray("MAC Addresses", macAddressStrings);
+        SmartDashboard.putString("Competition Bot MAC Address", macToString(COMPETITION_BOT_MAC_ADDRESS));
+        SmartDashboard.putString("Practice Bot MAC Address", macToString(PRACTICE_BOT_MAC_ADDRESS));
+      }  
       // If something goes terribly wrong we still want to use the competition bot stuff in competition.
       competitionBot = true;
     }
-
-      SmartDashboard.putBoolean("Competition Bot", competitionBot);
+      if(Constants.debug){
+        SmartDashboard.putBoolean("Competition Bot", competitionBot);
+      }
   }
 
   public static boolean isCompetitionBot() {
