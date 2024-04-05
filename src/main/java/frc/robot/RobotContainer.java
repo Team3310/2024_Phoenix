@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -176,7 +178,7 @@ public class RobotContainer {
     operatorController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(39.5);})); // platform
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
-    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3400); shooter.setRightMainRPM(2200); lift.setLiftAngle(45.0);})); // pass
+    operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3400-200.0); shooter.setRightMainRPM(2200-200.0); lift.setLiftAngle(45.0);})); // pass
  //   operatorController.b().onTrue(new SetTarget(TargetSimple.CENTERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
  
     // CommandScheduler.getInstance().setDefaultCommand(climber, new ClimbControlJoysticks(climber, operatorController));
