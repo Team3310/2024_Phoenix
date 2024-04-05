@@ -65,8 +65,8 @@ public class TunerConstants {
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
 
-    public static final String kPrimaryCANbusName = "Drivetrain";
-    public static final String kSecondaryCANbusName = isCompbot ? "Drivetrain" : "rio";
+    public static final String kPrimaryCANbusName = "Default Name";
+    public static final String kSecondaryCANbusName = isCompbot ? "Default Name" : "rio";
     private static final int kPigeonId = 0;
 
     //in revolutions
@@ -106,7 +106,7 @@ public class TunerConstants {
     private static final int kFrontLeftDriveMotorId = 0;
     private static final int kFrontLeftSteerMotorId = 4;
     private static final int kFrontLeftEncoderId = 0;
-    private static final double kFrontLeftEncoderOffset = isCompbot ?  0.2294921875/*0.157470703125::0.158203125*/ :  -0.14892578125;
+    private static final double kFrontLeftEncoderOffset = isCompbot ?  0.232421875/*0.157470703125::0.158203125*/ :  -0.14892578125;
 
     private static final double kFrontLeftXPosInches = 12.125;
     private static final double kFrontLeftYPosInches = 12.125;
@@ -115,7 +115,7 @@ public class TunerConstants {
     private static final int kFrontRightDriveMotorId = 1;
     private static final int kFrontRightSteerMotorId = 5;
     private static final int kFrontRightEncoderId = 1;
-    private static final double kFrontRightEncoderOffset = isCompbot ? -0.158447265625/*-0.155029296875::0.0498046875*/ : -0.26806640625;
+    private static final double kFrontRightEncoderOffset = isCompbot ? -0.1650390625/*-0.155029296875::0.0498046875*/ : -0.26806640625;
 
     private static final double kFrontRightXPosInches = 12.125;
     private static final double kFrontRightYPosInches = -12.125;
@@ -124,7 +124,7 @@ public class TunerConstants {
     private static final int kBackLeftDriveMotorId = 2;
     private static final int kBackLeftSteerMotorId = 6;
     private static final int kBackLeftEncoderId = 2;
-    private static final double kBackLeftEncoderOffset = isCompbot ? 0.294677734375/*0.294677734375*/ : 0.1513671875;
+    private static final double kBackLeftEncoderOffset = isCompbot ? 0.2978515625/*0.294677734375*/ : 0.1513671875;
 
     private static final double kBackLeftXPosInches = -12.125;
     private static final double kBackLeftYPosInches = 12.125;
@@ -133,7 +133,7 @@ public class TunerConstants {
     private static final int kBackRightDriveMotorId = 3;
     private static final int kBackRightSteerMotorId = 7;
     private static final int kBackRightEncoderId = 3;
-    private static final double kBackRightEncoderOffset = isCompbot ? -0.497314453125/*-0.499267578125*/ : 0.100830078125;
+    private static final double kBackRightEncoderOffset = isCompbot ? 0.497802734375/*-0.499267578125*/ : 0.100830078125;
 
     private static final double kBackRightXPosInches = -12.125;
     private static final double kBackRightYPosInches = -12.125;

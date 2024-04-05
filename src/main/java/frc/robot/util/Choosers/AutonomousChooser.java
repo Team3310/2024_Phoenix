@@ -55,57 +55,65 @@ import frc.robot.Auton.Stage.TwoStage;
 public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousMode>{
     public AutonomousChooser() {
         super("Autonomous Mode");
-        setDefaultOption(AutonomousMode.ONE_AUTON);
-        // .addOption(AutonomousMode.TWO_STAGE)
-        // .addOption(AutonomousMode.THREE_STAGE)
-        // .addOption(AutonomousMode.FOUR_STAGE)
-        // // .addOption(AutonomousMode.THREE_STAGE_MIDDLE)
-        // // .addOption(AutonomousMode.FOUR_STAGE_MIDDLE)
-        // // .addOption(AutonomousMode.TWO_STAGE_LEFT)
-        // // .addOption(AutonomousMode.THREE_STAGE_LEFT)
-        // // .addOption(AutonomousMode.FOUR_STAGE_LEFT)
-        // .addOption(AutonomousMode.TWO_AMP)
-        // .addOption(AutonomousMode.THREE_AMP)
-        // .addOption(AutonomousMode.FOUR_AMP)
-        // // .addOption(AutonomousMode.THREE_STAGE_LEFT_COUNTER)
-        // // .addOption(AutonomousMode.FOUR_STAGE_LEFT_COUNTER)
-        // .addOption(AutonomousMode.FAST_FOUR)
-        // .addOption(AutonomousMode.STAGE_IN)
-        // .addOption(AutonomousMode.STAGE_ON)
-        // .addOption(AutonomousMode.STAGE_TWO_IN)
-        // .addOption(AutonomousMode.STAGE_TWO_ON)
-        // .addOption(AutonomousMode.STAGE_THREE_IN)
-        // .addOption(AutonomousMode.STAGE_THREE_ON)
-        // .addOption(AutonomousMode.STAGE_THREE_MIN)
-        // .addOption(AutonomousMode.STAGE_THREE_MON)
-        // .addOption(AutonomousMode.ANTI_3005O)
-        // .addOption(AutonomousMode.ANTI_3005I)
-        // .addOption(AutonomousMode.DRIVE_TEST)
-        // .addOption(AutonomousMode.GYRO_TEST)
-        // .addOption(AutonomousMode.STAGE_THREE_MMCN)
-        // .addOption(AutonomousMode.STAGE_THREE_MMIN)
-        // .addOption(AutonomousMode.AMP_FIVE_IN)
-        // .addOption(AutonomousMode.AMP_FIVE_ON)
-        // .addOption(AutonomousMode.AMP_FIVE_MIN)
-        // .addOption(AutonomousMode.AMP_FIVE_MON)
-        // .addOption(AutonomousMode.AMP_SIX_IN)
-        // .addOption(AutonomousMode.AMP_SIX_ON)
-        // .addOption(AutonomousMode.CENTER_CSA)
-        // .addOption(AutonomousMode.CENTER_CAS)
-        // ;
-        List<AutonomousMode> autos = Arrays.asList(AutonomousMode.values());
-        List<AutonomousMode> remove = Arrays.asList(
-            AutonomousMode.THREE_STAGE_LEFT_COUNTER,
-            AutonomousMode.FOUR_STAGE_LEFT_COUNTER,
-            AutonomousMode.THREE_STAGE_MIDDLE,
-            AutonomousMode.FOUR_STAGE_MIDDLE,
-            AutonomousMode.TWO_STAGE_LEFT,
-            AutonomousMode.THREE_STAGE_LEFT,
-            AutonomousMode.FOUR_STAGE_LEFT,
-            AutonomousMode.ONE_AUTON
-        );
-        autos.removeAll(remove);
-        addOptions(autos.toArray(new AutonomousMode[0]));
+        setDefaultOption(AutonomousMode.ONE_AUTON)
+        // List<AutonomousMode> autos = Arrays.asList(AutonomousMode.values());
+        // List<AutonomousMode> remove = Arrays.asList(
+        //     AutonomousMode.THREE_STAGE_LEFT_COUNTER,
+        //     AutonomousMode.FOUR_STAGE_LEFT_COUNTER,
+        //     AutonomousMode.THREE_STAGE_MIDDLE,
+        //     AutonomousMode.FOUR_STAGE_MIDDLE,
+        //     AutonomousMode.TWO_STAGE_LEFT,
+        //     AutonomousMode.THREE_STAGE_LEFT,
+        //     AutonomousMode.FOUR_STAGE_LEFT,
+        //     AutonomousMode.ONE_AUTON
+        // );
+        // autos.removeAll(remove);
+        // addOptions(autos.toArray(new AutonomousMode[0]));
+        .addOption(AutonomousMode.TWO_STAGE)
+        .addOption(AutonomousMode.THREE_STAGE)
+        .addOption(AutonomousMode.FOUR_STAGE)
+        // .addOption(AutonomousMode.THREE_STAGE_MIDDLE)
+        // .addOption(AutonomousMode.FOUR_STAGE_MIDDLE)
+        // .addOption(AutonomousMode.TWO_STAGE_LEFT)
+        // .addOption(AutonomousMode.THREE_STAGE_LEFT)
+        // .addOption(AutonomousMode.FOUR_STAGE_LEFT)
+        .addOption(AutonomousMode.TWO_AMP)
+        .addOption(AutonomousMode.THREE_AMP)
+        .addOption(AutonomousMode.FOUR_AMP)
+        // .addOption(AutonomousMode.THREE_STAGE_LEFT_COUNTER)
+        // .addOption(AutonomousMode.FOUR_STAGE_LEFT_COUNTER)
+        .addOption(AutonomousMode.FAST_FOUR)
+        .addOption(AutonomousMode.STAGE_IN)
+        .addOption(AutonomousMode.STAGE_ON)
+        .addOption(AutonomousMode.STAGE_TWO_IN)
+        .addOption(AutonomousMode.STAGE_TWO_ON)
+        .addOption(AutonomousMode.STAGE_THREE_IN)
+        .addOption(AutonomousMode.STAGE_THREE_ON)
+        .addOption(AutonomousMode.STAGE_THREE_MIN)
+        .addOption(AutonomousMode.STAGE_THREE_MON)
+        .addOption(AutonomousMode.ANTI_3005O)
+        .addOption(AutonomousMode.ANTI_3005I)
+        .addOption(AutonomousMode.DRIVE_TEST)
+        .addOption(AutonomousMode.GYRO_TEST)
+        .addOption(AutonomousMode.STAGE_THREE_MMCN)
+        .addOption(AutonomousMode.STAGE_THREE_MMIN)
+        .addOption(AutonomousMode.AMP_FIVE_IN)
+        .addOption(AutonomousMode.AMP_FIVE_ON)
+        .addOption(AutonomousMode.AMP_FIVE_MIN)
+        .addOption(AutonomousMode.AMP_FIVE_MON)
+        .addOption(AutonomousMode.AMP_SIX_IN)
+        .addOption(AutonomousMode.AMP_SIX_ON)
+        .addOption(AutonomousMode.CENTER_CSA)
+        .addOption(AutonomousMode.CENTER_CAS)
+        .addOption(AutonomousMode.CENTER_SCA)
+        .addOption(AutonomousMode.CENTER_SAC)
+        .addOption(AutonomousMode.CENTER_ASC)
+        .addOption(AutonomousMode.CENTER_ACS)
+        .addOption(AutonomousMode.CENTER_CSSO)
+        .addOption(AutonomousMode.CENTER_CSOS)
+        .addOption(AutonomousMode.CENTER_SCSO)
+        .addOption(AutonomousMode.CENTER_SSOC)
+        ;
     }
 
     public Command getCommand() {

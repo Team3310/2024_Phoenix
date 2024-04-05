@@ -180,7 +180,9 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {}
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+    // m_robotContainer.drivetrain.setTeleopCurrentLimits();
+  }
 
   @Override
   public void teleopInit() {
