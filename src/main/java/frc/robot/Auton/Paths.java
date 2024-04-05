@@ -76,15 +76,19 @@ public class Paths {
     public final PathPlannerPath AS_CN;
     public final PathPlannerPath CN_AS;
     public final PathPlannerPath SNEAK5;
-    public final PathPlannerPath CN_S;
+    public final PathPlannerPath CCN_CS;
 
     public final PathPlannerPath C_N;
     public final PathPlannerPath CN_CCN;
+    public final PathPlannerPath CN_AIN;
+    public final PathPlannerPath CN_SIN;
+    public final PathPlannerPath CS_CCN;
     public final PathPlannerPath CS_AIN;
     public final PathPlannerPath CS_SIN;
+    public final PathPlannerPath CS_SON;
     public final PathPlannerPath AIN_CS;
     public final PathPlannerPath SIN_CS;
-
+    public final PathPlannerPath SON_CS;
 
     public final PathPlannerPath CLOSE_STAGE_END;
 
@@ -180,14 +184,19 @@ public class Paths {
             AS_CN = PathPlannerPath.fromPathFile("AS_CN").flipPath();
             CN_AS = PathPlannerPath.fromPathFile("CN_AS").flipPath();
             SNEAK5 = PathPlannerPath.fromPathFile("5AmpSneak").flipPath();
-            CN_S = PathPlannerPath.fromPathFile("CN_S").flipPath();
+            CCN_CS = PathPlannerPath.fromPathFile("CCN_CS").flipPath();
 
             C_N = PathPlannerPath.fromPathFile("C_N").flipPath();
             CN_CCN = PathPlannerPath.fromPathFile("CN_CCN").flipPath();
+            CN_AIN = PathPlannerPath.fromPathFile("CN_AIN").flipPath();
+            CN_SIN = PathPlannerPath.fromPathFile("CN_SIN").flipPath();
+            CS_CCN = PathPlannerPath.fromPathFile("CS_CCN").flipPath();
             CS_AIN = PathPlannerPath.fromPathFile("CS_AIN").flipPath();
             CS_SIN = PathPlannerPath.fromPathFile("CS_SIN").flipPath();
+            CS_SON = PathPlannerPath.fromPathFile("CS_SON").flipPath();
             AIN_CS = PathPlannerPath.fromPathFile("AIN_CS").flipPath();
             SIN_CS = PathPlannerPath.fromPathFile("SIN_CS").flipPath();
+            SON_CS = PathPlannerPath.fromPathFile("SON_CS").flipPath();
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd").flipPath(); 
 
@@ -267,14 +276,19 @@ public class Paths {
             AS_CN = PathPlannerPath.fromPathFile("AS_CN");
             CN_AS = PathPlannerPath.fromPathFile("CN_AS");
             SNEAK5 = PathPlannerPath.fromPathFile("5AmpSneak");
-            CN_S = PathPlannerPath.fromPathFile("CN_S");
+            CCN_CS = PathPlannerPath.fromPathFile("CCN_CS");
 
             C_N = PathPlannerPath.fromPathFile("C_N");
             CN_CCN = PathPlannerPath.fromPathFile("CN_CCN");
+            CN_AIN = PathPlannerPath.fromPathFile("CN_AIN");
+            CN_SIN = PathPlannerPath.fromPathFile("CN_SIN");
+            CS_CCN = PathPlannerPath.fromPathFile("CS_CCN");
             CS_AIN = PathPlannerPath.fromPathFile("CS_AIN");
             CS_SIN = PathPlannerPath.fromPathFile("CS_SIN");
+            CS_SON = PathPlannerPath.fromPathFile("CS_SON");
             AIN_CS = PathPlannerPath.fromPathFile("AIN_CS");
             SIN_CS = PathPlannerPath.fromPathFile("SIN_CS");
+            SON_CS = PathPlannerPath.fromPathFile("SON_CS");
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd");
 

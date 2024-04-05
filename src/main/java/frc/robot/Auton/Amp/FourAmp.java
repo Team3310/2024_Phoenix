@@ -35,7 +35,7 @@ public class FourAmp extends AutonCommandBase{
                 new FeederShootCommandAuton(robotContainer.shooter)
             ),
             FollowToIntake(Paths.getInstance().SNEAK5),
-            GoToShoot(robotContainer, Paths.getInstance().CN_S)
+            GoToShoot(robotContainer, Paths.getInstance().CCN_CS)
         );
     }
 }

@@ -1,7 +1,6 @@
-package frc.robot.Auton.Middle.Center;
+package frc.robot.Auton.Middle.Center.base;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.OneAuton;

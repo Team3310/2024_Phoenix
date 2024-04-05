@@ -1,5 +1,9 @@
 package frc.robot.util.Choosers;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.DriveTest;
@@ -19,8 +23,16 @@ import frc.robot.Auton.Middle.Amp.AMFourIN;
 import frc.robot.Auton.Middle.Amp.AMFourMIN;
 import frc.robot.Auton.Middle.Amp.AMFourMON;
 import frc.robot.Auton.Middle.Amp.AMFourON;
-import frc.robot.Auton.Middle.Center.CenterFiveAIN;
-import frc.robot.Auton.Middle.Center.CenterFiveSIN;
+import frc.robot.Auton.Middle.Center.norm.CenterFiveACS;
+import frc.robot.Auton.Middle.Center.norm.CenterFiveASC;
+import frc.robot.Auton.Middle.Center.norm.CenterFiveCAS;
+import frc.robot.Auton.Middle.Center.norm.CenterFiveCSA;
+import frc.robot.Auton.Middle.Center.norm.CenterFiveSAC;
+import frc.robot.Auton.Middle.Center.norm.CenterFiveSCA;
+import frc.robot.Auton.Middle.Center.shifted.CenterFiveCSOS;
+import frc.robot.Auton.Middle.Center.shifted.CenterFiveCSSO;
+import frc.robot.Auton.Middle.Center.shifted.CenterFiveSCSO;
+import frc.robot.Auton.Middle.Center.shifted.CenterFiveSSOC;
 import frc.robot.Auton.Middle.Counter.Anti3005Inside;
 import frc.robot.Auton.Middle.Counter.Anti3005Outside;
 import frc.robot.Auton.Middle.Stage.StageThreeCNMiddle;
@@ -43,44 +55,57 @@ import frc.robot.Auton.Stage.TwoStage;
 public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousMode>{
     public AutonomousChooser() {
         super("Autonomous Mode");
-        setDefaultOption(AutonomousMode.ONE_AUTON)
-        .addOption(AutonomousMode.TWO_STAGE)
-        .addOption(AutonomousMode.THREE_STAGE)
-        .addOption(AutonomousMode.FOUR_STAGE)
-        // .addOption(AutonomousMode.THREE_STAGE_MIDDLE)
-        // .addOption(AutonomousMode.FOUR_STAGE_MIDDLE)
-        // .addOption(AutonomousMode.TWO_STAGE_LEFT)
-        // .addOption(AutonomousMode.THREE_STAGE_LEFT)
-        // .addOption(AutonomousMode.FOUR_STAGE_LEFT)
-        .addOption(AutonomousMode.TWO_AMP)
-        .addOption(AutonomousMode.THREE_AMP)
-        .addOption(AutonomousMode.FOUR_AMP)
-        // .addOption(AutonomousMode.THREE_STAGE_LEFT_COUNTER)
-        // .addOption(AutonomousMode.FOUR_STAGE_LEFT_COUNTER)
-        .addOption(AutonomousMode.FAST_FOUR)
-        .addOption(AutonomousMode.STAGE_IN)
-        .addOption(AutonomousMode.STAGE_ON)
-        .addOption(AutonomousMode.STAGE_TWO_IN)
-        .addOption(AutonomousMode.STAGE_TWO_ON)
-        .addOption(AutonomousMode.STAGE_THREE_IN)
-        .addOption(AutonomousMode.STAGE_THREE_ON)
-        .addOption(AutonomousMode.STAGE_THREE_MIN)
-        .addOption(AutonomousMode.STAGE_THREE_MON)
-        .addOption(AutonomousMode.ANTI_3005O)
-        .addOption(AutonomousMode.ANTI_3005I)
-        .addOption(AutonomousMode.DRIVE_TEST)
-        .addOption(AutonomousMode.GYRO_TEST)
-        .addOption(AutonomousMode.STAGE_THREE_MMCN)
-        .addOption(AutonomousMode.STAGE_THREE_MMIN)
-        .addOption(AutonomousMode.AMP_FIVE_IN)
-        .addOption(AutonomousMode.AMP_FIVE_ON)
-        .addOption(AutonomousMode.AMP_FIVE_MIN)
-        .addOption(AutonomousMode.AMP_FIVE_MON)
-        .addOption(AutonomousMode.AMP_SIX_IN)
-        .addOption(AutonomousMode.AMP_SIX_ON)
-        .addOption(AutonomousMode.CENTER_FIVE_SIN)
-        .addOption(AutonomousMode.CENTER_FIVE_AIN)
-        ;
+        setDefaultOption(AutonomousMode.ONE_AUTON);
+        // .addOption(AutonomousMode.TWO_STAGE)
+        // .addOption(AutonomousMode.THREE_STAGE)
+        // .addOption(AutonomousMode.FOUR_STAGE)
+        // // .addOption(AutonomousMode.THREE_STAGE_MIDDLE)
+        // // .addOption(AutonomousMode.FOUR_STAGE_MIDDLE)
+        // // .addOption(AutonomousMode.TWO_STAGE_LEFT)
+        // // .addOption(AutonomousMode.THREE_STAGE_LEFT)
+        // // .addOption(AutonomousMode.FOUR_STAGE_LEFT)
+        // .addOption(AutonomousMode.TWO_AMP)
+        // .addOption(AutonomousMode.THREE_AMP)
+        // .addOption(AutonomousMode.FOUR_AMP)
+        // // .addOption(AutonomousMode.THREE_STAGE_LEFT_COUNTER)
+        // // .addOption(AutonomousMode.FOUR_STAGE_LEFT_COUNTER)
+        // .addOption(AutonomousMode.FAST_FOUR)
+        // .addOption(AutonomousMode.STAGE_IN)
+        // .addOption(AutonomousMode.STAGE_ON)
+        // .addOption(AutonomousMode.STAGE_TWO_IN)
+        // .addOption(AutonomousMode.STAGE_TWO_ON)
+        // .addOption(AutonomousMode.STAGE_THREE_IN)
+        // .addOption(AutonomousMode.STAGE_THREE_ON)
+        // .addOption(AutonomousMode.STAGE_THREE_MIN)
+        // .addOption(AutonomousMode.STAGE_THREE_MON)
+        // .addOption(AutonomousMode.ANTI_3005O)
+        // .addOption(AutonomousMode.ANTI_3005I)
+        // .addOption(AutonomousMode.DRIVE_TEST)
+        // .addOption(AutonomousMode.GYRO_TEST)
+        // .addOption(AutonomousMode.STAGE_THREE_MMCN)
+        // .addOption(AutonomousMode.STAGE_THREE_MMIN)
+        // .addOption(AutonomousMode.AMP_FIVE_IN)
+        // .addOption(AutonomousMode.AMP_FIVE_ON)
+        // .addOption(AutonomousMode.AMP_FIVE_MIN)
+        // .addOption(AutonomousMode.AMP_FIVE_MON)
+        // .addOption(AutonomousMode.AMP_SIX_IN)
+        // .addOption(AutonomousMode.AMP_SIX_ON)
+        // .addOption(AutonomousMode.CENTER_CSA)
+        // .addOption(AutonomousMode.CENTER_CAS)
+        // ;
+        List<AutonomousMode> autos = Arrays.asList(AutonomousMode.values());
+        List<AutonomousMode> remove = Arrays.asList(
+            AutonomousMode.THREE_STAGE_LEFT_COUNTER,
+            AutonomousMode.FOUR_STAGE_LEFT_COUNTER,
+            AutonomousMode.THREE_STAGE_MIDDLE,
+            AutonomousMode.FOUR_STAGE_MIDDLE,
+            AutonomousMode.TWO_STAGE_LEFT,
+            AutonomousMode.THREE_STAGE_LEFT,
+            AutonomousMode.FOUR_STAGE_LEFT,
+            AutonomousMode.ONE_AUTON
+        );
+        autos.removeAll(remove);
+        addOptions(autos.toArray(new AutonomousMode[0]));
     }
 
     public Command getCommand() {
@@ -123,8 +148,16 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         AMP_FIVE_MIN("Amp 5 1.IN->ON->CN"),
         AMP_SIX_ON("Amp 6 1.ON->IN"),
         AMP_SIX_IN("Amp 6 1.IN->ON"),
-        CENTER_FIVE_SIN("Center 5 SIN"),
-        CENTER_FIVE_AIN("Center 5 AIN"),
+        CENTER_CSA("Center CSA"),
+        CENTER_CAS("Center CAS"),
+        CENTER_SCA("Center SCA"),
+        CENTER_SAC("Center SAC"),
+        CENTER_ASC("Center ASC"),
+        CENTER_ACS("Center ACS"),
+        CENTER_CSSO("Center CSSO"),
+        CENTER_CSOS("Center CSOS"),
+        CENTER_SCSO("Center SCSO"),
+        CENTER_SSOC("Center SSOC"),
         ;
 
         private String name = "";
@@ -204,10 +237,26 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new AMFiveIN(RobotContainer.getInstance());
                 case AMP_SIX_ON:
                     return new AMFiveON(RobotContainer.getInstance());
-                case CENTER_FIVE_AIN:
-                    return new CenterFiveAIN(RobotContainer.getInstance());
-                case CENTER_FIVE_SIN:
-                    return new CenterFiveSIN(RobotContainer.getInstance());
+                case CENTER_CAS:
+                    return new CenterFiveCAS(RobotContainer.getInstance());
+                case CENTER_CSA:
+                    return new CenterFiveCSA(RobotContainer.getInstance());
+                case CENTER_SAC:
+                    return new CenterFiveSAC(RobotContainer.getInstance());
+                case CENTER_SCA:
+                    return new CenterFiveSCA(RobotContainer.getInstance());
+                case CENTER_ASC:
+                    return new CenterFiveACS(RobotContainer.getInstance());
+                case CENTER_ACS:
+                    return new CenterFiveASC(RobotContainer.getInstance());
+                case CENTER_CSOS:
+                    return new CenterFiveCSOS(RobotContainer.getInstance());
+                case CENTER_CSSO:
+                    return new CenterFiveCSSO(RobotContainer.getInstance());
+                case CENTER_SSOC:
+                    return new CenterFiveSSOC(RobotContainer.getInstance());
+                case CENTER_SCSO:
+                    return new CenterFiveSCSO(RobotContainer.getInstance());
                 case GYRO_TEST:
                     return new TestGyroInit(RobotContainer.getInstance());
                 case DRIVE_TEST:

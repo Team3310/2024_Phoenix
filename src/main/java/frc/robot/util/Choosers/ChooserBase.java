@@ -24,6 +24,13 @@ public class ChooserBase<Type>{
         return this;
     }
 
+    protected ChooserBase<Type> addOptions(Type[] options){
+        for(Type option: options){
+            chooser.addOption(option.toString(), option);
+        }
+        return this;
+    }
+
     public SendableChooser<Type> getSendable(){
         return chooser;
     }
