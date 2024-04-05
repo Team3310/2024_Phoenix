@@ -42,7 +42,7 @@ public class AimLiftWithOdometryAuton extends Command{
             shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
             shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
 
-            LED.getInstance().setSolid(Color.kChartreuse);
+            LED.getInstance().setSolid(Color.kNavajoWhite);
         }else{
             if(Constants.debug){
                 SmartDashboard.putNumber("targeting odo dist", drive.getOdoTargeting().getDistance_XY_average());

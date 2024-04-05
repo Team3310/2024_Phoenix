@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToSourceON"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ON_SM"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceToIN"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SIN_CS"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

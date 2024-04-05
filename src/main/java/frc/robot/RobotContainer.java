@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -154,6 +155,7 @@ public class RobotContainer {
   }
 
   public void configureOperatorController(){
+    // NetworkTableInstance.getDefault().getTable("test").getBooleanTopic("work?").publish().set(true);
     // intake
     operatorController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
     operatorController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());

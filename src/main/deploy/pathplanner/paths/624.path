@@ -1,0 +1,63 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.416851119416524,
+        "y": 2.75
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.728671012897582,
+        "y": 3.420540174413682
+      },
+      "isLocked": false,
+      "linkedName": "InSourceNote"
+    },
+    {
+      "anchor": {
+        "x": 3.799121883958054,
+        "y": 5.47
+      },
+      "prevControl": {
+        "x": 4.892473118279571,
+        "y": 3.734089690401603
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "AN2"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": -22.350000000000023,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.65,
+      "rotationDegrees": -22.350000000000023,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "SourceMiddleNotePaths",
+  "previewStartingState": {
+    "rotation": 41.63,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

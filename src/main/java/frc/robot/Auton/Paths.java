@@ -96,6 +96,7 @@ public class Paths {
     public final PathPlannerPath CO_SM;
 
     public final PathPlannerPath SM_GRAB_CLOSE;
+    public final PathPlannerPath PLAYOFFS624;
 
     private static Alliance side = Alliance.Red;
 
@@ -204,6 +205,7 @@ public class Paths {
             CO_SM = PathPlannerPath.fromPathFile("CO_SM").flipPath();
 
             SM_GRAB_CLOSE = PathPlannerPath.fromPathFile("SMGrabClose").flipPath();
+            PLAYOFFS624 = PathPlannerPath.fromPathFile("624").flipPath();
         } else {
             side = Alliance.Blue;
             TunerConstants.DriveTrain.setSideMode(side);
@@ -296,6 +298,7 @@ public class Paths {
             CO_SM = PathPlannerPath.fromPathFile("CO_SM");
 
             SM_GRAB_CLOSE = PathPlannerPath.fromPathFile("SMGrabClose");
+            PLAYOFFS624 = PathPlannerPath.fromPathFile("624");
         }
     }
 

@@ -86,12 +86,12 @@ public class Constants {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(4.7), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-3.0)); // -5.0
-            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-2.0));//0.0
-            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-2.0)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-2.0)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-2.0)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-2.0));
-            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-2.0));
+            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-1.0));//0.0
+            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-1.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-1.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-1.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-1.0));
+            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-1.0));
         }
  
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();

@@ -1,9 +1,5 @@
 package frc.robot.util.Choosers;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.DriveTest;
@@ -35,6 +31,7 @@ import frc.robot.Auton.Middle.Center.shifted.CenterFiveSCSO;
 import frc.robot.Auton.Middle.Center.shifted.CenterFiveSSOC;
 import frc.robot.Auton.Middle.Counter.Anti3005Inside;
 import frc.robot.Auton.Middle.Counter.Anti3005Outside;
+import frc.robot.Auton.Middle.Stage.Playoff624;
 import frc.robot.Auton.Middle.Stage.StageThreeCNMiddle;
 import frc.robot.Auton.Middle.Stage.StageThreeIN;
 import frc.robot.Auton.Middle.Stage.StageThreeINMiddle;
@@ -113,6 +110,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.CENTER_CSOS)
         .addOption(AutonomousMode.CENTER_SCSO)
         .addOption(AutonomousMode.CENTER_SSOC)
+        .addOption(AutonomousMode.PLAYOFFS624)
         ;
     }
 
@@ -166,6 +164,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         CENTER_CSOS("Center CSOS"),
         CENTER_SCSO("Center SCSO"),
         CENTER_SSOC("Center SSOC"),
+        PLAYOFFS624("624 playoffs"),
         ;
 
         private String name = "";
@@ -265,6 +264,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new CenterFiveSSOC(RobotContainer.getInstance());
                 case CENTER_SCSO:
                     return new CenterFiveSCSO(RobotContainer.getInstance());
+                case PLAYOFFS624:
+                    return new Playoff624(RobotContainer.getInstance()); 
                 case GYRO_TEST:
                     return new TestGyroInit(RobotContainer.getInstance());
                 case DRIVE_TEST:
