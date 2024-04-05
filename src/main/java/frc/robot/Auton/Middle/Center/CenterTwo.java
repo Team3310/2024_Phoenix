@@ -24,7 +24,7 @@ public class CenterTwo extends AutonCommandBase{
             new OneAuton(robotContainer),
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().C_N), 
-                new SetLiftAngle(Lift.getInstance(), 39.5-1.0),
+                new SetLiftAngle(Lift.getInstance(), 39.5-1.0-2.0),
                 new SetLeftShooterRPM(Shooter.getInstance(), 3275.0),
                 new SetRightShooterRPM(Shooter.getInstance(), 3400.0),
                 new FullIntakeGo()

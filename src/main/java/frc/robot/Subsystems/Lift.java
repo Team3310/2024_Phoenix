@@ -187,8 +187,8 @@ public class Lift extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (printCount++ > 10) {
-            printCount = 0;
+        // if (printCount++ > 10) {
+        //     printCount = 0;
             // If any faults happen, print them out. Sticky faults will always be present if
             // live-fault occurs
             // f_fusedSensorOutOfSync.refresh();
@@ -205,9 +205,9 @@ public class Lift extends SubsystemBase {
             //         System.out.println("Fused sensor out of sync sticky-faulted");
             //     }
             // }
-            SmartDashboard.putNumber("commanded degrees", targetLiftAngleDegrees);
-            SmartDashboard.putNumber("Lift Offset", offset);
-        }
+        //     SmartDashboard.putNumber("commanded degrees", targetLiftAngleDegrees);
+        //     SmartDashboard.putNumber("Lift Offset", offset);
+        // }
         SmartDashboard.putNumber("Lift Angle Deg", getLiftDegrees());
     }
 }
