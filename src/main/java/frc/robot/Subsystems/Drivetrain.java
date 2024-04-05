@@ -162,7 +162,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         driveFieldCentricFacingAngle.HeadingController.setPID(10.0, 0, 0);
         driveFieldCentricFacingAngle.ForwardReference = ForwardReference.RedAlliance;
 
-        Targeting.setTargetSimple(TargetSimple.SPEAKER);
+        // Targeting.setTargetSimple(TargetSimple.SPEAKER);
 
         snapPIDController = new ProfiledPIDController(Constants.SnapConstants.kP, Constants.SnapConstants.kI,
                 Constants.SnapConstants.kD, Constants.SnapConstants.kThetaControllerConstraints);

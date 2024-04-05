@@ -124,38 +124,43 @@ public class Targeting {
 
     public static void setTargetSimple(TargetSimple toTargetSimple) {
         targetSimple = toTargetSimple;
-        if(DriverStation.getAlliance().get() == SideMode.BLUE.getAlliance()){
-            switch (targetSimple){
-                case SPEAKER:
-                    target = target.BLUESPEAKER;
-                    break;
-                case CENTERPASS:
-                    target = target.BLUECENTERPASS;
-                    break;
-                case CORNERPASS:
-                    target = target.BLUECORNERPASS;
-                    break;
-                case NONE:
-                    target = target.NONE;
-                    break;
+        try{
+            if(DriverStation.getAlliance().get() == SideMode.BLUE.getAlliance()){
+                switch (targetSimple){
+                    case SPEAKER:
+                        target = target.BLUESPEAKER;
+                        break;
+                    case CENTERPASS:
+                        target = target.BLUECENTERPASS;
+                        break;
+                    case CORNERPASS:
+                        target = target.BLUECORNERPASS;
+                        break;
+                    case NONE:
+                        target = target.NONE;
+                        break;
+                }
+            } else {
+                switch (targetSimple) {
+                    case SPEAKER:
+                        target = target.REDSPEAKER;
+                        break;
+                    case CENTERPASS:
+                        target = target.REDCENTERPASS;
+                        break;
+                    case CORNERPASS:
+                        target = target.REDCORNERPASS;
+                        break;
+                    case NONE:
+                        target = target.NONE;
+                        break;
+                }
             }
-        } else {
-            switch (targetSimple) {
-                case SPEAKER:
-                    target = target.REDSPEAKER;
-                    break;
-                case CENTERPASS:
-                    target = target.REDCENTERPASS;
-                    break;
-                case CORNERPASS:
-                    target = target.REDCORNERPASS;
-                    break;
-                case NONE:
-                    target = target.NONE;
-                    break;
-            }
+            setTarget(target);
+        }catch(Exception e){
+            // e.printStackTrace();
+            System.err.println("simple target set failed");
         }
-        setTarget(target);
     }
 
     //#region Static Getters

@@ -147,7 +147,12 @@ public class FollowPathCommand{
     double currentVel =
         Math.hypot(currentSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond);
 
-        PPLibTelemetry.setCurrentPose(currentPose);
+    if(Utils.isSimulation()){
+      TunerConstants.DriveTrain.seedFieldRelative(targetState.getTargetHolonomicPose());
+      TunerConstants.DriveTrain.seedFieldRelativeWithOffset(targetState.getDifferentialPose().getRotation());
+    }
+
+    PPLibTelemetry.setCurrentPose(currentPose);
     PathPlannerLogging.logCurrentPose(currentPose);
 
     if (controller.isHolonomic()) {
@@ -164,10 +169,6 @@ public class FollowPathCommand{
         currentSpeeds.omegaRadiansPerSecond,
         targetSpeeds.omegaRadiansPerSecond);
     PPLibTelemetry.setPathInaccuracy(controller.getPositionalError());
-
-    if(Utils.isSimulation()){
-      TunerConstants.DriveTrain.seedFieldRelative(targetState.getDifferentialPose());
-    }
 
     return targetSpeeds;
   }

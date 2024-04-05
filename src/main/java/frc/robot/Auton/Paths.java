@@ -303,9 +303,13 @@ public class Paths {
         // SmartDashboard.putString("ds side", DriverStation.getAlliance().get().name());
         // SmartDashboard.putString("last side", side.name());
 
-        if(DriverStation.getAlliance().get() != side){
-            instance = new Paths(DriverStation.getAlliance().get());
-            // SmartDashboard.putString("set side", side.name());
+        try{
+            if(DriverStation.getAlliance().get() != side){
+                instance = new Paths(DriverStation.getAlliance().get());
+                // SmartDashboard.putString("set side", side.name());
+            }
+        }catch(Exception e){
+            System.err.println("error with DS side");
         }
     }
 }

@@ -24,7 +24,7 @@ public class OneAuton extends AutonCommandBase{
             ),
             new WaitCommand(0.1),
             new ParallelDeadlineGroup(
-                new WaitCommand(0.35), 
+                new WaitCommand(0.15), 
                 new FeederShootCommandAuton(robotContainer.shooter)
             )
         );
