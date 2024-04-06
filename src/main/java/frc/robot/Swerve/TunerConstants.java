@@ -70,7 +70,7 @@ public class TunerConstants {
     private static final int kPigeonId = 0;
 
     //in revolutions
-    public static final double liftMagnetOffset = isCompbot ? 0.254980390625 : 0.74129667-(1.0/360.0);  // NEGATIVE OFFSET LOWERS SHOT Compbot is 1 deg higher actual than smartdashboard
+    public static final double liftMagnetOffset = isCompbot ? 0.254980390625+(5.2/360.0) : 0.74129667-(1.0/360.0);  // NEGATIVE OFFSET LOWERS SHOT Compbot is 1 deg higher actual than smartdashboard
 
     // These are only used for simulation
     private static final double kSteerInertia = 0.00001;

@@ -28,7 +28,7 @@ public class Constants {
     //#endregion
 
     //#region Shooter
-        public static final double SHOOTER_GEAR_RATIO = 1.0;
+        public static final double SHOOTER_GEAR_RATIO = 1.5;
         public static final double KICKER_GEAR_RATIO = 2.5;
 
         public static final int SHOOTER_RIGHT_ID = 20;
@@ -86,12 +86,12 @@ public class Constants {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(4.7), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-3.0)); // -5.0
-            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-1.0));//0.0
-            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-1.0)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-1.0)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-1.0)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-1.0));
-            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-1.0));
+            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-1.5));//0.0
+            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-1.5)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-1.5)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-1.5)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-1.5));
+            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-1.5));
         }
  
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
@@ -166,7 +166,7 @@ public class Constants {
     //#endregion    
 
     //#region Elevator
-        public static final double ELEVATOR_GEAR_RATIO = (54.0/34.0)*(54.0/11.0);
+        public static final double ELEVATOR_GEAR_RATIO = (54.0/34.0)*(54.0/11.5);
         public static final double ELEVATOR_PULLEY_DIAMETER = 1.25;
 
         public static final int ELEVATOR_MOTOR_ID = 40;
@@ -175,7 +175,7 @@ public class Constants {
         public static final double ELEVATOR_MIN_INCHES = 0.0;
 
         public static final double ELEVATOR_AUTO_ZERO_SPEED = -0.1;
-        public static final double ELEVATOR_AUTO_ZERO_MOTOR_CURRENT = 1.0;
+        public static final double ELEVATOR_AUTO_ZERO_MOTOR_CURRENT = 1.5;
 
         public static final double AMP_SCORE_INCHES = 12.0;
         public static final double TRAP_SCORE_INCHES = ELEVATOR_MAX_INCHES;
@@ -195,7 +195,7 @@ public class Constants {
     //#endregion
 
     //#region Climber
-        public static final double CLIMBER_GEAR_RATIO = (70.0/18.0)*(60.0/11.0);
+        public static final double CLIMBER_GEAR_RATIO = (70.0/18.0)*(60.0/11.5);
         public static final double CLIMBER_PULLEY_DIAMETER = 1.25;
 
         public static final int CHAIN_SENSOR_PORT = 2;
@@ -220,7 +220,7 @@ public class Constants {
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters
 
     public static final class SnapConstants {
-        public static final double kP = 1.0;
+        public static final double kP = 1.5;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.25;
@@ -237,12 +237,12 @@ public class Constants {
     }
 
     public static final class SnapAutonConstants {
-        public static final double kP = 1.0;
+        public static final double kP = 1.5;
         public static final double kI = 0.05;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.25;
 
-        public static final double kEpsilon = 1.0;
+        public static final double kEpsilon = 1.5;
 
         // Constraints for the profiled angle controller
         public static final double kMaxAngularSpeedRadiansPerSecond = 2.0 * Math.PI;
@@ -254,7 +254,7 @@ public class Constants {
     }
 
     public static final class VisionAlignConstants {
-        public static final double kP = 1.0;
+        public static final double kP = 1.5;
         public static final double kI = 0.0;
         public static final double kD = 0.10;
         public static final double kTimeout = 0.25;
