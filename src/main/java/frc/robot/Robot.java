@@ -11,6 +11,10 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 
+import com.ctre.phoenix6.Utils;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -137,6 +141,9 @@ public class Robot extends TimedRobot {
     m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
 
     Paths.getInstance();
+
+    NetworkTableInstance.getDefault().getTable("path-chooser").getStringTopic("deploy-path").publish().set(Filesystem.getDeployDirectory().getAbsolutePath());
+    NetworkTableInstance.getDefault().getTable("path-chooser").getBooleanTopic("sim").publish().set(Utils.isSimulation());
   }
 
   @Override
