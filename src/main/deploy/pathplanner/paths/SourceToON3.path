@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.949482121186465,
-        "y": 1.5677475799396043
+        "x": 4.094347077583045,
+        "y": 2.2946123670025114
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.676346908249373,
-        "y": 1.2827025654051312
+        "x": 4.749950611012333,
+        "y": 1.7957835915671831
       },
       "isLocked": false,
       "linkedName": "SourceMiddle"
@@ -51,7 +51,7 @@
   "reversed": false,
   "folder": "SourceMiddleNotePaths",
   "previewStartingState": {
-    "rotation": -46.329999999999984,
+    "rotation": -41.5,
     "velocity": 0.0
   },
   "useDefaultConstraints": true

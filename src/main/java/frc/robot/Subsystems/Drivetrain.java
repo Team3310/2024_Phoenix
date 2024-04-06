@@ -861,6 +861,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
         return false;
     }
+
+    public Pose2d getCurrPathEnd(){
+        return pathFollower.getPathEnd();
+    }
     //#endregion auto stuff
 
     public enum DriveMode {

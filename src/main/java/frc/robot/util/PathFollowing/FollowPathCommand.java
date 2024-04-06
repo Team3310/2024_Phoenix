@@ -202,7 +202,11 @@ public class FollowPathCommand{
     timer.start();
   }
 
-public Rotation2d lastAngle() {
-    return path.getGoalEndState().getRotation();
-}
+  public Rotation2d lastAngle() {
+      return path.getGoalEndState().getRotation();
+  }
+
+  public Pose2d getPathEnd(){
+    return generatedTrajectory.getEndState().getTargetHolonomicPose();
+  }
 }

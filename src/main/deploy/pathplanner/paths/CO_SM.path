@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.6289052578105165,
-        "y": 2.750684390257669
+        "x": 7.771427765077753,
+        "y": 2.736432139530945
       },
       "isLocked": false,
       "linkedName": "SCO"
     },
     {
       "anchor": {
-        "x": 4.949482121186465,
-        "y": 1.5677475799396043
+        "x": 4.094347077583045,
+        "y": 2.2946123670025114
       },
       "prevControl": {
-        "x": 6.28919368949849,
-        "y": 1.4537295741258154
+        "x": 6.545734202579517,
+        "y": 1.1116755566844463
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -46.329999999999984,
+    "rotation": -29.74000000000001,
     "rotateFast": false
   },
   "reversed": false,
