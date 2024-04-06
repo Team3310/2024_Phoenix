@@ -25,7 +25,7 @@
   },
   "NetworkTables": {
     "transitory": {
-      "SmartDashboard": {
+      "test": {
         "open": true
       }
     }
