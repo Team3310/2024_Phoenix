@@ -25,12 +25,23 @@
   },
   "NetworkTables": {
     "transitory": {
+      "path-chooser": {
+        "open": true,
+        "string[]##v_/path-chooser/auto": {
+          "open": true
+        }
+      },
       "test": {
         "open": true
       }
     }
   },
   "NetworkTables Info": {
+    "NT3@127.0.0.1:61344": {
+      "Publishers": {
+        "open": true
+      }
+    },
     "visible": true
   }
 }
