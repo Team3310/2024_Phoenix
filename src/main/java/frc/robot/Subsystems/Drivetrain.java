@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.Utils;
@@ -24,14 +25,15 @@ import com.pathplanner.lib.util.PPLibTelemetry;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -76,6 +78,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private Targeting frontCamera = new Targeting("front", false);
     private Targeting odometryTargeting = new Targeting(true, TunerConstants.DriveTrain);
     private Targeting kalmanOdometryTargeting = new Targeting(true, TunerConstants.TargetingDrivetrain);
+
+    private final SwerveDrivePoseEstimator targetingOdo;
 
     private int pidVisionUpdateCounter = 0;
     private final int VISON_COUNTER_MAX = 4;
@@ -138,6 +142,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     public Drivetrain(boolean isTargetingDrivetrain, SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
         this.isTargetingDrivetrain = isTargetingDrivetrain;
+
+        this.targetingOdo = m_odometry = 
+            new SwerveDrivePoseEstimator(
+                m_kinematics, new Rotation2d(), m_modulePositions, new Pose2d(), 
+                VecBuilder.fill(0.1, 0.1, 0.1),
+                VecBuilder.fill(0.9, 0.9, 0.9));
+
         holdAngleController.setContinuous(true);
         holdAngleController.setOutputRange(-1.0, 1.0);
  
@@ -981,6 +992,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     @Override
     public void update(double time, double dt) {
+
+        //TODO @freddytums LOOK HERE
+        //found this in SwerveDrivetrain.OdometryThread.run() might be useful in keeping
+        //a seperate odo object updated with driving around then we could just override
+        //the addVisionMeasurement to use this odometry object instead, would still need
+        //to make sure all the seeds and what not get updated the same as the normal one
+        //again we could just override said methods and add the object to it with the same 
+        //calls. Don't know how much less messy this will be than a whole seperate object
+        double yawDegrees = BaseStatusSignal.getLatencyCompensatedValue(
+                m_yawGetter, m_angularVelocity);
+
+        /* Keep track of previous and current pose to account for the carpet vector */
+        targetingOdo.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+
+
         // chooseVisionAlignGoal();
         if (!isTargetingDrivetrain){
             switch (mControlMode) {
