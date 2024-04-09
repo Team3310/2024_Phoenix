@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
@@ -91,19 +92,22 @@ public class Targeting {
         CORNERPASS,
         CENTERPASS, NONE;
     }
-
+    private final Drivetrain drivetrain; 
     //#region Constructors
     // Targeting Constructor, Limelight
     public Targeting(String limelightHostname, boolean isOdometry) {
+        this.drivetrain = TunerConstants.DriveTrain;
         this.limelightHostname = "-" + limelightHostname;
         this.limelight = new Limelight(limelightHostname);
         this.isOdometry = isOdometry;
         this.distanceFilter = LinearFilter.movingAverage(NUMBER_TAPS_MOVING_AVERAGE);
     }
 
+    
     // Targeting Constructor, Odometry
-    public Targeting(boolean isOdometry) { 
+    public Targeting(boolean isOdometry, Drivetrain drivetrain) { 
         // this("junk", isOdometry);
+        this.drivetrain = drivetrain;
         this.isOdometry = isOdometry;
         this.limelight = new Limelight();
         this.distanceFilter = LinearFilter.movingAverage(NUMBER_TAPS_MOVING_AVERAGE);
@@ -255,8 +259,8 @@ public class Targeting {
 
     public void updateBotPos() {
         if (isOdometry) {
-            botPos[0] = TunerConstants.DriveTrain.getPose().getX();
-            botPos[1] = TunerConstants.DriveTrain.getPose().getY();
+            botPos[0] = drivetrain.getPose().getX();
+            botPos[1] = drivetrain.getPose().getY();
             botPos[2] = 0.0;
         } else {
             try {
@@ -435,7 +439,7 @@ public class Targeting {
             double translationalSpeed = Math.hypot(xSpeed, ySpeed);
 
             if((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && (distanceToTarget < KALMAN_APRILTAG_MAX_RANGE)){
-                TunerConstants.DriveTrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp());
+                TunerConstants.TargetingDrivetrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp());
                 if(Constants.debug){
                     SmartDashboard.putString("KALMAN", "Valid");
                 }
@@ -456,7 +460,7 @@ public class Targeting {
     }
     
     public void updatePoseEstimatorWithVisionBotPose() {
-        if(isOdometry || TunerConstants.DriveTrain.getDriveMode()==DriveMode.AUTON){
+        if(isOdometry){
             return;
         }
 
@@ -503,9 +507,9 @@ public class Targeting {
                 return;
             }
 
-            TunerConstants.DriveTrain.setVisionMeasurementStdDevs(
+            TunerConstants.TargetingDrivetrain.setVisionMeasurementStdDevs(
                     VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds)));
-            TunerConstants.DriveTrain.addVisionMeasurement(botPoseEstimate.pose,
+            TunerConstants.TargetingDrivetrain.addVisionMeasurement(botPoseEstimate.pose,
                     Timer.getFPGATimestamp() - botPoseEstimate.latency / 1000.0);
             PPLibTelemetry.setTargetPose(botPoseEstimate.pose);
         }

@@ -33,7 +33,8 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer = new RobotContainer();
 
   private UpdateManager updateManager = new UpdateManager(
-    TunerConstants.DriveTrain
+    TunerConstants.DriveTrain,
+    TunerConstants.TargetingDrivetrain
   );
 
   private static final byte[] COMPETITION_BOT_MAC_ADDRESS = new byte[]{

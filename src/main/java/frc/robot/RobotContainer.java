@@ -58,6 +58,7 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   public final Drivetrain drivetrain;
+  public final Drivetrain targeting_drivetrain;
   public final Intake intake;
   public final Shooter shooter;
   public final Lift lift;
@@ -83,6 +84,7 @@ public class RobotContainer {
     flicker = Flicker.getInstance();
     led = LED.getInstance();
     drivetrain = TunerConstants.DriveTrain;
+    targeting_drivetrain = TunerConstants.TargetingDrivetrain;
 
     autonomousChooser = new AutonomousChooser();
 
@@ -370,8 +372,12 @@ public class RobotContainer {
       public Drivetrain getDrivetrain(){
         return drivetrain;
       }
+
+      public Drivetrain getTargetingDrievtrain(){
+        return targeting_drivetrain;
+      }
     //#endregion
-    
+      
     //#region choosers
       public Command getAutonomousCommand() {
         /* First put the drivetrain into auto run mode, then run the auto */

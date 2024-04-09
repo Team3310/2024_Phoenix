@@ -74,7 +74,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private Limelight limelight = new Limelight("front");
     private Limelight noteLimelight = new Limelight("note");
     private Targeting frontCamera = new Targeting("front", false);
-    private Targeting odometryTargeting = new Targeting(true);
+    private Targeting odometryTargeting = new Targeting(true, TunerConstants.DriveTrain);
+    private Targeting kalmanOdometryTargeting = new Targeting(true, TunerConstants.TargetingDrivetrain);
 
     private int pidVisionUpdateCounter = 0;
     private final int VISON_COUNTER_MAX = 4;
@@ -132,9 +133,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // private final SwerveRequest.SysIdSwerveRotation RotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
     // private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
 
-    public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
-        super(driveTrainConstants, modules);
+    public boolean isTargetingDrivetrain;
 
+    public Drivetrain(boolean isTargetingDrivetrain, SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+        super(driveTrainConstants, modules);
+        this.isTargetingDrivetrain = isTargetingDrivetrain;
         holdAngleController.setContinuous(true);
         holdAngleController.setOutputRange(-1.0, 1.0);
  
@@ -887,6 +890,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
         odometryTargeting.update();
+        kalmanOdometryTargeting.update();
         
         // if (sideMode != RobotContainer.getInstance().getSideChooser().getSelected()) {
         //     sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
@@ -913,7 +917,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putNumber("odometryTargeting.getEl()", odometryTargeting.getEl());
             SmartDashboard.putNumber("odometryTargeting.getDistance_XY", (odometryTargeting.getDistance_XY() / 0.0254) / 12.0);
             
-            
+            SmartDashboard.putNumber("kalmanOdometryTargeting.getAz()", kalmanOdometryTargeting.getAz());
+            SmartDashboard.putNumber("kalmanOdometryTargeting.getEl()", kalmanOdometryTargeting.getEl());
+            SmartDashboard.putNumber("kalmanOdometryTargeting.getDistance_XY", (kalmanOdometryTargeting.getDistance_XY() / 0.0254) / 12.0);
+
             SmartDashboard.putNumber("frontCamera.getAz()", frontCamera.getAz());
             SmartDashboard.putNumber("frontCamera.getEl()", frontCamera.getEl());
             SmartDashboard.putNumber("frontCamera.getDistance_XY", (frontCamera.getDistance_XY() / 0.0254) / 12.0);
@@ -923,9 +930,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // SmartDashboard.putNumber("getPose().getY()", getEstimatedPosition().getY());
             SmartDashboard.putNumber("getPose().getX()", getPose().getX());
             SmartDashboard.putNumber("getPose().getY()", getPose().getY());
+            
             SmartDashboard.putNumber("odometryTargeting.getBotPosX()", odometryTargeting.getBotPosX());
             SmartDashboard.putNumber("odometryTargeting.getBotPosY()", odometryTargeting.getBotPosY());
-            SmartDashboard.putNumber("odometryTargeting.getAz()", odometryTargeting.getAz());
+
+            SmartDashboard.putNumber("kalmanOdometryTargeting.getBotPosX()", kalmanOdometryTargeting.getBotPosX());
+            SmartDashboard.putNumber("kalmanOdometryTargeting.getBotPosY()", kalmanOdometryTargeting.getBotPosY());
+            
             SmartDashboard.putNumber("frontCamera.getBotPosX()", frontCamera.getBotPosX());
             SmartDashboard.putNumber("frontCamera.getBotPosY()", frontCamera.getBotPosY());
             SmartDashboard.putNumber("frontCamera.getAz()", frontCamera.getAz());
@@ -971,36 +982,38 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     @Override
     public void update(double time, double dt) {
         // chooseVisionAlignGoal();
-        switch (mControlMode) {
-            case AIMATTARGET:
-                aimAtTarget();
-                break;
-            case AIMATTARGET_AUTON:
-                aimAtTargetAuton();
-                break;
-            case JOYSTICK:
-                joystickDrive();
-                break;
-            case AIM_AT_NOTE:
-                aimAtNote();
-                break;
-            case RESET_GYRO:
-                // Do nothing
-                break;
-            case STRAFE2APRILTAG:
-                strafeToAprilTag();
-                break;
-            // case JOYSTICK_BOTREL:
-            //     joystickDrive_RobotRelative();
-            //     break;
-            // case ODOMETRYTRACK:
-            //     odometryTrack();
-            //     break;
-            case AUTON:
-                autonDrive();
-                break;
-            case TEST:
-                testDrive();
+        if (!isTargetingDrivetrain){
+            switch (mControlMode) {
+                case AIMATTARGET:
+                    aimAtTarget();
+                    break;
+                case AIMATTARGET_AUTON:
+                    aimAtTargetAuton();
+                    break;
+                case JOYSTICK:
+                    joystickDrive();
+                    break;
+                case AIM_AT_NOTE:
+                    aimAtNote();
+                    break;
+                case RESET_GYRO:
+                    // Do nothing
+                    break;
+                case STRAFE2APRILTAG:
+                    strafeToAprilTag();
+                    break;
+                // case JOYSTICK_BOTREL:
+                //     joystickDrive_RobotRelative();
+                //     break;
+                // case ODOMETRYTRACK:
+                //     odometryTrack();
+                //     break;
+                case AUTON:
+                    autonDrive();
+                    break;
+                case TEST:
+                    testDrive();
+            }
         }
     }
 
