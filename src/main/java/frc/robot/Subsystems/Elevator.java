@@ -58,7 +58,7 @@ public class Elevator extends SubsystemBase {
         config.CurrentLimits.SupplyCurrentLimit = 40.0;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-        config.MotionMagic.MotionMagicCruiseVelocity = 121.0; // rotations per second
+        config.MotionMagic.MotionMagicCruiseVelocity = 93.0; // rotations per second
         config.MotionMagic.MotionMagicAcceleration = 201.0;
 
         elevatorMotor.getConfigurator().apply(config);

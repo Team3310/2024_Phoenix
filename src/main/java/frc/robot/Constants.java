@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Interpolable.InterpolatingDouble;
 import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
@@ -166,7 +167,7 @@ public class Constants {
     //#endregion    
 
     //#region Elevator
-        public static final double ELEVATOR_GEAR_RATIO = (54.0/34.0)*(54.0/11.5);
+        public static final double ELEVATOR_GEAR_RATIO = TunerConstants.isCompbot?(54.0/34.0)*(54.0/11.0):(44.0/44.0)*(54.0/11.5);
         public static final double ELEVATOR_PULLEY_DIAMETER = 1.25;
 
         public static final int ELEVATOR_MOTOR_ID = 40;
