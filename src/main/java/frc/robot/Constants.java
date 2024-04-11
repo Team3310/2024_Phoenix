@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -167,7 +167,7 @@ public class Constants {
     //#endregion    
 
     //#region Elevator
-        public static final double ELEVATOR_GEAR_RATIO = TunerConstants.isCompbot?(54.0/34.0)*(54.0/11.0):(44.0/44.0)*(54.0/11.5);
+        public static final double ELEVATOR_GEAR_RATIO = TunerConstants.isCompbot?(54.0/34.0)*(54.0/11.0):(64.0/14.0);
         public static final double ELEVATOR_PULLEY_DIAMETER = 1.25;
 
         public static final int ELEVATOR_MOTOR_ID = 40;
