@@ -167,7 +167,7 @@ public class Constants {
     //#endregion    
 
     //#region Elevator
-        public static final double ELEVATOR_GEAR_RATIO = TunerConstants.isCompbot?(54.0/34.0)*(54.0/11.0):(44.0/44.0)*(54.0/11.5);
+        public static final double ELEVATOR_GEAR_RATIO = TunerConstants.isCompbot?(54.0/34.0)*(54.0/11.0):(64.0/14.0);
         public static final double ELEVATOR_PULLEY_DIAMETER = 1.25;
 
         public static final int ELEVATOR_MOTOR_ID = 40;
@@ -189,7 +189,7 @@ public class Constants {
         public static final int AMP_SENSOR_PORT = 1;
 
         public static final double AMP_SCORE_RPM = -3000.0;
-        public static final double AMP_LOAD_RPM = 400.0;
+        public static final double AMP_LOAD_RPM = 1200.0;
         public static final double AMP_INTAKE_RPM = 800.0;
         public static final double AMP_EJECT_RPM = -800.0;
         public static final double TRAP_SCORE_RPM = -800.0;

@@ -65,6 +65,8 @@ public class Elevator extends SubsystemBase {
         elevatorMotor.getConfigurator().apply(outputConfigs);
 
         mmDutyCycleControl.EnableFOC = true;
+
+        elevatorMotor.setInverted(true);
     }
 
     public void setSpeed(double speed) {
