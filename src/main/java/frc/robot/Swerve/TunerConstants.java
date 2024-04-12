@@ -57,7 +57,7 @@ public class TunerConstants {
     // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 2.6666666666666665;
 
-    private static final double kDriveGearRatio = isCompbot?5.142857142857143:(32.0/14.0)*(22.0/24.0)*(45.0/15.0); //(18.0/28.0)
+    private static final double kDriveGearRatio = (32.0/14.0)*(22.0/24.0)*(45.0/15.0); //(18.0/28.0)
     private static final double kSteerGearRatio = 11.314285714285715;
     private static final double kWheelRadiusInches = 2.0*(152.0/157.5)*(204.85/196.85)*(195.1/196.85); //inches
 
