@@ -99,17 +99,20 @@ public class RobotContainer {
   public void configureDriverController(){
     // intake
     // driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
-    driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
+    //driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
     // driverController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
-    // driverController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
-    driverController.leftTrigger(0.5).onTrue(new SetDriveOrientation(DriveOrientation.ROBOT_CENTRIC)).onFalse(new SetDriveOrientation(DriveOrientation.FIELD_CENTRIC));
+    // driverController.leftTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
+    // driverController.leftTrigger(0.5).onTrue(new SetDriveOrientation(DriveOrientation.ROBOT_CENTRIC)).onFalse(new SetDriveOrientation(DriveOrientation.FIELD_CENTRIC));
+    driverController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
+    driverController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
 
     // shooting 
     driverController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker)).onFalse(new ScoreOffCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
-    driverController.leftBumper().onTrue(new SetDriveMode(DriveMode.AIMATTARGET).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
+    driverController.leftBumper().onTrue(new SetTarget(TargetSimple.SPEAKER).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.x().onTrue(new ShooterOff(shooter));
     driverController.b().onTrue(new ShooterOn(shooter));
-    driverController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
+    // driverController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far
+    driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(22.9);})); // platform
     // driverController.a().onTrue(new DriveTest(this)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
     //Adding target swapping controls for testing -JB
     driverController.povLeft().onTrue(new SetTarget(TargetSimple.CENTERPASS));
@@ -260,9 +263,11 @@ public class RobotContainer {
       SmartDashboard.putData("reset lift offset", new InstantCommand(()->lift.resetLiftOffset()));
 
       if(Constants.debug){
-        SmartDashboard.putData("increase RPM offset", new InstantCommand(()->shooter.adjustRPMOffset(200.0)));
-        SmartDashboard.putData("decrease RPM offset", new InstantCommand(()->shooter.adjustRPMOffset(-200.0)));
+        SmartDashboard.putData("increase RPM Left offset", new InstantCommand(()->shooter.adjustRPMLeftOffset(200.0)));
+        SmartDashboard.putData("decrease RPM Left offset", new InstantCommand(()->shooter.adjustRPMLeftOffset(-200.0)));
         SmartDashboard.putData("reset RPM offset", new InstantCommand(()->shooter.resetRPMOffset()));
+        SmartDashboard.putData("increase RPM Right offset", new InstantCommand(()->shooter.adjustRPMRightOffset(200.0)));
+        SmartDashboard.putData("decrease RPM Right offset", new InstantCommand(()->shooter.adjustRPMRightOffset(-200.0)));
       }
     }
 

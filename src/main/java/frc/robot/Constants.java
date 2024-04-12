@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -29,7 +29,7 @@ public class Constants {
     //#endregion
 
     //#region Shooter
-        public static final double SHOOTER_GEAR_RATIO = 1.5;
+        public static final double SHOOTER_GEAR_RATIO = 1.0;
         public static final double KICKER_GEAR_RATIO = 2.5;
 
         public static final int SHOOTER_RIGHT_ID = 20;
@@ -101,11 +101,11 @@ public class Constants {
             kRightShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(2200.0));
             kRightShooterMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(2200.0));
             // kRightShooterMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(2700.0));
-            kRightShooterMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(3000.0));
-            kRightShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(3000.0));
-            kRightShooterMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(3500.0));
-            kRightShooterMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(3500.0));
-            kRightShooterMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(3500.0));
+            kRightShooterMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(2800.0));
+            kRightShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(2800.0));
+            kRightShooterMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(3300.0));
+            kRightShooterMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(3300.0));
+            kRightShooterMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(3300.0));
         }
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLeftShooterMap = new InterpolatingTreeMap<>();

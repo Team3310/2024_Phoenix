@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
@@ -459,6 +460,7 @@ public class Targeting {
         if(isOdometry || TunerConstants.DriveTrain.getDriveMode()==DriveMode.AUTON){
             return;
         }
+        LimelightHelpers.SetRobotOrientation("limelight-front", TunerConstants.DriveTrain.getOdoPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
 
         PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight" + limelightHostname);
        

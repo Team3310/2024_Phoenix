@@ -33,7 +33,8 @@ public class Shooter extends SubsystemBase {
     private final double shooterRpmToMotorRPS = Constants.SHOOTER_GEAR_RATIO / 60;
     private final double kickerRpmToMotorRPS = Constants.KICKER_GEAR_RATIO / 60;
 
-    private double offset = 0.0;
+    private double leftOffset = 0.0;
+    private double rightOffset = 0.0;
 
     private boolean hasNote = false;
 
@@ -135,7 +136,7 @@ public class Shooter extends SubsystemBase {
             return;
         }
 
-        rpm += offset*(3.0/5.0);
+        rpm += rightOffset;
 
         shooterRightMain.setControl(m_voltageVelocityRight.withVelocity(rpm * shooterRpmToMotorRPS)
                 .withAcceleration(rpm * shooterRpmToMotorRPS / 5.0));
@@ -155,7 +156,7 @@ public class Shooter extends SubsystemBase {
             return;
         }
 
-        rpm += offset;
+        rpm += leftOffset;
 
         shooterLeftMain.setControl(m_voltageVelocityLeft.withVelocity(rpm * shooterRpmToMotorRPS)
                 .withAcceleration(rpm * shooterRpmToMotorRPS / 5.0));
@@ -181,12 +182,17 @@ public class Shooter extends SubsystemBase {
         shooterKicker.setControl(m_voltageVelocityKicker.withVelocity(rpm * kickerRpmToMotorRPS));
     }
 
-    public void adjustRPMOffset(double amount){
-        offset += amount;
+    public void adjustRPMLeftOffset(double amount){
+        leftOffset += amount;
+    }
+
+    public void adjustRPMRightOffset(double amount){
+        rightOffset += amount;
     }
 
     public void resetRPMOffset(){
-        offset = 0.0;
+        leftOffset = 0.0;
+        rightOffset = 0.0;
     }
 
     public void setNoteIn(boolean hasNote) {
@@ -204,7 +210,8 @@ public class Shooter extends SubsystemBase {
             SmartDashboard.putNumber("Shooter Left RPM", getLeftMainRPM());
             SmartDashboard.putNumber("Kicker RPM", getKickerRPM());
             SmartDashboard.putBoolean("isNoteLoaded", isNoteLoaded());
-            SmartDashboard.putNumber("Shooter RPM Offset", offset);
+            SmartDashboard.putNumber("Shooter RPM Left Offset", leftOffset);
+            SmartDashboard.putNumber("Shooter RPM Right Offset", rightOffset);
         }
 
         SmartDashboard.putBoolean("Shooter has note", hasNote());

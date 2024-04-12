@@ -276,7 +276,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         firstTimeInAimAtTarget = true;
         hasPreviouslyLockedOnTarget = false;
-        noteLimelight.setLedMode(LedMode.OFF);
+        // noteLimelight.setLedMode(LedMode.OFF);
         isTrackingNote = false;
 
         // Runs once on mode change to JOYSTICK, to set the current field-relative yaw
@@ -285,7 +285,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             maybeStopSnap(true);
         } else if (mode == DriveMode.AIM_AT_NOTE) {
             pidNoteUpdateCounter = NOTE_COUNTER_MAX + 1;
-            noteLimelight.setLedMode(LedMode.ON);
+            // noteLimelight.setLedMode(LedMode.ON);
         } else if (mode == DriveMode.AIM_AT_NOTE) {
              isTrackingNote = false;
         } else if (mode == DriveMode.AIMATTARGET) {
