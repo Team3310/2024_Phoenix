@@ -252,8 +252,8 @@ public class Targeting {
 
     public void updateBotPos() {
         if (isOdometry) {
-            botPos[0] = TunerConstants.DriveTrain.getPose().getX();
-            botPos[1] = TunerConstants.DriveTrain.getPose().getY();
+            botPos[0] = TunerConstants.DriveTrain.getTargetingOdoPose().getX();
+            botPos[1] = TunerConstants.DriveTrain.getTargetingOdoPose().getY();
             botPos[2] = 0.0;
         } else {
             try {

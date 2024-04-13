@@ -755,6 +755,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     //#endregion
 
     //#region getters
+    public Pose2d getTargetingOdoPose(){
+        return this.targetingOdo.getEstimatedPosition();
+    }
     private double getDriveXWithoutDeadband() {
         return -Math.copySign(Math.pow(joystick.getLeftY(), 2.0), joystick.getLeftY());
     }
