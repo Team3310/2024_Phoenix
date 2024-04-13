@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -91,8 +91,8 @@ public class Constants {
             kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-4.0)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-4.0)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(0.0));
-            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(0.0));
+            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-4.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-4.0)); // -4.0
         }
  
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();

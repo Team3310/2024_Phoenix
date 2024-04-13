@@ -64,7 +64,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private String drivetrain_state = "INIT";
 
     private PidController holdAngleController = new PidController(new PidConstants(0.5, 0.0, 0.00));
-    private PidController aimAtTargetController = new PidController(new PidConstants(0.5, 0.0, 0.02));
+    private PidController aimAtTargetController = new PidController(new PidConstants(0.7, 0.0, 0.02));
     private PidController noteTrackController = new PidController(new PidConstants(0.5, 0.001, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
     private PidController strafeTxController = new PidController(new PidConstants(1.0, 0.00, 0.02));
@@ -538,7 +538,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 firstTimeInAimAtTarget = false;
             }
 
-            double currentAngleRadians =  MathUtil.inputModulus(getBotAz_FieldRelative(), -Math.PI,  Math.PI);
+            double currentAngleRadians =  getBotAz_FieldRelative();
             double alignAngleRadians = MathUtil.inputModulus(currentAngleRadians - offset, -Math.PI,  Math.PI);
            
             if (canSeeTarget) {
@@ -547,10 +547,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 //     startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
                 // } else {
                     drivetrain_state = "LIME MODE";
-             //       if (!hasPreviouslyLockedOnTarget) {
-                        aimAtTargetController.setSetpoint(alignAngleRadians);
-                        SmartDashboard.putNumber("Align setpoint", Math.toDegrees(alignAngleRadians));
-               //     }
+                    aimAtTargetController.setSetpoint(alignAngleRadians);
+                    SmartDashboard.putNumber("Align setpoint", Math.toDegrees(alignAngleRadians));
                     hasPreviouslyLockedOnTarget = true;
                     double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
                     SmartDashboard.putNumber("Align current angle", Math.toDegrees(currentAngleRadians));
