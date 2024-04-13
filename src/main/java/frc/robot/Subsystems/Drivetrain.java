@@ -483,6 +483,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         return getPigeon2().getRotation2d().getRadians();
     }
 
+    private Pose2d getGyroAngle() {
+//        return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation().getRadians();
+//        return m_odometry.getEstimatedPosition().getRotation().getRadians();
+        return new Pose2d(0,0,getPigeon2().getRotation2d());
+    }
+
     private final double ROTATE_THRESH = 0.01;
     private final double TX_THRESH = 0.1;
     public void strafeToAprilTag() {
@@ -800,7 +806,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public double getBlueRelativeGyroDegrees() {
         // return this.m_blueFieldRelativeOffset.getDegrees() - getPose().getRotation().getDegrees();
-        return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_blueFieldRelativeOffset)).getRotation().getDegrees();
+        // return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_blueFieldRelativeOffset)).getRotation().getDegrees();
+        return getGyroAngle().relativeTo(new Pose2d(0, 0, m_blueFieldRelativeOffset)).getRotation().plus(Rotation2d.fromRadians(Math.PI)).getDegrees();
     }
 
     public ChassisSpeeds getFieldRelativeVelocites() {
