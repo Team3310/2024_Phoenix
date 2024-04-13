@@ -11,7 +11,6 @@ import frc.robot.Auton.Paths;
 import frc.robot.Commands.Intake.IntakeShooter;
 import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
 import frc.robot.Commands.Shooter.FeederShootCommandAuton;
-import frc.robot.Commands.Shooter.ShooterOn;
 import frc.robot.Subsystems.Lift;
 
 public class FourStageLeft extends AutonCommandBase{

@@ -1,0 +1,84 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.314234914184114,
+        "y": 4.441815740774339
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.097499909285533,
+        "y": 4.192604956638485
+      },
+      "isLocked": false,
+      "linkedName": "SCO"
+    },
+    {
+      "anchor": {
+        "x": 5.162451467760079,
+        "y": 4.148626582967452
+      },
+      "prevControl": {
+        "x": 5.654677345246356,
+        "y": 3.8853429740794434
+      },
+      "nextControl": {
+        "x": 4.532094778475272,
+        "y": 4.485794114445372
+      },
+      "isLocked": false,
+      "linkedName": "CCN_SM3DP"
+    },
+    {
+      "anchor": {
+        "x": 3.5059327261511672,
+        "y": 5.130810261620524
+      },
+      "prevControl": {
+        "x": 4.502775862694583,
+        "y": 4.969556224826736
+      },
+      "nextControl": {
+        "x": 2.853089603491207,
+        "y": 5.236417237344929
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.05,
+        "y": 4.8
+      },
+      "prevControl": {
+        "x": 2.7143220000725723,
+        "y": 5.072172430059147
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "SMGrabClose"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 960.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -18.425257118475646,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "SourceMiddleNotePaths",
+  "previewStartingState": {
+    "rotation": 64.98,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.314234914184114,
+        "y": 4.441815740774339
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 8.284915998403426,
+        "y": 3.9580536303929756
+      },
+      "isLocked": false,
+      "linkedName": "SCO"
+    },
+    {
+      "anchor": {
+        "x": 5.397002794005589,
+        "y": 1.6418592837185677
+      },
+      "prevControl": {
+        "x": 7.121913440255453,
+        "y": 1.5749755070938718
+      },
+      "nextControl": {
+        "x": 3.672092147755725,
+        "y": 1.7087430603432634
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.05,
+        "y": 4.8
+      },
+      "prevControl": {
+        "x": 1.3949707899415804,
+        "y": 3.606226641024711
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "SMGrabClose"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 960.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -18.425257118475646,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "SourceMiddleNotePaths",
+  "previewStartingState": {
+    "rotation": 64.98,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.372872745745491,
-        "y": 4.2219238724191746
+        "x": 8.314234914184114,
+        "y": 4.441815740774339
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.703016961589478,
-        "y": 2.625671791026123
+        "x": 7.644379130028101,
+        "y": 2.845563659381287
       },
       "isLocked": false,
       "linkedName": "SCO"
@@ -32,10 +32,10 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularAcceleration": 960.0
   },
   "goalEndState": {
     "velocity": 0,

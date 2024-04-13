@@ -3,14 +3,16 @@
     "mode": "Client (NT4)",
     "serverTeam": "3310"
   },
-  "Retained Values": {
-    "open": false
-  },
   "Server": {
     "open": true
   },
+  "retained": {
+    "limelight-note": {
+      "open": true
+    }
+  },
   "transitory": {
-    "path-chooser": {
+    "note": {
       "open": true
     }
   }

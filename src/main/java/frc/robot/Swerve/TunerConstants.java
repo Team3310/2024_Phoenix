@@ -15,7 +15,7 @@ import frc.robot.Subsystems.Drivetrain;
 // https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
 public class TunerConstants {
 
-    public static boolean isCompbot = false;
+    public static boolean isCompbot = true;
 
     // Both sets of gains need to be tuned to your individual robot.
 
@@ -40,8 +40,8 @@ public class TunerConstants {
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
     private static final double kSlipCurrentA = 80.0;  // TorqueCurrentLimit applied in SwerveModule
-    public static final double kStatorCurrentA = isCompbot?60.0:110.0; // Only used for non-torque control drive modes applied in drivetrain
-    public static final double kSupplyCurrentA = isCompbot?40.0:50.0; // Only used for non-torque control drive modes applied in drivetrain
+    public static final double kStatorCurrentA = 110.0; // Only used for non-torque control drive modes applied in drivetrain
+    public static final double kSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
 
     public static final double kTeleStatorCurrentA = 60.0; // Only used for non-torque control drive modes applied in drivetrain
     public static final double kTeleSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
@@ -51,7 +51,7 @@ public class TunerConstants {
 
     // Theoretical free speed (m/s) at 12v applied output;
     // This needs to be tuned to your individual robot
-    public static final double kSpeedAt12VoltsMps = 6.21;
+    public static final double kSpeedAt12VoltsMps = 5.0;
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot
@@ -59,7 +59,7 @@ public class TunerConstants {
 
     private static final double kDriveGearRatio = (32.0/14.0)*(22.0/24.0)*(45.0/15.0); //(18.0/28.0)
     private static final double kSteerGearRatio = 11.314285714285715;
-    private static final double kWheelRadiusInches = 2.0*(152.0/157.5)*(204.85/196.85)*(195.1/196.85); //inches
+    private static final double kWheelRadiusInches = 2.0*(152.0/157.5)*(204.85/196.85)*(195.1/196.85)*(188.0/196.85); //inches
 
     private static final boolean kSteerMotorReversed = true;
     private static final boolean kInvertLeftSide = false;
