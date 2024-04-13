@@ -149,6 +149,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
     // if (useLimelight) {
     //   var lastResult = LimelightHelpers.getLatestResults("limelight-fron").targetingResults;
 
@@ -199,12 +200,10 @@ public class Robot extends TimedRobot {
     }
     // TunerConstants.DriveTrain.setDriveMode(DriveMode.JOYSTICK);
 //    TunerConstants.DriveTrain.trapQueen();
-    TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
   }
 
   @Override
   public void teleopPeriodic() {
-    TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
   }
 
   @Override

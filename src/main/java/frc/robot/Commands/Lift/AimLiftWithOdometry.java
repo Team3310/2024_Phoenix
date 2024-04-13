@@ -41,27 +41,29 @@ public class AimLiftWithOdometry extends Command{
             // shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
             // shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
             if (drive.canSeeTargetTag()) {
-                drive.getLimelightTargeting().update();
-                double liftAngle = drive.getOdoTargeting().getEl();
-                double leftSpeed = drive.getOdoTargeting().getLeftShooterSpeed();
-                double rightSpeed = drive.getOdoTargeting().getRightShooterSpeed();
-                if(Constants.debug){
-                    SmartDashboard.putNumber("AimLift Angle", liftAngle);
-                    SmartDashboard.putNumber("AimLift Leftspeed", leftSpeed);
-                    SmartDashboard.putNumber("AimLift Rightspeed", rightSpeed);
-                }
-                lift.setLiftAngle(liftAngle);
-                shooter.setLeftMainRPM(leftSpeed);
-                shooter.setRightMainRPM(rightSpeed);
-
-                // if(drive.snapComplete() && lift.isFinished()){
-                    led.setSolid(new Color(0,255,0));
-                // }else{
-                //     led.setBlink(new Color(243, 204, 20));
-                // }
+                led.setSolid(new Color(0,255,0));
             }else{
                 led.setSolid(new Color(255,0,0));
             }
+
+            drive.getOdoTargeting().update();
+            double liftAngle = drive.getOdoTargeting().getEl();
+            double leftSpeed = drive.getOdoTargeting().getLeftShooterSpeed();
+            double rightSpeed = drive.getOdoTargeting().getRightShooterSpeed();
+            if(Constants.debug){
+                SmartDashboard.putNumber("AimLift Angle", liftAngle);
+                SmartDashboard.putNumber("AimLift Leftspeed", leftSpeed);
+                SmartDashboard.putNumber("AimLift Rightspeed", rightSpeed);
+            }
+            lift.setLiftAngle(liftAngle);
+            shooter.setLeftMainRPM(leftSpeed);
+            shooter.setRightMainRPM(rightSpeed);
+
+                // if(drive.snapComplete() && lift.isFinished()){
+                // }else{
+                //     led.setBlink(new Color(243, 204, 20));
+                // }
+            
             // else{
             //     drive.getOdoTargeting().update();  
             //     lift.setLiftAngle(drive.getOdoTargeting().getEl());

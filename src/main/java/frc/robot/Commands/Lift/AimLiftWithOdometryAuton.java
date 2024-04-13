@@ -33,26 +33,39 @@ public class AimLiftWithOdometryAuton extends Command{
             SmartDashboard.putBoolean("has target", drive.hasTarget());
         }
         if (drive.hasTarget()) {
-            if(Constants.debug){
-                SmartDashboard.putNumber("targeting dist", drive.getLimelightTargeting().getDistance_XY_average());
-            }
-            drive.getLimelightTargeting().update();
-            // double angle = dist!=0.0?drive.getLimelightTargeting().getEl():Constants.kLiftAngleMapComp.getInterpolated(new InterpolatingDouble(dist)).value;
-            lift.setLiftAngle(drive.getLimelightTargeting().getEl());
-            shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
-            shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
+            // if(Constants.debug){
+            //     SmartDashboard.putNumber("targeting dist", drive.getLimelightTargeting().getDistance_XY_average());
+            // }
+            // drive.getLimelightTargeting().update();
+            // // double angle = dist!=0.0?drive.getLimelightTargeting().getEl():Constants.kLiftAngleMapComp.getInterpolated(new InterpolatingDouble(dist)).value;
+            // lift.setLiftAngle(drive.getLimelightTargeting().getEl());
+            // shooter.setLeftMainRPM(drive.getLimelightTargeting().getLeftShooterSpeed());
+            // shooter.setRightMainRPM(drive.getLimelightTargeting().getRightShooterSpeed());
 
             LED.getInstance().setSolid(Color.kGreen);
         }else{
-            if(Constants.debug){
-                SmartDashboard.putNumber("targeting odo dist", drive.getOdoTargeting().getDistance_XY_average());
-            }
-            drive.getOdoTargeting().update();  
-            lift.setLiftAngle(drive.getOdoTargeting().getEl());
-            shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
-            shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
+            // if(Constants.debug){
+            //     SmartDashboard.putNumber("targeting odo dist", drive.getOdoTargeting().getDistance_XY_average());
+            // }
+            // drive.getOdoTargeting().update();  
+            // lift.setLiftAngle(drive.getOdoTargeting().getEl());
+            // shooter.setLeftMainRPM(drive.getOdoTargeting().getLeftShooterSpeed());
+            // shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
             LED.getInstance().setSolid(Color.kHotPink);
         }
+
+        drive.getOdoTargeting().update();
+        double liftAngle = drive.getOdoTargeting().getEl();
+        double leftSpeed = drive.getOdoTargeting().getLeftShooterSpeed();
+        double rightSpeed = drive.getOdoTargeting().getRightShooterSpeed();
+        if(Constants.debug){
+            SmartDashboard.putNumber("AimLift Angle", liftAngle);
+            SmartDashboard.putNumber("AimLift Leftspeed", leftSpeed);
+            SmartDashboard.putNumber("AimLift Rightspeed", rightSpeed);
+        }
+        lift.setLiftAngle(liftAngle);
+        shooter.setLeftMainRPM(leftSpeed);
+        shooter.setRightMainRPM(rightSpeed);
     }
 
     @Override
