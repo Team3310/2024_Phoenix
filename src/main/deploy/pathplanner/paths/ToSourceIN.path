@@ -8,56 +8,62 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5715542092913433,
-        "y": 3.667466057787329
+        "x": 1.520494370181287,
+        "y": 3.3033065817684437
       },
       "isLocked": false,
       "linkedName": "StageStart"
     },
     {
       "anchor": {
-        "x": 4.957219057295258,
-        "y": 1.9643673573061433
+        "x": 4.849144207605185,
+        "y": 1.8650010964618207
       },
       "prevControl": {
-        "x": 4.337502234822912,
-        "y": 2.219045503527655
+        "x": 4.229603051317434,
+        "y": 2.1201062784626594
       },
       "nextControl": {
-        "x": 7.097499909285533,
-        "y": 1.0847998838854824
+        "x": 6.595658011191799,
+        "y": 1.1458483538085098
       },
       "isLocked": false,
-      "linkedName": "SourceMiddle"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.372872745745491,
-        "y": 2.4774483834681957
+        "x": 8.506549584527741,
+        "y": 2.6663427239897968
       },
       "prevControl": {
-        "x": 7.969737653761024,
-        "y": 2.050565251924154
+        "x": 8.103414492543275,
+        "y": 2.239459592445755
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "InSourceNote"
     }
   ],
-  "rotationTargets": [
+  "rotationTargets": [],
+  "constraintZones": [
     {
-      "waypointRelativePos": 0.85,
-      "rotationDegrees": -21.94145863169192,
-      "rotateFast": false
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 1.2,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 3.25,
+        "maxAcceleration": 5.0,
+        "maxAngularVelocity": 720.0,
+        "maxAngularAcceleration": 960.0
+      }
     }
   ],
-  "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 2.0,
     "maxAcceleration": 5.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0
+    "maxAngularVelocity": 720.0,
+    "maxAngularAcceleration": 960.0
   },
   "goalEndState": {
     "velocity": 0.0,

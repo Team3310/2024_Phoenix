@@ -65,7 +65,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     private PidController holdAngleController = new PidController(new PidConstants(0.5, 0.0, 0.00));
     private PidController aimAtTargetController = new PidController(new PidConstants(1.2, 0.0, 0.0));
-    private PidController noteTrackController = new PidController(new PidConstants(0.5, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
+    private PidController noteTrackController = new PidController(new PidConstants(0.5, 0.001, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
     private PidController strafeTxController = new PidController(new PidConstants(1.0, 0.00, 0.02));
     private PidController strafeRotateController = new PidController(new PidConstants(1.0, 0.00, 0.02));
@@ -661,27 +661,41 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    private double lastCommandedSpeed = 0.0;
+    private boolean setTrackSpeed = false;
+
     private void autonDrive(){
         ChassisSpeeds speeds = pathFollower.update();
 
+        SmartDashboard.putBoolean("is tracking note", isTrackingNote);
+
         if(isTrackingNote && noteLimelight.hasTarget()){
-            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
+            if(!setTrackSpeed){
+                lastCommandedSpeed = speeds.vxMetersPerSecond;
+                setTrackSpeed = true;
+            }
             System.out.println("TRACKING!!!!");
+            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
 
             double currentNoteTrackAngle = getBotAz_FieldRelative();
-            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, 0.0, 2 * Math.PI);
+            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, -Math.PI, Math.PI);
+
+        //    if (pidNoteUpdateCounter > NOTE_COUNTER_MAX) {
             noteTrackController.setSetpoint(adjustAngle);
-            double pidRotationOutput = noteTrackController.calculate(getBotAz_FieldRelative(), 0.005);
+
+            double pidRotationOutput = noteTrackController.calculate(currentNoteTrackAngle, 0.005);
+            SmartDashboard.putNumber("PID Output Note", pidRotationOutput);
             applyRequest(()->driveRobotCentricNoDeadband
-                .withVelocityX(2.0)
+                .withVelocityX(lastCommandedSpeed)
                 .withVelocityY(0.0)
-                .withRotationalRate(pidRotationOutput*Constants.MaxSpeed)
+                .withRotationalRate(pidRotationOutput*Constants.MaxAngularRate)
                 .withDriveRequestType(DriveRequestType.Velocity)
             );
             return;
         }
 
         if (!pathDone()) {
+            setTrackSpeed = false;
             // var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
             // for (int i = 0; i < this.Modules.length; i++) {
             //     this.Modules[i].apply(states[i],
@@ -896,6 +910,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         // }
 
         
+        SmartDashboard.putBoolean("can see note", noteLimelight.hasTarget());
 
         SmartDashboard.putString("side", sideMode.toString());
 
