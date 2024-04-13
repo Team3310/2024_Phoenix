@@ -403,7 +403,7 @@ public class Targeting {
     // Drivetrain drivetrain = TunerConstants.DriveTrain;
     double KALMAN_ROTATION_MAX_RATE = 2;    //radians per second
     double KALMAN_MAX_SPEED = 2;            //meters per second
-    double KALMAN_APRILTAG_MAX_RANGE = 4.5; //meters
+    double KALMAN_APRILTAG_MAX_RANGE = 1.5; //meters
     public void updateKalmanFilter(){
         if (isOdometry) {
             return; //No Kalman Filter updating with odometry!
@@ -460,9 +460,14 @@ public class Targeting {
         if(isOdometry || TunerConstants.DriveTrain.getDriveMode()==DriveMode.AUTON){
             return;
         }
-        LimelightHelpers.SetRobotOrientation("limelight-front", TunerConstants.DriveTrain.getOdoPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+ 
+        // LimelightHelpers.SetRobotOrientation("limelight-front", TunerConstants.DriveTrain.getOdoPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        // LimelightHelpers.SetRobotOrientation("limelight-front", TunerConstants.DriveTrain.getOdoPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        double angle = TunerConstants.DriveTrain.getBlueRelativeGyroDegrees();
+        LimelightHelpers.SetRobotOrientation("limelight-front", angle, 0, 0, 0, 0, 0);
+        SmartDashboard.putNumber("Limelight orientation", angle);
 
-        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight" + limelightHostname);
+        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight" + limelightHostname);
        
         // invalid LL data
         if (botPoseEstimate.pose.getX() == 0.0) {

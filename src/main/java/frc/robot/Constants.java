@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -86,11 +86,11 @@ public class Constants {
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(4.7), new InterpolatingDouble(0.0));
-            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(0.0)); // -5.0
-            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(0.0));//0.0
-            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(0.0)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(0.0)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(0.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(0.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(0.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(0.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(0.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(0.0)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(0.0));
         }
@@ -214,19 +214,19 @@ public class Constants {
    //#endregion
 
     //drivetrain
-    public static final double MaxSpeed = 6.21; // 6 meters per second desired top speed
+    public static final double MaxSpeed = 5.0; // 6 meters per second desired top speed
     public static final double MaxAngularRate = 3 * Math.PI; // 3/4 of a rotation per second max angular velocity
     
     //camera
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters
 
     public static final class SnapConstants {
-        public static final double kP = 2.5;
+        public static final double kP = 1.5;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double kTimeout = 0.25;
+        public static final double kTimeout = 0.0;
 
-        public static final double kEpsilon = 5.0;
+        public static final double kEpsilon = 1.0;
 
         // Constraints for the profiled angle controller
         public static final double kMaxAngularSpeedRadiansPerSecond = 2.0 * Math.PI;

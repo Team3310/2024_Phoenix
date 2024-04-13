@@ -199,12 +199,12 @@ public class Robot extends TimedRobot {
     }
     // TunerConstants.DriveTrain.setDriveMode(DriveMode.JOYSTICK);
 //    TunerConstants.DriveTrain.trapQueen();
-    // TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
+    TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
   }
 
   @Override
   public void teleopPeriodic() {
-    // TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
+    TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
   }
 
   @Override

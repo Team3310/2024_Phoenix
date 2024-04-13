@@ -42,9 +42,9 @@ public class AimLiftWithOdometry extends Command{
             // shooter.setRightMainRPM(drive.getOdoTargeting().getRightShooterSpeed());
             if (drive.canSeeTargetTag()) {
                 drive.getLimelightTargeting().update();
-                double liftAngle = drive.getLimelightTargeting().getEl();
-                double leftSpeed = drive.getLimelightTargeting().getLeftShooterSpeed();
-                double rightSpeed = drive.getLimelightTargeting().getRightShooterSpeed();
+                double liftAngle = drive.getOdoTargeting().getEl();
+                double leftSpeed = drive.getOdoTargeting().getLeftShooterSpeed();
+                double rightSpeed = drive.getOdoTargeting().getRightShooterSpeed();
                 if(Constants.debug){
                     SmartDashboard.putNumber("AimLift Angle", liftAngle);
                     SmartDashboard.putNumber("AimLift Leftspeed", leftSpeed);

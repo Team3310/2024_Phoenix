@@ -64,7 +64,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private String drivetrain_state = "INIT";
 
     private PidController holdAngleController = new PidController(new PidConstants(0.5, 0.0, 0.00));
-    private PidController aimAtTargetController = new PidController(new PidConstants(1.2, 0.0, 0.0));
+    private PidController aimAtTargetController = new PidController(new PidConstants(0.5, 0.0, 0.02));
     private PidController noteTrackController = new PidController(new PidConstants(0.5, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
     private PidController strafeTxController = new PidController(new PidConstants(1.0, 0.00, 0.02));
@@ -85,6 +85,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private boolean isHoldingAngle = false;
     private double joystickDriveHoldAngleRadians = 0;
     private double passFieldRelativeAngleDeg = 0;
+    protected Rotation2d m_blueFieldRelativeOffset = new Rotation2d();
 
     private FollowPathCommand pathFollower;
 
@@ -139,7 +140,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         holdAngleController.setOutputRange(-1.0, 1.0);
  
         aimAtTargetController.setContinuous(true);
-        aimAtTargetController.setInputRange(-Math.PI, Math.PI);
+        aimAtTargetController.setInputRange(-Math.PI,  Math.PI);
         aimAtTargetController.setOutputRange(-1.0, 1.0);
 
         noteTrackController.setContinuous(true);
@@ -306,7 +307,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 // double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                 double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
 
-                PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
+                PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-front");
                 for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
                     if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
                         offset = -(Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
@@ -319,6 +320,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 if (canSeeTarget) {
                     if (Math.abs(Math.toDegrees(offset)) > 3.0) {
                         drivetrain_state = "LIME SNAP";
+                        SmartDashboard.putNumber("Snap offset", Math.toDegrees(offset));
+                        SmartDashboard.putNumber("Snap gyro", Math.toDegrees(getBotAz_FieldRelative()));
+                        SmartDashboard.putNumber("Snap gyro modulus", Math.toDegrees(MathUtil.inputModulus(getBotAz_FieldRelative(), -Math.PI,  Math.PI)));
+                        SmartDashboard.putNumber("Snap input", Math.toDegrees(getBotAz_FieldRelative() - offset));
+                        SmartDashboard.putNumber("Snap input modulus", Math.toDegrees(MathUtil.inputModulus(getBotAz_FieldRelative() - offset, -Math.PI,  Math.PI)));
                         startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
                     }
                 } 
@@ -513,12 +519,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             boolean canSeeTarget = false;
             double offset = 0;
             double distance_XY_Average = odometryTargeting.getDistance_XY_average();
-            double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
 
-            PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
+            PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-front");
             for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
                 if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
-                    distance_XY_Average = frontCamera.getDistance_XY_average();
+                    distance_XY_Average = odometryTargeting.getDistance_XY_average();
+                    double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                     aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                     offset = (Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
                     SmartDashboard.putNumber("TX Limelight", botPoseEstimate.rawFiducials[i].txnc);
@@ -531,30 +537,37 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 aimAtTargetController.integralAccum = 0;
                 firstTimeInAimAtTarget = false;
             }
-            
+
+            double currentAngleRadians =  MathUtil.inputModulus(getBotAz_FieldRelative(), -Math.PI,  Math.PI);
+            double alignAngleRadians = MathUtil.inputModulus(currentAngleRadians - offset, -Math.PI,  Math.PI);
+           
             if (canSeeTarget) {
                 // if (Math.abs(Math.toDegrees(offset)) > 3.0) {
                 //     drivetrain_state = "LIME SNAP";
                 //     startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
                 // } else {
                     drivetrain_state = "LIME MODE";
+             //       if (!hasPreviouslyLockedOnTarget) {
+                        aimAtTargetController.setSetpoint(alignAngleRadians);
+                        SmartDashboard.putNumber("Align setpoint", Math.toDegrees(alignAngleRadians));
+               //     }
                     hasPreviouslyLockedOnTarget = true;
-
-                    double currentAngleRadians = getBotAz_FieldRelative();
-                    double alignAngleRadians = MathUtil.inputModulus(currentAngleRadians - offset, -Math.PI,  Math.PI);
-                    aimAtTargetController.setSetpoint(alignAngleRadians);
-
                     double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
-
-                    // SmartDashboard.putNumber("PID Output:", rotation);
-                    // SmartDashboard.putNumber("PID Error:", offset);
-
+                    SmartDashboard.putNumber("Align current angle", Math.toDegrees(currentAngleRadians));
+                    SmartDashboard.putNumber("Align rotation", rotation);
                     updateDrive(rotation);
                 // }
             }
             else {
-                isHoldingAngle = false;
-                joystickDrive();
+                if (!hasPreviouslyLockedOnTarget) {
+                    isHoldingAngle = false;
+                    joystickDrive();
+                }
+                else {
+                    drivetrain_state = "LIME MODE NO TARGET";
+                    double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
+                    updateDrive(rotation);
+                }
 
                 // // If you have already locked onto a target don't go back to odo mode
                 // if (Targeting.getTargetSimple() == TargetSimple.SPEAKER || hasPreviouslyLockedOnTarget) {
@@ -669,7 +682,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             System.out.println("TRACKING!!!!");
 
             double currentNoteTrackAngle = getBotAz_FieldRelative();
-            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, 0.0, 2 * Math.PI);
+            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, -Math.PI,  Math.PI);
             noteTrackController.setSetpoint(adjustAngle);
             double pidRotationOutput = noteTrackController.calculate(getBotAz_FieldRelative(), 0.005);
             applyRequest(()->driveRobotCentricNoDeadband
@@ -760,6 +773,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public double getFieldRelativeGyro() {
         return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_fieldRelativeOffset)).getRotation().getRadians();
+    }
+
+    public double getBlueRelativeGyroDegrees() {
+        // return this.m_blueFieldRelativeOffset.getDegrees() - getPose().getRotation().getDegrees();
+        return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_blueFieldRelativeOffset)).getRotation().getDegrees();
     }
 
     public ChassisSpeeds getFieldRelativeVelocites() {
@@ -855,7 +873,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // }
 
     public boolean canSeeTargetTag(){
-        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-front");
+        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-front");
         for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
             if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
                 return true;
@@ -894,9 +912,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //     sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
         //     Targeting.setTarget(sideMode == SideMode.BLUE ? Target.BLUESPEAKER : Target.REDSPEAKER);
         // }
-
         
-
         SmartDashboard.putString("side", sideMode.toString());
 
         if (Constants.debug) {
@@ -955,12 +971,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             PPLibTelemetry.setCurrentPose(getPose());
         }
         SmartDashboard.putBoolean("will autos work", !Utils.isSimulation());
+        SmartDashboard.putNumber("limelight gyro", getOdoPose().getRotation().getDegrees());
         // PPLibTelemetry.setTargetPose(limelight.getBotPosePose());
     }
 
     public void seedFieldRelativeWithOffset(Rotation2d offset) {
         try {
             m_stateLock.writeLock().lock();
+            m_blueFieldRelativeOffset = getState().Pose.getRotation().minus(offset);
             if(getSideMode()==SideMode.RED){
                 offset = new Rotation2d(Math.PI).plus(offset);
             }
@@ -1046,46 +1064,36 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // }
     
     public double calculateSnapValue() {
-        if(mControlMode == DriveMode.AIMATTARGET_AUTON){
-            return snapPIDControllerAuton.calculate(getBotAz_FieldRelative());
-        }
-        return snapPIDController.calculate(getBotAz_FieldRelative());
+        return snapPIDController.calculate(MathUtil.inputModulus(getBotAz_FieldRelative(), -Math.PI,  Math.PI));
     }
 
     public void startSnap(double snapAngle) {
-        if (mControlMode == DriveMode.AIMATTARGET_AUTON) {
-            snapPIDControllerAuton.reset(getBotAz_FieldRelative());
-            snapPIDControllerAuton.setGoal(new TrapezoidProfile.State(Math.toRadians(snapAngle), 0.0));
-            isSnapping = true;
-        } else {
-            snapPIDController.reset(getBotAz_FieldRelative());
-            snapPIDController.setGoal(new TrapezoidProfile.State(Math.toRadians(snapAngle), 0.0));
-            isSnapping = true;
-        }
+        snapPIDController.reset(MathUtil.inputModulus(getBotAz_FieldRelative(), -Math.PI,  Math.PI));
+        double alignAngleRadians = MathUtil.inputModulus(Math.toRadians(snapAngle), -Math.PI,  Math.PI);
+        snapPIDController.setGoal(new TrapezoidProfile.State(alignAngleRadians, 0.0));
+        isSnapping = true;
     }
 
     TimeDelayedBoolean delayedBoolean = new TimeDelayedBoolean();
 
     public boolean snapComplete() {
-        if(mControlMode == DriveMode.AIMATTARGET_AUTON){
-            double error = snapPIDControllerAuton.getGoal().position - getBotAz_FieldRelative();
-            return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapAutonConstants.kEpsilon),
-                Constants.SnapAutonConstants.kTimeout);
-        }
-        else{
-            double error = snapPIDController.getGoal().position - getBotAz_FieldRelative();
-            return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapConstants.kEpsilon),
-                    Constants.SnapConstants.kTimeout);
-        }        
+        double error = MathUtil.inputModulus(snapPIDController.getGoal().position, -Math.PI,  Math.PI) - MathUtil.inputModulus(getBotAz_FieldRelative(), -Math.PI,  Math.PI);
+        SmartDashboard.putNumber("Snap error", Math.toDegrees(error));
+        return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapConstants.kEpsilon),
+                Constants.SnapConstants.kTimeout);     
     }
 
     public void maybeStopSnap(boolean force) {
         if (!isSnapping) {
+            SmartDashboard.putNumber("Snapcomplete = ", -1);
             return;
         }
         if (force || snapComplete()) {
             isSnapping = false;
             snapPIDController.reset(getBotAz_FieldRelative());
+            SmartDashboard.putNumber("Snapcomplete = ", 1);
+        } else {
+            SmartDashboard.putNumber("Snapcomplete = ", 0);
         }
     }
 
