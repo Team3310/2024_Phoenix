@@ -2,17 +2,13 @@ package frc.robot.util.Camera;
 
 import com.pathplanner.lib.util.PPLibTelemetry;
 
+import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Subsystems.Drivetrain;
-import frc.robot.Subsystems.Drivetrain.DriveMode;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
 import frc.robot.util.Choosers.SideChooser.SideMode;
@@ -91,8 +87,7 @@ public class Targeting {
         SPEAKER,
         CORNERPASS,
         CENTERPASS, NONE;
-    }
-
+    } 
     //#region Constructors
     // Targeting Constructor, Limelight
     public Targeting(String limelightHostname, boolean isOdometry) {
@@ -102,6 +97,7 @@ public class Targeting {
         this.distanceFilter = LinearFilter.movingAverage(NUMBER_TAPS_MOVING_AVERAGE);
     }
 
+    
     // Targeting Constructor, Odometry
     public Targeting(boolean isOdometry) { 
         // this("junk", isOdometry);
@@ -404,63 +400,63 @@ public class Targeting {
     double KALMAN_ROTATION_MAX_RATE = 2;    //radians per second
     double KALMAN_MAX_SPEED = 2;            //meters per second
     double KALMAN_APRILTAG_MAX_RANGE = 4.5; //meters
-    public void updateKalmanFilter(){
-        if (isOdometry) {
-            return; //No Kalman Filter updating with odometry!
-        }
+    // public void updateKalmanFilter(){
+    //     if (isOdometry) {
+    //         return; //No Kalman Filter updating with odometry!
+    //     }
 
-        PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight" + limelightHostname);
+    //     PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight" + limelightHostname);
 
-        if(Constants.debug){
-            SmartDashboard.putBoolean("LimelightHasTarget", limelight.hasTarget());
-        }
-        if (limelight.hasTarget()){
-            try {
-                botPos = limelight.getBotPose();//botpose_wpiblue
-                if (botPos.length < 3) {
-                    return;
-                }
-            } catch (Exception e) {
-                return;
-            }
+    //     if(Constants.debug){
+    //         SmartDashboard.putBoolean("LimelightHasTarget", limelight.hasTarget());
+    //     }
+    //     if (limelight.hasTarget()){
+    //         try {
+    //             botPos = limelight.getBotPose();//botpose_wpiblue
+    //             if (botPos.length < 3) {
+    //                 return;
+    //             }
+    //         } catch (Exception e) {
+    //             return;
+    //         }
 
-            double[] targetpose_robotspace = limelight.getTable().getEntry("botpose_targetspace").getDoubleArray(new double[6]);
-            double distanceToTarget = Math.hypot(targetpose_robotspace[0], targetpose_robotspace[1]);
-            Rotation2d botRotation2d = new Rotation2d(Math.toRadians(botPos[5])); //Believe botPos TZ is in degreess... could be wrong...
-            Pose2d botPose2d = new Pose2d(botPos[0], botPos[1], botRotation2d);
+    //         double[] targetpose_robotspace = limelight.getTable().getEntry("botpose_targetspace").getDoubleArray(new double[6]);
+    //         double distanceToTarget = Math.hypot(targetpose_robotspace[0], targetpose_robotspace[1]);
+    //         Rotation2d botRotation2d = new Rotation2d(Math.toRadians(botPos[5])); //Believe botPos TZ is in degreess... could be wrong...
+    //         Pose2d botPose2d = new Pose2d(botPos[0], botPos[1], botRotation2d);
 
-            ChassisSpeeds ChassisSpeeds = TunerConstants.DriveTrain.getCurrentRobotChassisSpeeds();
-            double rotationSpeed = ChassisSpeeds.omegaRadiansPerSecond;
-            double xSpeed = ChassisSpeeds.vxMetersPerSecond;
-            double ySpeed = ChassisSpeeds.vyMetersPerSecond;
-            double translationalSpeed = Math.hypot(xSpeed, ySpeed);
+    //         ChassisSpeeds ChassisSpeeds = TunerConstants.DriveTrain.getCurrentRobotChassisSpeeds();
+    //         double rotationSpeed = ChassisSpeeds.omegaRadiansPerSecond;
+    //         double xSpeed = ChassisSpeeds.vxMetersPerSecond;
+    //         double ySpeed = ChassisSpeeds.vyMetersPerSecond;
+    //         double translationalSpeed = Math.hypot(xSpeed, ySpeed);
 
-            if((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && (distanceToTarget < KALMAN_APRILTAG_MAX_RANGE)){
-                TunerConstants.DriveTrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp());
-                if(Constants.debug){
-                    SmartDashboard.putString("KALMAN", "Valid");
-                }
-                PPLibTelemetry.setTargetPose(botPose2d)
-                ;
-            } else {
-                if(Constants.debug){
-                    SmartDashboard.putString("KALMAN", "Invalid");
-                }
-            }
+    //         if((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && (distanceToTarget < KALMAN_APRILTAG_MAX_RANGE)){
+    //             TunerConstants.DriveTrain.addVisionMeasurement(botPose2d, Timer.getFPGATimestamp());
+    //             if(Constants.debug){
+    //                 SmartDashboard.putString("KALMAN", "Valid");
+    //             }
+    //             PPLibTelemetry.setTargetPose(botPose2d)
+    //             ;
+    //         } else {
+    //             if(Constants.debug){
+    //                 SmartDashboard.putString("KALMAN", "Invalid");
+    //             }
+    //         }
 
-            if(Constants.debug){
-                SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
-                SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
-                SmartDashboard.putNumber("translationSpeed", translationalSpeed);
-            }
-        }
-    }
+    //         if(Constants.debug){
+    //             SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
+    //             SmartDashboard.putNumber("rotationSpeed", rotationSpeed);
+    //             SmartDashboard.putNumber("translationSpeed", translationalSpeed);s
+    //         }
+    //     }
+    // }
     
     public void updatePoseEstimatorWithVisionBotPose() {
-        if(isOdometry || TunerConstants.DriveTrain.getDriveMode()==DriveMode.AUTON){
+        if(isOdometry){
             return;
         }
- 
+        
         // LimelightHelpers.SetRobotOrientation("limelight-front", TunerConstants.DriveTrain.getOdoPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
         // LimelightHelpers.SetRobotOrientation("limelight-front", TunerConstants.DriveTrain.getOdoPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
         double angle = TunerConstants.DriveTrain.getBlueRelativeGyroDegrees();
@@ -513,7 +509,7 @@ public class Targeting {
             TunerConstants.DriveTrain.setVisionMeasurementStdDevs(
                     VecBuilder.fill(xyStds, xyStds, Math.toRadians(degStds)));
             TunerConstants.DriveTrain.addVisionMeasurement(botPoseEstimate.pose,
-                    Timer.getFPGATimestamp() - botPoseEstimate.latency / 1000.0);
+                    MathSharedStore.getTimestamp() - botPoseEstimate.latency / 1000.0);
             PPLibTelemetry.setTargetPose(botPoseEstimate.pose);
         }
     }

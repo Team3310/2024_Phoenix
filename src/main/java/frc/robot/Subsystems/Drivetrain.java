@@ -2,6 +2,7 @@ package frc.robot.Subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.Utils;
@@ -24,14 +25,18 @@ import com.pathplanner.lib.util.PPLibTelemetry;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,7 +46,6 @@ import frc.robot.Constants;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
 import frc.robot.util.Camera.Limelight;
-import frc.robot.util.Camera.Limelight.LedMode;
 import frc.robot.util.Camera.LimelightHelpers;
 import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
 import frc.robot.util.Camera.Targeting;
@@ -70,6 +74,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private PidController strafeTxController = new PidController(new PidConstants(1.0, 0.00, 0.02));
     private PidController strafeRotateController = new PidController(new PidConstants(1.0, 0.00, 0.02));
 
+    private final SwerveDrivePoseEstimator targetingOdo;	
 
     private Limelight limelight = new Limelight("front");
     private Limelight noteLimelight = new Limelight("note");
@@ -135,6 +140,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+
+        this.targetingOdo = 
+            new SwerveDrivePoseEstimator(
+                m_kinematics, new Rotation2d(), m_modulePositions, new Pose2d(), 
+                VecBuilder.fill(0.1, 0.1, 0.1),
+                VecBuilder.fill(0.9, 0.9, 0.9));
 
         holdAngleController.setContinuous(true);
         holdAngleController.setOutputRange(-1.0, 1.0);
@@ -1004,7 +1015,67 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     @Override
+    public void tareEverything() {
+        try {
+            m_stateLock.writeLock().lock();
+
+            for (int i = 0; i < ModuleCount; ++i) {
+                Modules[i].resetPosition();
+                m_modulePositions[i] = Modules[i].getPosition(true);
+            }
+            m_odometry.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, new Pose2d());
+            targetingOdo.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, new Pose2d());
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void seedFieldRelative(Pose2d location) {
+        try {
+            m_stateLock.writeLock().lock();
+
+            m_odometry.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
+            targetingOdo.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
+            /* We need to update our cached pose immediately so that race conditions don't happen */
+            m_cachedState.Pose = location;
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void addVisionMeasurement(
+            Pose2d visionRobotPoseMeters,
+            double timestampSeconds) {
+        try {
+            m_stateLock.writeLock().lock();
+            targetingOdo.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void setVisionMeasurementStdDevs(Matrix<N3, N1> visionMeasurementStdDevs) {
+        try {
+            m_stateLock.writeLock().lock();
+            targetingOdo.setVisionMeasurementStdDevs(visionMeasurementStdDevs);
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
+    }
+
+    @Override
     public void update(double time, double dt) {
+        double yawDegrees = BaseStatusSignal.getLatencyCompensatedValue(m_yawGetter, m_angularVelocity);
+        try {
+            m_stateLock.writeLock().lock();
+            /* Keep track of previous and current pose to account for the carpet vector */
+            targetingOdo.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+        }finally {
+            m_stateLock.writeLock().unlock();
+        }
         // chooseVisionAlignGoal();
         switch (mControlMode) {
             case AIMATTARGET:
