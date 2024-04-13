@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -189,7 +189,7 @@ public class Constants {
         public static final int AMP_SENSOR_PORT = 1;
 
         public static final double AMP_SCORE_RPM = -3000.0;
-        public static final double AMP_LOAD_RPM = 900.0;
+        public static final double AMP_LOAD_RPM = 800.0;
         public static final double AMP_INTAKE_RPM = 800.0;
         public static final double AMP_EJECT_RPM = -800.0;
         public static final double TRAP_SCORE_RPM = -800.0;
