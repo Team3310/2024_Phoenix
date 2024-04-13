@@ -322,7 +322,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
                     if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
                         offset = -(Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
-                        SmartDashboard.putNumber("TX Limelight", botPoseEstimate.rawFiducials[i].txnc);
+                        // SmartDashboard.putNumber("TX Limelight", botPoseEstimate.rawFiducials[i].txnc);
                         canSeeTarget = true;
                         break;
                     }
@@ -331,11 +331,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 if (canSeeTarget) {
                     if (Math.abs(Math.toDegrees(offset)) > 3.0) {
                         drivetrain_state = "LIME SNAP";
-                        SmartDashboard.putNumber("Snap offset", Math.toDegrees(offset));
-                        SmartDashboard.putNumber("Snap gyro", Math.toDegrees(getBotAz_FieldRelative()));
-                        SmartDashboard.putNumber("Snap gyro modulus", Math.toDegrees(MathUtil.inputModulus(getBotAz_FieldRelative(), -Math.PI,  Math.PI)));
-                        SmartDashboard.putNumber("Snap input", Math.toDegrees(getBotAz_FieldRelative() - offset));
-                        SmartDashboard.putNumber("Snap input modulus", Math.toDegrees(MathUtil.inputModulus(getBotAz_FieldRelative() - offset, -Math.PI,  Math.PI)));
+                        // SmartDashboard.putNumber("Snap offset", Math.toDegrees(offset));
+                        // SmartDashboard.putNumber("Snap gyro", Math.toDegrees(getBotAz_FieldRelative()));
+                        // SmartDashboard.putNumber("Snap gyro modulus", Math.toDegrees(MathUtil.inputModulus(getBotAz_FieldRelative(), -Math.PI,  Math.PI)));
+                        // SmartDashboard.putNumber("Snap input", Math.toDegrees(getBotAz_FieldRelative() - offset));
+                        // SmartDashboard.putNumber("Snap input modulus", Math.toDegrees(MathUtil.inputModulus(getBotAz_FieldRelative() - offset, -Math.PI,  Math.PI)));
                         startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
                     }
                 } 
@@ -544,7 +544,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                     aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                     offset = (Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
-                    SmartDashboard.putNumber("TX Limelight", botPoseEstimate.rawFiducials[i].txnc);
+                    // SmartDashboard.putNumber("TX Limelight", botPoseEstimate.rawFiducials[i].txnc);
                     canSeeTarget = true;
                     break;
                 }
@@ -565,11 +565,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 // } else {
                     drivetrain_state = "LIME MODE";
                     aimAtTargetController.setSetpoint(alignAngleRadians);
-                    SmartDashboard.putNumber("Align setpoint", Math.toDegrees(alignAngleRadians));
+                    // SmartDashboard.putNumber("Align setpoint", Math.toDegrees(alignAngleRadians));
                     hasPreviouslyLockedOnTarget = true;
                     double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
-                    SmartDashboard.putNumber("Align current angle", Math.toDegrees(currentAngleRadians));
-                    SmartDashboard.putNumber("Align rotation", rotation);
+                    // SmartDashboard.putNumber("Align current angle", Math.toDegrees(currentAngleRadians));
+                    // SmartDashboard.putNumber("Align rotation", rotation);
                     updateDrive(rotation);
                 // }
             }
@@ -677,7 +677,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         else {
             if (isTrackingNote) {
                 drivetrain_state = "NOTE MODE";
-                double pidRotationOutput = noteTrackController.calculate(getBotAz_FieldRelative(), 0.005);
+                // double pidRotationOutput = noteTrackController.calculate(getBotAz_FieldRelative(), 0.005);
                 double xForward = Math.sqrt(getDriveXWithDeadband() * getDriveXWithDeadband() + getDriveYWithDeadband() * getDriveYWithDeadband());
                 setDriveOrientation(DriveOrientation.ROBOT_CENTRIC);
                 updateDrive(xForward, 0.0, 0.0);         
@@ -695,7 +695,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private void autonDrive(){
         ChassisSpeeds speeds = pathFollower.update();
 
-        SmartDashboard.putBoolean("is tracking note", isTrackingNote);
+        if(Constants.debug){
+            SmartDashboard.putBoolean("is tracking note", isTrackingNote);
+        }
 
         if(isTrackingNote && noteLimelight.hasTarget()){
             if(!setTrackSpeed){
@@ -712,7 +714,9 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             noteTrackController.setSetpoint(adjustAngle);
 
             double pidRotationOutput = noteTrackController.calculate(currentNoteTrackAngle, 0.005);
-            SmartDashboard.putNumber("PID Output Note", pidRotationOutput);
+            if(Constants.debug){
+                SmartDashboard.putNumber("PID Output Note", pidRotationOutput);
+            }
             applyRequest(()->driveRobotCentricNoDeadband
                 .withVelocityX(lastCommandedSpeed)
                 .withVelocityY(0.0)
@@ -808,9 +812,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public double getBlueRelativeGyroDegrees() {
-        // return this.m_blueFieldRelativeOffset.getDegrees() - getPose().getRotation().getDegrees();
-        // return m_odometry.getEstimatedPosition().relativeTo(new Pose2d(0, 0, m_blueFieldRelativeOffset)).getRotation().getDegrees();
-        return getGyroAngle().relativeTo(new Pose2d(0, 0, m_blueFieldRelativeOffset)).getRotation().plus(Rotation2d.fromRadians(Math.PI)).getDegrees();
+        return getGyroAngle().relativeTo(new Pose2d(0, 0, m_blueFieldRelativeOffset)).getRotation().getDegrees();
     }
 
     public ChassisSpeeds getFieldRelativeVelocites() {
@@ -945,13 +947,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //     sideMode = RobotContainer.getInstance().getSideChooser().getSelected();
         //     Targeting.setTarget(sideMode == SideMode.BLUE ? Target.BLUESPEAKER : Target.REDSPEAKER);
         // }
-
-        
-        SmartDashboard.putBoolean("can see note", noteLimelight.hasTarget());
-
+    
         SmartDashboard.putString("side", sideMode.toString());
 
         if (Constants.debug) {
+            SmartDashboard.putBoolean("can see note", noteLimelight.hasTarget());
             SmartDashboard.putNumber("odo x", getPose().getX());
             SmartDashboard.putNumber("odo y", getPose().getY());
 
@@ -1007,14 +1007,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             PPLibTelemetry.setCurrentPose(getPose());
         }
         SmartDashboard.putBoolean("will autos work", !Utils.isSimulation());
-        SmartDashboard.putNumber("limelight gyro", getOdoPose().getRotation().getDegrees());
+        // SmartDashboard.putNumber("limelight gyro", getOdoPose().getRotation().getDegrees());
         // PPLibTelemetry.setTargetPose(limelight.getBotPosePose());
     }
 
     public void seedFieldRelativeWithOffset(Rotation2d offset) {
         try {
             m_stateLock.writeLock().lock();
-            m_blueFieldRelativeOffset = getState().Pose.getRotation().minus(offset);
+            m_blueFieldRelativeOffset = getGyroAngle().getRotation().minus(offset);
             if(getSideMode()==SideMode.RED){
                 offset = new Rotation2d(Math.PI).plus(offset);
             }
@@ -1174,23 +1174,21 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public boolean snapComplete() {
         double error = MathUtil.inputModulus(snapPIDController.getGoal().position, -Math.PI,  Math.PI) - MathUtil.inputModulus(getBotAz_FieldRelative(), -Math.PI,  Math.PI);
-        SmartDashboard.putNumber("Snap error", Math.toDegrees(error));
+        // SmartDashboard.putNumber("Snap error", Math.toDegrees(error));
         return delayedBoolean.update(Math.abs(error) < Math.toRadians(Constants.SnapConstants.kEpsilon),
                 Constants.SnapConstants.kTimeout);     
     }
 
     public void maybeStopSnap(boolean force) {
         if (!isSnapping) {
-            SmartDashboard.putNumber("Snapcomplete = ", -1);
+            // SmartDashboard.putNumber("Snapcomplete = ", -1);
             return;
         }
         if (force || snapComplete()) {
             isSnapping = false;
             snapPIDController.reset(getBotAz_FieldRelative());
-            SmartDashboard.putNumber("Snapcomplete = ", 1);
-        } else {
-            SmartDashboard.putNumber("Snapcomplete = ", 0);
-        }
+            // SmartDashboard.putNumber("Snapcomplete = ", 1);
+        } 
     }
 
     public boolean isSnapping() {
