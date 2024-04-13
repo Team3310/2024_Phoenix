@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.441283549233766,
-        "y": 4.332684220923997
+        "x": 8.372872745745491,
+        "y": 4.2219238724191746
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.771427765077753,
-        "y": 2.736432139530945
+        "x": 7.703016961589478,
+        "y": 2.625671791026123
       },
       "isLocked": false,
       "linkedName": "SCO"
     },
     {
       "anchor": {
-        "x": 4.094347077583045,
-        "y": 2.2946123670025114
+        "x": 4.957219057295258,
+        "y": 1.9643673573061433
       },
       "prevControl": {
-        "x": 6.545734202579517,
-        "y": 1.1116755566844463
+        "x": 6.188613520084184,
+        "y": 1.3779890416923697
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,14 +32,14 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -29.74000000000001,
+    "rotation": -32.74000000000001,
     "rotateFast": false
   },
   "reversed": false,
