@@ -25,8 +25,10 @@
   },
   "NetworkTables": {
     "transitory": {
+      "note": {
+        "open": true
+      },
       "path-chooser": {
-        "open": true,
         "string[]##v_/path-chooser/auto": {
           "open": true
         }

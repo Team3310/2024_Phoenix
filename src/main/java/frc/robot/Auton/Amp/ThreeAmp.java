@@ -1,17 +1,10 @@
 package frc.robot.Auton.Amp;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.Paths;
 import frc.robot.Commands.Intake.IntakeShooter;
-import frc.robot.Commands.Lift.AimLiftWithOdometryAuton;
-import frc.robot.Commands.Shooter.FeederShootCommandAuton;
-import frc.robot.Subsystems.Lift;
 
 public class ThreeAmp extends AutonCommandBase{
     public ThreeAmp(RobotContainer robotContainer){
@@ -23,23 +16,7 @@ public class ThreeAmp extends AutonCommandBase{
                 Follow(Paths.getInstance().THREE_AMP),
                 new IntakeShooter()
             ),
-            new ParallelRaceGroup(
-                new AimLiftWithOdometryAuton(),
-                new SequentialCommandGroup(
-                    new WaitCommand(0.1),
-                    new WaitUntilCommand(()->Lift.getInstance().isFinished())
-                )
-            ),
-            // new ParallelDeadlineGroup(
-            //     new WaitCommand(0.5), 
-            //     new SetLiftAngle(Lift.getInstance(), 60.0),
-            //     new SetLeftShooterRPM(Shooter.getInstance(), 3500),
-            //     new SetRightShooterRPM(Shooter.getInstance(), 2500)
-            // ),
-            new ParallelDeadlineGroup(
-                new WaitCommand(0.25), 
-                new FeederShootCommandAuton(robotContainer.shooter)
-            )
+            AimAndShoot(robotContainer)
         );
     }
 }

@@ -463,6 +463,7 @@ public class Targeting {
         if(isOdometry){
             return;
         }
+        LimelightHelpers.SetRobotOrientation("limelight-front", TunerConstants.DriveTrain.getOdoPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
 
         PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight" + limelightHostname);
        

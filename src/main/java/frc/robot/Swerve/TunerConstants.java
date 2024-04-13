@@ -15,7 +15,7 @@ import frc.robot.Subsystems.Drivetrain;
 // https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
 public class TunerConstants {
 
-    public static boolean isCompbot = true;
+    public static boolean isCompbot = false;
 
     // Both sets of gains need to be tuned to your individual robot.
 
@@ -40,8 +40,8 @@ public class TunerConstants {
     // The stator current at which the wheels start to slip;
     // This needs to be tuned to your individual robot
     private static final double kSlipCurrentA = 80.0;  // TorqueCurrentLimit applied in SwerveModule
-    public static final double kStatorCurrentA = 60.0; // Only used for non-torque control drive modes applied in drivetrain
-    public static final double kSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
+    public static final double kStatorCurrentA = isCompbot?60.0:110.0; // Only used for non-torque control drive modes applied in drivetrain
+    public static final double kSupplyCurrentA = isCompbot?40.0:50.0; // Only used for non-torque control drive modes applied in drivetrain
 
     public static final double kTeleStatorCurrentA = 60.0; // Only used for non-torque control drive modes applied in drivetrain
     public static final double kTeleSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
@@ -57,7 +57,7 @@ public class TunerConstants {
     // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 2.6666666666666665;
 
-    private static final double kDriveGearRatio = 5.142857142857143;
+    private static final double kDriveGearRatio = (32.0/14.0)*(22.0/24.0)*(45.0/15.0); //(18.0/28.0)
     private static final double kSteerGearRatio = 11.314285714285715;
     private static final double kWheelRadiusInches = 2.0*(152.0/157.5)*(204.85/196.85)*(195.1/196.85); //inches
 
@@ -70,7 +70,7 @@ public class TunerConstants {
     private static final int kPigeonId = 0;
 
     //in revolutions
-    public static final double liftMagnetOffset = isCompbot ? 0.254980390625+(5.2/360.0) : 0.74129667-(1.0/360.0);  // NEGATIVE OFFSET LOWERS SHOT Compbot is 1 deg higher actual than smartdashboard
+    public static final double liftMagnetOffset = isCompbot ? 0.48354 : 0.74129667-(1.0/360.0)-(5.0/360.0);  // NEGATIVE OFFSET LOWERS SHOT Compbot is 1 deg higher actual than smartdashboard
 
     // These are only used for simulation
     private static final double kSteerInertia = 0.00001;
@@ -106,7 +106,7 @@ public class TunerConstants {
     private static final int kFrontLeftDriveMotorId = 0;
     private static final int kFrontLeftSteerMotorId = 4;
     private static final int kFrontLeftEncoderId = 0;
-    private static final double kFrontLeftEncoderOffset = isCompbot ? 0.369140625/*0.157470703125::0.158203125*/ :  -0.14892578125;
+    private static final double kFrontLeftEncoderOffset = isCompbot ? -0.45068359375/*0.157470703125::0.158203125*/ :   -0.103759765625;
 
     private static final double kFrontLeftXPosInches = 12.125;
     private static final double kFrontLeftYPosInches = 12.125;
@@ -115,7 +115,7 @@ public class TunerConstants {
     private static final int kFrontRightDriveMotorId = 1;
     private static final int kFrontRightSteerMotorId = 5;
     private static final int kFrontRightEncoderId = 1;
-    private static final double kFrontRightEncoderOffset = isCompbot ? -0.1572265625/*-0.155029296875::0.0498046875*/ : -0.26806640625;
+    private static final double kFrontRightEncoderOffset = isCompbot ?  -0.38037109375/*-0.155029296875::0.0498046875*/ :  0.087158203125;
 
     private static final double kFrontRightXPosInches = 12.125;
     private static final double kFrontRightYPosInches = -12.125;
@@ -124,7 +124,7 @@ public class TunerConstants {
     private static final int kBackLeftDriveMotorId = 2;
     private static final int kBackLeftSteerMotorId = 6;
     private static final int kBackLeftEncoderId = 2;
-    private static final double kBackLeftEncoderOffset = isCompbot ? 0.301025390625/*0.294677734375*/ : 0.1513671875;
+    private static final double kBackLeftEncoderOffset = isCompbot ? -0.05078125/*0.294677734375*/ : -0.31103515625;
 
     private static final double kBackLeftXPosInches = -12.125;
     private static final double kBackLeftYPosInches = 12.125;
@@ -133,7 +133,7 @@ public class TunerConstants {
     private static final int kBackRightDriveMotorId = 3;
     private static final int kBackRightSteerMotorId = 7;
     private static final int kBackRightEncoderId = 3;
-    private static final double kBackRightEncoderOffset = isCompbot ? -0.4990234375/*-0.499267578125*/ : 0.100830078125;
+    private static final double kBackRightEncoderOffset = isCompbot ? 0.360595703125/*-0.499267578125*/ : -0.03466796875;
 
     private static final double kBackRightXPosInches = -12.125;
     private static final double kBackRightYPosInches = -12.125;

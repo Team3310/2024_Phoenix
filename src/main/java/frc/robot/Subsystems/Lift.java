@@ -73,7 +73,7 @@ public class Lift extends SubsystemBase {
         configs.Slot0.kV = 1.28;
         configs.Slot0.kA = 0.01;
         configs.Slot0.kP = 150.0;
-        configs.Slot0.kI = 0.1;
+        configs.Slot0.kI = 0.2;
         configs.Slot0.kD = 0.2;
         configs.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
         configs.Slot0.kG = 0.35;
@@ -206,8 +206,8 @@ public class Lift extends SubsystemBase {
             //     }
             // }
         //     SmartDashboard.putNumber("commanded degrees", targetLiftAngleDegrees);
-        //     SmartDashboard.putNumber("Lift Offset", offset);
         // }
         SmartDashboard.putNumber("Lift Angle Deg", getLiftDegrees());
+        SmartDashboard.putNumber("Lift Offset", offset);
     }
 }

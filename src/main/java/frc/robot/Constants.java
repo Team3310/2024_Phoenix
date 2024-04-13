@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Interpolable.InterpolatingDouble;
 import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
@@ -28,7 +29,7 @@ public class Constants {
     //#endregion
 
     //#region Shooter
-        public static final double SHOOTER_GEAR_RATIO = 1.5;
+        public static final double SHOOTER_GEAR_RATIO = 1.0;
         public static final double KICKER_GEAR_RATIO = 2.5;
 
         public static final int SHOOTER_RIGHT_ID = 20;
@@ -85,13 +86,13 @@ public class Constants {
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(4.7), new InterpolatingDouble(0.0));
-            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-3.0)); // -5.0
-            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-1.5));//0.0
-            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-1.5)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-1.5)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-1.5)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-1.5));
-            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-1.5));
+            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(0.0)); // -5.0
+            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(0.0));//0.0
+            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(0.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(0.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(0.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(0.0));
+            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(0.0));
         }
  
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
@@ -100,11 +101,11 @@ public class Constants {
             kRightShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(2200.0));
             kRightShooterMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(2200.0));
             // kRightShooterMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(2700.0));
-            kRightShooterMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(3000.0));
-            kRightShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(3000.0));
-            kRightShooterMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(3500.0));
-            kRightShooterMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(3500.0));
-            kRightShooterMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(3500.0));
+            kRightShooterMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(2800.0));
+            kRightShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(2800.0));
+            kRightShooterMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(3300.0));
+            kRightShooterMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(3300.0));
+            kRightShooterMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(3300.0));
         }
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLeftShooterMap = new InterpolatingTreeMap<>();
@@ -166,7 +167,7 @@ public class Constants {
     //#endregion    
 
     //#region Elevator
-        public static final double ELEVATOR_GEAR_RATIO = (54.0/34.0)*(54.0/11.5);
+        public static final double ELEVATOR_GEAR_RATIO = (64.0/14.0);
         public static final double ELEVATOR_PULLEY_DIAMETER = 1.25;
 
         public static final int ELEVATOR_MOTOR_ID = 40;
@@ -182,13 +183,13 @@ public class Constants {
     //#endregion
 
     //#region Amp
-        public static final double AMP_GEAR_RATIO = (30.0/12.0);
+        public static final double AMP_GEAR_RATIO = (18.0/12.0);
 
         public static final int AMP_MOTOR_ID = 50;
         public static final int AMP_SENSOR_PORT = 1;
 
         public static final double AMP_SCORE_RPM = -3000.0;
-        public static final double AMP_LOAD_RPM = 400.0;
+        public static final double AMP_LOAD_RPM = 900.0;
         public static final double AMP_INTAKE_RPM = 800.0;
         public static final double AMP_EJECT_RPM = -800.0;
         public static final double TRAP_SCORE_RPM = -800.0;
@@ -220,7 +221,7 @@ public class Constants {
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters
 
     public static final class SnapConstants {
-        public static final double kP = 1.5;
+        public static final double kP = 2.5;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.25;

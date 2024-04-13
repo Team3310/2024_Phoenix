@@ -3,6 +3,7 @@ package frc.robot.util.Choosers;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Auton.DriveTest;
+import frc.robot.Auton.DriveTestTwo;
 import frc.robot.Auton.OneAuton;
 import frc.robot.Auton.TestGyroInit;
 import frc.robot.Auton.Amp.FourAmp;
@@ -91,6 +92,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.ANTI_3005O)
         .addOption(AutonomousMode.ANTI_3005I)
         .addOption(AutonomousMode.DRIVE_TEST)
+        .addOption(AutonomousMode.DRIVE_TEST_FB)
         .addOption(AutonomousMode.GYRO_TEST)
         .addOption(AutonomousMode.STAGE_THREE_MMCN)
         .addOption(AutonomousMode.STAGE_THREE_MMIN)
@@ -142,7 +144,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         STAGE_THREE_IN("stage three 1.IN->2.ON->3.PN"),
         STAGE_THREE_MON("stage three 1.ON->2.IN->3.CN"),
         STAGE_THREE_MIN("stage three 1.IN->2.ON->3.CN"),
-        DRIVE_TEST("drive test"),
+        DRIVE_TEST("drive test forward and back"),
+        DRIVE_TEST_FB("drive test"),
         GYRO_TEST("gyro test"),
         ANTI_3005O("anti 3005 1.outside->2.CN"),
         ANTI_3005I("anti 3005 1.inside->2.CN"),
@@ -270,6 +273,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new TestGyroInit(RobotContainer.getInstance());
                 case DRIVE_TEST:
                     return new DriveTest(RobotContainer.getInstance());
+                case DRIVE_TEST_FB:
+                    return new DriveTestTwo(RobotContainer.getInstance());
                 case ONE_AUTON:
                     return new OneAuton(RobotContainer.getInstance());
                 default:
