@@ -217,9 +217,9 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                 case CENTER_SCA:
                     return new CenterFiveSCA(RobotContainer.getInstance());
                 case CENTER_ASC:
-                    return new CenterFiveACS(RobotContainer.getInstance());
-                case CENTER_ACS:
                     return new CenterFiveASC(RobotContainer.getInstance());
+                case CENTER_ACS:
+                    return new CenterFiveACS(RobotContainer.getInstance());
                 case CENTER_CSOS:
                     return new CenterFiveCSOS(RobotContainer.getInstance());
                 case CENTER_CSSO:

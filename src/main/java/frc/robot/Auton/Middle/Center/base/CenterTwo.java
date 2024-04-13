@@ -24,8 +24,8 @@ public class CenterTwo extends AutonCommandBase{
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().C_N), 
                 new SetLiftAngle(Lift.getInstance(), 39.5-(1.0+2.0+1.0)),
-                new SetLeftShooterRPM(Shooter.getInstance(), 3275.0),
-                new SetRightShooterRPM(Shooter.getInstance(), 3400.0),
+                new SetLeftShooterRPM(Shooter.getInstance(), 3275.0-200.0),
+                new SetRightShooterRPM(Shooter.getInstance(), 3400.0-200.0),
                 new FullIntakeGo()
             ),
             new FeederShootCommandAuton(Shooter.getInstance()).withTimeout(0.025)
