@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -86,13 +86,13 @@ public class Constants {
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(4.7), new InterpolatingDouble(0.0));
-            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-3.0)); // -5.0
-            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-1.5));//0.0
-            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-1.5)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-1.5)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-1.5)); // -2.0
-            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-1.5));
-            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-1.5));
+            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(0.0)); // -5.0
+            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(0.0));//0.0
+            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(0.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(0.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(0.0)); // -2.0
+            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(0.0));
+            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(0.0));
         }
  
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
@@ -183,13 +183,13 @@ public class Constants {
     //#endregion
 
     //#region Amp
-        public static final double AMP_GEAR_RATIO = (30.0/12.0);
+        public static final double AMP_GEAR_RATIO = (18.0/12.0);
 
         public static final int AMP_MOTOR_ID = 50;
         public static final int AMP_SENSOR_PORT = 1;
 
         public static final double AMP_SCORE_RPM = -3000.0;
-        public static final double AMP_LOAD_RPM = 1200.0;
+        public static final double AMP_LOAD_RPM = 900.0;
         public static final double AMP_INTAKE_RPM = 800.0;
         public static final double AMP_EJECT_RPM = -800.0;
         public static final double TRAP_SCORE_RPM = -800.0;
@@ -221,7 +221,7 @@ public class Constants {
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters
 
     public static final class SnapConstants {
-        public static final double kP = 1.5;
+        public static final double kP = 2.5;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.25;

@@ -108,7 +108,7 @@ public class RobotContainer {
 
     // shooting 
     driverController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker)).onFalse(new ScoreOffCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
-    driverController.leftBumper().onTrue(new SetTarget(TargetSimple.SPEAKER).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
+    driverController.leftBumper().onTrue(new SetTarget(TargetSimple.SPEAKER).andThen(new SetDriveMode(DriveMode.AIMATTARGET))).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
     driverController.x().onTrue(new ShooterOff(shooter));
     driverController.b().onTrue(new ShooterOn(shooter));
     // driverController.a().onTrue(new IntakeAmpToShooter());//new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(25.0);})); // far

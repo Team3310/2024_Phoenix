@@ -64,7 +64,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private String drivetrain_state = "INIT";
 
     private PidController holdAngleController = new PidController(new PidConstants(0.5, 0.0, 0.00));
-    private PidController aimAtTargetController = new PidController(new PidConstants(0.7, 0.0, 0.01));
+    private PidController aimAtTargetController = new PidController(new PidConstants(1.2, 0.0, 0.0));
     private PidController noteTrackController = new PidController(new PidConstants(0.5, 0.00, 0.02));  // 1.0 strafe, 0.4 rotate
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
     private PidController strafeTxController = new PidController(new PidConstants(1.0, 0.00, 0.02));
@@ -310,6 +310,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
                     if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
                         offset = -(Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
+                        SmartDashboard.putNumber("TX Limelight", botPoseEstimate.rawFiducials[i].txnc);
                         canSeeTarget = true;
                         break;
                     }
@@ -520,6 +521,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     distance_XY_Average = frontCamera.getDistance_XY_average();
                     aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                     offset = (Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
+                    SmartDashboard.putNumber("TX Limelight", botPoseEstimate.rawFiducials[i].txnc);
                     canSeeTarget = true;
                     break;
                 }
