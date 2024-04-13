@@ -1,7 +1,5 @@
 package frc.robot.Auton;
 
-import java.nio.file.WatchEvent;
-
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -63,7 +61,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path){
-        return FollowToIntake(path, true);
+        return FollowToIntake(path, false);
     }
 
     protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path, boolean track){

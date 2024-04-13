@@ -41,7 +41,7 @@ public class TunerConstants {
     // This needs to be tuned to your individual robot
     private static final double kSlipCurrentA = 80.0;  // TorqueCurrentLimit applied in SwerveModule
     public static final double kStatorCurrentA = 110.0; // Only used for non-torque control drive modes applied in drivetrain
-    public static final double kSupplyCurrentA = 50.0; // Only used for non-torque control drive modes applied in drivetrain
+    public static final double kSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
 
     public static final double kTeleStatorCurrentA = 60.0; // Only used for non-torque control drive modes applied in drivetrain
     public static final double kTeleSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
