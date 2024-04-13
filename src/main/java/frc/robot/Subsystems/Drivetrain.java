@@ -1036,7 +1036,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             PPLibTelemetry.setCurrentPose(getPose());
         }
         SmartDashboard.putBoolean("will autos work", !Utils.isSimulation());
-        // PPLibTelemetry.setTargetPose(limelight.getBotPosePose());
+        PPLibTelemetry.setTargetPose(targetingOdo.getEstimatedPosition());
+        PPLibTelemetry.setCurrentPose(m_odometry.getEstimatedPosition());
     }
 
     public void seedFieldRelativeWithOffset(Rotation2d offset) {
@@ -1064,8 +1065,13 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         double yawDegrees = BaseStatusSignal.getLatencyCompensatedValue(
                 m_yawGetter, m_angularVelocity);
 
-        /* Keep track of previous and current pose to account for the carpet vector */
-        targetingOdo.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+        try {
+            m_stateLock.writeLock().lock();
+            /* Keep track of previous and current pose to account for the carpet vector */
+            targetingOdo.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);
+        }finally {
+            m_stateLock.writeLock().unlock();
+        }
 
 
         // chooseVisionAlignGoal();
