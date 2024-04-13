@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -58,7 +60,7 @@ public class RobotContainer {
   private final CommandXboxController operatorController = new CommandXboxController(1);
 
   public final Drivetrain drivetrain;
-  public final Drivetrain targeting_drivetrain;
+  // public final Drivetrain targeting_drivetrain;
   public final Intake intake;
   public final Shooter shooter;
   public final Lift lift;
@@ -84,7 +86,6 @@ public class RobotContainer {
     flicker = Flicker.getInstance();
     led = LED.getInstance();
     drivetrain = TunerConstants.DriveTrain;
-    targeting_drivetrain = TunerConstants.TargetingDrivetrain;
 
     autonomousChooser = new AutonomousChooser();
 
@@ -208,6 +209,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    SmartDashboard.putData("test seed", new InstantCommand(()->drivetrain.testSeedOdo()));
     if(Constants.debug){
       addTestButtons();
     }
@@ -378,9 +380,9 @@ public class RobotContainer {
         return drivetrain;
       }
 
-      public Drivetrain getTargetingDrievtrain(){
-        return targeting_drivetrain;
-      }
+      // public Drivetrain getTargetingDrievtrain(){
+      //   return targeting_drivetrain;
+      // }
     //#endregion
       
     //#region choosers

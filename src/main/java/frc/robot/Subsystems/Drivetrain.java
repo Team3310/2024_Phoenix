@@ -24,7 +24,9 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PPLibTelemetry;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -33,7 +35,11 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -76,8 +82,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private Limelight limelight = new Limelight("front");
     private Limelight noteLimelight = new Limelight("note");
     private Targeting frontCamera = new Targeting("front", false);
-    private Targeting odometryTargeting = new Targeting(true, TunerConstants.DriveTrain);
-    private Targeting kalmanOdometryTargeting = new Targeting(true, TunerConstants.TargetingDrivetrain);
+    private Targeting odometryTargeting = new Targeting(true);
+    private Targeting kalmanOdometryTargeting = new Targeting(true);
 
     private final SwerveDrivePoseEstimator targetingOdo;
 
@@ -137,13 +143,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     // private final SwerveRequest.SysIdSwerveRotation RotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
     // private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
 
-    public boolean isTargetingDrivetrain;
 
-    public Drivetrain(boolean isTargetingDrivetrain, SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
+    public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
-        this.isTargetingDrivetrain = isTargetingDrivetrain;
 
-        this.targetingOdo = m_odometry = 
+        this.targetingOdo =
             new SwerveDrivePoseEstimator(
                 m_kinematics, new Rotation2d(), m_modulePositions, new Pose2d(), 
                 VecBuilder.fill(0.1, 0.1, 0.1),
@@ -899,6 +903,58 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     @Override
+    public void tareEverything() {
+        try {
+            m_stateLock.writeLock().lock();
+
+            for (int i = 0; i < ModuleCount; ++i) {
+                Modules[i].resetPosition();
+                m_modulePositions[i] = Modules[i].getPosition(true);
+            }
+            m_odometry.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, new Pose2d());
+            targetingOdo.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, new Pose2d());
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void seedFieldRelative(Pose2d location) {
+        try {
+            m_stateLock.writeLock().lock();
+
+            m_odometry.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
+            targetingOdo.resetPosition(Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, location);
+            /* We need to update our cached pose immediately so that race conditions don't happen */
+            m_cachedState.Pose = location;
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void addVisionMeasurement(
+            Pose2d visionRobotPoseMeters,
+            double timestampSeconds) {
+        try {
+            m_stateLock.writeLock().lock();
+            targetingOdo.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void setVisionMeasurementStdDevs(Matrix<N3, N1> visionMeasurementStdDevs) {
+        try {
+            m_stateLock.writeLock().lock();
+            targetingOdo.setVisionMeasurementStdDevs(visionMeasurementStdDevs);
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
+    }
+
+    @Override
     public void periodic() {
         // LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
@@ -910,7 +966,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //     Targeting.setTarget(sideMode == SideMode.BLUE ? Target.BLUESPEAKER : Target.REDSPEAKER);
         // }
 
-        
+        SmartDashboard.putString("drive odo", m_odometry.getEstimatedPosition().toString());        
+        SmartDashboard.putString("kal odo", targetingOdo.getEstimatedPosition().toString());
+
+        seedFieldRelative();
 
         SmartDashboard.putString("side", sideMode.toString());
 
@@ -1010,7 +1069,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
 
         // chooseVisionAlignGoal();
-        if (!isTargetingDrivetrain){
+        // if (!isTargetingDrivetrain){
             switch (mControlMode) {
                 case AIMATTARGET:
                     aimAtTarget();
@@ -1042,7 +1101,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 case TEST:
                     testDrive();
             }
-        }
+        // }
     }
 
     public static double rolloverConversion_radians(double angleRadians) {
@@ -1253,6 +1312,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             default:
                  System.out.println("ERROR setting side");
         }
+    }
+
+    public void testSeedOdo() {
+        SmartDashboard.putBoolean("set targetOdo vision", true);
+        targetingOdo.addVisionMeasurement(new Pose2d(5.0, 5.0, Rotation2d.fromDegrees(30.0)), MathSharedStore.getTimestamp()+2.0);
     }
 
     // aprilTagTrack():

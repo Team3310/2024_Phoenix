@@ -148,9 +148,6 @@ public class TunerConstants {
     private static final SwerveModuleConstants BackRight = ConstantCreator.createModuleConstants(
             kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset, Units.inchesToMeters(kBackRightXPosInches), Units.inchesToMeters(kBackRightYPosInches), kInvertRightSide);
 
-    public static final Drivetrain DriveTrain = new Drivetrain(false, DrivetrainConstants, FrontLeft,
-            FrontRight, BackLeft, BackRight);
-
-    public static final Drivetrain TargetingDrivetrain = new Drivetrain(true, DrivetrainConstants, FrontLeft,
+    public static final Drivetrain DriveTrain = new Drivetrain(DrivetrainConstants, FrontLeft,
             FrontRight, BackLeft, BackRight);
 }

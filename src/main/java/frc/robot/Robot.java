@@ -33,8 +33,8 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer = new RobotContainer();
 
   private UpdateManager updateManager = new UpdateManager(
-    TunerConstants.DriveTrain,
-    TunerConstants.TargetingDrivetrain
+    TunerConstants.DriveTrain
+    // TunerConstants.TargetingDrivetrain
   );
 
   private static final byte[] COMPETITION_BOT_MAC_ADDRESS = new byte[]{
@@ -200,12 +200,12 @@ public class Robot extends TimedRobot {
     }
     // TunerConstants.DriveTrain.setDriveMode(DriveMode.JOYSTICK);
 //    TunerConstants.DriveTrain.trapQueen();
-    // TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
+    TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
   }
 
   @Override
   public void teleopPeriodic() {
-    // TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
+    TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
   }
 
   @Override
