@@ -14,7 +14,7 @@ public class FourAmp extends AutonCommandBase{
         this.addCommands(
             new ThreeAmp(robotContainer),
             new ParallelDeadlineGroup(
-                Follow(Paths.getInstance().FOUR_AMP).andThen(new WaitCommand(0.5)),
+                Follow(Paths.getInstance().FOUR_AMP),
                 new IntakeShooter()
             ),
             AimAndShoot(robotContainer),

@@ -53,7 +53,7 @@ public class Constants {
         public static final int LIFT_MOTOR_ID = 30;
         public static final int LIFT_CANCODER_ID = 5;
 
-        public static final double LIFT_MAX_DEGREES = 70.0;
+        public static final double LIFT_MAX_DEGREES = 60.0;
         public static final double LIFT_MIN_DEGREES = 18.6;
         public static final double LIFT_INTAKE_DEGREES = 30.0;
         public static final double LIFT_START_DEGREES = 18.0;
