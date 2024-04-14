@@ -366,19 +366,35 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     //#region DriveTrain methods
 
     public void updateDrive(double rotation) {
-        if (driveOrientation == DriveOrientation.FIELD_CENTRIC) {        
-            this.applyRequest(() -> driveFieldCentric
-                .withVelocityX(getDriveXWithoutDeadband() * Constants.MaxSpeed) 
-                .withVelocityY(getDriveYWithoutDeadband() * Constants.MaxSpeed) 
-                .withRotationalRate(rotation * Constants.MaxAngularRate) 
+        if (driveOrientation == DriveOrientation.FIELD_CENTRIC) {
+            if(soFine){
+                this.applyRequest(() -> driveFieldCentricNoDeadband
+                .withVelocityX(MathUtil.applyDeadband(getDriveXWithoutDeadband(), 0.05, 1.0) * Constants.MaxSpeed) 
+                .withVelocityY(MathUtil.applyDeadband(getDriveYWithoutDeadband(), 0.05, 1.0) * Constants.MaxSpeed) 
+                .withRotationalRate(MathUtil.applyDeadband(rotation, 0.05, 1.0) * Constants.MaxAngularRate)
             );
+            } else {  
+                this.applyRequest(() -> driveFieldCentric
+                    .withVelocityX(getDriveXWithoutDeadband() * Constants.MaxSpeed) 
+                    .withVelocityY(getDriveYWithoutDeadband() * Constants.MaxSpeed) 
+                    .withRotationalRate(rotation * Constants.MaxAngularRate)
+                );
+            }
         }
         else {
-            this.applyRequest(() -> driveRobotCentric
-                .withVelocityX(getDriveXWithoutDeadband() * Constants.MaxSpeed) 
-                .withVelocityY(getDriveYWithoutDeadband() * Constants.MaxSpeed) 
-                .withRotationalRate(rotation * Constants.MaxAngularRate) 
-            );
+            if(soFine){
+                this.applyRequest(() -> driveRobotCentricNoDeadband
+                    .withVelocityX(MathUtil.applyDeadband(getDriveXWithoutDeadband(), 0.05, 1.0) * Constants.MaxSpeed) 
+                    .withVelocityY(MathUtil.applyDeadband(getDriveYWithoutDeadband(), 0.05, 1.0) * Constants.MaxSpeed) 
+                    .withRotationalRate(MathUtil.applyDeadband(rotation, 0.05, 1.0) * Constants.MaxAngularRate)
+                );
+            }else{
+                this.applyRequest(() -> driveRobotCentric
+                    .withVelocityX(getDriveXWithoutDeadband() * Constants.MaxSpeed) 
+                    .withVelocityY(getDriveYWithoutDeadband() * Constants.MaxSpeed) 
+                    .withRotationalRate(rotation * Constants.MaxAngularRate) 
+                );
+            }
         }
     }
 
@@ -759,11 +775,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     //#endregion
 
     //#region getters
+    private boolean soFine = false;
+
+    public void setSoFine(boolean sosoFine){
+        this.soFine = sosoFine;
+    }
     public Pose2d getTargetingOdoPose(){
         return this.targetingOdo.getEstimatedPosition();
     }
     private double getDriveXWithoutDeadband() {
-        return -Math.copySign(Math.pow(joystick.getLeftY(), 2.0), joystick.getLeftY());
+        return -Math.copySign(Math.pow(joystick.getLeftY(), 2.0), joystick.getLeftY())*(soFine?0.25:1.0);
     }
 
     private double getDriveXWithDeadband() {
@@ -771,7 +792,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     private double getDriveYWithoutDeadband() {
-        return -Math.copySign(Math.pow(joystick.getLeftX(), 2.0), joystick.getLeftX());
+        return -Math.copySign(Math.pow(joystick.getLeftX(), 2.0), joystick.getLeftX())*(soFine?0.25:1.0);
     }
 
     private double getDriveYWithDeadband() {
@@ -783,7 +804,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     private double getDriveRotationWithDeadband() {
-        return addDeadband(getDriveRotationWithoutDeadband());
+        return addDeadband(getDriveRotationWithoutDeadband())*(soFine?0.25:1.0);
     }
 
     private double addDeadband(double input) {
