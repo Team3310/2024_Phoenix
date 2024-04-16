@@ -221,11 +221,15 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 new PIDConstants(5.0, 0, 0),
                 TunerConstants.kSpeedAt12VoltsMps,
                 driveBaseRadius,
-                new ReplanningConfig(true, true)
+                //TODO where to change the error thresholds, defualts are 1.0 dynamic and 0.25 spike in meters
+                //@freddytums
+                new ReplanningConfig(true, true, 1.0, 0.25)
             );
 
+        //TODO try changing this to the targeting odometry to fix
+        //the reseeding freakout @freddytums
         pathFollower = new FollowPathCommand(
-                () -> this.getPose(),
+                () -> this.getPose(), //targetingOdo.getEstimatedPosition()
                 this::getCurrentRobotChassisSpeeds,
                 new PPHolonomicDriveController(
                         config.translationConstants, config.rotationConstants, config.period, config.maxModuleSpeed,
@@ -715,6 +719,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putBoolean("is tracking note", isTrackingNote);
         }
 
+        //TODO test new ways of tracking note speed @freddytums
+        //ie maybe command overall speed of path so we slow down towards in
+        //however we will have to see how the replanning, if we get off (probably), affects that
+        //or we could try using the path timer to "choose" when to slow down
+        //ultimately this is all to solve the issue of drive over the center line when we tracked
+        //we could all solve this with command timing but I think doing it here will be more
+        //applicable to all situations as I'd likely try tuning the commands for the center line
+        //then when we go for the closer ones it'll be different
         if(isTrackingNote && noteLimelight.hasTarget()){
             if(!setTrackSpeed){
                 lastCommandedSpeed = speeds.vxMetersPerSecond;
@@ -761,6 +773,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // rotationHold();
             // SmartDashboard.putBoolean("path done", true);
             applyRequest(()->new SwerveDriveBrake());
+            //TODO put this back in?? or just use targetingOdo as poseSupplier for paths
+            //prefer the latter to avoid the error spike shenanigans
             // seedFieldRelative(targetingOdo.getEstimatedPosition());
             // seedFieldRelativeWithOffset(targetingOdo.getEstimatedPosition().getRotation());
         }

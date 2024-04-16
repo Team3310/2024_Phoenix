@@ -77,6 +77,7 @@ public class FollowPathCommand{
       path = originalPath;
     }
 
+    //TODO test getting rid of this when using targetingOdo @freddytums
     if(resetPose){
         drivetrain.seedFieldRelative(path.getPreviewStartingHolonomicPose());
     }
@@ -133,6 +134,8 @@ public class FollowPathCommand{
       if (currentError >= replanningConfig.dynamicReplanningTotalErrorThreshold
           || currentError - previousError
               >= replanningConfig.dynamicReplanningErrorSpikeThreshold) {
+                //TODO try increasing this error spike threshold if changing the poseSupplier
+                //doesn't work, maybe whene just getting rid of it @freddytums
         replanPath(currentPose, currentSpeeds);
         timer.reset();
         targetState = generatedTrajectory.sample(0);
