@@ -109,6 +109,8 @@ public class FollowPathCommand{
       PPLibTelemetry.setCurrentPath(path);
     }
 
+    replanning = true;
+
     timer.reset();
     timer.start();
 
@@ -133,14 +135,16 @@ public class FollowPathCommand{
 
       //TODO maybe if we are note tracking we ignore this for simplicity
       //if(!TunerConstants.DriveTrain.isTrackingNote){
-        if (currentError >= replanningConfig.dynamicReplanningTotalErrorThreshold
-            || currentError - previousError
-                >= replanningConfig.dynamicReplanningErrorSpikeThreshold) {
-                  //TODO try increasing this error spike threshold if changing the poseSupplier
-                  //doesn't work, maybe whene just getting rid of it @freddytums
-          replanPath(currentPose, currentSpeeds);
-          timer.reset();
-          targetState = generatedTrajectory.sample(0);
+        if(replanning){
+          if (currentError >= replanningConfig.dynamicReplanningTotalErrorThreshold
+              || currentError - previousError
+                  >= replanningConfig.dynamicReplanningErrorSpikeThreshold) {
+                    //TODO try increasing this error spike threshold if changing the poseSupplier
+                    //doesn't work, maybe whene just getting rid of it @freddytums
+            replanPath(currentPose, currentSpeeds);
+            timer.reset();
+            targetState = generatedTrajectory.sample(0);
+          }
         }
       //}
     }
@@ -190,6 +194,11 @@ public class FollowPathCommand{
         new PathPlannerTrajectory(replanned, currentSpeeds, currentPose.getRotation());
     PathPlannerLogging.logActivePath(replanned);
     PPLibTelemetry.setCurrentPath(replanned);
+  }
+
+  private boolean replanning = true;
+  public void setReplanning(boolean replan){
+    this.replanning = replan;
   }
 
   public boolean pathDone() {

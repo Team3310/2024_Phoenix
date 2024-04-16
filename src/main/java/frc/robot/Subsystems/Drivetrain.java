@@ -718,6 +718,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private double slowAccel = 0.0;
     private boolean setSlowAccel = false;
 
+    private boolean towardsEnd = false;
+
     //stopping distance
     private double stopDist = 0.0;
     private boolean setStopDist = false;
@@ -734,6 +736,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //TODO test new ways of tracking note speed @freddytums
         //ie maybe command overall speed of path so we slow down towards end
         //however we will have to see how the replanning, if we get off (probably), affects that
+        //if it does we could just try having a flag that once we are towards the end we tell it don't
+        //replan the path anymore so we can just get speeds idk
         //or we could try using the path timer to "choose" when to slow down
         //or use the path end pose to calculate a stopping distance from the last commanded speed
         //that once we are withing that stopping distance we slow down like a mini motion profile
@@ -770,9 +774,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 double curSpeed = Math.hypot(getCurrentRobotChassisSpeeds().vxMetersPerSecond, getCurrentRobotChassisSpeeds().vyMetersPerSecond);
                 slowAccel = (-Math.pow(distance, distance))/(2.0*distance);
             speed -= slowAccel;
+
+            //method 3: don't replan the path anymore
+            //this will get used in FollowPathCommand to cancel replanning
+            pathFollower.setReplanning(false); 
+            then use path speed
+            speed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
         }else{
             setSlowAccel = false;
             speed = lastCommandedSpeed;
+            pathFollower.setReplanning(true); 
         }
         */
 
