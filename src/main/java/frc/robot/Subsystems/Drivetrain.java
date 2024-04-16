@@ -321,7 +321,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 double distance_XY_Average = odometryTargeting.getDistance_XY_average();
                 // double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                 double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-
+                aimOffset+= yawOffset;
+                //TODO is this the right spot? @freddytums
                 PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-front");
                 for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
                     if (botPoseEstimate.rawFiducials[i].id == Targeting.getTargetID()) {
@@ -543,6 +544,20 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
+    private double yawOffset = 0.0;
+
+    public void increaseYawoffset(){
+        yawOffset += 0.50;
+    }
+
+    public void decreaseYawoffset(){
+        yawOffset -= 0.50;
+    }
+
+    public void resetYawoffset(){
+        yawOffset = 0.0;
+    }
+
     public void aimAtTarget() {
         if (isSnapping) {
             maybeStopSnap(false);
@@ -563,6 +578,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     distance_XY_Average = odometryTargeting.getDistance_XY_average();
                     double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                     aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+                    //TODO is this the right spot? @freddytums
+                    aimOffset += yawOffset;
                     offset = (Math.toRadians(botPoseEstimate.rawFiducials[i].txnc + aimOffset));
                     // SmartDashboard.putNumber("TX Limelight", botPoseEstimate.rawFiducials[i].txnc);
                     canSeeTarget = true;
@@ -1132,7 +1149,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
             SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
             SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
-            
+
+            SmartDashboard.putNumber("yaw offset", yawOffset);
         }
         SmartDashboard.putBoolean("will autos work", !Utils.isSimulation());
         // SmartDashboard.putNumber("limelight gyro", getOdoPose().getRotation().getDegrees());
