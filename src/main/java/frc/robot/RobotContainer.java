@@ -264,6 +264,9 @@ public class RobotContainer {
       SmartDashboard.putData("reset lift offset", new InstantCommand(()->lift.resetLiftOffset()));
 
       if(Constants.debug){
+        SmartDashboard.putData("increase yaw offset", new InstantCommand(()->drivetrain.increaseYawoffset()));
+        SmartDashboard.putData("reset yaw offset", new InstantCommand(()->drivetrain.resetYawoffset()));
+        SmartDashboard.putData("decrease yaw offset", new InstantCommand(()->drivetrain.decreaseYawoffset()));
         SmartDashboard.putData("increase RPM Left offset", new InstantCommand(()->shooter.adjustRPMLeftOffset(200.0)));
         SmartDashboard.putData("decrease RPM Left offset", new InstantCommand(()->shooter.adjustRPMLeftOffset(-200.0)));
         SmartDashboard.putData("reset RPM offset", new InstantCommand(()->shooter.resetRPMOffset()));
