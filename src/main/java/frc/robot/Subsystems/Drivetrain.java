@@ -712,6 +712,18 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private double lastCommandedSpeed = 0.0;
     private boolean setTrackSpeed = false;
 
+    //timer approach
+    private double StopTime = 1.0;
+    private double speed = 0.0;
+    private double slowAccel = 0.0;
+    private boolean setSlowAccel = false;
+
+    //stopping distance
+    private double stopDist = 0.0;
+    private boolean setStopDist = false;
+    //just use path max accel?
+    private double MAX_ACCEL = 5.5;
+
     private void autonDrive(){
         ChassisSpeeds speeds = pathFollower.update();
 
@@ -720,13 +732,81 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
 
         //TODO test new ways of tracking note speed @freddytums
-        //ie maybe command overall speed of path so we slow down towards in
+        //ie maybe command overall speed of path so we slow down towards end
         //however we will have to see how the replanning, if we get off (probably), affects that
         //or we could try using the path timer to "choose" when to slow down
+        //or use the path end pose to calculate a stopping distance from the last commanded speed
+        //that once we are withing that stopping distance we slow down like a mini motion profile
+        //we could even like let it get within that distance then let the path replan and let it
+        //do the motion profile its self idk whatever works best and is the simplest given our time
         //ultimately this is all to solve the issue of drive over the center line when we tracked
         //we could all solve this with command timing but I think doing it here will be more
         //applicable to all situations as I'd likely try tuning the commands for the center line
         //then when we go for the closer ones it'll be different
+
+        //timer approach
+        /*
+        if(pathFollower.getPathTime()-pathFollower.getPathTimer()<StopTime){
+            //method 1: using path speed from that point on
+            speed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+            //method 2: making our own motion profile
+            //from V²=V₀²+2aΔx we can solve for the acceleration needed
+                //submethod 1: only updating the acceleration once
+                if(!setSlowAccel){
+                    double distance = 
+                        pathFollower.getPathEnd().getTranslation().getDistance(
+                            targetingOdo.getEstimatedPosition().getTranslation()
+                            // m_odometry.getEstimatedPosition().getTranslation()
+                        );
+                    slowAccel = (-(lastCommandedSpeed*lastCommandedSpeed))/(2.0*distance);
+                    setSlowAccel = true;
+                }
+                //submethod 2: updating constantly
+                double distance = 
+                        pathFollower.getPathEnd().getTranslation().getDistance(
+                            targetingOdo.getEstimatedPosition().getTranslation()
+                            // m_odometry.getEstimatedPosition().getTranslation()
+                        );
+                double curSpeed = Math.hypot(getCurrentRobotChassisSpeeds().vxMetersPerSecond, getCurrentRobotChassisSpeeds().vyMetersPerSecond);
+                slowAccel = (-Math.pow(distance, distance))/(2.0*distance);
+            speed -= slowAccel;
+        }else{
+            setSlowAccel = false;
+            speed = lastCommandedSpeed;
+        }
+        */
+
+        //stopping distance
+        /*
+        if(setTrackSpeed){
+            stopDist = (lastCommandedSpeed*lastCommandedSpeed)/(2.0*MAX_ACCEL);
+            setStopDist = true;
+        }else{
+            setStopDist = false;
+        }
+        if(setStopDist){
+            double distance = 
+                            pathFollower.getPathEnd().getTranslation().getDistance(
+                                targetingOdo.getEstimatedPosition().getTranslation()
+                                // m_odometry.getEstimatedPosition().getTranslation()
+                            );
+            if(distance<=stopDist){
+                speed = 0.0;
+            }
+        }
+        */
+
+        //apply these speeds, from any method
+        /*
+        applyRequest(()->driveRobotCentricNoDeadband
+                .withVelocityX(speed)
+                .withVelocityY(0.0)
+                .withRotationalRate(pidRotationOutput*Constants.MaxAngularRate)
+                .withDriveRequestType(DriveRequestType.Velocity)
+            );
+        */
+
+
         if(isTrackingNote && noteLimelight.hasTarget()){
             if(!setTrackSpeed){
                 lastCommandedSpeed = speeds.vxMetersPerSecond;

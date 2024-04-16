@@ -131,15 +131,18 @@ public class FollowPathCommand{
       double previousError = Math.abs(controller.getPositionalError());
       double currentError = currentPose.getTranslation().getDistance(targetState.positionMeters);
 
-      if (currentError >= replanningConfig.dynamicReplanningTotalErrorThreshold
-          || currentError - previousError
-              >= replanningConfig.dynamicReplanningErrorSpikeThreshold) {
-                //TODO try increasing this error spike threshold if changing the poseSupplier
-                //doesn't work, maybe whene just getting rid of it @freddytums
-        replanPath(currentPose, currentSpeeds);
-        timer.reset();
-        targetState = generatedTrajectory.sample(0);
-      }
+      //TODO maybe if we are note tracking we ignore this for simplicity
+      //if(!TunerConstants.DriveTrain.isTrackingNote){
+        if (currentError >= replanningConfig.dynamicReplanningTotalErrorThreshold
+            || currentError - previousError
+                >= replanningConfig.dynamicReplanningErrorSpikeThreshold) {
+                  //TODO try increasing this error spike threshold if changing the poseSupplier
+                  //doesn't work, maybe whene just getting rid of it @freddytums
+          replanPath(currentPose, currentSpeeds);
+          timer.reset();
+          targetState = generatedTrajectory.sample(0);
+        }
+      //}
     }
 
     ChassisSpeeds targetSpeeds = controller.calculateRobotRelativeSpeeds(currentPose, targetState);
@@ -193,8 +196,12 @@ public class FollowPathCommand{
     return timer.hasElapsed(generatedTrajectory.getTotalTimeSeconds());
   }
 
+  public double getPathTimer() {
+    return timer.get();
+  }
+
   public double getPathTime() {
-      return timer.get();
+    return generatedTrajectory.getTotalTimeSeconds();
   }
 
   public void stopPath(){
