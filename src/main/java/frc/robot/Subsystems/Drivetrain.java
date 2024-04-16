@@ -229,7 +229,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         //TODO try changing this to the targeting odometry to fix
         //the reseeding freakout @freddytums
         pathFollower = new FollowPathCommand(
-                () -> this.getPose(), //targetingOdo.getEstimatedPosition()
+                () -> this.getPose(), //getTargetingOdoPose()
                 this::getCurrentRobotChassisSpeeds,
                 new PPHolonomicDriveController(
                         config.translationConstants, config.rotationConstants, config.period, config.maxModuleSpeed,
