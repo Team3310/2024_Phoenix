@@ -398,8 +398,8 @@ public class Targeting {
 
     // Drivetrain drivetrain = TunerConstants.DriveTrain;
     double KALMAN_ROTATION_MAX_RATE = 2;    //radians per second
-    double KALMAN_MAX_SPEED = 2;            //meters per second
-    double KALMAN_APRILTAG_MAX_RANGE = 4.5; //meters
+    double KALMAN_MAX_SPEED = 6;            //meters per second
+    double KALMAN_APRILTAG_MAX_RANGE = 8; //meters
     // public void updateKalmanFilter(){
     //     if (isOdometry) {
     //         return; //No Kalman Filter updating with odometry!
@@ -482,7 +482,7 @@ public class Targeting {
         
         if ((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && 
             (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && 
-            (botPoseEstimate.avgTagDist < KALMAN_APRILTAG_MAX_RANGE || botPoseEstimate.tagCount > 2)
+            (botPoseEstimate.avgTagDist < KALMAN_APRILTAG_MAX_RANGE || botPoseEstimate.tagCount > 1)
         ) {
             double xyStds;
             double degStds;

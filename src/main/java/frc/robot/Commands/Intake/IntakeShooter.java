@@ -1,5 +1,8 @@
 package frc.robot.Commands.Intake;
 
+import com.pathplanner.lib.util.GeometryUtil;
+
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -10,6 +13,7 @@ import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
 import frc.robot.Swerve.TunerConstants;
+import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class IntakeShooter extends Command {
     private Intake intake;
@@ -19,6 +23,7 @@ public class IntakeShooter extends Command {
     private Drivetrain drive;
     private LED led;
     private boolean trackNote;
+    private double xBoundary = 7.0;
 
     public IntakeShooter(){
         this(false);
@@ -34,6 +39,11 @@ public class IntakeShooter extends Command {
 
         this.trackNote = trackNote;
 
+        xBoundary = 7.0;
+        if(drive.getSideMode()==SideMode.RED){
+            this.xBoundary = GeometryUtil.flipFieldPosition(new Translation2d(xBoundary, xBoundary)).getX();
+        }
+
         addRequirements(intake, shooter, lift, elevator, led);
     } 
 
@@ -45,7 +55,7 @@ public class IntakeShooter extends Command {
             shooter.setKickerRPM(Constants.KICKER_INTAKE_RPM);
             // elevator.setPosition(2.0);
             lift.setLiftAngle(Constants.LIFT_INTAKE_DEGREES);
-            drive.isTrackingNote = trackNote;
+            // drive.isTrackingNote = trackNote;
         // }
         // led.setBlink(new Color(0, 255, 0));
         led.setBlink(new Color(243, 204, 20));
@@ -53,6 +63,9 @@ public class IntakeShooter extends Command {
 
     @Override
     public void execute() {
+        if(drive.getSideMode()==SideMode.BLUE?drive.getPose().getX()<xBoundary:drive.getPose().getX()>xBoundary){
+            drive.isTrackingNote = trackNote;
+        }
     }
 
     @Override

@@ -666,7 +666,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
      public void aimAtNote() {
-        if (noteLimelight.hasTarget() && Math.abs(noteLimelight.getTargetHorizOffset()) < 20.0) {
+        if (noteLimelight.hasTarget() /*&& Math.abs(noteLimelight.getTargetHorizOffset()) < 27.0*/) {
             drivetrain_state = "NOTE MODE";
             double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
 
@@ -761,6 +761,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // rotationHold();
             // SmartDashboard.putBoolean("path done", true);
             applyRequest(()->new SwerveDriveBrake());
+            // seedFieldRelative(targetingOdo.getEstimatedPosition());
+            // seedFieldRelativeWithOffset(targetingOdo.getEstimatedPosition().getRotation());
         }
     }
 
@@ -1025,11 +1027,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
             SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
             SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
-            PPLibTelemetry.setCurrentPose(getPose());
+            
         }
         SmartDashboard.putBoolean("will autos work", !Utils.isSimulation());
         // SmartDashboard.putNumber("limelight gyro", getOdoPose().getRotation().getDegrees());
         // PPLibTelemetry.setTargetPose(limelight.getBotPosePose());
+
+        if(mControlMode != DriveMode.AUTON){
+            PPLibTelemetry.setCurrentPose(getPose());
+            PPLibTelemetry.setTargetPose(targetingOdo.getEstimatedPosition());
+        }
     }
 
     public void seedFieldRelativeWithOffset(Rotation2d offset) {

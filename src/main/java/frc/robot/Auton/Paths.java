@@ -92,6 +92,9 @@ public class Paths {
     public final PathPlannerPath AIN_CS;
     public final PathPlannerPath SIN_CS;
     public final PathPlannerPath SON_CS;
+    public final PathPlannerPath CCN_CLOSE;
+    public final PathPlannerPath CENTER_AMP;
+    public final PathPlannerPath CENTER_PODIUM;
 
     public final PathPlannerPath CLOSE_STAGE_END;
 
@@ -204,6 +207,9 @@ public class Paths {
             AIN_CS = PathPlannerPath.fromPathFile("AIN_CS").flipPath();
             SIN_CS = PathPlannerPath.fromPathFile("SIN_CS").flipPath();
             SON_CS = PathPlannerPath.fromPathFile("SON_CS").flipPath();
+            CCN_CLOSE = PathPlannerPath.fromPathFile("CCN_CLOSE").flipPath();
+            CENTER_AMP = PathPlannerPath.fromPathFile("CENTER_AMP").flipPath();
+            CENTER_PODIUM = PathPlannerPath.fromPathFile("CENTER_PODIUM").flipPath();
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd").flipPath(); 
 
@@ -300,6 +306,9 @@ public class Paths {
             AIN_CS = PathPlannerPath.fromPathFile("AIN_CS");
             SIN_CS = PathPlannerPath.fromPathFile("SIN_CS");
             SON_CS = PathPlannerPath.fromPathFile("SON_CS");
+            CCN_CLOSE = PathPlannerPath.fromPathFile("CCN_CLOSE");
+            CENTER_AMP = PathPlannerPath.fromPathFile("CENTER_AMP");
+            CENTER_PODIUM = PathPlannerPath.fromPathFile("CENTER_PODIUM");
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd");
 

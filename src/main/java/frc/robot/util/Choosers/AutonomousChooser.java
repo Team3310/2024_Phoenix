@@ -16,6 +16,7 @@ import frc.robot.Auton.Middle.Amp.AmpOCI;
 import frc.robot.Auton.Middle.Amp.AmpOIAN2;
 import frc.robot.Auton.Middle.Amp.AmpOIAN2AN3;
 import frc.robot.Auton.Middle.Amp.AmpOIC;
+import frc.robot.Auton.Middle.Center.CenterFive;
 import frc.robot.Auton.Middle.Center.norm.CenterFiveACS;
 import frc.robot.Auton.Middle.Center.norm.CenterFiveASC;
 import frc.robot.Auton.Middle.Center.norm.CenterFiveCAS;
@@ -80,6 +81,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.CENTER_CSOS)
         .addOption(AutonomousMode.CENTER_SCSO)
         .addOption(AutonomousMode.CENTER_SSOC)
+        .addOption(AutonomousMode.CENTER_FIVE)
         //#endregion
         //#region counter
         .addOption(AutonomousMode.PLAYOFFS624)
@@ -117,7 +119,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         AMP_IOAN2("amp IOAN2"),
         AMP_IOAN2AN3("amp IOAN2AN3"),
         AMP_OIC("amp OIC"),
-        AMP_OCI("amp OIC"),
+        AMP_OCI("amp OCI"),
         AMP_OIAN2("amp OIAN2"),
         AMP_OIAN2AN3("amp OIAN2AN3"),
         TWO_AMP("two amp"),
@@ -135,6 +137,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         CENTER_CSOS("Center CSOS"),
         CENTER_SCSO("Center SCSO"),
         CENTER_SSOC("Center SSOC"),
+        CENTER_FIVE("Center 5"),
         //#endregion
         //#region test
         DRIVE_TEST("drive test forward and back"),
@@ -228,6 +231,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new CenterFiveSSOC(RobotContainer.getInstance());
                 case CENTER_SCSO:
                     return new CenterFiveSCSO(RobotContainer.getInstance());
+                case CENTER_FIVE:
+                    return new CenterFive(RobotContainer.getInstance());
                 //#endregion
                 //#region counter
                 case PLAYOFFS624:
