@@ -228,6 +228,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         //TODO try changing this to the targeting odometry to fix
         //the reseeding freakout @freddytums
+        //TODO try changing this to the targeting odometry to fix
+        //the reseeding freakout @freddytums
         pathFollower = new FollowPathCommand(
                 () -> this.getPose(), //getTargetingOdoPose()
                 this::getCurrentRobotChassisSpeeds,
@@ -321,7 +323,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 double distance_XY_Average = odometryTargeting.getDistance_XY_average();
                 // double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                 double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-                aimOffset+= yawOffset;
+                aimOffset += yawOffset;
                 //TODO is this the right spot? @freddytums
                 PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-front");
                 for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
@@ -333,7 +335,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                     }
                 }
 
-                if (canSeeTarget) {
+                if (false) {
                     if (Math.abs(Math.toDegrees(offset)) > 3.0) {
                         drivetrain_state = "LIME SNAP";
                         // SmartDashboard.putNumber("Snap offset", Math.toDegrees(offset));
@@ -344,11 +346,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                         startSnap(Math.toDegrees(getBotAz_FieldRelative() - offset));
                     }
                 } 
-                // else {
-                //     drivetrain_state = "ODO SNAP";
-                //     SmartDashboard.putNumber("ODO Snap Angle", Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
-                //     startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
-                // }
+                else {
+                    drivetrain_state = "ODO SNAP";
+                    SmartDashboard.putNumber("ODO Snap Angle", Math.toDegrees(odometryTargeting.getAz() + Math.PI) - aimOffset);
+                    startSnap(Math.toDegrees(odometryTargeting.getAz() + Math.PI) + aimOffset);
+                }
             }
         }
 
@@ -602,7 +604,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 // } else {
                     drivetrain_state = "LIME MODE";
                     aimAtTargetController.setSetpoint(alignAngleRadians);
-                    // SmartDashboard.putNumber("Align setpoint", Math.toDegrees(alignAngleRadians));
+                    // SmartDashboar
+                    SmartDashboard.putNumber("Align setpoint", Math.toDegrees(alignAngleRadians));
                     hasPreviouslyLockedOnTarget = true;
                     double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
                     // SmartDashboard.putNumber("Align current angle", Math.toDegrees(currentAngleRadians));
@@ -611,40 +614,42 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 // }
             }
             else {
-                if (!hasPreviouslyLockedOnTarget) {
-                    isHoldingAngle = false;
-                    joystickDrive();
-                }
-                else {
-                    drivetrain_state = "LIME MODE NO TARGET";
-                    double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
-                    updateDrive(rotation);
-                }
+                // if (!hasPreviouslyLockedOnTarget) {
+                //     isHoldingAngle = false;
+                //     joystickDrive();
+                // }
+                // else {
+                //     drivetrain_state = "LIME MODE NO TARGET";
+                //     double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
+                //     updateDrive(-rotation);
+                // }
 
-                // // If you have already locked onto a target don't go back to odo mode
+                // If you have already locked onto a target don't go back to odo mode
                 // if (Targeting.getTargetSimple() == TargetSimple.SPEAKER || hasPreviouslyLockedOnTarget) {
                 //     isHoldingAngle = false;
                 //     joystickDrive();
                 //     return;
                 // }
 
-                // drivetrain_state = "ODO MODE";
+                drivetrain_state = "ODO MODE";
 
-                // double currentAngleRadians = getBotAz_FieldRelative();
-                // double angleCalc = odometryTargeting.getAz() + Math.PI - Math.toRadians(aimOffset);
-                // double alignAngleRadians = MathUtil.inputModulus(angleCalc, -Math.PI,  Math.PI);
+                double odoCurrentAngleRadians = getBotAz_FieldRelative();
+                double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((odometryTargeting.getDistance_XY_average() / 0.0254) / 12.0)).value;
+                aimOffset+=yawOffset;
+                double angleCalc = odometryTargeting.getAz() + Math.PI + Math.toRadians(aimOffset);
+                double odoAlignAngleRadians = MathUtil.inputModulus(angleCalc, -Math.PI,  Math.PI);
     
-                // aimAtTargetController.setSetpoint(alignAngleRadians);
+                aimAtTargetController.setSetpoint(odoAlignAngleRadians);
 
-                // double rotation = aimAtTargetController.calculate(currentAngleRadians, 0.005);
+                double rotation = aimAtTargetController.calculate(odoCurrentAngleRadians, 0.005);
      
-                // // SmartDashboard.putNumber("ODO Angle:", Math.toDegrees(angleCalc));
-                // // SmartDashboard.putNumber("ODO Angle with Modulus:", Math.toDegrees(alignAngleRadians));
+                // SmartDashboard.putNumber("ODO Angle:", Math.toDegrees(angleCalc));
+                // SmartDashboard.putNumber("ODO Angle with Modulus:", Math.toDegrees(alignAngleRadians));
 
-                // // SmartDashboard.putNumber("PID Output:", rotation);
-                // // SmartDashboard.putNumber("PID Error:", offset);
+                // SmartDashboard.putNumber("PID Output:", rotation);
+                // SmartDashboard.putNumber("PID Error:", offset);
 
-                // updateDrive(-rotation);
+                updateDrive(-rotation);
             }
         }
     }
@@ -835,31 +840,202 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         */
 
 
-        if(isTrackingNote && noteLimelight.hasTarget()){
-            if(!setTrackSpeed){
-                lastCommandedSpeed = speeds.vxMetersPerSecond;
-                setTrackSpeed = true;
+        //TODO test new ways of tracking note speed @freddytums
+        //ie maybe command overall speed of path so we slow down towards end
+        //however we will have to see how the replanning, if we get off (probably), affects that
+        //if it does we could just try having a flag that once we are towards the end we tell it don't
+        //replan the path anymore so we can just get speeds idk
+        //or we could try using the path timer to "choose" when to slow down
+        //or use the path end pose to calculate a stopping distance from the last commanded speed
+        //that once we are withing that stopping distance we slow down like a mini motion profile
+        //we could even like let it get within that distance then let the path replan and let it
+        //do the motion profile its self idk whatever works best and is the simplest given our time
+        //ultimately this is all to solve the issue of drive over the center line when we tracked
+        //we could all solve this with command timing but I think doing it here will be more
+        //applicable to all situations as I'd likely try tuning the commands for the center line
+        //then when we go for the closer ones it'll be different
+
+        //timer approach
+        /*
+        if(pathFollower.getPathTime()-pathFollower.getPathTimer()<StopTime){
+            //method 1: using path speed from that point on
+            speed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+            //method 2: making our own motion profile
+            //from V²=V₀²+2aΔx we can solve for the acceleration needed
+                //submethod 1: only updating the acceleration once
+                if(!setSlowAccel){
+                    double distance = 
+                        pathFollower.getPathEnd().getTranslation().getDistance(
+                            targetingOdo.getEstimatedPosition().getTranslation()
+                            // m_odometry.getEstimatedPosition().getTranslation()
+                        );
+                    slowAccel = (-(lastCommandedSpeed*lastCommandedSpeed))/(2.0*distance);
+                    setSlowAccel = true;
+                }
+                //submethod 2: updating constantly
+                double distance = 
+                        pathFollower.getPathEnd().getTranslation().getDistance(
+                            targetingOdo.getEstimatedPosition().getTranslation()
+                            // m_odometry.getEstimatedPosition().getTranslation()
+                        );
+                double curSpeed = Math.hypot(getCurrentRobotChassisSpeeds().vxMetersPerSecond, getCurrentRobotChassisSpeeds().vyMetersPerSecond);
+                slowAccel = (-Math.pow(distance, distance))/(2.0*distance);
+            speed -= slowAccel;
+
+            //method 3: don't replan the path anymore
+            //this will get used in FollowPathCommand to cancel replanning
+            pathFollower.setReplanning(false); 
+            then use path speed
+            speed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        }else{
+            setSlowAccel = false;
+            speed = lastCommandedSpeed;
+            pathFollower.setReplanning(true); 
+        }
+        */
+
+        //stopping distance
+        /*
+        if(setTrackSpeed){
+            stopDist = (lastCommandedSpeed*lastCommandedSpeed)/(2.0*MAX_ACCEL);
+            setStopDist = true;
+        }else{
+            setStopDist = false;
+        }
+        if(setStopDist){
+            double distance = 
+                            pathFollower.getPathEnd().getTranslation().getDistance(
+                                targetingOdo.getEstimatedPosition().getTranslation()
+                                // m_odometry.getEstimatedPosition().getTranslation()
+                            );
+            if(distance<=stopDist){
+                speed = 0.0;
             }
+        }
+        */
+
+        //apply these speeds, from any method
+        /*
+        applyRequest(()->driveRobotCentricNoDeadband
+                .withVelocityX(speed)
+                .withVelocityY(0.0)
+                .withRotationalRate(pidRotationOutput*Constants.MaxAngularRate)
+                .withDriveRequestType(DriveRequestType.Velocity)
+            );
+        */
+
+
+        //TODO test new ways of tracking note speed @freddytums
+        //ie maybe command overall speed of path so we slow down towards end
+        //however we will have to see how the replanning, if we get off (probably), affects that
+        //if it does we could just try having a flag that once we are towards the end we tell it don't
+        //replan the path anymore so we can just get speeds idk
+        //or we could try using the path timer to "choose" when to slow down
+        //or use the path end pose to calculate a stopping distance from the last commanded speed
+        //that once we are withing that stopping distance we slow down like a mini motion profile
+        //we could even like let it get within that distance then let the path replan and let it
+        //do the motion profile its self idk whatever works best and is the simplest given our time
+        //ultimately this is all to solve the issue of drive over the center line when we tracked
+        //we could all solve this with command timing but I think doing it here will be more
+        //applicable to all situations as I'd likely try tuning the commands for the center line
+        //then when we go for the closer ones it'll be different
+
+        //timer approach
+        /*
+        if(pathFollower.getPathTime()-pathFollower.getPathTimer()<StopTime){
+        //method 1: using path speed from that point on
+        speed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        //method 2: making our own motion profile
+        //from V²=V₀²+2aΔx we can solve for the acceleration needed
+        //submethod 1: only updating the acceleration once
+        if(!setSlowAccel){
+        double distance = 
+        pathFollower.getPathEnd().getTranslation().getDistance(
+        targetingOdo.getEstimatedPosition().getTranslation()
+        // m_odometry.getEstimatedPosition().getTranslation()
+        );
+        slowAccel = (-(lastCommandedSpeed*lastCommandedSpeed))/(2.0*distance);
+        setSlowAccel = true;
+        }
+                //submethod 2: updating constantly
+        double distance = 
+        pathFollower.getPathEnd().getTranslation().getDistance(
+        targetingOdo.getEstimatedPosition().getTranslation()
+        // m_odometry.getEstimatedPosition().getTranslation()
+        );
+        double curSpeed = Math.hypot(getCurrentRobotChassisSpeeds().vxMetersPerSecond, getCurrentRobotChassisSpeeds().vyMetersPerSecond);
+        slowAccel = (-Math.pow(distance, distance))/(2.0*distance);
+speed -= slowAccel;
+        
+            //method 3: don't replan the path anymore
+            //this will get used in FollowPathCommand to cancel replanning
+            pathFollower.setReplanning(false); 
+            then use path speed
+            speed = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        }else{
+        setSlowAccel = false;
+        speed = lastCommandedSpeed;
+        pathFollower.setReplanning(true); 
+        }
+        */
+
+        //stopping distance
+        /*
+        if(setTrackSpeed){
+            stopDist = (lastCommandedSpeed*lastCommandedSpeed)/(2.0*MAX_ACCEL);
+            setStopDist = true;
+        }else{
+            setStopDist = false;
+        }
+        if(setStopDist){
+            double distance = 
+                            pathFollower.getPathEnd().getTranslation().getDistance(
+                                targetingOdo.getEstimatedPosition().getTranslation()
+                                // m_odometry.getEstimatedPosition().getTranslation()
+                            );
+            if(distance<=stopDist){
+                speed = 0.0;
+            }
+        }
+        */
+
+        //apply these speeds, from any method
+        /*
+        applyRequest(()->driveRobotCentricNoDeadband
+                .withVelocityX(speed)
+                .withVelocityY(0.0)
+                .withRotationalRate(pidRotationOutput*Constants.MaxAngularRate)
+                .withDriveRequestType(DriveRequestType.Velocity)
+            );
+        */
+
+
+        if(isTrackingNote && noteLimelight.hasTarget()){
+        //     if(!setTrackSpeed){
+        //         lastCommandedSpeed = speeds.vxMetersPerSecond;
+        //         setTrackSpeed = true;
+        //     }
             System.out.println("TRACKING!!!!");
             double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
 
             double currentNoteTrackAngle = getBotAz_FieldRelative();
             double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, -Math.PI, Math.PI);
 
-        //    if (pidNoteUpdateCounter > NOTE_COUNTER_MAX) {
+        // //    if (pidNoteUpdateCounter > NOTE_COUNTER_MAX) {
             noteTrackController.setSetpoint(adjustAngle);
 
             double pidRotationOutput = noteTrackController.calculate(currentNoteTrackAngle, 0.005);
-            if(Constants.debug){
-                SmartDashboard.putNumber("PID Output Note", pidRotationOutput);
-            }
-            applyRequest(()->driveRobotCentricNoDeadband
-                .withVelocityX(lastCommandedSpeed)
-                .withVelocityY(0.0)
-                .withRotationalRate(pidRotationOutput*Constants.MaxAngularRate)
-                .withDriveRequestType(DriveRequestType.Velocity)
-            );
-            return;
+        //     if(Constants.debug){
+        //         SmartDashboard.putNumber("PID Output Note", pidRotationOutput);
+        //     }
+        //     applyRequest(()->driveRobotCentricNoDeadband
+        //         .withVelocityX(lastCommandedSpeed)
+        //         .withVelocityY(0.0)
+        //         .withRotationalRate(pidRotationOutput*Constants.MaxAngularRate)
+        //         .withDriveRequestType(DriveRequestType.Velocity)
+        //     );
+        //     return;
+            speeds.omegaRadiansPerSecond = pidRotationOutput*Constants.MaxAngularRate;
         }
 
         if (!pathDone()) {
@@ -1101,7 +1277,6 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             SmartDashboard.putNumber("odo y", getPose().getY());
 
             SmartDashboard.putNumber("notetx", noteLimelight.getTargetHorizOffset());
-            SmartDashboard.putString("DriveTrain State", drivetrain_state);
 
             SmartDashboard.putBoolean("is snapping", isSnapping);
 
@@ -1148,11 +1323,12 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
             // }
 
             SmartDashboard.putString("field velocites", getFieldRelativeVelocites().toString());
-            SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());
-
-            SmartDashboard.putNumber("yaw offset", yawOffset);
+            SmartDashboard.putNumber("m_offset", m_fieldRelativeOffset.getDegrees());            
         }
+        SmartDashboard.putNumber("yaw offset", yawOffset);
+        SmartDashboard.putNumber("odometry.getDistance_XY_average()", (odometryTargeting.getDistance_XY_average() / 0.0254) / 12.0);
         SmartDashboard.putBoolean("will autos work", !Utils.isSimulation());
+        SmartDashboard.putString("DriveTrain State", drivetrain_state);
         // SmartDashboard.putNumber("limelight gyro", getOdoPose().getRotation().getDegrees());
         // PPLibTelemetry.setTargetPose(limelight.getBotPosePose());
 

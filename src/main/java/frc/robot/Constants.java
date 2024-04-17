@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -75,8 +75,8 @@ public class Constants {
             kLiftAngleMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(46.0));
             kLiftAngleMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(33.0));
             kLiftAngleMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(26.0));
-            kLiftAngleMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(23.0+0.5));
-            kLiftAngleMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.25));
+            kLiftAngleMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(23.0+0.5-.75));
+            kLiftAngleMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.25-1.0));
             kLiftAngleMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(18.75));
             kLiftAngleMap.put(new InterpolatingDouble(32.0), new InterpolatingDouble(18.5));
             kLiftAngleMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(19.0));
@@ -86,10 +86,10 @@ public class Constants {
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(4.7), new InterpolatingDouble(0.0));
-            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-4.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-4.0-1.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-4.0+1.25)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-4.0+1.25)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-4.0)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-4.0)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-4.0)); // -4.0
