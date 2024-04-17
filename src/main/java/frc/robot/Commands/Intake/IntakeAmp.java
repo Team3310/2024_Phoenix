@@ -26,7 +26,7 @@ public class IntakeAmp extends Command{
     @Override
     public void initialize() {
         intake.setFrontIntakeRPM(Constants.UP_INTAKE_RPM);
-        intake.setBottomIntakeRPM(Constants.UP_INTAKE_RPM);
+        intake.setBottomIntakeRPM(Constants.UP_INTAKE_RPM+500.0);
         intake.setTopIntakeRPM(-Constants.UP_INTAKE_RPM);
         flicker.setRPM(Constants.AMP_INTAKE_RPM);
         lift.setLiftAngle(Constants.LIFT_INTAKE_DEGREES);

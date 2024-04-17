@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Auton.AutonCommandBase;
 import frc.robot.Auton.DriveTest;
+import frc.robot.Auton.Paths;
 import frc.robot.Commands.Climber.ClimbControlJoysticks;
 import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.ClimberPrepNoAngle;
@@ -119,6 +121,7 @@ public class RobotContainer {
     driverController.povLeft().onTrue(new SetTarget(TargetSimple.CENTERPASS));
     driverController.povRight().onTrue(new SetTarget(TargetSimple.CORNERPASS));
     driverController.povUp().onTrue(new SetTarget(TargetSimple.SPEAKER));
+    // SmartDashboard.putData("seed", new InstantCommand(()->AutonCommandBase.resetRobotPoseFromPath(Paths.getInstance().C_N)));
     
     // driverController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5000); shooter.setRightMainRPM(3000); lift.setLiftAngle(30.0);})); // fender
     // driverController.a().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(5500); shooter.setRightMainRPM(3500); lift.setLiftAngle(19.0);})); // far
