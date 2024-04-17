@@ -100,8 +100,8 @@ public class RobotContainer {
     // intake
     // driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
     // driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
-    // driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
-    driverController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
+    driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
+    // driverController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
     // driverController.leftTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
     driverController.leftTrigger(0.5).onTrue(new InstantCommand(()->drivetrain.setSoFine(true))).onFalse(new InstantCommand(()->drivetrain.setSoFine(false)));
     // driverController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
