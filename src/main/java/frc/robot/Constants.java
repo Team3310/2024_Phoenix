@@ -221,7 +221,7 @@ public class Constants {
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters
 
     public static final class SnapConstants {
-        public static final double kP = 1.5;
+        public static final double kP = 0.75;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.0;
@@ -238,7 +238,7 @@ public class Constants {
     }
 
     public static final class SnapAutonConstants {
-        public static final double kP = 1.5;
+        public static final double kP = 1.0;
         public static final double kI = 0.05;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.25;
