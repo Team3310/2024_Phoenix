@@ -48,6 +48,14 @@ public class AutonCommandBase extends SequentialCommandGroup {
         TunerConstants.DriveTrain.seedFieldRelativeWithOffset(start.getRotation());  
     }
 
+    public static void resetRobotPoseFromPath(PathPlannerPath path) {
+        path.getTrajectory(new ChassisSpeeds(0, 0, 0), path.getStartingDifferentialPose().getRotation()).getInitialDifferentialPose();
+        Pose2d start = path.getPreviewStartingHolonomicPose();
+        
+        TunerConstants.DriveTrain.seedFieldRelative(start);   
+        TunerConstants.DriveTrain.seedFieldRelativeWithOffset(start.getRotation());  
+    }
+
     protected PathPlannerPath getPath(String pathName){
         PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
         if(robotContainer.getDrivetrain().getSideMode() == SideMode.RED){

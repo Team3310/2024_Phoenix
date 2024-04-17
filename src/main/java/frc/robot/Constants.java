@@ -20,7 +20,7 @@ public class Constants {
         public static final double UNDER_INTAKE_EJECT_RPM = -3000.0;
         public static final double FRONT_IN_INTAKE_RPM = 2000.0;
         public static final double FRONT_EJECT_INTAKE_RPM = -1000.0;
-        public static final double BACK_IN_INTAKE_RPM = 1500.0;
+        public static final double BACK_IN_INTAKE_RPM = 2000.0;
         public static final double BACK_EJECT_INTAKE_RPM = -1000.0;
         public static final double UP_INTAKE_RPM = 1500.0;
         public static final double UP_INTAKE_EJECT_RPM = -1000.0;
@@ -190,7 +190,7 @@ public class Constants {
 
         public static final double AMP_SCORE_RPM = -3000.0;
         public static final double AMP_LOAD_RPM = 800.0;
-        public static final double AMP_INTAKE_RPM = 800.0;
+        public static final double AMP_INTAKE_RPM = 1500.0;
         public static final double AMP_EJECT_RPM = -800.0;
         public static final double TRAP_SCORE_RPM = -800.0;
     //#endregion
