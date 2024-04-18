@@ -82,7 +82,7 @@ public class Constants {
             kLiftAngleMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(19.0));
         }
 
-        //- left + right
+        //- left; + right
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kAutoAimOffset = new InterpolatingTreeMap<>();
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
