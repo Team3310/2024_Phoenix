@@ -356,11 +356,11 @@ public class Targeting {
  //       SmartDashboard.putNumber("Distance2Target pos", (distance_XY_pos / 0.0254) / 12.0);
         if (distance_XY != 0) {
             this.targetEl = Constants.kLiftAngleMap
-                    .getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
             this.leftShooterSpeed = Constants.kLeftShooterMap
-                    .getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
             this.rightShooterSpeed = Constants.kRightShooterMap
-                    .getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
+                    .getInterpolated(new InterpolatingDouble((distance_XY / 0.0254) / 12.0)).value;
             // this.targetEl = Constants.kLiftAngleMap
             //         .getInterpolated(new InterpolatingDouble(distance_XY / 12.0)).value;
             // this.leftShooterSpeed = Constants.kLeftShooterMap

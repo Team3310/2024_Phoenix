@@ -43,7 +43,7 @@ public class AimLiftWithOdometry extends Command{
             if (drive.canSeeTargetTag()) {
                 led.setSolid(new Color(0,255,0));
             }else{
-                led.setSolid(new Color(255,255,0));
+                led.setSolid(new Color(255,0,255));
             }
 
             drive.getOdoTargeting().update();
