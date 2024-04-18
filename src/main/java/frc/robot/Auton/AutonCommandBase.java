@@ -121,7 +121,10 @@ public class AutonCommandBase extends SequentialCommandGroup {
     protected Command AimAndShoot(RobotContainer container){
         return new SequentialCommandGroup(
                 new ParallelDeadlineGroup(
-                    new AimLiftWithOdometryAuton().withTimeout(0.25),
+                    new SequentialCommandGroup(
+                        new WaitUntilCommand(()->container.drivetrain.hasTarget()).withTimeout(0.1),
+                        new AimLiftWithOdometryAuton()
+                    ).withTimeout(0.25),
                     new SetDriveMode(DriveMode.AIMATTARGET).andThen(new WaitUntilCommand(()->container.getDrivetrain().snapComplete()))
                 ),
                 new WaitCommand(0.1),

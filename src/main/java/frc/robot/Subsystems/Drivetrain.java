@@ -560,7 +560,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void resetYawoffset(){
-        yawOffset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?2.0:0.0;
+        yawOffset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?3.0:0.0;
     }
 
     public void aimAtTarget() {

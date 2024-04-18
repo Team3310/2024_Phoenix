@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Subsystems.Lift;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
@@ -318,6 +319,9 @@ public class Paths {
             SM_GRAB_CLOSE = PathPlannerPath.fromPathFile("SMGrabClose");
             PLAYOFFS624 = PathPlannerPath.fromPathFile("624");
         }
+
+        Lift.getInstance().resetLiftOffset();
+        TunerConstants.DriveTrain.resetYawoffset();
     }
 
     public void flip() {
