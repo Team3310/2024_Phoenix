@@ -82,11 +82,12 @@ public class Constants {
             kLiftAngleMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(19.0));
         }
 
+        //- left + right
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kAutoAimOffset = new InterpolatingTreeMap<>();
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(4.7), new InterpolatingDouble(0.0));
-            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-4.0-1.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-4.0)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-4.0+1.25)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-4.0+1.25)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
@@ -221,7 +222,7 @@ public class Constants {
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters
 
     public static final class SnapConstants {
-        public static final double kP = 0.75;
+        public static final double kP = 1.125; //1.5
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.0;
