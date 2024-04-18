@@ -37,6 +37,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -240,6 +241,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 () -> false);
 
         configurePathPlanner();
+
+        yawOffset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?2.0:0.0;
     }
 
     public void setTeleopCurrentLimits(){
@@ -557,7 +560,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void resetYawoffset(){
-        yawOffset = 0.0;
+        yawOffset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?2.0:0.0;
     }
 
     public void aimAtTarget() {

@@ -77,6 +77,8 @@ public class RobotContainer {
   public RobotContainer() {
     instance = this;
 
+    drivetrain = TunerConstants.DriveTrain;
+    
     lift = Lift.getInstance();
     shooter = Shooter.getInstance();
     intake = Intake.getInstance();
@@ -84,7 +86,6 @@ public class RobotContainer {
     climber = Climber.getInstance();
     flicker = Flicker.getInstance();
     led = LED.getInstance();
-    drivetrain = TunerConstants.DriveTrain;
 
     autonomousChooser = new AutonomousChooser();
 
