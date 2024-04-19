@@ -12,6 +12,10 @@ public class TwoAmpSolo extends AutonCommandBase{
 
         this.addCommands(
             new TwoAmp(robotContainer),
+            // FollowToIntake(Paths.getInstance().AN_ON),
+            // GoToShoot(robotContainer, Paths.getInstance().ON_AS),
+            // FollowToIntake(Paths.getInstance().AS_IN),
+            // GoToShoot(robotContainer, Paths.getInstance().IN_AS, false)
             FollowToIntake(Paths.getInstance().TWO_AMP_SOLO),
             AimAndShoot(robotContainer),
             FollowToIntake(Paths.getInstance().TWO_AMP_SOLO2),

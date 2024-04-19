@@ -44,7 +44,7 @@ public class FeederShootCommandAuton extends Command {
   @Override
   public void end(boolean interrupted) {
     Shooter.getInstance().setNoteIn(false);
-    m_subsystem.setKickerOff();
+    // m_subsystem.setKickerOff();
   }
 
   // Returns true when the command should end.
