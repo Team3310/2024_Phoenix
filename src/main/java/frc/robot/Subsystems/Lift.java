@@ -131,7 +131,8 @@ public class Lift extends SubsystemBase {
 
         liftClosedLoopOutput = LiftClosedLoopOutputType.Voltage;
 
-        offset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?0.5:0.0;
+        // offset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?0.0:0.0;
+        
     }
 
     public void setLiftAngle(double degrees) {
@@ -182,7 +183,7 @@ public class Lift extends SubsystemBase {
     }
 
     public void resetLiftOffset(){
-        offset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?0.5:0.0;
+        offset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?0.25:0.0;
     }
 
     public double getOffset(){

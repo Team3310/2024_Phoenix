@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     TunerConstants.DriveTrain.getLimelightTargeting().updatePoseEstimatorWithVisionBotPose();
 
-    SmartDashboard.putString("time", String.format("%d:%02d", (int)(DriverStation.getMatchTime()/60), (int)(DriverStation.getMatchTime()%60)));
+    SmartDashboard.putNumber("time", DriverStation.getMatchTime());
     // if (useLimelight) {
     //   var lastResult = LimelightHelpers.getLatestResults("limelight-fron").targetingResults;
 

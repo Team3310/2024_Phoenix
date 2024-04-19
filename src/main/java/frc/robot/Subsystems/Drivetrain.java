@@ -39,6 +39,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -64,6 +65,7 @@ import frc.robot.util.PathFollowing.FollowPathCommand;
  * so it can be used in command-based projects easily.
  */
 public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateManager.Updatable {
+    private final Field2d field = new Field2d();
     private DriveMode mControlMode = DriveMode.JOYSTICK;
     private SideMode sideMode = SideMode.RED;
     private String drivetrain_state = "INIT";
@@ -242,7 +244,8 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         configurePathPlanner();
 
-        yawOffset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?2.0:0.0;
+        // yawOffset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?2.0:0.0;
+        SmartDashboard.putData(field);
     }
 
     public void setTeleopCurrentLimits(){
@@ -564,7 +567,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     }
 
     public void resetYawoffset(){
-        yawOffset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?3.0:0.0;
+        yawOffset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?2.0:0.0;
     }
 
     public void aimAtTarget() {
@@ -1343,6 +1346,8 @@ speed -= slowAccel;
             PPLibTelemetry.setCurrentPose(getPose());
             PPLibTelemetry.setTargetPose(targetingOdo.getEstimatedPosition());
         }
+
+        field.setRobotPose(targetingOdo.getEstimatedPosition());
     }
 
     public void seedFieldRelativeWithOffset(Rotation2d offset) {

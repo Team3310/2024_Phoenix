@@ -42,7 +42,7 @@ public class TunerConstants {
     public static final double kStatorCurrentA = 110.0; // Only used for non-torque control drive modes applied in drivetrain
     public static final double kSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
 
-    public static final double kTeleStatorCurrentA = 80.0; // Only used for non-torque control drive modes applied in drivetrain
+    public static final double kTeleStatorCurrentA = 70.0; // Only used for non-torque control drive modes applied in drivetrain
     public static final double kTeleSupplyCurrentA = 40.0; // Only used for non-torque control drive modes applied in drivetrain
 
     // This is set on the modules in Drivetrain (units are in seconds, 0 == off)
