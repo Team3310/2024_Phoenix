@@ -78,7 +78,7 @@ public class IntakeShooter extends Command {
         // intake.setFrontIntakeRPM(0.0);
         // intake.setBackIntakeRPM(0.0);
         shooter.setKickerRPM(0.0);
-        elevator.setPosition(0.0);
+        // elevator.setPosition(0.0);
         drive.isTrackingNote = false;
         if(!interrupted){
             led.setSolid(new Color(243, 204, 20));

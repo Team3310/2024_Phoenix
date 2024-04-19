@@ -253,10 +253,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         currentConfigs.SupplyCurrentLimitEnable = true;
 
         // Torque current limits are applied in SwerveModule with kSlipCurrent.
+        StatusCode status = StatusCode.StatusCodeNotInitialized;
         for (int i = 0; i < this.Modules.length; i++) {
-            StatusCode response = this.Modules[i].getDriveMotor().getConfigurator().apply(currentConfigs);
-            if (!response.isOK()) {
-                System.out.println("TalonFX ID " + this.Modules[i].getDriveMotor().getDeviceID() + " failed config ramp configs with error " + response.toString());
+            status = StatusCode.StatusCodeNotInitialized;
+            for(int t=0; t<5; t++){
+                status = this.Modules[i].getDriveMotor().getConfigurator().apply(currentConfigs);
+                if (status.isOK()) {
+                    break;
+                }
             }
         }
     }

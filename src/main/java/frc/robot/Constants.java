@@ -73,8 +73,8 @@ public class Constants {
             kLiftAngleMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(62.0));
             kLiftAngleMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(62.0));
             kLiftAngleMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(46.0));
-            kLiftAngleMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(33.0+1.0));
-            kLiftAngleMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(26.0));
+            kLiftAngleMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(33.0+1.0+0.5));
+            kLiftAngleMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(26.0+0.5));
             kLiftAngleMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(23.0+0.5-.5+1.25));
             kLiftAngleMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.25-1.0));
             kLiftAngleMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(18.75));
@@ -87,13 +87,13 @@ public class Constants {
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(4.7), new InterpolatingDouble(0.0));
-            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-4.0+2.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-4.0+1.25+0.5)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-4.0+2.0+2.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-4.0+1.25+0.5+2.0)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-4.0+1.25+1.0)); // -4.0
             kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-4.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
         }
  
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
@@ -193,7 +193,7 @@ public class Constants {
         public static final double AMP_LOAD_RPM = 800.0;
         public static final double AMP_INTAKE_RPM = 1500.0;
         public static final double AMP_EJECT_RPM = -800.0;
-        public static final double TRAP_SCORE_RPM = -800.0;
+        public static final double TRAP_SCORE_RPM = -1600.0;
     //#endregion
 
     //#region Climber

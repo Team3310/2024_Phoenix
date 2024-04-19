@@ -28,6 +28,7 @@ import frc.robot.Auton.Middle.Center.shifted.CenterFiveCSSO;
 import frc.robot.Auton.Middle.Center.shifted.CenterFiveSCSO;
 import frc.robot.Auton.Middle.Center.shifted.CenterFiveSSOC;
 import frc.robot.Auton.Middle.Source.Playoff624;
+import frc.robot.Auton.Middle.Source.SourceICO;
 import frc.robot.Auton.Middle.Source.SourceICP;
 import frc.robot.Auton.Middle.Source.SourceIOC;
 import frc.robot.Auton.Middle.Source.SourceIOP;
@@ -55,6 +56,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.SOURCE_OCI)
         .addOption(AutonomousMode.SOURCE_IOC)
         .addOption(AutonomousMode.SOURCE_ICP)
+        .addOption(AutonomousMode.SOURCE_ICO)
         .addOption(AutonomousMode.SOURCE_ICPS)
         .addOption(AutonomousMode.SOURCE_IOP)
         //#endregion
@@ -112,6 +114,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         SOURCE_IOC("source IOC"),
         SOURCE_IOP("source IOP"),
         SOURCE_ICP("source ICP"),
+        SOURCE_ICO("source ICO"),
         SOURCE_ICPS("source ICP under stage"),
         //#endregion
         //#region amp
@@ -185,6 +188,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new SourceIOC(RobotContainer.getInstance());
                 case SOURCE_ICP:
                     return new SourceICP(RobotContainer.getInstance(), CNPNPath.CN);
+                case SOURCE_ICO:
+                    return new SourceICO(RobotContainer.getInstance());
                 case SOURCE_ICPS:
                     return new SourceICP(RobotContainer.getInstance(), CNPNPath.CCNS);
                 //#endregion
