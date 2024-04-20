@@ -3,32 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.29,
-        "y": 4.3
+        "x": 1.3579149380520985,
+        "y": 5.529873281968787
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.161221742443485,
-        "y": 4.177945498748141
+        "x": 2.4944301317174067,
+        "y": 5.52661562465982
       },
       "isLocked": false,
-      "linkedName": "CCN"
-    },
-    {
-      "anchor": {
-        "x": 5.162451467760079,
-        "y": 4.397837367103306
-      },
-      "prevControl": {
-        "x": 5.7576814369488165,
-        "y": 3.8891035035095696
-      },
-      "nextControl": {
-        "x": 4.356236674687896,
-        "y": 5.086896701808922
-      },
-      "isLocked": false,
-      "linkedName": "MiddleStageCenter"
+      "linkedName": "CenterStart2"
     },
     {
       "anchor": {
@@ -36,28 +20,44 @@
         "y": 5.541275082550166
       },
       "prevControl": {
-        "x": 3.258300373743605,
-        "y": 5.541275082550166
+        "x": 2.6590357859885527,
+        "y": 5.55338052008127
       },
       "nextControl": {
-        "x": 1.8637559679463909,
-        "y": 5.541275082550166
+        "x": 3.3593381472477235,
+        "y": 5.467977793098444
       },
       "isLocked": false,
       "linkedName": "MiddleStageSpeaker"
     },
     {
       "anchor": {
-        "x": 1.3579149380520985,
-        "y": 5.529873281968787
+        "x": 5.162451467760079,
+        "y": 4.397837367103306
       },
       "prevControl": {
-        "x": 1.8858589864260682,
-        "y": 5.529873281968787
+        "x": 4.760164427967203,
+        "y": 4.694763515521856
+      },
+      "nextControl": {
+        "x": 5.778148699154542,
+        "y": 3.9433941725026314
+      },
+      "isLocked": false,
+      "linkedName": "MiddleStageCenter"
+    },
+    {
+      "anchor": {
+        "x": 8.29,
+        "y": 4.3
+      },
+      "prevControl": {
+        "x": 7.463986356544141,
+        "y": 4.104648209296419
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CenterStart2"
+      "linkedName": "CCN"
     }
   ],
   "rotationTargets": [],
