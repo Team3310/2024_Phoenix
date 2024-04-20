@@ -15,8 +15,9 @@ public class IntakeThrough extends Command{
 
     @Override
     public void initialize() {
-        intake.setFrontIntakeRPM(Constants.FRONT_IN_INTAKE_RPM);
-        intake.setBottomIntakeRPM(Constants.BACK_EJECT_INTAKE_RPM);
+        intake.setFrontIntakeRPM(Constants.FRONT_IN_INTAKE_RPM*1.5);
+        intake.setBottomIntakeRPM(Constants.BACK_EJECT_INTAKE_RPM*3.5);
+
     }
 
     @Override
