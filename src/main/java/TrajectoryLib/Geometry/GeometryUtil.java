@@ -1,4 +1,7 @@
-package TrajectoryLib.Geometry;
+package TrajectoryLib.geometry;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class GeometryUtil {
 
@@ -23,14 +26,14 @@ public class GeometryUtil {
      * @return Curve radius
      */
     public static double calculateRadius(Pose2d a, Pose2d b, Pose2d c) {
-        Pose2d vba = a.minus(b);
-        Pose2d vbc = c.minus(b);
+        Translation2d vba = a.getTranslation().minus(b.getTranslation());
+        Translation2d vbc = c.getTranslation().minus(b.getTranslation());
         double cross_z = (vba.getX() * vbc.getY()) - (vba.getY() * vbc.getX());
         int sign = (cross_z < 0) ? 1 : -1;
 
-        double ab = a.getDistance(b);
-        double bc = b.getDistance(c);
-        double ac = a.getDistance(c);
+        double ab = a.getTranslation().getDistance(b.getTranslation());
+        double bc = b.getTranslation().getDistance(c.getTranslation());
+        double ac = a.getTranslation().getDistance(c.getTranslation());
 
         double p = (ab + bc + ac) / 2;
         double area = Math.sqrt(Math.abs(p * (p - ab) * (p - bc) * (p - ac)));

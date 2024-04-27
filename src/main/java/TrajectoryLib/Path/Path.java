@@ -1,12 +1,12 @@
-package TrajectoryLib.Path;
+package TrajectoryLib.path;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import TrajectoryLib.Geometry.GeometryUtil;
 import TrajectoryLib.Splines.Spline2d;
+import TrajectoryLib.geometry.GeometryUtil;
 
 public class Path {
     public static final int NumOfSamplePoints = 20;
@@ -18,7 +18,7 @@ public class Path {
     public Path(Spline2d[] splines, RotationTarget[] rotationTargets) {
         this.points = buildPoints(splines, rotationTargets);
         this.globalConstraints = new PathConstraints(5.0, 4.0, 2.0 * Math.PI, 2.0 * Math.PI);
-        this.goalEndState = new GoalEndState(points.get(numPoints() - 1).position.getVelocity(),
+        this.goalEndState = new GoalEndState(points.get(numPoints() - 1).position.getVelocities(),
                 points.get(numPoints() - 1).position.getRotation());
 
         precalcValues();
@@ -102,7 +102,7 @@ public class Path {
 
                 if (i != 0) {
                     point.distanceAlongPath = points.get(i - 1).distanceAlongPath
-                            + (points.get(i - 1).position.getPose().getDistance(point.position.getPose()));
+                            + (points.get(i - 1).position.getPose().getTranslation().getDistance(point.position.getPose().getTranslation()));
                 }
             }
 

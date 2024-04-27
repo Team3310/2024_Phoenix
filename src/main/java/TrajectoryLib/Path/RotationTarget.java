@@ -1,8 +1,8 @@
-package TrajectoryLib.Path;
+package TrajectoryLib.path;
 
 import java.util.Objects;
 
-import TrajectoryLib.Geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /** A target holonomic rotation at a position along a path */
 public class RotationTarget {

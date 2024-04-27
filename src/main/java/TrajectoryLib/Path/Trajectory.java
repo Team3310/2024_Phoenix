@@ -1,22 +1,23 @@
-package TrajectoryLib.Path;
+package TrajectoryLib.path;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import TrajectoryLib.Geometry.GeometryUtil;
-import TrajectoryLib.Geometry.Pose2d;
-import TrajectoryLib.Geometry.Rotation2d;
-import TrajectoryLib.Geometry.Vector2d;
+import TrajectoryLib.geometry.GeometryUtil;
+import TrajectoryLib.geometry.Vector2d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class Trajectory {
     private final List<State> states;
 
     public Trajectory(
-            Path path, Vector2d startingSpeeds, Rotation2d startingRotation) {
+            Path path, ChassisSpeeds startingSpeeds, Rotation2d startingRotation) {
         this.states = generateStates(path, startingSpeeds, startingRotation);
     }
 
-    public static List<State> generateStates(Path path, Vector2d startingSpeeds, Rotation2d startingRotation) {
+    public static List<State> generateStates(Path path, ChassisSpeeds startingSpeeds, Rotation2d startingRotation) {
         List<State> states = new ArrayList<>();
 
         double prevRotationTargetDist = 0.0;
@@ -45,24 +46,27 @@ public class Trajectory {
 
             if (i == path.numPoints() - 1) {
                 state.deltaPos = path.getPoint(i).distanceAlongPath - path.getPoint(i - 1).distanceAlongPath;
-                state.targetVelocity = path.getGoalEndState().getVelocity();
+                state.targetVelocity = path.getGoalEndState().getSpeeds();
+                state.targetVectorVelocity = new Vector2d(path.getPoint(i).position.getVelocities().vxMetersPerSecond, path.getPoint(i).position.getVelocities().vyMetersPerSecond);
             } else if (i == 0) {
                 state.deltaPos = 0;
                 state.targetVelocity = startingSpeeds;
+                state.targetVectorVelocity = new Vector2d(path.getPoint(i).position.getVelocities().vxMetersPerSecond, path.getPoint(i).position.getVelocities().vyMetersPerSecond);
             } else {
                 state.deltaPos = path.getPoint(i + 1).distanceAlongPath - path.getPoint(i).distanceAlongPath;
-                state.targetVelocity = path.getPoint(i).position.getVelocity();
+                state.targetVelocity = path.getPoint(i).position.getVelocities();
+                state.targetVectorVelocity = new Vector2d(path.getPoint(i).position.getVelocities().vxMetersPerSecond, path.getPoint(i).position.getVelocities().vyMetersPerSecond);
 
-                double v0 = states.get(states.size() - 1).targetVelocity.getMagnitude();
+                double v0 = states.get(states.size() - 1).targetVectorVelocity.getMagnitude();
                 double vMax = Math.sqrt(
                         Math.abs(
                                 Math.pow(v0, 2)
                                         + (2 * constraints.getMaxAccelerationMpsSq() * state.deltaPos)));
-                state.targetVelocity.adjustMagnitude(Math.min(vMax, path.getPoint(i).maxV));
+                state.adjustVectorVelocityMagnitude(Math.min(vMax, path.getPoint(i).maxV));
             }
 
             if (nextTarget.shouldRotateFast()) {
-                state.targetPose.adjustRotation(nextTarget.getTarget());
+                state.adjustRotation(nextTarget.getTarget());
             } else {
                 double t = (path.getPoint(i).distanceAlongPath - prevRotationTargetDist) / distanceBetweenTargets;
                 t = Math.min(Math.max(0.0, t), 1.0);
@@ -70,8 +74,10 @@ public class Trajectory {
                     t = 0.0;
                 }
 
-                state.targetPose.adjustRotation(prevRotationTargetRot.interpolate(nextTarget.getTarget(), t));
+                state.adjustRotation(prevRotationTargetRot.interpolate(nextTarget.getTarget(), t));
             }
+
+            System.out.println(state.targetVelocity);
 
             states.add(state);
         }
@@ -80,26 +86,34 @@ public class Trajectory {
         for (int i = states.size() - 2; i > 1; i--) {
             PathConstraints constraints = states.get(i).constraints;
 
-            double v0 = states.get(i + 1).targetVelocity.getMagnitude();
+            double v0 = states.get(i + 1).targetVectorVelocity.getMagnitude();
 
             double vMax = Math.sqrt(
                     Math.abs(
                             Math.pow(v0, 2)
                                     + (2 * constraints.getMaxAccelerationMpsSq() * states.get(i + 1).deltaPos)));
-            states.get(i).targetVelocity.adjustMagnitude(Math.min(vMax, states.get(i).targetVelocity.getMagnitude()));
+            states.get(i).adjustVectorVelocityMagnitude(Math.min(vMax, states.get(i).targetVectorVelocity.getMagnitude()));
+
+            System.out.println(states.get(i).targetVelocity);
         }
 
         double time = 0;
         states.get(0).time = 0;
+        states.get(0).targetVelocity.omegaRadiansPerSecond = startingSpeeds.omegaRadiansPerSecond;
 
         // final pass: calculates time
         for (int i = 1; i < states.size(); i++) {
-            double v0 = states.get(i - 1).targetVelocity.getMagnitude();
-            double v = states.get(i).targetVelocity.getMagnitude();
+            double v0 = states.get(i - 1).targetVectorVelocity.getMagnitude();
+            double v = states.get(i).targetVectorVelocity.getMagnitude();
             double dt = (2 * states.get(i).deltaPos) / (v + v0);
+
+            System.out.println(states.get(i).targetVelocity);
 
             time += dt;
             states.get(i).time = time;
+
+            Rotation2d headingDelta = states.get(i).targetPose.getRotation().minus(states.get(i - 1).targetPose.getRotation());
+            states.get(i).targetVelocity.omegaRadiansPerSecond = headingDelta.getRadians() / dt;
         }
 
         return states;
@@ -214,7 +228,8 @@ public class Trajectory {
     public static class State {
         private double time;
         private Pose2d targetPose;
-        private Vector2d targetVelocity;
+        private ChassisSpeeds targetVelocity;
+        private Vector2d targetVectorVelocity;
         private PathConstraints constraints;
 
         private double deltaPos;
@@ -236,7 +251,11 @@ public class Trajectory {
                 return endVal.interpolate(this, 1 - t);
             }
 
-            lerpedState.targetVelocity = targetVelocity.interpolate(endVal.targetVelocity, t);
+            lerpedState.targetVectorVelocity = targetVectorVelocity.interpolate(endVal.targetVectorVelocity, t);
+            lerpedState.targetVelocity = new ChassisSpeeds(
+                lerpedState.targetVectorVelocity.getX(), 
+                lerpedState.targetVectorVelocity.getX(), 
+                GeometryUtil.doubleLerp(targetVelocity.omegaRadiansPerSecond, endVal.targetVelocity.omegaRadiansPerSecond, t));
             lerpedState.targetPose = targetPose.interpolate(endVal.targetPose, t);
 
             if (t < 0.5) {
@@ -262,17 +281,38 @@ public class Trajectory {
         }
 
         /**
+         * Get the target vector velocity
+         *
+         * @return The target vector velocity
+         */
+        public Vector2d getTargetVectorVelocity() {
+            return targetVectorVelocity;
+        }
+
+        public void adjustVectorVelocityMagnitude(double newValue){
+            //adjusts magnitude
+            targetVectorVelocity.adjustMagnitude(newValue);
+
+            //updates ChassisSpeeds object
+            targetVelocity = new ChassisSpeeds(targetVectorVelocity.getX(), targetVectorVelocity.getY(), targetVelocity.omegaRadiansPerSecond);
+        }
+
+        public void adjustRotation(Rotation2d newRot){
+            targetPose = new Pose2d(targetPose.getX(), targetPose.getY(), newRot);
+        }
+
+        /**
          * Get the target velocity
          *
          * @return The target velocity
          */
-        public Vector2d getTargetVelocity() {
+        public ChassisSpeeds getTargetVelocity() {
             return targetVelocity;
         }
 
         @Override
         public String toString(){
-            return String.format("pose: (%.2f, %.2f) velocity: (%.2f, %.2f)", targetPose.getX(), targetPose.getY(), targetVelocity.getX(), targetVelocity.getY());
+            return String.format("pose: (%.2f, %.2f) velocity: (%.2f m/s, %.2f m/s, %.2f rads/s)", targetPose.getX(), targetPose.getY(), targetVelocity.vxMetersPerSecond, targetVelocity.vyMetersPerSecond, targetVelocity.omegaRadiansPerSecond);
         }
     }
 }

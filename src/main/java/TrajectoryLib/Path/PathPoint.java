@@ -1,6 +1,6 @@
-package TrajectoryLib.Path;
+package TrajectoryLib.path;
 
-import TrajectoryLib.Geometry.Pose2dWithMotion;
+import TrajectoryLib.geometry.Pose2dWithMotion;
 
 /** A point along a pathplanner path */
 public class PathPoint {

@@ -1,42 +1,25 @@
-package TrajectoryLib.Geometry;
+package TrajectoryLib.geometry;
 
-public class Pose2dWithMotion implements interpolable<Pose2dWithMotion> {
-    private Vector2d velocity;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.Interpolatable;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+
+public class Pose2dWithMotion implements Interpolatable<Pose2dWithMotion> {
+    private ChassisSpeeds velocity;
     private Pose2d pose;
 
-    public Pose2dWithMotion(double x, double y, double dx, double dy) {
-        this(x, y, Rotation2d.ZERO, dx, dy);
-    }
-
-    public Pose2dWithMotion(double x, double y, Rotation2d theta, double dx, double dy) {
+    public Pose2dWithMotion(double x, double y, Rotation2d theta, double dx, double dy, double dtheta) {
         this.pose = new Pose2d(x, y, theta);
-        this.velocity = new Vector2d(dx, dy);
+        this.velocity = new ChassisSpeeds(dx, dy, dtheta);
     }
 
-    public Pose2dWithMotion(double x, double y, double velocity, Rotation2d heading) {
-        this(x, y, Rotation2d.ZERO, velocity, heading);
+    public Pose2dWithMotion(Pose2d pose, ChassisSpeeds velocites) {
+        this.pose = pose;
+        this.velocity = velocites;
     }
 
-    public Pose2dWithMotion(double x, double y, Rotation2d theta, double velocity, Rotation2d heading) {
-        this.pose = new Pose2d(x, y, theta);
-        this.velocity = new Vector2d(velocity, heading);
-    }
-
-    public Pose2dWithMotion(double x, double y, Vector2d velocity) {
-        this(x, y, Rotation2d.ZERO, velocity);
-    }
-
-    public Pose2dWithMotion(double x, double y, Rotation2d theta, Vector2d velocity) {
-        this.pose = new Pose2d(x, y, theta);
-        this.velocity = velocity;
-    }
-
-    public Pose2dWithMotion(Pose2d pose, Vector2d velocity) {
-        this.pose = new Pose2d(pose);
-        this.velocity = velocity;
-    }
-
-    public Vector2d getVelocity() {
+    public ChassisSpeeds getVelocities() {
         return velocity;
     }
 
@@ -56,10 +39,17 @@ public class Pose2dWithMotion implements interpolable<Pose2dWithMotion> {
         return pose.getRotation();
     }
 
+    private ChassisSpeeds interpVelocity(ChassisSpeeds other, double t){
+        return new ChassisSpeeds(
+            GeometryUtil.doubleLerp(velocity.vxMetersPerSecond, other.vxMetersPerSecond, t), 
+            GeometryUtil.doubleLerp(velocity.vyMetersPerSecond, other.vyMetersPerSecond, t), 
+            GeometryUtil.doubleLerp(velocity.omegaRadiansPerSecond, other.omegaRadiansPerSecond, t));
+    }
+
     @Override
     public Pose2dWithMotion interpolate(Pose2dWithMotion other, double t) {
         return new Pose2dWithMotion(
                 pose.interpolate(other.pose, t),
-                velocity.interpolate(other.velocity, t));
+                interpVelocity(other.velocity, t));
     }
 }

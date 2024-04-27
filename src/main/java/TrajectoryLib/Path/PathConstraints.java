@@ -1,4 +1,4 @@
-package TrajectoryLib.Path;
+package TrajectoryLib.path;
 
 public class PathConstraints {
     private final double maxVelocityMps;

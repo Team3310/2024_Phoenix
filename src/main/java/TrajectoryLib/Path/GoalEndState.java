@@ -1,37 +1,30 @@
-package TrajectoryLib.Path;
+package TrajectoryLib.path;
 
 import java.util.Objects;
 
-import TrajectoryLib.Geometry.Rotation2d;
-import TrajectoryLib.Geometry.Vector2d;
+import TrajectoryLib.geometry.Vector2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 /** Describes the goal end state of the robot when finishing a path */
 public class GoalEndState {
+  private final ChassisSpeeds speeds;
   private final Vector2d velocity;
   private final Rotation2d rotation;
   private final boolean rotateFast;
 
-  /**
-   * Create a new goal end state
-   *
-   * @param velocity   The goal end velocity (M/S)
-   * @param rotation   The goal rotation
-   * @param rotateFast Should the robot reach the rotation as fast as possible
-   */
-  public GoalEndState(Vector2d velocity, Rotation2d rotation, boolean rotateFast) {
-    this.velocity = velocity;
+  public GoalEndState(ChassisSpeeds velocity, Rotation2d rotation) {
+    this.velocity = new Vector2d(velocity.vxMetersPerSecond, velocity.vyMetersPerSecond);
     this.rotation = rotation;
-    this.rotateFast = rotateFast;
+    this.rotateFast = false;
+    this.speeds = velocity;
   }
 
-  /**
-   * Create a new goal end state
-   *
-   * @param velocity The goal end velocity (M/S)
-   * @param rotation The goal rotation
-   */
-  public GoalEndState(Vector2d velocity, Rotation2d rotation) {
-    this(velocity, rotation, false);
+  public GoalEndState(ChassisSpeeds velocity, Rotation2d rotation, boolean rotateFast) {
+    this.velocity = new Vector2d(velocity.vxMetersPerSecond, velocity.vyMetersPerSecond);
+    this.rotation = rotation;
+    this.rotateFast = rotateFast;
+    this.speeds = velocity;
   }
 
   /**
@@ -58,6 +51,15 @@ public class GoalEndState {
    */
   public Vector2d getVelocity() {
     return velocity;
+  }
+
+  /**
+   * Get the goal end velocity
+   *
+   * @return Goal end velocity (M/S)
+   */
+  public ChassisSpeeds getSpeeds() {
+    return speeds;
   }
 
   /**

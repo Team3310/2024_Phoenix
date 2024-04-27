@@ -1,6 +1,9 @@
-package TrajectoryLib.Geometry;
+package TrajectoryLib.geometry;
 
-public class Vector2d implements interpolable<Vector2d> {
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.Interpolatable;
+
+public class Vector2d implements Interpolatable<Vector2d> {
     private double magnitude;
     private Rotation2d heading;
 
