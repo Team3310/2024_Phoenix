@@ -24,6 +24,7 @@
       "/SmartDashboard/reset lift offset": "Command",
       "/SmartDashboard/reset yaw offset": "Command",
       "/SmartDashboard/stop test drive train": "Command",
+      "/SmartDashboard/test": "Command",
       "/SmartDashboard/test drive train": "Command"
     }
   },

@@ -3,6 +3,8 @@ package com.pathplanner.lib.util;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPoint;
+
+import TrajectoryLib.Path.Path;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.*;
@@ -94,11 +96,38 @@ public class PPLibTelemetry {
   }
 
   /**
+   * Set the current path being followed
+   *
+   * @param path The current path
+   */
+  public static void setCurrentPath(Path path) {
+    double[] arr = new double[path.numPoints() * 3];
+
+    int ndx = 0;
+    for (TrajectoryLib.Path.PathPoint p : path.getAllPathPoints()) {
+      System.out.println("brrrr");
+      Translation2d pos = new Translation2d(p.position.getPose().getX(), p.position.getPose().getY());
+      arr[ndx] = pos.getX();
+      arr[ndx + 1] = pos.getY();
+      // Just add 0 as a heading since it's not needed for displaying a path
+      arr[ndx + 2] = 0.0;
+      ndx += 3;
+    }
+
+    pathPub.set(arr);
+  }
+
+  /**
    * Set the target robot pose
    *
    * @param targetPose Target robot pose
    */
   public static void setTargetPose(Pose2d targetPose) {
+    targetPosePub.set(
+        new double[] {targetPose.getX(), targetPose.getY(), targetPose.getRotation().getRadians()});
+  }
+
+  public static void setTargetPose(TrajectoryLib.Geometry.Pose2d targetPose) {
     targetPosePub.set(
         new double[] {targetPose.getX(), targetPose.getY(), targetPose.getRotation().getRadians()});
   }

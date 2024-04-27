@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import TrajectoryLib.util.TrajectoryTests;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -96,6 +97,8 @@ public class RobotContainer {
 
     configureBindings();
     DriverReadout.addChoosers(autonomousChooser);
+
+    SmartDashboard.putData("test", new InstantCommand(()->TrajectoryTests.trajectoryPPLibLogTest()));
   }
 
   //#region controller buttons
