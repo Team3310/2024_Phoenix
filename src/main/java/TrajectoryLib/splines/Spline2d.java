@@ -1,4 +1,4 @@
-package TrajectoryLib.Splines;
+package TrajectoryLib.splines;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 public class Spline2d{
     private Spline x, y;
     private Pose2dWithMotion start, end;
+    private final double TIME_RESOLUTION = 0.05;
 
     public Spline2d(Pose2dWithMotion start, Pose2dWithMotion end){
         this.x = new Spline(start.getX(), start.getVelocities().vxMetersPerSecond, end.getX(), end.getVelocities().vxMetersPerSecond);
@@ -59,5 +60,17 @@ public class Spline2d{
 
     public void printYCoefficients(){
         y.printCoefficients();
+    }
+
+    public double getTotalDistance(){
+        double dist = 0.0;
+
+        //sum the distance of each point of the path at some resolution
+        for (double t = TIME_RESOLUTION; t <= 1.0; t+=TIME_RESOLUTION) {
+            //gets the distance between the two points and adds it to total distance
+            dist += getPose(t).getTranslation().getDistance(getPose(t-TIME_RESOLUTION).getTranslation());
+        }
+
+        return dist;
     }
 }

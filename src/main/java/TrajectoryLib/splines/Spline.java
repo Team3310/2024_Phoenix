@@ -1,4 +1,4 @@
-package TrajectoryLib.Splines;
+package TrajectoryLib.splines;
 
 import TrajectoryLib.util.MathUtil;
 

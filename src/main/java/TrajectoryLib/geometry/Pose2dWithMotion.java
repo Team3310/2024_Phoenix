@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.Interpolatable;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import javafx.geometry.Pos;
 
 public class Pose2dWithMotion implements Interpolatable<Pose2dWithMotion> {
     private ChassisSpeeds velocity;
@@ -51,5 +52,17 @@ public class Pose2dWithMotion implements Interpolatable<Pose2dWithMotion> {
         return new Pose2dWithMotion(
                 pose.interpolate(other.pose, t),
                 interpVelocity(other.velocity, t));
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o instanceof Pose2dWithMotion){
+            Pose2dWithMotion other = (Pose2dWithMotion)o;
+            if(other.getVelocities().equals(getVelocities()) && other.getPose().equals(getPose())){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

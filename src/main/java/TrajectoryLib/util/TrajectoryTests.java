@@ -2,12 +2,12 @@ package TrajectoryLib.util;
 
 import com.pathplanner.lib.util.PPLibTelemetry;
 
-import TrajectoryLib.Splines.Spline2d;
 import TrajectoryLib.geometry.Pose2dWithMotion;
 import TrajectoryLib.path.Path;
 import TrajectoryLib.path.RotationTarget;
 import TrajectoryLib.path.Trajectory;
 import TrajectoryLib.path.Trajectory.State;
+import TrajectoryLib.splines.Spline2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 

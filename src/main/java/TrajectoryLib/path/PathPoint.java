@@ -17,6 +17,7 @@ public class PathPoint {
     public RotationTarget rotationTarget = null;
     /** The constraints applied to this point */
     public PathConstraints constraints = null;
+    public double waypointRelativeDistance = 0.0;
 
     /**
      * Create a path point
@@ -30,6 +31,18 @@ public class PathPoint {
         this.position = position;
         this.rotationTarget = rotationTarget;
         this.constraints = constraints;
+    }
+
+    /**
+     * Create a path point
+     *
+     * @param position       Position of the point
+     * @param rotationTarget Rotation target at this point
+     */
+    public PathPoint(Pose2dWithMotion position, RotationTarget rotationTarget, double relativeDistance) {
+        this.position = position;
+        this.rotationTarget = rotationTarget;
+        this.waypointRelativeDistance = relativeDistance;
     }
 
     /**
