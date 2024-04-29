@@ -8,17 +8,75 @@ import TrajectoryLib.path.RotationTarget;
 import TrajectoryLib.path.Trajectory;
 import TrajectoryLib.path.Trajectory.State;
 import TrajectoryLib.splines.Spline2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 
 public class TrajectoryTests {
     public static void main(String[] args) {
         try {
-            trajectoryGenerationTest(0.05);
+            // splineDistanceTest();
+            trajectoryReplanTest(0.05);
         } catch (Exception e) {
             e.printStackTrace();
         }
         
+    }
+
+    public static void splineDistanceTest(){
+        Pose2dWithMotion start = new Pose2dWithMotion(5.14, 3.77, Rotation2d.fromDegrees(0.0), 0.0, 0.0, 0.0);
+        Pose2dWithMotion end = new Pose2dWithMotion(8.9, 2.64, Rotation2d.fromDegrees(0.0), 1, -1.8, 0.0);
+        Pose2dWithMotion end2 = new Pose2dWithMotion(0.0, 3.77, Rotation2d.fromDegrees(0.0), 0, 0, 0.0);
+
+        Spline2d[] splines = {
+            new Spline2d(start, end),
+            new Spline2d(start, end2)
+        };
+        
+
+        System.out.println(splines[0].getTotalDistance());
+        System.out.println(splines[1].getTotalDistance());
+    }
+
+    public static void trajectoryReplanTest(double resolution){
+        Pose2dWithMotion start = new Pose2dWithMotion(5.14, 3.77, Rotation2d.fromDegrees(0.0), 0.0, 0.0, 0.0);
+        Pose2dWithMotion end = new Pose2dWithMotion(8.9, 2.64, Rotation2d.fromDegrees(0.0), 1, -1.8, 0.0);
+
+        Spline2d[] splines = {
+            new Spline2d(start, end)
+        };
+        RotationTarget[] rotationTargets = {
+            new RotationTarget(0.25, Rotation2d.fromDegrees(45.0)),
+            new RotationTarget(0.75, Rotation2d.fromDegrees(135)),
+        };
+
+        Path path = new Path(splines, rotationTargets).replan(new 
+            Pose2dWithMotion(
+                new Pose2d(7.5, 3.0, Rotation2d.fromDegrees(0.0)), 
+                new ChassisSpeeds(0.0, 0.0, 0)
+            )
+        );
+        Trajectory traj = new Trajectory(path, path.getPoint(0).position.getVelocities(), Rotation2d.fromDegrees(0.0));
+
+        String x = "", y = "", dx = "", dy = "";
+
+        for (double t = 0; t < traj.getTotaltime(); t+=resolution) {
+            State state = traj.sample(t);
+
+            // System.out.println(state);
+
+            x += Double.toString(state.getTargetPose().getX())+", ";
+            y += Double.toString(state.getTargetPose().getY())+", ";
+            dx += Double.toString(state.getTargetVectorVelocity().getX()+state.getTargetPose().getX())+", ";
+            dy += Double.toString(state.getTargetVectorVelocity().getY()+state.getTargetPose().getY())+", ";
+        }
+
+        System.out.println("Total Path Time: "+traj.getTotaltime());
+        System.out.println("X :\n"+x);
+        System.out.println("Y :\n"+y);
+        System.out.println("dX :\n"+dx);
+        System.out.println("dY :\n"+dy);
     }
 
     public static void trajectoryPPLibLogTest(){

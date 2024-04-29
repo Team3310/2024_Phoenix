@@ -11,7 +11,7 @@ import TrajectoryLib.splines.Spline;
 import TrajectoryLib.splines.Spline2d;
 
 public class Path {
-    public static final int NumOfSamplePoints = 20;
+    public static final int NumOfSamplePoints = 100;
 
     private List<PathPoint> points;
     private List<RotationTarget> rotationTargets;
@@ -80,7 +80,7 @@ public class Path {
 
         return points;
     }
-    
+
     public Path replan(Pose2dWithMotion currentState){
         //TODO tests how this affects multi-waypoint paths
         //may have to use the PathPoint relative distance to maintain
@@ -127,14 +127,16 @@ public class Path {
 
             for (int i = 0; i < points.size(); i++) {
                 Spline2d possible = new Spline2d(currentState, points.get(i).position);
+                // System.out.println(String.format("%.2f<%.2f", shorestDist, possible.getTotalDistance()));
                 if(possible.getTotalDistance()<=shorestDist){
                     shorestDist = possible.getTotalDistance();
                     joinIndex = i;
-                    if(shorestDist <= ShortestDistSkip){
-                        //we have a break point that if we are within some small value
-                        //we just choose that point and move on to save time
-                        break;
-                    }
+                    // System.out.println("new join index: "+joinIndex);
+                    // if(shorestDist <= ShortestDistSkip){
+                    //     //we have a break point that if we are within some small value
+                    //     //we just choose that point and move on to save time
+                    //     break;
+                    // }
                 }
             }
 
@@ -156,10 +158,12 @@ public class Path {
                 }
             }
 
+            System.out.println(joinPoint.position.toString());
+
             return new Path(
                 new Spline2d[]{
                     new Spline2d(currentState, joinPoint.position),
-                    new Spline2d(points.get(0).position, endPoint.position), 
+                    new Spline2d(joinPoint.position, endPoint.position), 
                 },
                 rotationTargets.toArray(new RotationTarget[0])
             );

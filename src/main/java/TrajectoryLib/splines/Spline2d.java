@@ -11,7 +11,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 public class Spline2d{
     private Spline x, y;
     private Pose2dWithMotion start, end;
-    private final double TIME_RESOLUTION = 0.05;
+    private final double TIME_RESOLUTION = 0.01;
 
     public Spline2d(Pose2dWithMotion start, Pose2dWithMotion end){
         this.x = new Spline(start.getX(), start.getVelocities().vxMetersPerSecond, end.getX(), end.getVelocities().vxMetersPerSecond);

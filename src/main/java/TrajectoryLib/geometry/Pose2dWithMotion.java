@@ -65,4 +65,9 @@ public class Pose2dWithMotion implements Interpolatable<Pose2dWithMotion> {
 
         return false;
     }
+
+    @Override
+    public String toString(){
+        return pose.toString()+"  "+velocity.toString();
+    }
 }
