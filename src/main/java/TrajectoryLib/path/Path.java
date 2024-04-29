@@ -90,6 +90,7 @@ public class Path {
         //TODO tests how this affects multi-waypoint paths
         //may have to use the PathPoint relative distance to maintain
         //the desired path shape when replanning
+        //TODO try just inserting points instead of computing new splines
 
         final double MaxMainPointDistance = 0.25; //meters
         final double ShortestDistSkip = 0.05; //meters
