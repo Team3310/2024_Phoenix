@@ -133,9 +133,10 @@ public class Path {
 
             for (int i = 0; i < points.size(); i++) {
                 Spline2d possible = new Spline2d(currentState, points.get(i).position);
+                Spline2d possible2 = new Spline2d(points.get(i).position, endPoint.position);
                 // System.out.println(String.format("%.2f<%.2f", shorestDist, possible.getTotalDistance()));
-                if(possible.getTotalDistance()<=shorestDist){
-                    shorestDist = possible.getTotalDistance();
+                if(possible.getTotalDistance()+possible2.getTotalDistance()<=shorestDist){
+                    shorestDist = possible.getTotalDistance()+possible2.getTotalDistance();
                     joinIndex = i;
                     // System.out.println("new join index: "+joinIndex);
                     // if(shorestDist <= ShortestDistSkip){
@@ -167,6 +168,8 @@ public class Path {
             System.out.println(currentState.toString());
             System.out.println(joinPoint.position.toString());
             System.out.println(endPoint.position.toString());
+
+            // new Spline2d(currentState, joinPoint.position),
 
             return new Path(
                 new Spline2d[]{

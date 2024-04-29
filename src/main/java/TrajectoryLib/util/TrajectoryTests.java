@@ -17,8 +17,8 @@ public class TrajectoryTests {
     public static void main(String[] args) {
         try {
             // splineDistanceTest();
-            // trajectoryReplanTest(0.05);
-            OptimizingTest();
+            trajectoryReplanTest(0.05);
+            // OptimizingTest();
         } catch (Exception e) {
             e.printStackTrace();
         }
