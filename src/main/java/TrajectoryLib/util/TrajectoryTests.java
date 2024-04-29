@@ -114,8 +114,8 @@ public class TrajectoryTests {
         System.out.println("Total Path Time: "+traj.getTotaltime());
         System.out.println("X :\n"+x);
         System.out.println("Y :\n"+y);
-        System.out.println("dX :\n"+dx);
-        System.out.println("dY :\n"+dy);
+        // System.out.println("dX :\n"+dx);
+        // System.out.println("dY :\n"+dy);
     }
 
     public static void trajectoryPPLibLogTest(){

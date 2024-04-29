@@ -133,10 +133,9 @@ public class Path {
 
             for (int i = 0; i < points.size(); i++) {
                 Spline2d possible = new Spline2d(currentState, points.get(i).position);
-                Spline2d possible2 = new Spline2d(points.get(i).position, endPoint.position);
                 // System.out.println(String.format("%.2f<%.2f", shorestDist, possible.getTotalDistance()));
-                if(possible.getTotalDistance()+possible2.getTotalDistance()<=shorestDist){
-                    shorestDist = possible.getTotalDistance()+possible2.getTotalDistance();
+                if(possible.getTotalDistance()<=shorestDist){
+                    shorestDist = possible.getTotalDistance();
                     joinIndex = i;
                     // System.out.println("new join index: "+joinIndex);
                     // if(shorestDist <= ShortestDistSkip){
@@ -169,15 +168,44 @@ public class Path {
             System.out.println(joinPoint.position.toString());
             System.out.println(endPoint.position.toString());
 
+            List<PathPoint> temp = new ArrayList<>();
+            List<RotationTarget> rotTargets = new LinkedList<RotationTarget>(rotationTargets);
+
+            double timeStep = 1.0 / ((double) NumOfSamplePoints);
+
+            Spline2d joinSpline = new Spline2d(currentState, joinPoint.position);
+
+            for (int j = 0; j < NumOfSamplePoints; j++) {
+                double t = j * timeStep;
+                RotationTarget target = null;
+                if (!rotTargets.isEmpty()) {
+                    if (Math.abs(rotTargets.get(0).forSegmentIndex(0).getPosition() - t) <= Math.abs(
+                            rotTargets.get(0).forSegmentIndex(0).getPosition() - Math.min(t + timeStep, 1.0))) {
+                        target = rotTargets.get(0);
+                        rotTargets.remove(0);
+                    }
+                }
+                temp.add(new PathPoint(joinSpline.getPoseWithMotion(j * timeStep), target, (j*timeStep)));
+            }
+
+            for(int i=joinIndex+1; i<numPoints(); i++){
+                temp.add(getPoint(i));
+            }
+
+            this.points = temp;
+            precalcValues();
+            
+            return this;
+
             // new Spline2d(currentState, joinPoint.position),
 
-            return new Path(
-                new Spline2d[]{
-                    new Spline2d(currentState, joinPoint.position),
-                    new Spline2d(joinPoint.position, endPoint.position), 
-                },
-                rotationTargets.toArray(new RotationTarget[0])
-            );
+            // return new Path(
+            //     new Spline2d[]{
+            //         new Spline2d(currentState, joinPoint.position),
+            //         new Spline2d(joinPoint.position, endPoint.position), 
+            //     },
+            //     rotationTargets.toArray(new RotationTarget[0])
+            // );
         }
     }
 
