@@ -50,8 +50,11 @@ public class Spline2d{
     }
 
     public void printCoefficients(){
+        System.out.print("(");
         printXCoefficients();
+        System.out.print(", ");
         printYCoefficients();
+        System.out.print(")\n");
     }
 
     public void printXCoefficients(){

@@ -45,11 +45,11 @@ public class Spline {
     }
 
     public void printCoefficients(){
-        System.out.println(String.format("c0: %.2f, c1: %.2f, c2: %.2f, c3: %.2f, c4: %.2f, c5: %.2f", c0, c1, c2, c3, c4, c5));
+        System.out.print(String.format("%.2f + %.2f*t + %.2f*t^2 + %.2f*t^3 + %.2f*t^4 + %.2f*t^5", c0, c1, c2, c3, c4, c5));
     }
 
     @Override
     public String toString(){
-        return String.format("c0: %.2f, c1: %.2f, c2: %.2f, c3: %.2f, c4: %.2f, c5: %.2f", c0, c1, c2, c3, c4, c5);
+        return String.format("%.2f + %.2f*t + %.2f*t^2 + %.2f*t^3 + %.2f*t^4 + %.2f*t^5", c0, c1, c2, c3, c4, c5);
     }
 }

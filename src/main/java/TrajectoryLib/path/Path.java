@@ -7,6 +7,7 @@ import java.util.List;
 
 import TrajectoryLib.geometry.GeometryUtil;
 import TrajectoryLib.geometry.Pose2dWithMotion;
+import TrajectoryLib.path.Trajectory.State;
 import TrajectoryLib.splines.Spline;
 import TrajectoryLib.splines.Spline2d;
 
@@ -19,6 +20,10 @@ public class Path {
     private PathConstraints globalConstraints;
 
     public Path(Spline2d[] splines, RotationTarget[] rotationTargets) {
+        for (Spline2d spline : splines) {
+            spline.printCoefficients();
+        }
+
         this.rotationTargets = Arrays.asList(rotationTargets);
         this.points = buildPoints(splines, rotationTargets);
         this.globalConstraints = new PathConstraints(5.0, 4.0, 2.0 * Math.PI, 2.0 * Math.PI);
@@ -158,7 +163,9 @@ public class Path {
                 }
             }
 
+            System.out.println(currentState.toString());
             System.out.println(joinPoint.position.toString());
+            System.out.println(endPoint.position.toString());
 
             return new Path(
                 new Spline2d[]{

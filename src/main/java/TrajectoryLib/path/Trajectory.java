@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import TrajectoryLib.geometry.GeometryUtil;
+import TrajectoryLib.geometry.Pose2dWithMotion;
 import TrajectoryLib.geometry.Vector2d;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -77,7 +78,7 @@ public class Trajectory {
                 state.adjustRotation(prevRotationTargetRot.interpolate(nextTarget.getTarget(), t));
             }
 
-            System.out.println(state.targetVelocity);
+            // System.out.println(state.targetVelocity);
 
             states.add(state);
         }
@@ -94,7 +95,7 @@ public class Trajectory {
                                     + (2 * constraints.getMaxAccelerationMpsSq() * states.get(i + 1).deltaPos)));
             states.get(i).adjustVectorVelocityMagnitude(Math.min(vMax, states.get(i).targetVectorVelocity.getMagnitude()));
 
-            System.out.println(states.get(i).targetVelocity);
+            // System.out.println(states.get(i).targetVelocity);
         }
 
         double time = 0;
@@ -107,7 +108,7 @@ public class Trajectory {
             double v = states.get(i).targetVectorVelocity.getMagnitude();
             double dt = (2 * states.get(i).deltaPos) / (v + v0);
 
-            System.out.println(states.get(i).targetVelocity);
+            // System.out.println(states.get(i).targetVelocity);
 
             time += dt;
             states.get(i).time = time;
@@ -308,6 +309,10 @@ public class Trajectory {
          */
         public ChassisSpeeds getTargetVelocity() {
             return targetVelocity;
+        }
+
+        public Pose2dWithMotion getState(){
+            return new Pose2dWithMotion(targetPose, targetVelocity);
         }
 
         @Override

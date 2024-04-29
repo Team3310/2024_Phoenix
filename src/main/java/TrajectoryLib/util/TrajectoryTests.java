@@ -17,11 +17,48 @@ public class TrajectoryTests {
     public static void main(String[] args) {
         try {
             // splineDistanceTest();
-            trajectoryReplanTest(0.05);
+            // trajectoryReplanTest(0.05);
+            OptimizingTest();
         } catch (Exception e) {
             e.printStackTrace();
         }
         
+    }
+
+    public static void OptimizingTest(){
+        Pose2dWithMotion start = new Pose2dWithMotion(5.14, 3.77, Rotation2d.fromDegrees(0.0), 0.0, 0.0, 0.0);
+        Pose2dWithMotion end = new Pose2dWithMotion(8.9, 2.64, Rotation2d.fromDegrees(0.0), 1, -1.8, 0.0);
+
+        Spline2d[] splines = {
+            new Spline2d(start, end)
+        };
+        RotationTarget[] rotationTargets = {
+            new RotationTarget(0.25, Rotation2d.fromDegrees(45.0)),
+            new RotationTarget(0.75, Rotation2d.fromDegrees(135)),
+        };
+
+        Path path = new Path(splines, rotationTargets);
+        path = path.replan(new 
+            Pose2dWithMotion(
+                new Pose2d(7.5, 3.0, Rotation2d.fromDegrees(0.0)), 
+                new ChassisSpeeds(0.0, 0.0, 0)
+            )
+        );
+        Trajectory traj = new Trajectory(path, start.getVelocities(), start.getRotation());
+
+        splines[0].printCoefficients();
+
+        for(int i=0; i<5; i++){
+            start = traj.getInitialState().getState();
+            end = traj.getEndState().getState();
+            
+            splines[0] = new Spline2d(start, end);
+
+            // splines[0].printCoefficients();
+
+            path = new Path(splines, rotationTargets);
+            traj = new Trajectory(path, start.getVelocities(), start.getRotation());
+        }
     }
 
     public static void splineDistanceTest(){
@@ -51,7 +88,9 @@ public class TrajectoryTests {
             new RotationTarget(0.75, Rotation2d.fromDegrees(135)),
         };
 
-        Path path = new Path(splines, rotationTargets).replan(new 
+        Path path = new Path(splines, rotationTargets);
+        System.out.println(path.getPoint(path.numPoints()-1).position.toString());
+        path = path.replan(new 
             Pose2dWithMotion(
                 new Pose2d(7.5, 3.0, Rotation2d.fromDegrees(0.0)), 
                 new ChassisSpeeds(0.0, 0.0, 0)
