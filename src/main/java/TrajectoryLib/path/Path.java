@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import TrajectoryLib.geometry.GeometryUtil;
 import TrajectoryLib.geometry.Pose2dWithMotion;
-import TrajectoryLib.path.Trajectory.State;
-import TrajectoryLib.splines.Spline;
+import TrajectoryLib.geometry.Vector2d;
 import TrajectoryLib.splines.Spline2d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class Path {
     public static final int NumOfSamplePoints = 100;
@@ -19,6 +24,8 @@ public class Path {
     private GoalEndState goalEndState;
     private PathConstraints globalConstraints;
 
+    public boolean preventFlipping = false;
+
     public Path(Spline2d[] splines, RotationTarget[] rotationTargets) {
         for (Spline2d spline : splines) {
             spline.printCoefficients();
@@ -26,6 +33,17 @@ public class Path {
 
         this.rotationTargets = Arrays.asList(rotationTargets);
         this.points = buildPoints(splines, rotationTargets);
+        this.globalConstraints = new PathConstraints(5.0, 4.0, 2.0 * Math.PI, 2.0 * Math.PI);
+        this.goalEndState = new GoalEndState(points.get(numPoints() - 1).position.getVelocities(),
+                points.get(numPoints() - 1).position.getRotation());
+
+        precalcValues();
+    }
+
+
+    public Path(List<PathPoint> points, List<RotationTarget> rotationTargets) {
+        this.rotationTargets = rotationTargets;
+        this.points = points;
         this.globalConstraints = new PathConstraints(5.0, 4.0, 2.0 * Math.PI, 2.0 * Math.PI);
         this.goalEndState = new GoalEndState(points.get(numPoints() - 1).position.getVelocities(),
                 points.get(numPoints() - 1).position.getRotation());
@@ -175,6 +193,32 @@ public class Path {
 
             Spline2d joinSpline = new Spline2d(currentState, joinPoint.position);
 
+            double v0 = Math.hypot(currentState.getVelocities().vxMetersPerSecond, currentState.getVelocities().vyMetersPerSecond);
+            double deltaPos = joinSpline.getTotalDistance();
+
+            double vMax = Math.sqrt(
+                        Math.abs(
+                                Math.pow(v0, 2)
+                                        + (2 * this.globalConstraints.getMaxAccelerationMpsSq() * deltaPos)));
+
+            if(Math.hypot(joinPoint.position.getVelocities().vxMetersPerSecond, joinPoint.position.getVelocities().vyMetersPerSecond)<vMax){
+                ChassisSpeeds speeds = joinPoint.position.getVelocities();
+                if(Math.abs(joinPoint.position.getVelocities().vxMetersPerSecond) < 0.01 &&  Math.abs(joinPoint.position.getVelocities().vyMetersPerSecond) < 0.01){
+                    Vector2d speed = new Vector2d(getPoint(joinIndex+1).position.getVelocities());
+                    speed.adjustMagnitude(vMax);
+
+                    speeds.vxMetersPerSecond = speed.getX();
+                    speeds.vyMetersPerSecond = speed.getY();
+                }       
+                Pose2dWithMotion changedJoinPoint = new Pose2dWithMotion( 
+                    joinPoint.position.getPose(),
+                    speeds
+                );
+                joinSpline = new Spline2d(currentState, changedJoinPoint);
+            }
+
+            
+
             for (int j = 0; j < NumOfSamplePoints; j++) {
                 double t = j * timeStep;
                 RotationTarget target = null;
@@ -207,6 +251,49 @@ public class Path {
             //     rotationTargets.toArray(new RotationTarget[0])
             // );
         }
+    }
+
+    public List<Pose2d> getPathPoses() {
+        return points.stream()
+            .map(p -> p.position.getPose())
+            .collect(Collectors.toList());
+    }
+
+    public Trajectory getTrajectory(
+      ChassisSpeeds startingSpeeds, Rotation2d startingRotation) {
+        return new Trajectory(this, startingSpeeds, startingRotation);
+    }
+
+    public Pose2d getPreviewStartingHolonomicPose() {
+        return getPoint(0).position.getPose();
+    }
+
+    public Path flipPath(){
+        List<PathPoint> flippedPoints = new ArrayList<>();
+
+        for (int i = numPoints()-1; i > 0; i--) {
+            PathPoint tempPoint = getPoint(i);
+
+            PathPoint flippedPoint = new PathPoint(
+                new Pose2dWithMotion(
+                    new Pose2d(
+                        GeometryUtil.flipFieldPosition(tempPoint.position.getPose().getTranslation()),
+                        tempPoint.position.getRotation()
+                        ), 
+                    new ChassisSpeeds(
+                        -tempPoint.position.getVelocities().vxMetersPerSecond, 
+                        tempPoint.position.getVelocities().vxMetersPerSecond, 
+                        tempPoint.position.getVelocities().omegaRadiansPerSecond
+                    )
+                ),
+                tempPoint.rotationTarget,
+                tempPoint.constraints
+            );
+
+            flippedPoints.add(flippedPoint);
+        }
+
+        return new Path(flippedPoints, this.rotationTargets);
     }
 
     public GoalEndState getGoalEndState() {

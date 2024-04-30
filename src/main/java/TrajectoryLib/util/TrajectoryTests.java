@@ -92,28 +92,39 @@ public class TrajectoryTests {
         System.out.println(path.getPoint(path.numPoints()-1).position.toString());
         path = path.replan(new 
             Pose2dWithMotion(
-                new Pose2d(7.5, 3.0, Rotation2d.fromDegrees(0.0)), 
+                new Pose2d(4.5, 3.0, Rotation2d.fromDegrees(0.0)), 
                 new ChassisSpeeds(0.0, 0.0, 0)
             )
         );
         Trajectory traj = new Trajectory(path, path.getPoint(0).position.getVelocities(), Rotation2d.fromDegrees(0.0));
 
-        String x = "", y = "", dx = "", dy = "";
+        PPLibTelemetry.setCurrentPath(path);
 
-        for (double t = 0; t < traj.getTotaltime(); t+=resolution) {
-            State state = traj.sample(t);
+        Timer timer = new Timer();
+        timer.start();
 
-            // System.out.println(state);
-
-            x += Double.toString(state.getTargetPose().getX())+", ";
-            y += Double.toString(state.getTargetPose().getY())+", ";
-            dx += Double.toString(state.getTargetVectorVelocity().getX()+state.getTargetPose().getX())+", ";
-            dy += Double.toString(state.getTargetVectorVelocity().getY()+state.getTargetPose().getY())+", ";
+        while (!timer.hasElapsed(traj.getTotaltime())) {
+            System.out.println(timer.get());
+            PPLibTelemetry.setVelocities(0.0, traj.sample(timer.get()).getTargetVectorVelocity().getMagnitude(), 0.0, traj.sample(timer.get()).getTargetVelocity().omegaRadiansPerSecond);
+            PPLibTelemetry.setTargetPose(traj.sample(timer.get()).getTargetPose());
         }
 
-        System.out.println("Total Path Time: "+traj.getTotaltime());
-        System.out.println("X :\n"+x);
-        System.out.println("Y :\n"+y);
+        // String x = "", y = "", dx = "", dy = "";
+
+        // for (double t = 0; t < traj.getTotaltime(); t+=resolution) {
+        //     State state = traj.sample(t);
+
+        //     // System.out.println(state);
+
+        //     x += Double.toString(state.getTargetPose().getX())+", ";
+        //     y += Double.toString(state.getTargetPose().getY())+", ";
+        //     dx += Double.toString(state.getTargetVectorVelocity().getX()+state.getTargetPose().getX())+", ";
+        //     dy += Double.toString(state.getTargetVectorVelocity().getY()+state.getTargetPose().getY())+", ";
+        // }
+
+        // System.out.println("Total Path Time: "+traj.getTotaltime());
+        // System.out.println("X :\n"+x);
+        // System.out.println("Y :\n"+y);
         // System.out.println("dX :\n"+dx);
         // System.out.println("dY :\n"+dy);
     }

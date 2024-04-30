@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.Interpolatable;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import javafx.geometry.Pos;
 
 public class Pose2dWithMotion implements Interpolatable<Pose2dWithMotion> {
     private ChassisSpeeds velocity;

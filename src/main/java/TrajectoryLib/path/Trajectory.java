@@ -231,7 +231,7 @@ public class Trajectory {
         private Pose2d targetPose;
         private ChassisSpeeds targetVelocity;
         private Vector2d targetVectorVelocity;
-        private PathConstraints constraints;
+        public PathConstraints constraints;
 
         private double deltaPos;
 

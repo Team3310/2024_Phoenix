@@ -4,6 +4,17 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 public class GeometryUtil {
+    private static final double FIELD_LENGTH = 16.54;
+
+    /**
+    * Flip a field position to the other side of the field, maintaining a blue alliance origin
+    *
+    * @param pos The position to flip
+    * @return The flipped position
+    */
+    public static Translation2d flipFieldPosition(Translation2d pos) {
+      return new Translation2d(FIELD_LENGTH - pos.getX(), pos.getY());
+    }
 
     /**
      * Interpolate between two doubles

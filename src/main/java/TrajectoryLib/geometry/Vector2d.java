@@ -2,6 +2,7 @@ package TrajectoryLib.geometry;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.Interpolatable;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class Vector2d implements Interpolatable<Vector2d> {
     private double magnitude;
@@ -10,6 +11,11 @@ public class Vector2d implements Interpolatable<Vector2d> {
     public Vector2d(double dx, double dy) {
         this.magnitude = Math.hypot(dx, dy);
         this.heading = new Rotation2d(dx, dy);
+    }
+
+    public Vector2d(ChassisSpeeds speeds) {
+        this.magnitude = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+        this.heading = new Rotation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
     }
 
     public Vector2d(double magnitude, Rotation2d heading) {

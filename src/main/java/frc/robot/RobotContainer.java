@@ -98,7 +98,7 @@ public class RobotContainer {
     configureBindings();
     DriverReadout.addChoosers(autonomousChooser);
 
-    SmartDashboard.putData("test", new InstantCommand(()->TrajectoryTests.trajectoryPPLibLogTest()));
+    SmartDashboard.putData("test", new InstantCommand(()->TrajectoryTests.trajectoryReplanTest(0.05)));
   }
 
   //#region controller buttons
