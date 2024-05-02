@@ -48,5 +48,6 @@
     "rotation": 54.78,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": true,
+  "isHermiteSpline": true
 }

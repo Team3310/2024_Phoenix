@@ -2,6 +2,7 @@
   "robotWidth": 0.91,
   "robotLength": 0.91,
   "holonomicMode": true,
+  "hermiteMode": true,
   "pathFolders": [
     "4Amp",
     "4Middle",
