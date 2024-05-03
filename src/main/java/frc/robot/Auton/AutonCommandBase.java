@@ -4,9 +4,9 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -43,8 +43,14 @@ public class AutonCommandBase extends SequentialCommandGroup {
     protected void resetRobotPose(PathPlannerPath path) {
         path.getTrajectory(new ChassisSpeeds(0, 0, 0), path.getStartingDifferentialPose().getRotation()).getInitialDifferentialPose();
         Pose2d start = path.getPreviewStartingHolonomicPose();
+
+        Translation2d delta = path.getPoint(path.numPoints()-1).position.minus(
+            start.getTranslation()
+        );
         
-        TunerConstants.DriveTrain.seedFieldRelative(start);   
+        TunerConstants.DriveTrain.seedFieldRelative(
+            new Pose2d(start.getTranslation().plus(delta.times(0.30)), start.getRotation())
+        );   
         TunerConstants.DriveTrain.seedFieldRelativeWithOffset(start.getRotation());  
     }
 
