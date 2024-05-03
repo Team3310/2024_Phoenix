@@ -1,12 +1,7 @@
 package com.pathplanner.lib.controllers;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.PIDConstants;
-
-import TrajectoryLib.path.Trajectory;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,6 +9,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /** Path following controller for holonomic drive trains */
 public class PPHolonomicDriveController implements PathFollowingController {
@@ -162,54 +159,6 @@ public class PPHolonomicDriveController implements PathFollowingController {
 
     return ChassisSpeeds.fromFieldRelativeSpeeds(
         xFF + xFeedback, yFF + yFeedback, rotationFF + rotationFeedback, currentPose.getRotation());
-  }
-
-  @Override
-  public ChassisSpeeds calculateFieldRelativeSpeeds(
-      Pose2d currentPose, Trajectory.State targetState) {
-    double xFF = targetState.getTargetVelocity().vxMetersPerSecond;
-    double yFF = targetState.getTargetVelocity().vyMetersPerSecond;
-
-    this.translationError = currentPose.getTranslation().minus(targetState.getTargetPose().getTranslation());
-
-    if (!this.isEnabled) {
-      return ChassisSpeeds.fromFieldRelativeSpeeds(xFF, yFF, 0, currentPose.getRotation());
-    }
-
-    double xFeedback =
-        this.xController.calculate(currentPose.getX(), targetState.getTargetPose().getTranslation().getX());
-    double yFeedback =
-        this.yController.calculate(currentPose.getY(), targetState.getTargetPose().getTranslation().getY());
-
-    double angVelConstraint = targetState.constraints.getMaxAngularVelocityRps();
-    double maxAngVel = angVelConstraint;
-
-    if (Double.isFinite(maxAngVel)) {
-      // Approximation of available module speed to do rotation with
-      double maxAngVelModule = Math.max(0, maxModuleSpeed - targetState.getTargetVectorVelocity().getMagnitude()) * mpsToRps;
-      maxAngVel = Math.min(angVelConstraint, maxAngVelModule);
-    }
-
-    var rotationConstraints =
-        new TrapezoidProfile.Constraints(
-            maxAngVel, targetState.constraints.getMaxAngularAccelerationRpsSq());
-
-    Rotation2d targetRotation = targetState.getTargetPose().getRotation();
-    if (rotationTargetOverride != null) {
-      targetRotation = rotationTargetOverride.get().orElse(targetRotation);
-    }
-
-    double rotationFeedback =
-        rotationController.calculate(
-            currentPose.getRotation().getRadians(),
-            new TrapezoidProfile.State(targetRotation.getRadians(), 0),
-            rotationConstraints);
-    double rotationFF =
-        0.0; // this is a choreo path thing which we are not using
-        // targetState.holonomicAngularVelocityRps.orElse(rotationController.getSetpoint().velocity);
-
-    return new ChassisSpeeds(
-        xFF + xFeedback, yFF + yFeedback, rotationFF + rotationFeedback);
   }
 
   /**

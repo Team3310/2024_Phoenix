@@ -1,10 +1,10 @@
 package com.pathplanner.lib.path;
 
 import com.pathplanner.lib.auto.CommandUtil;
+import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.PPLibTelemetry;
-
-import edu.wpi.first.hal.HAL;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
+import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,8 +13,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.util.Math.GeometryUtil;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -29,6 +27,7 @@ public class PathPlannerPath {
   private static int instances = 0;
 
   private List<Translation2d> bezierPoints;
+  private List<List<Translation2d>> hermitePoints;
   private List<RotationTarget> rotationTargets;
   private List<ConstraintsZone> constraintZones;
   private List<EventMarker> eventMarkers;
@@ -37,9 +36,9 @@ public class PathPlannerPath {
   private List<PathPoint> allPoints;
   private boolean reversed;
   private Rotation2d previewStartingRotation;
-  private ChassisSpeeds previewStartingSpeeds;
 
   private boolean isChoreoPath = false;
+  private boolean isHermitePath = false;
   private PathPlannerTrajectory choreoTrajectory = null;
 
   /**
@@ -51,7 +50,7 @@ public class PathPlannerPath {
   /**
    * Create a new path planner path
    *
-   * @param bezierPoints List of points representing the cubic Bezier curve of the path
+   * @param points List of points representing the control points of the path
    * @param holonomicRotations List of rotation targets along the path
    * @param constraintZones List of constraint zones along the path
    * @param eventMarkers List of event markers along the path
@@ -61,25 +60,33 @@ public class PathPlannerPath {
    * @param previewStartingRotation The settings used for previews in the UI
    */
   public PathPlannerPath(
-      List<Translation2d> bezierPoints,
+      List<?> points,
       List<RotationTarget> holonomicRotations,
       List<ConstraintsZone> constraintZones,
       List<EventMarker> eventMarkers,
       PathConstraints globalConstraints,
       GoalEndState goalEndState,
       boolean reversed,
-      Rotation2d previewStartingRotation,
-      ChassisSpeeds previewStartingSpeeds) {
-    this.bezierPoints = bezierPoints;
+      Rotation2d previewStartingRotation) {
+    if(points.get(0) instanceof List<?>){
+      this.hermitePoints = (List<List<Translation2d>>) points;
+      this.isHermitePath = true;
+    }else{
+      this.bezierPoints = (List<Translation2d>) points;
+    }
     this.rotationTargets = holonomicRotations;
     this.constraintZones = constraintZones;
     this.eventMarkers = eventMarkers;
     this.globalConstraints = globalConstraints;
     this.goalEndState = goalEndState;
     this.reversed = reversed;
-    this.allPoints = createPath(this.bezierPoints, this.rotationTargets, this.constraintZones);
+
+    if(isHermitePath){
+      this.allPoints = createHermitePath(this.hermitePoints, this.rotationTargets, this.constraintZones);
+    }else{
+      this.allPoints = createBezierPath(this.bezierPoints, this.rotationTargets, this.constraintZones);
+    }
     this.previewStartingRotation = previewStartingRotation;
-    this.previewStartingSpeeds = previewStartingSpeeds;
 
     precalcValues();
 
@@ -114,8 +121,7 @@ public class PathPlannerPath {
         globalConstraints,
         goalEndState,
         reversed,
-        Rotation2d.fromDegrees(0),
-        new ChassisSpeeds(0.0, 0.0, 0.0));
+        Rotation2d.fromDegrees(0));
   }
 
   /**
@@ -142,8 +148,7 @@ public class PathPlannerPath {
         constraints,
         goalEndState,
         reversed,
-        Rotation2d.fromDegrees(0),
-        new ChassisSpeeds(0.0, 0.0, 0.0));
+        Rotation2d.fromDegrees(0));
   }
 
   /**
@@ -411,8 +416,6 @@ public class PathPlannerPath {
   }
 
   private static PathPlannerPath fromJson(JSONObject pathJson) {
-    List<Translation2d> bezierPoints =
-        bezierPointsFromWaypointsJson((JSONArray) pathJson.get("waypoints"));
     PathConstraints globalConstraints =
         PathConstraints.fromJson((JSONObject) pathJson.get("globalConstraints"));
     GoalEndState goalEndState = GoalEndState.fromJson((JSONObject) pathJson.get("goalEndState"));
@@ -434,18 +437,31 @@ public class PathPlannerPath {
     }
 
     Rotation2d previewStartingRotation = Rotation2d.fromDegrees(0);
-    ChassisSpeeds previewStartingSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
     if (pathJson.containsKey("previewStartingState")) {
       JSONObject previewStartingStateJson = (JSONObject) pathJson.get("previewStartingState");
       if (previewStartingStateJson != null) {
         previewStartingRotation =
             Rotation2d.fromDegrees(
                 ((Number) previewStartingStateJson.get("rotation")).doubleValue());
-            double velocity = ((Number) previewStartingStateJson.get("velocity")).doubleValue();
-            previewStartingSpeeds = new ChassisSpeeds(velocity*Math.cos(previewStartingRotation.getRadians()), velocity*Math.sin(previewStartingRotation.getRadians()), 0.0);
       }
     }
 
+    if((boolean) pathJson.getOrDefault("isHermiteSpline", false)){
+      List<List<Translation2d>> hermitePoints = hermitePointsFromWaypointsJson((JSONArray) pathJson.get("waypoints"));
+      return new PathPlannerPath(
+        hermitePoints,
+        rotationTargets,
+        constraintZones,
+        eventMarkers,
+        globalConstraints,
+        goalEndState,
+        reversed,
+        previewStartingRotation);
+    }
+
+    List<Translation2d> bezierPoints =
+        bezierPointsFromWaypointsJson((JSONArray) pathJson.get("waypoints"));
+    
     return new PathPlannerPath(
         bezierPoints,
         rotationTargets,
@@ -454,8 +470,7 @@ public class PathPlannerPath {
         globalConstraints,
         goalEndState,
         reversed,
-        previewStartingRotation,
-        previewStartingSpeeds);
+        previewStartingRotation);
   }
 
   private static List<Translation2d> bezierPointsFromWaypointsJson(JSONArray waypointsJson) {
@@ -480,6 +495,50 @@ public class PathPlannerPath {
     bezierPoints.add(pointFromJson((JSONObject) lastPoint.get("anchor")));
 
     return bezierPoints;
+  }
+
+  private static List<List<Translation2d>> hermitePointsFromWaypointsJson(JSONArray waypointsJson) {
+    List<List<Translation2d>> hermitePoints = new ArrayList<>();
+
+    // First point
+    JSONObject firstPoint = (JSONObject) waypointsJson.get(0);
+    Translation2d anchor = pointFromJson((JSONObject) firstPoint.get("anchor"));
+    Translation2d control = pointFromJson((JSONObject) firstPoint.get("nextControl"));
+    hermitePoints.add(
+      Arrays.asList(
+        anchor,
+        new Translation2d(
+          control.getX() - anchor.getX(),
+          control.getY() - anchor.getY()
+        )
+      )
+    );
+
+    // Mid points
+    for (int i = 1; i < waypointsJson.size() - 1; i++) {
+      JSONObject point = (JSONObject) waypointsJson.get(i);
+      anchor = pointFromJson((JSONObject) point.get("anchor"));
+      hermitePoints.add(
+        Arrays.asList(
+          anchor,
+          pointFromJson((JSONObject) point.get("nextControl")).minus(anchor)
+        )
+      );
+    }
+
+    // Last point
+    JSONObject lastPoint = (JSONObject) waypointsJson.get(waypointsJson.size() - 1);
+    anchor = pointFromJson((JSONObject) lastPoint.get("anchor"));
+    hermitePoints.add(
+      Arrays.asList(
+        anchor,
+        pointFromJson((JSONObject) lastPoint.get("prevControl")).minus(anchor)
+      )
+    );
+
+    // System.out.println(hermitePoints.size());
+
+    return hermitePoints;
   }
 
   private static Translation2d pointFromJson(JSONObject pointJson) {
@@ -536,7 +595,7 @@ public class PathPlannerPath {
     return globalConstraints;
   }
 
-  private static List<PathPoint> createPath(
+  private static List<PathPoint> createBezierPath(
       List<Translation2d> bezierPoints,
       List<RotationTarget> holonomicRotations,
       List<ConstraintsZone> constraintZones) {
@@ -569,7 +628,48 @@ public class PathPlannerPath {
               .collect(Collectors.toList());
 
       PathSegment segment =
-          new PathSegment(p1, p2, p3, p4, segmentRotations, segmentZones, s == numSegments - 1);
+          new PathSegment(p1, p2, p3, p4, segmentRotations, segmentZones, s == numSegments - 1, false);
+      points.addAll(segment.getSegmentPoints());
+    }
+
+    return points;
+  }
+
+  private static List<PathPoint> createHermitePath(
+      List<List<Translation2d>> hermitePoints,
+      List<RotationTarget> holonomicRotations,
+      List<ConstraintsZone> constraintZones) {
+    if (hermitePoints.size() < 2) {
+      throw new IllegalArgumentException("Not enough hermite points");
+    }
+
+    List<PathPoint> points = new ArrayList<>();
+
+    int numSegments = hermitePoints.size()-1;
+    System.out.println("Num Segments: "+numSegments);
+    for (int s = 0; s < numSegments; s++) {
+      // int iOffset = s * 2;
+      Translation2d p1 = hermitePoints.get(s).get(0);
+      Translation2d v1 = hermitePoints.get(s).get(1);
+      Translation2d p2 = hermitePoints.get(s+1).get(0);
+      Translation2d v2 = hermitePoints.get(s+1).get(1);
+
+      int segmentIdx = s;
+      List<RotationTarget> segmentRotations =
+          holonomicRotations.stream()
+              .filter(
+                  target ->
+                      target.getPosition() >= segmentIdx && target.getPosition() <= segmentIdx + 1)
+              .map(target -> target.forSegmentIndex(segmentIdx))
+              .collect(Collectors.toList());
+      List<ConstraintsZone> segmentZones =
+          constraintZones.stream()
+              .filter(zone -> zone.overlapsRange(segmentIdx, segmentIdx + 1))
+              .map(zone -> zone.forSegmentIndex(segmentIdx))
+              .collect(Collectors.toList());
+
+      PathSegment segment =
+          new PathSegment(p1, v1, v2, p2, segmentRotations, segmentZones, s == numSegments - 1, true);
       points.addAll(segment.getSegmentPoints());
     }
 
@@ -654,10 +754,6 @@ public class PathPlannerPath {
     return goalEndState;
   }
 
-  public ChassisSpeeds getStartSpeeds(){
-    return previewStartingSpeeds;
-  }
-
   private static double getCurveRadiusAtPoint(int index, List<PathPoint> points) {
     if (points.size() < 3) {
       return Double.POSITIVE_INFINITY;
@@ -730,8 +826,7 @@ public class PathPlannerPath {
               currentFieldRelativeSpeeds.vxMetersPerSecond,
               currentFieldRelativeSpeeds.vyMetersPerSecond);
       robotNextControl =
-          startingPose.getTranslation().plus(new Translation2d(stoppingDistance, heading));
-      //next control is esentially a control point for the bezier curve to lerp on
+          startingPose.getTranslation().plus(new Translation2d(stoppingDistance / 2.0, heading));
     }
 
     int closestPointIdx = 0;
@@ -739,7 +834,6 @@ public class PathPlannerPath {
         (robotNextControl != null) ? robotNextControl : startingPose.getTranslation();
     double closestDist = positionDelta(comparePoint, getPoint(closestPointIdx).position);
 
-    //loops through all points which has about 20 per "segment" which is between waypoints
     for (int i = 1; i < numPoints(); i++) {
       double d = positionDelta(comparePoint, getPoint(i).position);
 
@@ -749,8 +843,6 @@ public class PathPlannerPath {
       }
     }
 
-    //note these if statements when true return
-    //if closest point is the end
     if (closestPointIdx == numPoints() - 1) {
       Rotation2d heading = getPoint(numPoints() - 1).position.minus(comparePoint).getAngle();
 
@@ -781,15 +873,11 @@ public class PathPlannerPath {
           globalConstraints,
           goalEndState,
           reversed,
-          previewStartingRotation,
-          previewStartingSpeeds);
-    } else if (
-        (closestPointIdx == 0 && robotNextControl == null)//closest is start of path and starting velocity is low
+          previewStartingRotation);
+    } else if ((closestPointIdx == 0 && robotNextControl == null)
         || (Math.abs(closestDist - startingPose.getTranslation().getDistance(getPoint(0).position))
                 <= 0.25
-            && linearVel < 0.1)) 
-        //or distance to closest path point is close to start and start velocity is low
-      {
+            && linearVel < 0.1)) {
       double distToStart = startingPose.getTranslation().getDistance(getPoint(0).position);
 
       Rotation2d heading = getPoint(0).position.minus(startingPose.getTranslation()).getAngle();
@@ -800,6 +888,22 @@ public class PathPlannerPath {
           allPoints.get(0).position.minus(allPoints.get(1).position).getAngle();
       Translation2d joinPrevControl =
           getPoint(0).position.plus(new Translation2d(distToStart / 2.0, joinHeading));
+
+      if(isHermitePath){
+        // replanning a hermite path is annoyingly complex just add points
+        PathSegment joinSegment =
+          new PathSegment(
+              startingPose.getTranslation(),
+              robotNextControl,
+              joinPrevControl,
+              getPoint(0).position,
+              false);
+        List<PathPoint> replannedPoints = new ArrayList<>();
+        replannedPoints.addAll(joinSegment.getSegmentPoints());
+        replannedPoints.addAll(allPoints);
+
+        return PathPlannerPath.fromPathPoints(replannedPoints, globalConstraints, goalEndState);
+      }
 
       if (bezierPoints.isEmpty()) {
         // We don't have any bezier points to reference
@@ -849,16 +953,11 @@ public class PathPlannerPath {
             globalConstraints,
             goalEndState,
             reversed,
-            previewStartingRotation,
-            previewStartingSpeeds);
+            previewStartingRotation);
       }
     }
-    //otherwise if closest point is somewhere were else in the middle
 
     int joinAnchorIdx = numPoints() - 1;
-    //checks where along the path distance wise after the closest point
-    //coincides with the the distance along the path + closest distance
-    //to see which point to join the path at
     for (int i = closestPointIdx; i < numPoints(); i++) {
       if (getPoint(i).distanceAlongPath
           >= getPoint(closestPointIdx).distanceAlongPath + closestDist) {
@@ -870,13 +969,11 @@ public class PathPlannerPath {
     Translation2d joinPrevControl = getPoint(closestPointIdx).position;
     Translation2d joinAnchor = getPoint(joinAnchorIdx).position;
 
-    if (robotNextControl == null) {//if starting velocity is low
-      double robotToJoinDelta = startingPose.getTranslation().getDistance(joinAnchor); //delta pos from start to point where joining
+    if (robotNextControl == null) {
+      double robotToJoinDelta = startingPose.getTranslation().getDistance(joinAnchor);
       Rotation2d heading = joinPrevControl.minus(startingPose.getTranslation()).getAngle();
       robotNextControl =
           startingPose.getTranslation().plus(new Translation2d(robotToJoinDelta / 3.0, heading));
-      //sets new next control point, the /3.0 seems arbitary. it affects the effective "strength" of the control point.
-      //I guess because the velocity is low you can go straight towards it then start to correct towards the actual path
     }
 
     if (joinAnchorIdx == numPoints() - 1) {
@@ -890,11 +987,19 @@ public class PathPlannerPath {
           globalConstraints,
           goalEndState,
           reversed,
-          previewStartingRotation,
-          previewStartingSpeeds);
-      //note upon looking at this it doesn't actually replan in accordance with starting speeds and rotation
-      //which is weird might not actually affect much but I could see potential issues
-      //the join is the end in this case so it should matter what your starting speed is
+          previewStartingRotation);
+    }
+
+    if(isHermitePath){
+      // replanning a hermite path is annoyingly complex just add points
+      PathSegment joinSegment =
+          new PathSegment(
+              startingPose.getTranslation(), robotNextControl, joinPrevControl, joinAnchor, false);
+      List<PathPoint> replannedPoints = new ArrayList<>();
+      replannedPoints.addAll(joinSegment.getSegmentPoints());
+      replannedPoints.addAll(allPoints.subList(joinAnchorIdx, allPoints.size()));
+
+      return PathPlannerPath.fromPathPoints(replannedPoints, globalConstraints, goalEndState);
     }
 
     if (bezierPoints.isEmpty()) {
@@ -909,10 +1014,6 @@ public class PathPlannerPath {
       return PathPlannerPath.fromPathPoints(replannedPoints, globalConstraints, goalEndState);
     }
 
-    //lines 916-1025 basically just do what the contructor would do but because it has to recalc
-    //bezier points it also checks all the rotation targets, constraints zones, and event markers
-
-    //lines 916-948 recalc the bezier control points
     // We can reference bezier points
     int nextWaypointIdx = (int) Math.ceil((joinAnchorIdx + 1) * PathSegment.RESOLUTION);
     int bezierPointIdx = nextWaypointIdx * 3;
@@ -947,7 +1048,6 @@ public class PathPlannerPath {
             nextWaypointPrevControl));
     replannedBezier.addAll(bezierPoints.subList(bezierPointIdx, bezierPoints.size()));
 
-    //lines 951-975 lerp along new bezier points to get the path
     double segment1Length = 0;
     Translation2d lastSegment1Pos = startingPose.getTranslation();
     double segment2Length = 0;
@@ -974,7 +1074,6 @@ public class PathPlannerPath {
 
     double segment1Pct = segment1Length / (segment1Length + segment2Length);
 
-    //lines 978-1025 takes the new lerped path and match rotation targets, constraints zones, and event markers along it
     List<RotationTarget> mappedTargets = new ArrayList<>();
     List<ConstraintsZone> mappedZones = new ArrayList<>();
     List<EventMarker> mappedMarkers = new ArrayList<>();
@@ -1035,9 +1134,7 @@ public class PathPlannerPath {
         globalConstraints,
         goalEndState,
         reversed,
-        previewStartingRotation,
-        previewStartingSpeeds);
-    //again doesn't change starting rotation and speeds which may or may not have an effect
+        previewStartingRotation);
   }
 
   /**
@@ -1111,17 +1208,12 @@ public class PathPlannerPath {
 
       path.allPoints = pathPoints;
       path.isChoreoPath = true;
-      path.choreoTrajectory = new PathPlannerTrajectory(mirroredStates);
+      path.choreoTrajectory =
+          new PathPlannerTrajectory(mirroredStates, choreoTrajectory.getEventCommands());
 
       return path;
     }
 
-    List<Translation2d> newBezier =
-        bezierPoints.stream().map(GeometryUtil::flipFieldPosition).collect(Collectors.toList());
-    newBezier.clear();    
-    for (Translation2d point : bezierPoints) {
-      newBezier.add(GeometryUtil.flipFieldPosition(point));
-    }        
     List<RotationTarget> newRotTargets =
         rotationTargets.stream()
             .map(
@@ -1138,8 +1230,21 @@ public class PathPlannerPath {
             goalEndState.shouldRotateFast());
     Rotation2d newPreviewRot = GeometryUtil.flipFieldRotation(previewStartingRotation);
 
-    PathPlannerPath newPath = new PathPlannerPath(
-        newBezier,
+    if(isHermitePath){
+      List<List<Translation2d>> newHermite = new ArrayList<>();
+
+      for (List<Translation2d> list : hermitePoints) {
+        newHermite.add(
+          Arrays.asList(
+            //flip just the pose not the velocities
+            GeometryUtil.flipFieldPosition(list.get(0)),
+            new Translation2d(-list.get(1).getX(), list.get(1).getY())
+          )
+        );
+      }
+
+        return new PathPlannerPath(
+        newHermite,
         newRotTargets,
         constraintZones,
         eventMarkers.stream()
@@ -1148,11 +1253,11 @@ public class PathPlannerPath {
         globalConstraints,
         newEndState,
         reversed,
-        newPreviewRot,
-        previewStartingSpeeds);
+        newPreviewRot);
+    }
 
-    // System.out.println("nf:"+bezierPoints.get(0)+"   f:"+GeometryUtil.flipFieldPosition(bezierPoints.get(0)));    
-    // System.out.println(newPath.getPreviewStartingHolonomicPose().getTranslation().toString());    
+    List<Translation2d> newBezier =
+        bezierPoints.stream().map(GeometryUtil::flipFieldPosition).collect(Collectors.toList());
 
     return new PathPlannerPath(
         newBezier,
@@ -1164,8 +1269,7 @@ public class PathPlannerPath {
         globalConstraints,
         newEndState,
         reversed,
-        newPreviewRot,
-        previewStartingSpeeds);
+        newPreviewRot);
   }
 
   /**
@@ -1213,6 +1317,7 @@ public class PathPlannerPath {
     if (o == null || getClass() != o.getClass()) return false;
     PathPlannerPath that = (PathPlannerPath) o;
     return Objects.equals(bezierPoints, that.bezierPoints)
+        && Objects.equals(hermitePoints, that.hermitePoints)
         && Objects.equals(rotationTargets, that.rotationTargets)
         && Objects.equals(constraintZones, that.constraintZones)
         && Objects.equals(eventMarkers, that.eventMarkers)
@@ -1224,6 +1329,7 @@ public class PathPlannerPath {
   public int hashCode() {
     return Objects.hash(
         bezierPoints,
+        hermitePoints,
         rotationTargets,
         constraintZones,
         eventMarkers,

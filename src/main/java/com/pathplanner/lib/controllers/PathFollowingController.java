@@ -1,8 +1,6 @@
 package com.pathplanner.lib.controllers;
 
 import com.pathplanner.lib.path.PathPlannerTrajectory;
-
-import TrajectoryLib.path.Trajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
@@ -40,6 +38,4 @@ public interface PathFollowingController {
    * @return True if this controller is for a holonomic drive train
    */
   boolean isHolonomic();
-
-  ChassisSpeeds calculateFieldRelativeSpeeds(Pose2d currentPose, Trajectory.State targetState);
 }

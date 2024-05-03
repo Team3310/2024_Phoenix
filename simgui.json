@@ -58,16 +58,13 @@
     }
   },
   "NetworkTables Info": {
+    "Connections": {
+      "open": true
+    },
     "NT3@127.0.0.1:61344": {
       "Publishers": {
         "open": true
       }
-    },
-    "Server": {
-      "Publishers": {
-        "open": true
-      },
-      "open": true
     },
     "visible": true
   }

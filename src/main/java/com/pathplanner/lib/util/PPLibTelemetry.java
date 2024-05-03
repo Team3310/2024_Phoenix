@@ -1,32 +1,20 @@
 package com.pathplanner.lib.util;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPoint;
-
-import TrajectoryLib.path.Path;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.networktables.DoubleArrayPublisher;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTableEvent;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableListener;
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /** Utility class for sending data to the PathPlanner app via NT4 */
 public class PPLibTelemetry {
@@ -95,28 +83,6 @@ public class PPLibTelemetry {
     int ndx = 0;
     for (PathPoint p : path.getAllPathPoints()) {
       Translation2d pos = p.position;
-      arr[ndx] = pos.getX();
-      arr[ndx + 1] = pos.getY();
-      // Just add 0 as a heading since it's not needed for displaying a path
-      arr[ndx + 2] = 0.0;
-      ndx += 3;
-    }
-
-    pathPub.set(arr);
-  }
-
-  /**
-   * Set the current path being followed
-   *
-   * @param path The current path
-   */
-  public static void setCurrentPath(Path path) {
-    double[] arr = new double[path.numPoints() * 3];
-
-    int ndx = 0;
-    for (TrajectoryLib.path.PathPoint p : path.getAllPathPoints()) {
-      System.out.println("brrrr");
-      Translation2d pos = new Translation2d(p.position.getPose().getX(), p.position.getPose().getY());
       arr[ndx] = pos.getX();
       arr[ndx + 1] = pos.getY();
       // Just add 0 as a heading since it's not needed for displaying a path

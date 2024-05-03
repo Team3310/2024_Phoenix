@@ -1,5 +1,8 @@
 package com.pathplanner.lib.util;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -16,6 +19,16 @@ public class GeometryUtil {
    */
   public static Translation2d flipFieldPosition(Translation2d pos) {
     return new Translation2d(FIELD_LENGTH - pos.getX(), pos.getY());
+  }
+
+  /**
+   * Flip a list of field positions to the other side of the field, maintaining a blue alliance origin
+   *
+   * @param pos The position to flip
+   * @return The flipped position
+   */
+  public static List<Translation2d> flipFieldPosition(List<Translation2d> poses) {
+    return poses.stream().map(GeometryUtil::flipFieldPosition).collect(Collectors.toList());
   }
 
   /**

@@ -1,0 +1,59 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 13.64,
+        "y": 6.9978551068213255
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 12.247351500417286,
+        "y": 6.191584922852387
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 13.652,
+        "y": 5.541275082550166
+      },
+      "prevControl": {
+        "x": 12.06877854784281,
+        "y": 5.497296708879134
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -2.5448043798132693,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 5.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 960.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "4Amp",
+  "previewStartingState": {
+    "rotation": 30.7,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true,
+  "isHermiteSpline": true
+}

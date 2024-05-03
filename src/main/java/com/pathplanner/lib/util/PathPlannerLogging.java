@@ -1,13 +1,10 @@
 package com.pathplanner.lib.util;
 
+import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.geometry.Pose2d;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import com.pathplanner.lib.path.PathPlannerPath;
-
-import TrajectoryLib.path.Path;
-import edu.wpi.first.math.geometry.Pose2d;
 
 /** Utility class for handling custom logging callbacks */
 public class PathPlannerLogging {
@@ -72,35 +69,7 @@ public class PathPlannerLogging {
    *
    * @param path The active path
    */
-  public static void logActivePath(Object path) {
-    if(path instanceof PathPlannerPath){
-      logActivePath((PathPlannerPath)path);
-    }else if(path instanceof Path){
-      logActivePath((Path)path);
-    }
-  }
-
-  /**
-   * Log the active path. This is used internally.
-   *
-   * @param path The active path
-   */
-  private static void logActivePath(PathPlannerPath path) {
-    if (logActivePath != null) {
-      if (path != null) {
-        logActivePath.accept(path.getPathPoses());
-      } else {
-        logActivePath.accept(new ArrayList<>());
-      }
-    }
-  }
-
-  /**
-   * Log the active path. This is used internally.
-   *
-   * @param path The active path
-   */
-  private static void logActivePath(Path path) {
+  public static void logActivePath(PathPlannerPath path) {
     if (logActivePath != null) {
       if (path != null) {
         logActivePath.accept(path.getPathPoses());

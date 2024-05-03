@@ -92,13 +92,13 @@ public class TrajectoryTests {
         System.out.println(path.getPoint(path.numPoints()-1).position.toString());
         path = path.replan(new 
             Pose2dWithMotion(
-                new Pose2d(4.5, 3.0, Rotation2d.fromDegrees(0.0)), 
+                new Pose2d(6.5, 3.0, Rotation2d.fromDegrees(0.0)), 
                 new ChassisSpeeds(0.0, 0.0, 0)
             )
         );
         Trajectory traj = new Trajectory(path, path.getPoint(0).position.getVelocities(), Rotation2d.fromDegrees(0.0));
 
-        PPLibTelemetry.setCurrentPath(path);
+        // PPLibTelemetry.setCurrentPath(path);
 
         Timer timer = new Timer();
         timer.start();
@@ -144,7 +144,7 @@ public class TrajectoryTests {
         Path path = new Path(splines, rotationTargets);
         Trajectory traj = new Trajectory(path, start.getVelocities(), start.getRotation());
 
-        PPLibTelemetry.setCurrentPath(path);
+        // PPLibTelemetry.setCurrentPath(path);
 
         Timer timer = new Timer();
         timer.start();

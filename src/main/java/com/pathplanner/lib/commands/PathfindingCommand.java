@@ -3,10 +3,7 @@ package com.pathplanner.lib.commands;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.*;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.GeometryUtil;
-import com.pathplanner.lib.util.PPLibTelemetry;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.util.*;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.MathUtil;
@@ -15,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -43,6 +41,8 @@ public class PathfindingCommand extends Command {
   private Pose2d startingPose;
 
   private double timeOffset = 0;
+
+  private boolean finish = false;
 
   /**
    * Constructs a new base pathfinding command that will generate a path towards the given path.
@@ -164,6 +164,7 @@ public class PathfindingCommand extends Command {
   public void initialize() {
     currentTrajectory = null;
     timeOffset = 0;
+    finish = false;
 
     Pose2d currentPose = poseSupplier.get();
 
@@ -180,7 +181,7 @@ public class PathfindingCommand extends Command {
 
     if (currentPose.getTranslation().getDistance(targetPose.getTranslation()) < 0.5) {
       output.accept(new ChassisSpeeds());
-      this.cancel();
+      finish = true;
     } else {
       Pathfinding.setStartPosition(currentPose.getTranslation());
       Pathfinding.setGoalPosition(targetPose.getTranslation());
@@ -191,6 +192,10 @@ public class PathfindingCommand extends Command {
 
   @Override
   public void execute() {
+    if (finish) {
+      return;
+    }
+
     Pose2d currentPose = poseSupplier.get();
     ChassisSpeeds currentSpeeds = speedsSupplier.get();
 
@@ -337,6 +342,10 @@ public class PathfindingCommand extends Command {
 
   @Override
   public boolean isFinished() {
+    if (finish) {
+      return true;
+    }
+
     if (targetPath != null && !targetPath.isChoreoPath()) {
       Pose2d currentPose = poseSupplier.get();
       ChassisSpeeds currentSpeeds = speedsSupplier.get();
@@ -375,5 +384,17 @@ public class PathfindingCommand extends Command {
     currentTrajectory = replanned.getTrajectory(currentSpeeds, currentPose.getRotation());
     PathPlannerLogging.logActivePath(replanned);
     PPLibTelemetry.setCurrentPath(replanned);
+  }
+
+  public static Command warmupCommand() {
+    return new PathfindHolonomic(
+            new Pose2d(15.0, 4.0, Rotation2d.fromDegrees(180)),
+            new PathConstraints(4, 3, 4, 4),
+            () -> new Pose2d(1.5, 4, new Rotation2d()),
+            ChassisSpeeds::new,
+            (speeds) -> {},
+            new HolonomicPathFollowerConfig(4.5, 0.4, new ReplanningConfig()))
+        .andThen(Commands.print("[PathPlanner] PathfindingCommand finished warmup"))
+        .ignoringDisable(true);
   }
 }

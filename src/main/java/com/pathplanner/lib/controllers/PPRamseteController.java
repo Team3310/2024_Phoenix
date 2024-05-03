@@ -1,8 +1,6 @@
 package com.pathplanner.lib.controllers;
 
 import com.pathplanner.lib.path.PathPlannerTrajectory;
-
-import TrajectoryLib.path.Trajectory;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -48,18 +46,6 @@ public class PPRamseteController extends RamseteController implements PathFollow
         targetState.getDifferentialPose(),
         targetState.velocityMps,
         targetState.headingAngularVelocityRps);
-  }
-
-  @Override
-  public ChassisSpeeds calculateFieldRelativeSpeeds(
-      Pose2d currentPose, Trajectory.State targetState) {
-    lastError = currentPose.getTranslation().getDistance(targetState.getTargetPose().getTranslation());
-
-    return calculate(
-        currentPose,
-        targetState.getTargetPose(),
-        targetState.getTargetVectorVelocity().getMagnitude(),
-        /*targetState.headingAngularVelocityRps*/0.0);
   }
 
   /**

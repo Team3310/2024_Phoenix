@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8724191734097757,
+        "x": 3.872419173409776,
         "y": 7.065858703145978
       },
       "isLocked": false,
@@ -48,5 +48,6 @@
     "rotation": 30.7,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": false,
+  "isHermiteSpline": true
 }
