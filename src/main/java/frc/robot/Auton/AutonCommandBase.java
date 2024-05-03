@@ -44,13 +44,13 @@ public class AutonCommandBase extends SequentialCommandGroup {
         path.getTrajectory(new ChassisSpeeds(0, 0, 0), path.getStartingDifferentialPose().getRotation()).getInitialDifferentialPose();
         Pose2d start = path.getPreviewStartingHolonomicPose();
 
-        Translation2d delta = path.getPoint(path.numPoints()-1).position.minus(
-            start.getTranslation()
-        );
+        // Translation2d delta = path.getPoint(path.numPoints()-1).position.minus(
+        //     start.getTranslation()
+        // );
+
+        // start = new Pose2d(start.getTranslation().plus(delta.times(1.5)), start.getRotation());
         
-        TunerConstants.DriveTrain.seedFieldRelative(
-            new Pose2d(start.getTranslation().plus(delta.times(0.30)), start.getRotation())
-        );   
+        TunerConstants.DriveTrain.seedFieldRelative(start);   
         TunerConstants.DriveTrain.seedFieldRelativeWithOffset(start.getRotation());  
     }
 
