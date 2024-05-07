@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8200950687615667,
-        "y": 3.7967995935991876
+        "x": 1.3509924162705473,
+        "y": 2.9318915780688717
       },
       "isLocked": false,
       "linkedName": null
@@ -20,28 +20,12 @@
         "y": 2.726659167610502
       },
       "prevControl": {
-        "x": 1.712704561997762,
-        "y": 3.009531464333023
+        "x": 2.321572449994785,
+        "y": 2.511560626290728
       },
       "nextControl": {
-        "x": 4.180267789107007,
-        "y": 2.3601727203454415
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.089154178308427,
-        "y": 3.79679959360564
-      },
-      "prevControl": {
-        "x": 4.652403055219373,
-        "y": 3.5179103222378205
-      },
-      "nextControl": {
-        "x": 6.305889183206938,
-        "y": 4.573750861787438
+        "x": 4.69334881526906,
+        "y": 3.606226641024711
       },
       "isLocked": false,
       "linkedName": null
@@ -52,8 +36,8 @@
         "y": 5.687869661460061
       },
       "prevControl": {
-        "x": 9.44301317174063,
-        "y": 6.4941398454225485
+        "x": 9.41369425595994,
+        "y": 6.4355020138611705
       },
       "nextControl": null,
       "isLocked": false,
@@ -81,5 +65,6 @@
     "velocity": 0
   },
   "useDefaultConstraints": true,
-  "isHermiteSpline": true
+  "isHermiteSpline": true,
+  "overrideIsHermite": null
 }

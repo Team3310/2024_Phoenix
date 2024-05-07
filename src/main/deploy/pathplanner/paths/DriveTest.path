@@ -65,5 +65,6 @@
     "velocity": 0
   },
   "useDefaultConstraints": true,
-  "isHermiteSpline": true
+  "isHermiteSpline": false,
+  "overrideIsHermite": false
 }
