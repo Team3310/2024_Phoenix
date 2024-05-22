@@ -1,13 +1,23 @@
 package frc.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Interpolable.InterpolatingDouble;
 import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
     public static final boolean debug = false;
+
+    //#region controller
+        public static final boolean ONE_CONTROLLER = false;
+
+        // 2 controller setup
+        public static final int DRIVER_PORT = 0;
+        public static final int OP_PORT = 1;
+
+        // 1 controller setup
+        public static final int ONE_PORT = 0;
+    //#endregion
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;

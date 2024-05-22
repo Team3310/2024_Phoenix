@@ -4,25 +4,15 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Auton.AutonCommandBase;
-import frc.robot.Auton.DriveTest;
-import frc.robot.Auton.Paths;
-import frc.robot.Commands.Climber.ClimbControlJoysticks;
 import frc.robot.Commands.Climber.ClimberAutoZero;
-import frc.robot.Commands.Climber.ClimberPrepNoAngle;
 import frc.robot.Commands.Climber.SetClimberInches;
-import frc.robot.Commands.Climber.SetClimberUpDown;
 import frc.robot.Commands.Drive.SetDriveMode;
-import frc.robot.Commands.Drive.SetDriveOrientation;
 import frc.robot.Commands.Drive.SetTarget;
 import frc.robot.Commands.Elevator.SetElevatorInches;
 import frc.robot.Commands.Flicker.LoadAmp;
@@ -40,7 +30,6 @@ import frc.robot.Commands.Shooter.ShooterOn;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
-import frc.robot.Subsystems.Drivetrain.DriveOrientation;
 import frc.robot.Subsystems.Elevator;
 import frc.robot.Subsystems.Flicker;
 import frc.robot.Subsystems.Intake;
@@ -53,11 +42,13 @@ import frc.robot.util.DriverReadout;
 import frc.robot.util.Camera.Targeting.TargetSimple;
 import frc.robot.util.Choosers.AutonomousChooser;
 import frc.robot.util.Choosers.AutonomousChooser.AutonomousMode;
-import frc.robot.util.Interpolable.InterpolatingDouble;
 
 public class RobotContainer {
-  private final CommandXboxController driverController = new CommandXboxController(0);
-  private final CommandXboxController operatorController = new CommandXboxController(1);
+  private final CommandXboxController driverController = new CommandXboxController(Constants.DRIVER_PORT);
+  private final CommandXboxController operatorController = new CommandXboxController(Constants.OP_PORT);
+  
+  private final CommandXboxController oneController = new CommandXboxController(Constants.ONE_PORT);
+
 
   public final Drivetrain drivetrain;
   public final Intake intake;
@@ -189,7 +180,7 @@ public class RobotContainer {
     operatorController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3500); shooter.setRightMainRPM(2500); lift.setLiftAngle(39.5);})); // platform
     operatorController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);})); // fender
     operatorController.b().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3400-200.0-100.0); shooter.setRightMainRPM(2200-200.0-100.0); lift.setLiftAngle(45.0);})); // pass
- //   operatorController.b().onTrue(new SetTarget(TargetSimple.CENTERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
+    //operatorController.b().onTrue(new SetTarget(TargetSimple.CENTERPASS).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK)); // auto speaker track
  
     // CommandScheduler.getInstance().setDefaultCommand(climber, new ClimbControlJoysticks(climber, operatorController));
 
@@ -210,14 +201,76 @@ public class RobotContainer {
     // operatorController.y().onTrue(new InstantCommand(()->flicker.setPosition(1.0)));
   }
 
+  /**
+   * sets the bindings for controller when using only one
+   */
+  private void configureOneController(){
+    //driving
+      // drive control
+    drivetrain.setDriveController(oneController);
+      // zero
+    oneController.povLeft().onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)
+      .andThen(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()))
+      .andThen(new SetDriveMode(DriveMode.JOYSTICK)));
+
+    // intake
+      // intake shooter
+    oneController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
+      // intake amp
+    oneController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
+      // eject
+    oneController.b().onTrue(new IntakeEject()).onFalse(new StopAllIntakes());
+      // transfer
+    oneController.a().onTrue(new IntakeAmpToShooter());
+
+    // shooting
+      // score
+    oneController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker)).onFalse(new ScoreOffCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
+      // auto aim
+    oneController.leftBumper().onTrue(new SetTarget(TargetSimple.SPEAKER).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
+      // pass - left paddle
+    oneController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3400-200.0-100.0); shooter.setRightMainRPM(2200-200.0-100.0); lift.setLiftAngle(45.0);}));
+      // fender - right paddle
+    oneController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);}));
+
+    // climb
+      // climbers up
+    oneController.back().onTrue(new SetClimberInches(climber, Constants.CLIMBER_MAX_INCHES).alongWith(new SetDriveMode(DriveMode.JOYSTICK)).alongWith(new SetLiftOff(lift)).alongWith(new ShooterOff(shooter)));
+      // climbers down
+    oneController.start().onTrue(new SetClimberInches(climber, Constants.CLIMBER_MIN_INCHES).alongWith(new SetDriveMode(DriveMode.JOYSTICK)).alongWith(new SetLiftOff(lift)).alongWith(new ShooterOff(shooter)));
+    
+    // elevator
+      // trap
+    oneController.povUp().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MAX_INCHES).alongWith(new LoadAmp(flicker)));
+      // amp
+    oneController.povRight().onTrue(new SetElevatorInches(elevator, Constants.AMP_SCORE_INCHES).alongWith(new LoadAmp(flicker)));
+      // down
+    oneController.povDown().onTrue(new SetElevatorInches(elevator, Constants.ELEVATOR_MIN_INCHES));
+  }
+
+  /**
+   * configure the bindings for controllers
+   * @param isOne using one or two controller set up
+   */
+  private void configureControllers(boolean isOne){
+    if(isOne){
+      configureOneController();
+    }else{
+      configureDriverController();
+      configureOperatorController();
+    }
+  }
+
   private void configureBindings() {
+    // configure human controllers
+    configureControllers(Constants.ONE_CONTROLLER);
+
+    //always want these offset buttons for comp
+    addOffsetButtons();
+    //only if we need to debug things
     if(Constants.debug){
       addTestButtons();
     }
-    configureDriverController();
-    configureOperatorController();
-    //always want these offset buttons for comp
-    addOffsetButtons();
 
     // SmartDashboard.putString("red start pose", PathPlannerPath.fromPathFile("2Amp").flipPath().getPreviewStartingHolonomicPose().getRotation().plus(new Rotation2d(Math.PI)).toString());
     // SmartDashboard.putString("blue start pose", PathPlannerPath.fromPathFile("2Amp").getPreviewStartingHolonomicPose().getRotation().toString());

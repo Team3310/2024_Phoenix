@@ -38,6 +38,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -97,7 +98,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     private FollowPathCommand pathFollower;
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    private CommandXboxController joystick = new CommandXboxController(0);
     private final double STICK_DEADBAND = 0.1;
 
     private final SwerveRequest.ApplyChassisSpeeds autoRequest = new SwerveRequest.ApplyChassisSpeeds();
@@ -246,6 +247,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
         // yawOffset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?2.0:0.0;
         SmartDashboard.putData(field);
+    }
+
+    public void setDriveController(CommandXboxController controller){
+        this.joystick = controller;
     }
 
     public void setTeleopCurrentLimits(){
