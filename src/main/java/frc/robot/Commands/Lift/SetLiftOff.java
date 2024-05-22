@@ -30,6 +30,6 @@ public class SetLiftOff extends Command{
 
     @Override
     public void end(boolean interrupted){
-        lift.setLiftOff();
+        // lift.setLiftOff();
     }
 }

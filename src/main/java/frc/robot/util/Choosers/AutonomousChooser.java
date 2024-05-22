@@ -17,6 +17,9 @@ import frc.robot.Auton.Middle.Amp.AmpOIAN2;
 import frc.robot.Auton.Middle.Amp.AmpOIAN2AN3;
 import frc.robot.Auton.Middle.Amp.AmpOIC;
 import frc.robot.Auton.Middle.Center.CenterFive;
+import frc.robot.Auton.Middle.Center.CenterFiveAmp;
+import frc.robot.Auton.Middle.Center.CenterFiveOver;
+import frc.robot.Auton.Middle.Center.CenterFiveSource;
 import frc.robot.Auton.Middle.Center.norm.CenterFiveACS;
 import frc.robot.Auton.Middle.Center.norm.CenterFiveASC;
 import frc.robot.Auton.Middle.Center.norm.CenterFiveCAS;
@@ -28,6 +31,7 @@ import frc.robot.Auton.Middle.Center.shifted.CenterFiveCSSO;
 import frc.robot.Auton.Middle.Center.shifted.CenterFiveSCSO;
 import frc.robot.Auton.Middle.Center.shifted.CenterFiveSSOC;
 import frc.robot.Auton.Middle.Source.Playoff624;
+import frc.robot.Auton.Middle.Source.SourceICO;
 import frc.robot.Auton.Middle.Source.SourceICP;
 import frc.robot.Auton.Middle.Source.SourceIOC;
 import frc.robot.Auton.Middle.Source.SourceIOP;
@@ -55,6 +59,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.SOURCE_OCI)
         .addOption(AutonomousMode.SOURCE_IOC)
         .addOption(AutonomousMode.SOURCE_ICP)
+        .addOption(AutonomousMode.SOURCE_ICO)
         .addOption(AutonomousMode.SOURCE_ICPS)
         .addOption(AutonomousMode.SOURCE_IOP)
         //#endregion
@@ -82,6 +87,9 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.CENTER_SCSO)
         .addOption(AutonomousMode.CENTER_SSOC)
         .addOption(AutonomousMode.CENTER_FIVE)
+        .addOption(AutonomousMode.CENTER_FIVE_OVER)
+        .addOption(AutonomousMode.CENTER_FIVE_AMP)
+        .addOption(AutonomousMode.CENTER_FIVE_SOURCE)
         //#endregion
         //#region counter
         .addOption(AutonomousMode.PLAYOFFS624)
@@ -112,6 +120,7 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         SOURCE_IOC("source IOC"),
         SOURCE_IOP("source IOP"),
         SOURCE_ICP("source ICP"),
+        SOURCE_ICO("source ICO"),
         SOURCE_ICPS("source ICP under stage"),
         //#endregion
         //#region amp
@@ -137,7 +146,10 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         CENTER_CSOS("Center CSOS"),
         CENTER_SCSO("Center SCSO"),
         CENTER_SSOC("Center SSOC"),
-        CENTER_FIVE("Center 5"),
+        CENTER_FIVE("Center Five Center"),
+        CENTER_FIVE_OVER("Center Five Center Over"),
+        CENTER_FIVE_AMP("Center Five Amp"),
+        CENTER_FIVE_SOURCE("Center Five Source"),
         //#endregion
         //#region test
         DRIVE_TEST("drive test forward and back"),
@@ -185,6 +197,8 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new SourceIOC(RobotContainer.getInstance());
                 case SOURCE_ICP:
                     return new SourceICP(RobotContainer.getInstance(), CNPNPath.CN);
+                case SOURCE_ICO:
+                    return new SourceICO(RobotContainer.getInstance());
                 case SOURCE_ICPS:
                     return new SourceICP(RobotContainer.getInstance(), CNPNPath.CCNS);
                 //#endregion
@@ -233,6 +247,12 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new CenterFiveSCSO(RobotContainer.getInstance());
                 case CENTER_FIVE:
                     return new CenterFive(RobotContainer.getInstance());
+                case CENTER_FIVE_OVER:
+                    return new CenterFiveOver(RobotContainer.getInstance());
+                case CENTER_FIVE_AMP:
+                    return new CenterFiveAmp(RobotContainer.getInstance());
+                case CENTER_FIVE_SOURCE:
+                    return new CenterFiveSource(RobotContainer.getInstance());
                 //#endregion
                 //#region counter
                 case PLAYOFFS624:

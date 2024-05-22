@@ -7,7 +7,7 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
-    public static final boolean debug = true;
+    public static final boolean debug = false;
 
     //#region Intake
         public static final double INTAKE_GEAR_RATIO = 12.0/30.0;
@@ -73,26 +73,27 @@ public class Constants {
             kLiftAngleMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(62.0));
             kLiftAngleMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(62.0));
             kLiftAngleMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(46.0));
-            kLiftAngleMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(33.0));
-            kLiftAngleMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(26.0));
-            kLiftAngleMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(23.0+0.5));
-            kLiftAngleMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.25));
+            kLiftAngleMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(33.0+1.0+0.5));
+            kLiftAngleMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(26.0+0.5));
+            kLiftAngleMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(23.0+0.5-.5+1.25));
+            kLiftAngleMap.put(new InterpolatingDouble(24.0), new InterpolatingDouble(20.25-1.0));
             kLiftAngleMap.put(new InterpolatingDouble(28.0), new InterpolatingDouble(18.75));
             kLiftAngleMap.put(new InterpolatingDouble(32.0), new InterpolatingDouble(18.5));
             kLiftAngleMap.put(new InterpolatingDouble(40.0), new InterpolatingDouble(19.0));
         }
 
+        //- left; + right
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kAutoAimOffset = new InterpolatingTreeMap<>();
         static {
             kAutoAimOffset.put(new InterpolatingDouble(3.0), new InterpolatingDouble(0.0));
             kAutoAimOffset.put(new InterpolatingDouble(4.7), new InterpolatingDouble(0.0));
-            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-4.0)); // -4.0
-            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-4.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(12.0), new InterpolatingDouble(-4.0+2.0+2.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(16.0), new InterpolatingDouble(-4.0+1.25+0.5+2.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(20.0), new InterpolatingDouble(-4.0+1.25+1.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(24.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(28.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(32.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
+            kAutoAimOffset.put(new InterpolatingDouble(40.0), new InterpolatingDouble(-4.0+5.0)); // -4.0
         }
  
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
@@ -192,7 +193,7 @@ public class Constants {
         public static final double AMP_LOAD_RPM = 800.0;
         public static final double AMP_INTAKE_RPM = 1500.0;
         public static final double AMP_EJECT_RPM = -800.0;
-        public static final double TRAP_SCORE_RPM = -800.0;
+        public static final double TRAP_SCORE_RPM = -1600.0;
     //#endregion
 
     //#region Climber
@@ -221,7 +222,7 @@ public class Constants {
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters
 
     public static final class SnapConstants {
-        public static final double kP = 1.5;
+        public static final double kP = 1.125; //1.5
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.0;
@@ -238,7 +239,7 @@ public class Constants {
     }
 
     public static final class SnapAutonConstants {
-        public static final double kP = 1.5;
+        public static final double kP = 1.0;
         public static final double kI = 0.05;
         public static final double kD = 0.0;
         public static final double kTimeout = 0.25;

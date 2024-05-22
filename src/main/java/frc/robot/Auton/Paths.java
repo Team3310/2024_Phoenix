@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Subsystems.Lift;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 
@@ -95,6 +96,8 @@ public class Paths {
     public final PathPlannerPath CCN_CLOSE;
     public final PathPlannerPath CENTER_AMP;
     public final PathPlannerPath CENTER_PODIUM;
+    public final PathPlannerPath CENTER_THROUGH;
+    public final PathPlannerPath CS_CENTER;
 
     public final PathPlannerPath CLOSE_STAGE_END;
 
@@ -210,6 +213,8 @@ public class Paths {
             CCN_CLOSE = PathPlannerPath.fromPathFile("CCN_CLOSE").flipPath();
             CENTER_AMP = PathPlannerPath.fromPathFile("CENTER_AMP").flipPath();
             CENTER_PODIUM = PathPlannerPath.fromPathFile("CENTER_PODIUM").flipPath();
+            CENTER_THROUGH = PathPlannerPath.fromPathFile("CENTER_THROUGH").flipPath();
+            CS_CENTER = PathPlannerPath.fromPathFile("CS_CENTER").flipPath();
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd").flipPath(); 
 
@@ -309,6 +314,8 @@ public class Paths {
             CCN_CLOSE = PathPlannerPath.fromPathFile("CCN_CLOSE");
             CENTER_AMP = PathPlannerPath.fromPathFile("CENTER_AMP");
             CENTER_PODIUM = PathPlannerPath.fromPathFile("CENTER_PODIUM");
+            CENTER_THROUGH = PathPlannerPath.fromPathFile("CENTER_THROUGH");
+            CS_CENTER = PathPlannerPath.fromPathFile("CS_CENTER");
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd");
 
@@ -318,6 +325,9 @@ public class Paths {
             SM_GRAB_CLOSE = PathPlannerPath.fromPathFile("SMGrabClose");
             PLAYOFFS624 = PathPlannerPath.fromPathFile("624");
         }
+
+        Lift.getInstance().resetLiftOffset();
+        TunerConstants.DriveTrain.resetYawoffset();
     }
 
     public void flip() {

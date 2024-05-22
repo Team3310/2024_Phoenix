@@ -16,10 +16,12 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Swerve.TunerConstants;
+import frc.robot.util.Choosers.SideChooser.SideMode;
 
 public class Lift extends SubsystemBase {
     private static Lift instance;
@@ -128,6 +130,9 @@ public class Lift extends SubsystemBase {
         liftPositionRevs.setUpdateFrequency(200);
 
         liftClosedLoopOutput = LiftClosedLoopOutputType.Voltage;
+
+        // offset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?0.0:0.0;
+        
     }
 
     public void setLiftAngle(double degrees) {
@@ -178,7 +183,7 @@ public class Lift extends SubsystemBase {
     }
 
     public void resetLiftOffset(){
-        offset = 0.0;
+        offset = DriverStation.getAlliance().get()==SideMode.BLUE.getAlliance()?0.25:0.0;
     }
 
     public double getOffset(){

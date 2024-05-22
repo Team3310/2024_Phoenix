@@ -2,5 +2,6 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.format.settings.url": ".vscode/java-formatter.xml",
     "java.debug.settings.onBuildFailureProceed": true,
-    "java.dependency.packagePresentation": "hierarchical"
+    "java.dependency.packagePresentation": "hierarchical",
+    "wpilib.selectDefaultSimulateExtension": true
 }

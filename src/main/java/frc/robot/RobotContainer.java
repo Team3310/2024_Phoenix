@@ -77,6 +77,8 @@ public class RobotContainer {
   public RobotContainer() {
     instance = this;
 
+    drivetrain = TunerConstants.DriveTrain;
+    
     lift = Lift.getInstance();
     shooter = Shooter.getInstance();
     intake = Intake.getInstance();
@@ -84,7 +86,6 @@ public class RobotContainer {
     climber = Climber.getInstance();
     flicker = Flicker.getInstance();
     led = LED.getInstance();
-    drivetrain = TunerConstants.DriveTrain;
 
     autonomousChooser = new AutonomousChooser();
 
@@ -101,8 +102,8 @@ public class RobotContainer {
   public void configureDriverController(){
     // intake
     // driverController.rightTrigger(0.5).onTrue(new IntakeAuton()).onFalse(new SetDriveMode(DriveMode.JOYSTICK).andThen(new StopAllIntakes()));
-    driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
     // driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
+    driverController.rightTrigger(0.5).onTrue(new SetDriveMode(DriveMode.AIM_AT_NOTE)).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
     // driverController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
     // driverController.leftTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
     driverController.leftTrigger(0.5).onTrue(new InstantCommand(()->drivetrain.setSoFine(true))).onFalse(new InstantCommand(()->drivetrain.setSoFine(false)));
@@ -265,6 +266,9 @@ public class RobotContainer {
       SmartDashboard.putData("increase lift offset", new InstantCommand(()->lift.adjustLiftOffset(0.25)));
       SmartDashboard.putData("decrease lift offset", new InstantCommand(()->lift.adjustLiftOffset(-0.25)));
       SmartDashboard.putData("reset lift offset", new InstantCommand(()->lift.resetLiftOffset()));
+      SmartDashboard.putData("increase yaw offset", new InstantCommand(()->drivetrain.increaseYawoffset()));
+      SmartDashboard.putData("reset yaw offset", new InstantCommand(()->drivetrain.resetYawoffset()));
+      SmartDashboard.putData("decrease yaw offset", new InstantCommand(()->drivetrain.decreaseYawoffset()));
 
       if(Constants.debug){
         SmartDashboard.putData("increase yaw offset", new InstantCommand(()->drivetrain.increaseYawoffset()));

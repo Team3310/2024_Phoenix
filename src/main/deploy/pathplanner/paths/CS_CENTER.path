@@ -3,48 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.29,
-        "y": 4.3
+        "x": 4.620051525817337,
+        "y": 4.866940019594326
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.161221742443485,
-        "y": 4.177945498748141
+        "x": 4.282883994339417,
+        "y": 5.174788635291557
       },
       "isLocked": false,
-      "linkedName": "CCN"
+      "linkedName": "CS"
     },
     {
       "anchor": {
-        "x": 5.162451467760079,
-        "y": 4.397837367103306
+        "x": 3.593889473493233,
+        "y": 5.529873281968787
       },
       "prevControl": {
-        "x": 5.7576814369488165,
-        "y": 3.8891035035095696
+        "x": 4.151719890165676,
+        "y": 5.529873281968787
       },
       "nextControl": {
-        "x": 4.356236674687896,
-        "y": 5.086896701808922
+        "x": 3.0360590568207892,
+        "y": 5.529873281968787
       },
       "isLocked": false,
-      "linkedName": "MiddleStageCenter"
-    },
-    {
-      "anchor": {
-        "x": 2.758300373743605,
-        "y": 5.541275082550166
-      },
-      "prevControl": {
-        "x": 3.258300373743605,
-        "y": 5.541275082550166
-      },
-      "nextControl": {
-        "x": 1.8637559679463909,
-        "y": 5.541275082550166
-      },
-      "isLocked": false,
-      "linkedName": "MiddleStageSpeaker"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -52,7 +36,7 @@
         "y": 5.529873281968787
       },
       "prevControl": {
-        "x": 1.8858589864260682,
+        "x": 2.1804463953698643,
         "y": 5.529873281968787
       },
       "nextControl": null,
@@ -60,7 +44,13 @@
       "linkedName": "CenterStart2"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {

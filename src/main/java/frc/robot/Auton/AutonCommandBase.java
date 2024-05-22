@@ -74,7 +74,7 @@ public class AutonCommandBase extends SequentialCommandGroup {
     }
 
     protected ParallelDeadlineGroup FollowToIntake(PathPlannerPath path, boolean track){
-        return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Shooter.getInstance().hasNote()||!TunerConstants.DriveTrain.isTrackingNote).withTimeout(0.05)), new WaitCommand(0.05).andThen(new IntakeShooter(track)));
+        return new ParallelDeadlineGroup(Follow(path).andThen(new WaitUntilCommand(()->Shooter.getInstance().hasNote()||!TunerConstants.DriveTrain.isTrackingNote).withTimeout(0.05)), new WaitCommand(0.2).andThen(new IntakeShooter(track)));
     }
 
     protected ParallelDeadlineGroup FollowToAmpIntake(PathPlannerPath path){
@@ -121,7 +121,10 @@ public class AutonCommandBase extends SequentialCommandGroup {
     protected Command AimAndShoot(RobotContainer container){
         return new SequentialCommandGroup(
                 new ParallelDeadlineGroup(
-                    new AimLiftWithOdometryAuton().withTimeout(0.25),
+                    new SequentialCommandGroup(
+                        new WaitUntilCommand(()->container.drivetrain.hasTarget()).withTimeout(0.1),
+                        new AimLiftWithOdometryAuton()
+                    ).withTimeout(0.25),
                     new SetDriveMode(DriveMode.AIMATTARGET).andThen(new WaitUntilCommand(()->container.getDrivetrain().snapComplete()))
                 ),
                 new WaitCommand(0.1),
