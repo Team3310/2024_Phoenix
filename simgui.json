@@ -28,10 +28,10 @@
     }
   },
   "NetworkTables": {
-    "Retained Values": {
+    "Persistent Values": {
       "open": false
     },
-    "Transitory Values": {
+    "Retained Values": {
       "open": false
     },
     "transitory": {

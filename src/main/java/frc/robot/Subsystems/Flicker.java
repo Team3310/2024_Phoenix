@@ -78,10 +78,11 @@ public class Flicker extends SubsystemBase {
     @Override
     public void periodic() {
         if (Constants.debug) {
-            SmartDashboard.putBoolean("is note in amp", isNoteLoaded());
             SmartDashboard.putNumber("Flicker RPM", motor.getVelocity().getValueAsDouble());
         }
 
         SmartDashboard.putBoolean("Amp has note", hasNote());
+        SmartDashboard.putBoolean("is note in amp", isNoteLoaded());
+
     }
 }

@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -24,6 +25,11 @@ public class Intake extends SubsystemBase {
     private VelocityVoltage topIntakeControl = new VelocityVoltage(0);
     private VelocityVoltage bottomIntakeControl = new VelocityVoltage(0);
 
+    private StatusSignal<Double> frontIntakeRPM;
+    private StatusSignal<Double> topIntakeRPM;
+    private StatusSignal<Double> bottomIntakeRPM;
+
+    
     private final double kF = 0.11;
     private final double kP = 0.15;
     private final double kI = 0.012;
@@ -66,6 +72,14 @@ public class Intake extends SubsystemBase {
         topIntakeControl.Slot = 0;
         bottomIntakeControl.EnableFOC = true;
         bottomIntakeControl.Slot = 0;
+
+        topIntakeRPM = topIntake.getVelocity();
+        frontIntakeRPM = frontIntake.getVelocity();
+        bottomIntakeRPM = bottomIntake.getVelocity();
+
+        topIntakeRPM.setUpdateFrequency(200);
+        frontIntakeRPM.setUpdateFrequency(200);
+        bottomIntakeRPM.setUpdateFrequency(200);
     }
 
     public void setFrontIntakeRPM(double rpm) {
@@ -153,5 +167,13 @@ public class Intake extends SubsystemBase {
             SmartDashboard.putNumber("Top Intake AMP", topIntake.getTorqueCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Bottom Intake AMP", bottomIntake.getTorqueCurrent().getValueAsDouble());
         }
+
+        frontIntakeRPM.refresh();
+        topIntakeRPM.refresh();
+        bottomIntakeRPM.refresh();
+
+        SmartDashboard.putNumber("Front Intake RPM", getMotorRPSToRPM(frontIntakeRPM.getValueAsDouble()));
+        SmartDashboard.putNumber("Top Intake RPM", getMotorRPSToRPM(topIntakeRPM.getValueAsDouble()));
+        SmartDashboard.putNumber("Bottom Intake RPM", getMotorRPSToRPM(bottomIntakeRPM.getValueAsDouble()));
     }
 }
