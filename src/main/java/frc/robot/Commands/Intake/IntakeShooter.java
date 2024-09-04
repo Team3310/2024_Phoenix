@@ -23,7 +23,7 @@ public class IntakeShooter extends Command {
     private Drivetrain drive;
     private LED led;
     private boolean trackNote;
-    private double xBoundary = 7.0;
+    private double xBoundary = 6.0;
 
     public IntakeShooter(){
         this(false);
@@ -39,9 +39,9 @@ public class IntakeShooter extends Command {
 
         this.trackNote = trackNote;
 
-        xBoundary = 7.0;
+        xBoundary = 6.0;
         if(drive.getSideMode()==SideMode.RED){
-            this.xBoundary = GeometryUtil.flipFieldPosition(new Translation2d(xBoundary, xBoundary)).getX();
+            this.xBoundary = 10.7;
         }
 
         addRequirements(intake, shooter, lift, elevator, led);
@@ -63,7 +63,7 @@ public class IntakeShooter extends Command {
 
     @Override
     public void execute() {
-        if(drive.getSideMode()==SideMode.BLUE?drive.getPose().getX()<xBoundary:drive.getPose().getX()>xBoundary){
+        if(drive.getSideMode()==SideMode.BLUE?drive.getPose().getX()>xBoundary:drive.getPose().getX()<xBoundary){
             drive.isTrackingNote = trackNote;
         }
     }

@@ -388,6 +388,11 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     //#region DriveTrain methods
 
     public void updateDrive(double rotation) {
+        SmartDashboard.putNumber("x scaled", MathUtil.applyDeadband(getDriveXWithoutDeadband(), 0.05, 1.0));
+        SmartDashboard.putNumber("y scaled", MathUtil.applyDeadband(getDriveYWithoutDeadband(), 0.05, 1.0));
+        SmartDashboard.putNumber("x raw", joystick.getLeftX());
+        SmartDashboard.putNumber("y raw", joystick.getLeftY());
+
         if (driveOrientation == DriveOrientation.FIELD_CENTRIC) {
             if(soFine){
                 this.applyRequest(() -> driveFieldCentricNoDeadband
@@ -1024,6 +1029,8 @@ speed -= slowAccel;
             );
         */
 
+        
+
 
         if(isTrackingNote && noteLimelight.hasTarget()){
         //     if(!setTrackSpeed){
@@ -1051,6 +1058,8 @@ speed -= slowAccel;
         //     );
         //     return;
             speeds.omegaRadiansPerSecond = pidRotationOutput*Constants.MaxAngularRate;
+            speeds.vxMetersPerSecond = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+            speeds.vyMetersPerSecond = 0.0;
         }
 
         if (!pathDone()) {
@@ -1098,8 +1107,11 @@ speed -= slowAccel;
     public Pose2d getTargetingOdoPose(){
         return this.targetingOdo.getEstimatedPosition();
     }
+
+    private final double soFineScalar = 0.40; 
+
     private double getDriveXWithoutDeadband() {
-        return -Math.copySign(Math.pow(joystick.getLeftY(), 2.0), joystick.getLeftY())*(soFine?0.25:1.0);
+        return -Math.copySign(Math.pow(joystick.getLeftY(), Constants.RAMP_POWER), joystick.getLeftY())*(soFine?soFineScalar:1.0);
     }
 
     private double getDriveXWithDeadband() {
@@ -1107,7 +1119,7 @@ speed -= slowAccel;
     }
 
     private double getDriveYWithoutDeadband() {
-        return -Math.copySign(Math.pow(joystick.getLeftX(), 2.0), joystick.getLeftX())*(soFine?0.25:1.0);
+        return -Math.copySign(Math.pow(joystick.getLeftX(), Constants.RAMP_POWER), joystick.getLeftX())*(soFine?soFineScalar:1.0);
     }
 
     private double getDriveYWithDeadband() {
@@ -1115,11 +1127,11 @@ speed -= slowAccel;
    }
 
     private double getDriveRotationWithoutDeadband() {
-        return -Math.copySign(Math.pow(joystick.getRightX(), 2.0), joystick.getRightX());
+        return -Math.copySign(Math.pow(joystick.getRightX(), Constants.RAMP_POWER), joystick.getRightX());
     }
 
     private double getDriveRotationWithDeadband() {
-        return addDeadband(getDriveRotationWithoutDeadband())*(soFine?0.25:1.0);
+        return addDeadband(getDriveRotationWithoutDeadband())*(soFine?soFineScalar:1.0);
     }
 
     private double addDeadband(double input) {
@@ -1285,6 +1297,7 @@ speed -= slowAccel;
         // }
     
         SmartDashboard.putString("side", sideMode.toString());
+        SmartDashboard.putBoolean("note tracking", isTrackingNote);
 
         if (Constants.debug) {
             SmartDashboard.putBoolean("can see note", noteLimelight.hasTarget());

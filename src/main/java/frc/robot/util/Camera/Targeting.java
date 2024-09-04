@@ -480,7 +480,7 @@ public class Targeting {
         double ySpeed = ChassisSpeeds.vyMetersPerSecond;
         double translationalSpeed = Math.hypot(xSpeed, ySpeed);
         
-        if ((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) && 
+        if ((Math.abs(rotationSpeed) < KALMAN_ROTATION_MAX_RATE) &&  
             (Math.abs(translationalSpeed) < KALMAN_MAX_SPEED) && 
             (botPoseEstimate.avgTagDist < KALMAN_APRILTAG_MAX_RANGE || botPoseEstimate.tagCount > 1)
         ) {

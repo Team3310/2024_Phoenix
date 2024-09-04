@@ -8,6 +8,8 @@ public class Constants {
 
     public static final boolean debug = false;
 
+    public static final double RAMP_POWER = 3.0;
+
     //#region controller
         public static final boolean ONE_CONTROLLER = false;
 
@@ -226,7 +228,7 @@ public class Constants {
 
     //drivetrain
     public static final double MaxSpeed = 5.0; // 6 meters per second desired top speed
-    public static final double MaxAngularRate = 3 * Math.PI; // 3/4 of a rotation per second max angular velocity
+    public static final double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
     
     //camera
     public static final double MAX_NOTE_DISTANCE = 5.0/3.281; //feet to meters

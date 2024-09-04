@@ -35,10 +35,19 @@
       "open": false
     },
     "transitory": {
+      "Drive": {
+        "open": true
+      },
       "LiveWindow": {
         ".status": {
           "open": true
         }
+      },
+      "Pose": {
+        "double[]##v_/Pose/robotPose": {
+          "open": true
+        },
+        "open": true
       },
       "SmartDashboard": {
         "open": true
