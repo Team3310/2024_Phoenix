@@ -1,4 +1,4 @@
-package frc.robot.Auton.Middle.Center;
+package frc.robot.Auton.Middle.Center.over;
 
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -16,9 +16,9 @@ import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
 
-public class CenterFiveOver extends AutonCommandBase{
+public class CenterOverStart extends AutonCommandBase{
 
-    public CenterFiveOver(RobotContainer robotContainer) {
+    public CenterOverStart(RobotContainer robotContainer) {
         super(robotContainer);
 
         resetRobotPose(Paths.getInstance().C_N);
@@ -33,18 +33,12 @@ public class CenterFiveOver extends AutonCommandBase{
                         new IntakeThrough(robotContainer.intake),
                         new SetLiftAngle(Lift.getInstance(), Constants.LIFT_MIN_DEGREES+1.0),
                         new SetLeftShooterRPM(Shooter.getInstance(), 3275.0-200.0),
-                        new SetRightShooterRPM(Shooter.getInstance(), 3400.0-200.0)
+                       new SetRightShooterRPM(Shooter.getInstance(), 3400.0-200.0)
                     ),
                     new IntakeShooter()
                 )
             ),
-            GoToShoot(robotContainer, Paths.getInstance().CCN_CS, false),
-            FollowToIntake(Paths.getInstance().CS_CENTER),
-            AimAndShoot(robotContainer),
-            FollowToIntake(Paths.getInstance().CENTER_AMP),
-            AimAndShoot(robotContainer),
-            FollowToIntake(Paths.getInstance().CENTER_PODIUM),
-            AimAndShoot(robotContainer)
+            GoToShoot(robotContainer, Paths.getInstance().CCN_CS, false)
         );
     }
     

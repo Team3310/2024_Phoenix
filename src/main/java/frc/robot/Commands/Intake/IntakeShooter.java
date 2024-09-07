@@ -27,7 +27,8 @@ public class IntakeShooter extends Command {
 
     public IntakeShooter(){
         this(false);
-    } 
+    }
+
 
     public IntakeShooter(boolean trackNote){
         this.intake = Intake.getInstance();

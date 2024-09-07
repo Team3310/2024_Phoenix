@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.SetClimberInches;
@@ -215,9 +216,13 @@ public class RobotContainer {
 
     // intake
       // intake shooter
-    oneController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
+    oneController.rightTrigger(0.5)
+      .onTrue(new IntakeShooter().alongWith(new SetDriveMode(DriveMode.AIM_AT_NOTE)))
+      .onFalse(new StopAllIntakes().alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
       // intake amp
-    oneController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
+    oneController.leftTrigger(0.5)
+      .onTrue(new IntakeAmp().alongWith(new SetDriveMode(DriveMode.AIM_AT_NOTE)))
+      .onFalse(new StopAllIntakes().alongWith(new SetDriveMode(DriveMode.JOYSTICK)));
       // eject
     oneController.b().onTrue(new IntakeEject()).onFalse(new StopAllIntakes());
       // transfer
@@ -228,8 +233,8 @@ public class RobotContainer {
     oneController.rightBumper().onTrue(new ScoreOnCommand(shooter, flicker)).onFalse(new ScoreOffCommand(shooter, flicker).andThen(new SetLiftOff(lift)));
       // auto aim
     oneController.leftBumper().onTrue(new SetTarget(TargetSimple.SPEAKER).andThen(new SetDriveMode(DriveMode.AIMATTARGET)).andThen(new AimLiftWithOdometry())).onFalse(new SetDriveMode(DriveMode.JOYSTICK));
-      // pass - left paddle
-    oneController.x().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3400-200.0-100.0); shooter.setRightMainRPM(2200-200.0-100.0); lift.setLiftAngle(45.0);}));
+      // slow - left paddle
+    oneController.x().onTrue(new InstantCommand(()->drivetrain.setSoFine(true))).onFalse(new InstantCommand(()->drivetrain.setSoFine(false)));
       // fender - right paddle
     oneController.y().onTrue(new InstantCommand(()->{shooter.setLeftMainRPM(3000); shooter.setRightMainRPM(2000); lift.setLiftAngle(60.0);}));
 

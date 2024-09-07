@@ -11,7 +11,7 @@ public class Constants {
     public static final double RAMP_POWER = 3.0;
 
     //#region controller
-        public static final boolean ONE_CONTROLLER = false;
+        public static final boolean ONE_CONTROLLER = true;
 
         // 2 controller setup
         public static final int DRIVER_PORT = 0;
