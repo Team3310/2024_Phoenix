@@ -1032,45 +1032,24 @@ speed -= slowAccel;
         
 
 
-        if(isTrackingNote && noteLimelight.hasTarget()){
-        //     if(!setTrackSpeed){
-        //         lastCommandedSpeed = speeds.vxMetersPerSecond;
-        //         setTrackSpeed = true;
-        //     }
-            // System.out.println("TRACKING!!!!");
-            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
-
-            double currentNoteTrackAngle = getBotAz_FieldRelative();
-            double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, -Math.PI, Math.PI);
-
-        // //    if (pidNoteUpdateCounter > NOTE_COUNTER_MAX) {
-            noteTrackController.setSetpoint(adjustAngle);
-
-            double pidRotationOutput = noteTrackController.calculate(currentNoteTrackAngle, 0.005);
-        //     if(Constants.debug){
-        //         SmartDashboard.putNumber("PID Output Note", pidRotationOutput);
-        //     }
-        //     applyRequest(()->driveRobotCentricNoDeadband
-        //         .withVelocityX(lastCommandedSpeed)
-        //         .withVelocityY(0.0)
-        //         .withRotationalRate(pidRotationOutput*Constants.MaxAngularRate)
-        //         .withDriveRequestType(DriveRequestType.Velocity)
-        //     );
-        //     return;
-            speeds.omegaRadiansPerSecond = pidRotationOutput*Constants.MaxAngularRate;
-            speeds.vxMetersPerSecond = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
-            speeds.vyMetersPerSecond = 0.0;
-        }
+        
 
         if (!pathDone()) {
-            setTrackSpeed = false;
-            // var states = m_kinematics.toSwerveModuleStates(speeds, new Translation2d());
-            // for (int i = 0; i < this.Modules.length; i++) {
-            //     this.Modules[i].apply(states[i],
-            //             SwerveModule.DriveRequestType.OpenLoopVoltage,
-            //             SwerveModule.SteerRequestType.MotionMagic);
-            // }
-            // SmartDashboard.putBoolean("path done", false);
+            if(isTrackingNote && noteLimelight.hasTarget()){
+                double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
+
+                double currentNoteTrackAngle = getBotAz_FieldRelative();
+                double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, -Math.PI, Math.PI);
+
+                noteTrackController.setSetpoint(adjustAngle);
+
+                double pidRotationOutput = noteTrackController.calculate(currentNoteTrackAngle, 0.005);
+
+                speeds.omegaRadiansPerSecond = pidRotationOutput*Constants.MaxAngularRate;
+                speeds.vxMetersPerSecond = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+                speeds.vyMetersPerSecond = 0.0;
+            }
+            
             applyRequest(()->driveRobotCentricNoDeadband
                 .withVelocityX(speeds.vxMetersPerSecond)
                 .withVelocityY(speeds.vyMetersPerSecond)

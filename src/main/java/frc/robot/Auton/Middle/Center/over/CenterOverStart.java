@@ -35,7 +35,7 @@ public class CenterOverStart extends AutonCommandBase{
                         new SetLeftShooterRPM(Shooter.getInstance(), 3275.0-200.0),
                        new SetRightShooterRPM(Shooter.getInstance(), 3400.0-200.0)
                     ),
-                    new IntakeShooter()
+                    new IntakeShooter(true)
                 )
             ),
             GoToShoot(robotContainer, Paths.getInstance().CCN_CS, false)

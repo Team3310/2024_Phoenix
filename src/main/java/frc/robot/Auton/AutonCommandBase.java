@@ -78,7 +78,8 @@ public class AutonCommandBase extends SequentialCommandGroup {
             Follow(path)
                 .andThen(new WaitUntilCommand(()->Shooter.getInstance().hasNote()||!TunerConstants.DriveTrain.isTrackingNote).withTimeout(0.05)), 
             new WaitCommand(0.2)
-                .andThen(new IntakeShooter(track)));
+                .andThen(new IntakeShooter(track))
+            );
     }
 
     protected ParallelDeadlineGroup FollowToAmpIntake(PathPlannerPath path){
