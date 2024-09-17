@@ -16,9 +16,9 @@ import frc.robot.Commands.Shooter.SetRightShooterRPM;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
 
-public class CenterOverStart extends AutonCommandBase{
+public class CenterOverStartAmp extends AutonCommandBase{
 
-    public CenterOverStart(RobotContainer robotContainer) {
+    public CenterOverStartAmp(RobotContainer robotContainer) {
         super(robotContainer);
 
         resetRobotPose(Paths.getInstance().C_N);
@@ -26,7 +26,7 @@ public class CenterOverStart extends AutonCommandBase{
         this.addCommands(
             new OneAuton(robotContainer),
             new ParallelDeadlineGroup(
-                Follow(Paths.getInstance().CENTER_THROUGH), 
+                Follow(Paths.getInstance().AMP_THROUGH), 
                 new SequentialCommandGroup(
                     new ParallelDeadlineGroup(
                         new WaitUntilAtXBoundaryClose(6.41, robotContainer),
@@ -38,7 +38,7 @@ public class CenterOverStart extends AutonCommandBase{
                     new IntakeShooter(true)
                 )
             ),
-            GoToShoot(robotContainer, Paths.getInstance().CCN_CS, false)
+            GoToShoot(robotContainer, Paths.getInstance().AIN_CS, false)
         );
     }
     

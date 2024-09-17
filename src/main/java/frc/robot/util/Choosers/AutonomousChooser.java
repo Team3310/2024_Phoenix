@@ -26,8 +26,13 @@ import frc.robot.Auton.Middle.Center.norm.CenterFiveCSA;
 import frc.robot.Auton.Middle.Center.norm.CenterFiveSAC;
 import frc.robot.Auton.Middle.Center.norm.CenterFiveSCA;
 import frc.robot.Auton.Middle.Center.over.CenterFiveOver;
-import frc.robot.Auton.Middle.Center.over.CenterOverCAS;
+import frc.robot.Auton.Middle.Center.over.CenterFiveOverAmp;
+import frc.robot.Auton.Middle.Center.over.CenterFiveOverSource;
+import frc.robot.Auton.Middle.Center.over.CenterOverACS;
+import frc.robot.Auton.Middle.Center.over.CenterOverASC;
 import frc.robot.Auton.Middle.Center.over.CenterOverCSA;
+import frc.robot.Auton.Middle.Center.over.CenterOverSAC;
+import frc.robot.Auton.Middle.Center.over.CenterOverSCA;
 import frc.robot.Auton.Middle.Center.shifted.CenterFiveCSOS;
 import frc.robot.Auton.Middle.Center.shifted.CenterFiveCSSO;
 import frc.robot.Auton.Middle.Center.shifted.CenterFiveSCSO;
@@ -90,8 +95,14 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         .addOption(AutonomousMode.CENTER_SSOC)
         .addOption(AutonomousMode.CENTER_FIVE)
         .addOption(AutonomousMode.CENTER_FIVE_OVER)
+        .addOption(AutonomousMode.CENTER_FIVE_OVER_AMP)
+        .addOption(AutonomousMode.CENTER_FIVE_OVER_SOURCE)
         .addOption(AutonomousMode.CENTER_OVER_CSA)
         .addOption(AutonomousMode.CENTER_OVER_CAS)
+        .addOption(AutonomousMode.CENTER_OVER_SCA)
+        .addOption(AutonomousMode.CENTER_OVER_SAC)
+        .addOption(AutonomousMode.CENTER_OVER_ASC)
+        .addOption(AutonomousMode.CENTER_OVER_ACS)
         .addOption(AutonomousMode.CENTER_FIVE_AMP)
         .addOption(AutonomousMode.CENTER_FIVE_SOURCE)
         //#endregion
@@ -152,8 +163,14 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
         CENTER_SSOC("Center SSOC"),
         CENTER_FIVE("Center Five Center"),
         CENTER_FIVE_OVER("Center Five Center Over"),
+        CENTER_FIVE_OVER_AMP("Center Five Amp Over"),
+        CENTER_FIVE_OVER_SOURCE("Center Five Source Over"),
         CENTER_OVER_CSA("Center Over CSA"),
         CENTER_OVER_CAS("Center Over CAS"),
+        CENTER_OVER_SCA("Center Over SCA"),
+        CENTER_OVER_SAC("Center Over SAC"),
+        CENTER_OVER_ASC("Center Over ASC"),
+        CENTER_OVER_ACS("Center Over ACS"),
         CENTER_FIVE_AMP("Center Five Amp"),
         CENTER_FIVE_SOURCE("Center Five Source"),
         //#endregion
@@ -255,10 +272,22 @@ public class AutonomousChooser extends ChooserBase<AutonomousChooser.AutonomousM
                     return new CenterFive(RobotContainer.getInstance());
                 case CENTER_FIVE_OVER:
                     return new CenterFiveOver(RobotContainer.getInstance());
+                case CENTER_FIVE_OVER_AMP:
+                    return new CenterFiveOverAmp(RobotContainer.getInstance());
+                case CENTER_FIVE_OVER_SOURCE:
+                    return new CenterFiveOverSource(RobotContainer.getInstance());
                 case CENTER_OVER_CAS:
-                    return new CenterOverCAS(RobotContainer.getInstance());
+                    return new CenterOverASC(RobotContainer.getInstance());
                 case CENTER_OVER_CSA:
                     return new CenterOverCSA(RobotContainer.getInstance());
+                case CENTER_OVER_SAC:
+                    return new CenterOverSAC(RobotContainer.getInstance());
+                case CENTER_OVER_SCA:
+                    return new CenterOverSCA(RobotContainer.getInstance());
+                case CENTER_OVER_ASC:
+                    return new CenterOverASC(RobotContainer.getInstance());
+                case CENTER_OVER_ACS:
+                    return new CenterOverACS(RobotContainer.getInstance());
                 case CENTER_FIVE_AMP:
                     return new CenterFiveAmp(RobotContainer.getInstance());
                 case CENTER_FIVE_SOURCE:

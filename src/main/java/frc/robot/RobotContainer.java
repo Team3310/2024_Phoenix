@@ -262,8 +262,9 @@ public class RobotContainer {
       configureOneController();
     }else{
       configureDriverController();
-      configureOperatorController();
     }
+
+    configureOperatorController();
   }
 
   private void configureBindings() {

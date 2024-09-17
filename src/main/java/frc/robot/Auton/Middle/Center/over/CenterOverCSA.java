@@ -12,12 +12,12 @@ public class CenterOverCSA extends AutonCommandBase{
         resetRobotPose(Paths.getInstance().C_N);
         
         this.addCommands(
-            new CenterOverStart(robotContainer),
+            new CenterOverStartCenter(robotContainer),
             FollowToIntake(Paths.getInstance().CS_SIN),
             GoToShoot(robotContainer, Paths.getInstance().SIN_CS),
             FollowToIntake(Paths.getInstance().CS_AIN),
-            GoToShoot(robotContainer, Paths.getInstance().AIN_CS)
-            
+            GoToShoot(robotContainer, Paths.getInstance().AIN_CS),
+            new CenterOverEnd(robotContainer)
         );
     }
     

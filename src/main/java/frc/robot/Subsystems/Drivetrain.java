@@ -74,6 +74,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private PidController holdAngleController = new PidController(new PidConstants(0.5, 0.0, 0.00));
     private PidController aimAtTargetController = new PidController(new PidConstants(0.55, 0.0, 0.02));//0.4
     private PidController noteTrackController = new PidController(new PidConstants(0.5, 0.001, 0.02));  // 1.0 strafe, 0.4 rotate
+    private PidController noteTrackAutonController = new PidController(new PidConstants(1.0, 0.001, 0.02));
     private PidController joystickController = new PidController(new PidConstants(1.0, 0, 0.0));
     private PidController strafeTxController = new PidController(new PidConstants(1.0, 0.00, 0.02));
     private PidController strafeRotateController = new PidController(new PidConstants(1.0, 0.00, 0.02));
@@ -161,6 +162,10 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         noteTrackController.setContinuous(true);
         noteTrackController.setInputRange(-Math.PI, Math.PI);
         noteTrackController.setOutputRange(-1.0, 1.0);
+
+        noteTrackAutonController.setContinuous(true);
+        noteTrackAutonController.setInputRange(-Math.PI, Math.PI);
+        noteTrackAutonController.setOutputRange(-1.0, 1.0);
 
         strafeRotateController.setContinuous(true);
         strafeRotateController.setInputRange(-Math.PI, Math.PI);
@@ -714,7 +719,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
      public void aimAtNote() {
         if (noteLimelight.hasTarget() /*&& Math.abs(noteLimelight.getTargetHorizOffset()) < 27.0*/) {
             drivetrain_state = "NOTE MODE";
-            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
+            double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset()-0.14);
 
             double currentNoteTrackAngle = getBotAz_FieldRelative();
             double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, -Math.PI, Math.PI);
@@ -1031,19 +1036,23 @@ speed -= slowAccel;
 
         
 
-
+        drivetrain_state = "AUTON";
         
 
         if (!pathDone()) {
             if(isTrackingNote && noteLimelight.hasTarget()){
-                double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset());
+                drivetrain_state = "AUTON NOTE";
+                double targetOffset = Math.toRadians(noteLimelight.getTargetHorizOffset()-0.14);
 
                 double currentNoteTrackAngle = getBotAz_FieldRelative();
                 double adjustAngle = MathUtil.inputModulus(currentNoteTrackAngle - targetOffset, -Math.PI, Math.PI);
 
-                noteTrackController.setSetpoint(adjustAngle);
-
-                double pidRotationOutput = noteTrackController.calculate(currentNoteTrackAngle, 0.005);
+            //    if (pidNoteUpdateCounter > NOTE_COUNTER_MAX) {
+                noteTrackAutonController.setSetpoint(adjustAngle);
+                pidNoteUpdateCounter = 0;
+            //    }
+            //    pidNoteUpdateCounter++;
+                double pidRotationOutput = noteTrackAutonController.calculate(currentNoteTrackAngle, 0.005);
 
                 speeds.omegaRadiansPerSecond = pidRotationOutput*Constants.MaxAngularRate;
                 speeds.vxMetersPerSecond = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);

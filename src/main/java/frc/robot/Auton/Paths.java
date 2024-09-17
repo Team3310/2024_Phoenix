@@ -97,6 +97,8 @@ public class Paths {
     public final PathPlannerPath CENTER_AMP;
     public final PathPlannerPath CENTER_PODIUM;
     public final PathPlannerPath CENTER_THROUGH;
+    public final PathPlannerPath SOURCE_THROUGH;
+    public final PathPlannerPath AMP_THROUGH;
     public final PathPlannerPath CS_CENTER;
 
     public final PathPlannerPath CLOSE_STAGE_END;
@@ -214,6 +216,8 @@ public class Paths {
             CENTER_AMP = PathPlannerPath.fromPathFile("CENTER_AMP").flipPath();
             CENTER_PODIUM = PathPlannerPath.fromPathFile("CENTER_PODIUM").flipPath();
             CENTER_THROUGH = PathPlannerPath.fromPathFile("CENTER_THROUGH").flipPath();
+            SOURCE_THROUGH = PathPlannerPath.fromPathFile("SOURCE_THROUGH").flipPath();
+            AMP_THROUGH = PathPlannerPath.fromPathFile("AMP_THROUGH").flipPath();
             CS_CENTER = PathPlannerPath.fromPathFile("CS_CENTER").flipPath();
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd").flipPath(); 
@@ -315,6 +319,8 @@ public class Paths {
             CENTER_AMP = PathPlannerPath.fromPathFile("CENTER_AMP");
             CENTER_PODIUM = PathPlannerPath.fromPathFile("CENTER_PODIUM");
             CENTER_THROUGH = PathPlannerPath.fromPathFile("CENTER_THROUGH");
+            AMP_THROUGH = PathPlannerPath.fromPathFile("AMP_THROUGH");
+            SOURCE_THROUGH = PathPlannerPath.fromPathFile("SOURCE_THROUGH");
             CS_CENTER = PathPlannerPath.fromPathFile("CS_CENTER");
 
             CLOSE_STAGE_END = PathPlannerPath.fromPathFile("CloseStageEnd");

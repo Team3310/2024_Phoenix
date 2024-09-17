@@ -24,6 +24,7 @@ public class IntakeShooter extends Command {
     private LED led;
     private boolean trackNote;
     private double xBoundary = 6.0;
+    private boolean override = false;
 
     public IntakeShooter(){
         this(false);
@@ -48,6 +49,25 @@ public class IntakeShooter extends Command {
         addRequirements(intake, shooter, lift, elevator, led);
     } 
 
+    public IntakeShooter(boolean trackNote, boolean override){
+        this.intake = Intake.getInstance();
+        this.shooter = Shooter.getInstance();
+        this.lift = Lift.getInstance();
+        this.elevator = Elevator.getInstance();
+        this.drive = TunerConstants.DriveTrain;
+        this.led = LED.getInstance();
+
+        this.trackNote = trackNote;
+        this.override = override;
+
+        xBoundary = 5.5;
+        if(drive.getSideMode()==SideMode.RED){
+            this.xBoundary = 11.25;
+        }
+
+        addRequirements(intake, shooter, lift, elevator, led);
+    }
+
     @Override
     public void initialize() {
         // if (!shooter.isNoteLoaded()) {
@@ -64,7 +84,7 @@ public class IntakeShooter extends Command {
 
     @Override
     public void execute() {
-        if(drive.getSideMode()==SideMode.BLUE?drive.getPose().getX()>xBoundary:drive.getPose().getX()<xBoundary){
+        if(override || drive.getSideMode()==SideMode.BLUE?drive.getPose().getX()>xBoundary:drive.getPose().getX()<xBoundary){
             drive.isTrackingNote = trackNote;
         }
     }
