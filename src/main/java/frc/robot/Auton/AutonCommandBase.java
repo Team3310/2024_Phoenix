@@ -83,20 +83,18 @@ public class AutonCommandBase extends SequentialCommandGroup {
         return new ParallelDeadlineGroup(
             Follow(path)
                 .andThen(new WaitUntilCommand(()->Shooter.getInstance().hasNote()||!TunerConstants.DriveTrain.isTrackingNote).withTimeout(0.05)), 
-            new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.05)
-                .andThen(new WaitCommand(0.05))
+            new WaitCommand(0.05)
                 .andThen(new IntakeShooter(track, override))
-            );
+        );
     }
 
     protected ParallelDeadlineGroup FollowToIntakeWaitUntilPose(PathPlannerPath path, boolean track, boolean override, Translation2d pose){
         return new ParallelDeadlineGroup(
             Follow(path)
                 .andThen(new WaitUntilCommand(()->Shooter.getInstance().hasNote()||!TunerConstants.DriveTrain.isTrackingNote).withTimeout(0.05)), 
-            new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.05)
-                .andThen(new WaitUntilAtPose(pose, robotContainer))
+            new WaitUntilAtPose(pose, robotContainer)
                 .andThen(new IntakeShooter(track, override))
-            );
+        );
     }
 
     protected ParallelDeadlineGroup FollowToAmpIntake(PathPlannerPath path){
@@ -149,7 +147,8 @@ public class AutonCommandBase extends SequentialCommandGroup {
                     ).withTimeout(0.25),
                     new SetDriveMode(DriveMode.AIMATTARGET).andThen(new WaitUntilCommand(()->container.getDrivetrain().snapComplete()))
                 ),
-                new WaitCommand(0.15)
+                new WaitCommand(0.15),
+                new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.05)
             );
     }
 }

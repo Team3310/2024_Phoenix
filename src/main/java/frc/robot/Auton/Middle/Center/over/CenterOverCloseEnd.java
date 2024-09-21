@@ -17,8 +17,7 @@ public class CenterOverCloseEnd extends AutonCommandBase{
             FollowToIntake(Paths.getInstance().CENTER_AMP,true,true),
             AimAndShoot(robotContainer),
             FollowToIntakeWaitUntilPose(Paths.getInstance().CENTER_PODIUM, true, true, new Translation2d(2.56, 4.10)),
-            AimAndShoot(robotContainer),
-            new FeederShootCommandAuton(robotContainer.shooter)
+            AimAndShoot(robotContainer)
         );
     }
     

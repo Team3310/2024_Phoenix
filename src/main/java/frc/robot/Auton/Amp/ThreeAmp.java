@@ -12,7 +12,6 @@ public class ThreeAmp extends AutonCommandBase{
 
         this.addCommands(
             new TwoAmp(robotContainer),
-            //TODO replace with new method
             new ParallelDeadlineGroup(
                 Follow(Paths.getInstance().THREE_AMP),
                 new IntakeShooter()
