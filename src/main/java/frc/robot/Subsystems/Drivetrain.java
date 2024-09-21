@@ -679,16 +679,16 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
         }
     }
 
-    public void trapQueen(){
-        Orchestra trapQUEEN = new Orchestra();
-        for(SwerveModule m:Modules){
-            trapQUEEN.addInstrument(m.getDriveMotor());
-            trapQUEEN.addInstrument(m.getSteerMotor());
-        }
+    // public void trapQueen(){
+    //     Orchestra trapQUEEN = new Orchestra();
+    //     for(SwerveModule m:Modules){
+    //         trapQUEEN.addInstrument(m.getDriveMotor());
+    //         trapQUEEN.addInstrument(m.getSteerMotor());
+    //     }
 
-        trapQUEEN.loadMusic("TrapQueen.chrp");
-        trapQUEEN.play();
-    }
+    //     trapQUEEN.loadMusic("TrapQueen.chrp");
+    //     trapQUEEN.play();
+    // }
 
     public void aimAtTargetAuton() {
         Targeting.setTargetSimple(Targeting.getTargetSimple());
@@ -774,7 +774,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
     private double MAX_ACCEL = 5.5;
 
     private void autonDrive(){
-        ChassisSpeeds speeds = pathFollower.update();
+        ChassisSpeeds speeds = pathFollower.update(isTrackingNote);
 
         if(Constants.debug){
             SmartDashboard.putBoolean("is tracking note", isTrackingNote);

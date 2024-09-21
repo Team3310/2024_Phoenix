@@ -118,7 +118,7 @@ public class FollowPathCommand{
   }
 
   
-  public ChassisSpeeds update() {
+  public ChassisSpeeds update(boolean noteTracking) {
     double currentTime = timer.get();
     // SmartDashboard.putNumber("auton timer", currentTime);
     PathPlannerTrajectory.State targetState = generatedTrajectory.sample(currentTime);
@@ -133,20 +133,18 @@ public class FollowPathCommand{
       double previousError = Math.abs(controller.getPositionalError());
       double currentError = currentPose.getTranslation().getDistance(targetState.positionMeters);
 
-      //TODO maybe if we are note tracking we ignore this for simplicity
-      //if(!TunerConstants.DriveTrain.isTrackingNote){
-        if(replanning){
-          if (currentError >= replanningConfig.dynamicReplanningTotalErrorThreshold
-              || currentError - previousError
-                  >= replanningConfig.dynamicReplanningErrorSpikeThreshold) {
-                    //TODO try increasing this error spike threshold if changing the poseSupplier
-                    //doesn't work, maybe whene just getting rid of it @freddytums
-            replanPath(currentPose, currentSpeeds);
-            timer.reset();
-            targetState = generatedTrajectory.sample(0);
-          }
+      //TODO maybe if we are note tracking we ignore this for simplicity - test before leaving in
+      if(replanning && !noteTracking){
+        if (currentError >= replanningConfig.dynamicReplanningTotalErrorThreshold
+            || currentError - previousError
+                >= replanningConfig.dynamicReplanningErrorSpikeThreshold) {
+                  //TODO try increasing this error spike threshold if changing the poseSupplier
+                  //doesn't work, maybe whene just getting rid of it @freddytums
+          replanPath(currentPose, currentSpeeds);
+          timer.reset();
+          targetState = generatedTrajectory.sample(0);
         }
-      //}
+      }
     }
 
     ChassisSpeeds targetSpeeds = controller.calculateRobotRelativeSpeeds(currentPose, targetState);

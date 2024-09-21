@@ -23,10 +23,7 @@ public class OneAuton extends AutonCommandBase{
                 new SetRightShooterRPM(robotContainer.shooter, 2200)
             ),
             new WaitCommand(0.1),
-            new ParallelDeadlineGroup(
-                new WaitCommand(0.15), 
-                new FeederShootCommandAuton(robotContainer.shooter)
-            )
+            new FeederShootCommandAuton(robotContainer.shooter).withTimeout(0.025)
         );
     }
 }

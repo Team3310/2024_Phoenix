@@ -38,7 +38,9 @@ public class CenterOverStartAmp extends AutonCommandBase{
                     new IntakeShooter(true)
                 )
             ),
-            GoToShoot(robotContainer, Paths.getInstance().AIN_CS, false)
+            GoToShoot(robotContainer, Paths.getInstance().AIN_CS, false),
+            FollowToIntake(Paths.getInstance().CS_CENTER),
+            AimAndShoot(robotContainer)
         );
     }
     
