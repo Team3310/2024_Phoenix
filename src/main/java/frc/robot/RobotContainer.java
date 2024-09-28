@@ -157,7 +157,7 @@ public class RobotContainer {
   public void configureOperatorController(){
     // NetworkTableInstance.getDefault().getTable("test").getBooleanTopic("work?").publish().set(true);
     // intake
-    operatorController.rightTrigger(0.5).onTrue(new IntakeShooter()).onFalse(new StopAllIntakes());
+    operatorController.rightTrigger(0.5).onTrue(new IntakeShooter(false)).onFalse(new StopAllIntakes());
     operatorController.leftTrigger(0.5).onTrue(new IntakeAmp()).onFalse(new StopAllIntakes());
     operatorController.rightStick().onTrue(new IntakeEject()).onFalse(new StopAllIntakes());
 
