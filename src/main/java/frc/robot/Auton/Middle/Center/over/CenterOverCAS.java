@@ -16,7 +16,7 @@ public class CenterOverCAS extends AutonCommandBase{
             FollowToIntake(Paths.getInstance().CS_AIN),
             GoToShoot(robotContainer, Paths.getInstance().AIN_CS),
             FollowToIntake(Paths.getInstance().CS_SIN),
-            GoToShoot(robotContainer, Paths.getInstance().SIN_CS),
+            GoToShoot(robotContainer, Paths.getInstance().SIN_CS, false),
             new CenterOverEnd(robotContainer)
         );
     }

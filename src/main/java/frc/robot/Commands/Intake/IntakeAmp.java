@@ -50,7 +50,6 @@ public class IntakeAmp extends Command{
         flicker.setRPM(0.0);
         if(!interrupted){
             led.setSolid(new Color(0, 0, 255));
-            led.setSolid(new Color(0, 0, 255));
             flicker.setNoteIn(true);
         }
     }

@@ -16,7 +16,7 @@ public class CenterOverASC extends AutonCommandBase{
             FollowToIntake(Paths.getInstance().CS_SIN),
             GoToShoot(robotContainer, Paths.getInstance().SIN_CS),
             FollowToIntake(Paths.getInstance().CS_CCN),
-            GoToShoot(robotContainer, Paths.getInstance().CCN_CS),
+            GoToShoot(robotContainer, Paths.getInstance().CCN_CS, false),
             new CenterOverEnd(robotContainer)
         );
     }

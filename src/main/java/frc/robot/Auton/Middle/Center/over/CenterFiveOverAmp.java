@@ -13,6 +13,8 @@ public class CenterFiveOverAmp extends AutonCommandBase{
         
         this.addCommands(
             new CenterOverStartAmp(robotContainer),
+            FollowToIntake(Paths.getInstance().CS_CENTER),
+            AimAndShoot(robotContainer),
             new CenterOverCloseEnd(robotContainer)
         );
     }

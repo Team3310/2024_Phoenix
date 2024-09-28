@@ -16,7 +16,7 @@ public class CenterOverSCA extends AutonCommandBase{
             FollowToIntake(Paths.getInstance().CS_CCN),
             GoToShoot(robotContainer, Paths.getInstance().CCN_CS),
             FollowToIntake(Paths.getInstance().CS_AIN),
-            GoToShoot(robotContainer, Paths.getInstance().AIN_CS),
+            GoToShoot(robotContainer, Paths.getInstance().AIN_CS, false),
             new CenterOverEnd(robotContainer)
         );
     }
