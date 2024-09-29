@@ -53,6 +53,7 @@ import frc.robot.util.Camera.LimelightHelpers;
 import frc.robot.util.Camera.LimelightHelpers.PoseEstimate;
 import frc.robot.util.Camera.Targeting;
 import frc.robot.util.Camera.Targeting.TargetSimple;
+import frc.robot.util.Choosers.SideChooser;
 import frc.robot.util.Choosers.SideChooser.SideMode;
 import frc.robot.util.Control.PidConstants;
 import frc.robot.util.Control.PidController;
@@ -343,7 +344,7 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
                 double distance_XY_Average = odometryTargeting.getDistance_XY_average();
                 // double aimOffset = getSideMode()==SideMode.BLUE?0.0:Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
                 double aimOffset = Constants.kAutoAimOffset.getInterpolated(new InterpolatingDouble((distance_XY_Average / 0.0254) / 12.0)).value;
-                aimOffset += yawOffset;
+                aimOffset += yawOffset + sideYawOffset;
                 //TODO is this the right spot? @freddytums
                 PoseEstimate botPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-front");
                 for (int i = 0; i < botPoseEstimate.rawFiducials.length; i++) {
@@ -1273,6 +1274,9 @@ speed -= slowAccel;
         ;
     }
 
+    private final double SOURCE_SIDE_OFFSET_Y = 4.00;
+    private double sideYawOffset = 0.0;
+
     @Override
     public void periodic() {
         // LimelightHelpers.getLatestResults("limelight-front");
@@ -1286,6 +1290,14 @@ speed -= slowAccel;
     
         SmartDashboard.putString("side", sideMode.toString());
         SmartDashboard.putBoolean("note tracking", isTrackingNote);
+
+        if(getPose().getY() < SOURCE_SIDE_OFFSET_Y){
+            sideYawOffset = 5.0;
+        }else{
+            sideYawOffset = 0.0;
+        }
+
+        SmartDashboard.putNumber("side yaw offset", sideYawOffset);
 
         if (Constants.debug) {
             SmartDashboard.putBoolean("can see note", noteLimelight.hasTarget());
@@ -1513,6 +1525,9 @@ speed -= slowAccel;
         double alignAngleRadians = MathUtil.inputModulus(Math.toRadians(snapAngle), -Math.PI,  Math.PI);
         snapPIDController.setGoal(new TrapezoidProfile.State(alignAngleRadians, 0.0));
         isSnapping = true;
+        if(Utils.isSimulation()){
+            seedFieldRelativeWithOffset(Rotation2d.fromRadians(snapAngle));
+        }
     }
 
     TimeDelayedBoolean delayedBoolean = new TimeDelayedBoolean();

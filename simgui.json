@@ -35,9 +35,6 @@
       "open": false
     },
     "transitory": {
-      "Drive": {
-        "open": true
-      },
       "LiveWindow": {
         ".status": {
           "open": true
