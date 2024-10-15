@@ -1292,7 +1292,7 @@ speed -= slowAccel;
         SmartDashboard.putBoolean("note tracking", isTrackingNote);
 
         if(getPose().getY() < SOURCE_SIDE_OFFSET_Y){
-            sideYawOffset = 5.0;
+            sideYawOffset = 5.0 * (getSideMode().equals(SideMode.RED)?-1:1);
         }else{
             sideYawOffset = 0.0;
         }

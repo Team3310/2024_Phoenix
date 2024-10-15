@@ -110,9 +110,9 @@ public class Constants {
  
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kRightShooterMap = new InterpolatingTreeMap<>();
         static {
-            kRightShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(2200.0));
-            kRightShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(2200.0));
-            kRightShooterMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(2200.0));
+            kRightShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(3000.0));
+            kRightShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(3000.0));
+            kRightShooterMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(3000.0));
             // kRightShooterMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(2700.0));
             kRightShooterMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(2800.0));
             kRightShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(2800.0));
@@ -123,9 +123,9 @@ public class Constants {
 
         public static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> kLeftShooterMap = new InterpolatingTreeMap<>();
         static {
-            kLeftShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(2700.0));
-            kLeftShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(2700.0));
-            kLeftShooterMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(2700.0));
+            kLeftShooterMap.put(new InterpolatingDouble(3.0), new InterpolatingDouble(3500.0));
+            kLeftShooterMap.put(new InterpolatingDouble(4.7), new InterpolatingDouble(3500.0));
+            kLeftShooterMap.put(new InterpolatingDouble(8.0), new InterpolatingDouble(3500.0));
             // kLeftShooterMap.put(new InterpolatingDouble(12.0), new InterpolatingDouble(3700.0));
             kLeftShooterMap.put(new InterpolatingDouble(16.0), new InterpolatingDouble(5000.0));
             kLeftShooterMap.put(new InterpolatingDouble(20.0), new InterpolatingDouble(5000.0));

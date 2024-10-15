@@ -60,9 +60,9 @@ public class IntakeShooter extends Command {
         this.trackNote = trackNote;
         this.override = override;
 
-        xBoundary = 5.7;
+        xBoundary = 6.20;
         if(drive.getSideMode()==SideMode.RED){
-            this.xBoundary = 10.8;
+            this.xBoundary = 10.30;
         }
 
         addRequirements(intake, shooter, lift, elevator, led);
