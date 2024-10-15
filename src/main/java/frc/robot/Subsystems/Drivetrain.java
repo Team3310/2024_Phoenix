@@ -2,6 +2,8 @@ package frc.robot.Subsystems;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.StatusCode;
@@ -46,6 +48,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
+import frc.robot.Subsystems.AdvantageDriveTest.GyroIO;
+import frc.robot.Subsystems.AdvantageDriveTest.GyroIOInputsAutoLogged;
+import frc.robot.Subsystems.AdvantageDriveTest.GyroIOPigeon2;
+import frc.robot.Subsystems.AdvantageDriveTest.Module;
+import frc.robot.Subsystems.AdvantageDriveTest.ModuleIO;
+import frc.robot.Subsystems.AdvantageDriveTest.ModuleIOTalonFX;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.UpdateManager;
 import frc.robot.util.Camera.Limelight;
@@ -66,6 +74,11 @@ import frc.robot.util.PathFollowing.FollowPathCommand;
  * so it can be used in command-based projects easily.
  */
 public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateManager.Updatable {
+    //TODO merge together with AdvantageKit system
+    private final Module[] moduleIOs;
+    private final GyroIO gyroIO;
+    private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
+
     private final Field2d field = new Field2d();
     private DriveMode mControlMode = DriveMode.JOYSTICK;
     private SideMode sideMode = SideMode.RED;
@@ -145,6 +158,14 @@ public class Drivetrain extends SwerveDrivetrain implements Subsystem, UpdateMan
 
     public Drivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
+
+        //TODO test current sim capability, if it doesn't work implement simIO 
+        this.moduleIOs = new Module[4];
+        for(int i=0; i< this.ModuleCount; i++){
+            moduleIOs[i] = new Module(new ModuleIOTalonFX(this.Modules[i]), -1);
+        }
+
+        this.gyroIO = new GyroIOPigeon2(this.getPigeon2(), ()->this.getOdoPose());
 
         this.targetingOdo = 
             new SwerveDrivePoseEstimator(
@@ -1278,6 +1299,13 @@ speed -= slowAccel;
         // LimelightHelpers.getLatestResults("limelight-front");
         frontCamera.update();
         odometryTargeting.update();
+
+        gyroIO.updateInputs(gyroInputs);
+        Logger.processInputs("Drive/Gyro", gyroInputs);
+
+        for (var module : moduleIOs) {
+            module.periodic();
+        }
         
         // if (sideMode != RobotContainer.getInstance().getSideChooser().getSelected()) {
         //     sideMode = RobotContainer.getInstance().getSideChooser().getSelected();

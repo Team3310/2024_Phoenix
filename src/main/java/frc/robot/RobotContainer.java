@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+
+import com.ctre.phoenix6.Utils;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Commands.Climber.ClimberAutoZero;
 import frc.robot.Commands.Climber.SetClimberInches;
 import frc.robot.Commands.Drive.SetDriveMode;
@@ -28,6 +34,7 @@ import frc.robot.Commands.Shooter.ScoreOffCommand;
 import frc.robot.Commands.Shooter.ScoreOnCommand;
 import frc.robot.Commands.Shooter.ShooterOff;
 import frc.robot.Commands.Shooter.ShooterOn;
+import frc.robot.Constants.Mode;
 import frc.robot.Subsystems.Climber;
 import frc.robot.Subsystems.Drivetrain;
 import frc.robot.Subsystems.Drivetrain.DriveMode;
@@ -37,6 +44,10 @@ import frc.robot.Subsystems.Intake;
 import frc.robot.Subsystems.LED;
 import frc.robot.Subsystems.Lift;
 import frc.robot.Subsystems.Shooter;
+import frc.robot.Subsystems.AdvantageSubsystemTest.Subsystem;
+import frc.robot.Subsystems.AdvantageSubsystemTest.SubsystemIO;
+import frc.robot.Subsystems.AdvantageSubsystemTest.SubsystemIOSim;
+import frc.robot.Subsystems.AdvantageSubsystemTest.SubsystemIOTalonFX;
 import frc.robot.Swerve.Telemetry;
 import frc.robot.Swerve.TunerConstants;
 import frc.robot.util.DriverReadout;
@@ -66,8 +77,33 @@ public class RobotContainer {
 
   private static RobotContainer instance;
 
+   // Dashboard inputs
+  private final LoggedDashboardChooser<AutonomousMode> autoChooser;
+  private final LoggedDashboardChooser<Command> sysIdChooser;
+  private final LoggedDashboardNumber flywheelSpeedInput =
+      new LoggedDashboardNumber("Flywheel Speed", 1500.0);
+
+  private final Subsystem test;
+
   public RobotContainer() {
     instance = this;
+
+    switch (getIOMode()) {
+      case REAL:
+        // Real robot, instantiate hardware IO implementations
+        test = new Subsystem(new SubsystemIOTalonFX(), getIOMode());
+        break;
+
+      case SIM:
+        // Sim robot, instantiate physics sim IO implementations
+        test = new Subsystem(new SubsystemIOSim(), getIOMode());
+        break;
+
+      default:
+        // Replayed robot, disable IO implementations
+        test = new Subsystem(new SubsystemIO(){}, getIOMode());
+        break;
+    }
 
     drivetrain = TunerConstants.DriveTrain;
     
@@ -80,6 +116,11 @@ public class RobotContainer {
     led = LED.getInstance();
 
     autonomousChooser = new AutonomousChooser();
+    //TODO see how these get added to dashboard option (elastic, shuffleboard, etc.)
+    autoChooser = new LoggedDashboardChooser<AutonomousMode>("auto", autonomousChooser.getSendable());
+    sysIdChooser = new LoggedDashboardChooser<Command>("tests");
+
+    setUpSysIds();
 
     logger = new Telemetry(TunerConstants.kSpeedAt12VoltsMps);
 
@@ -87,7 +128,29 @@ public class RobotContainer {
     CommandScheduler.getInstance().registerSubsystem(drivetrain);
 
     configureBindings();
-    DriverReadout.addChoosers(autonomousChooser);
+    // DriverReadout.addChoosers(autonomousChooser);
+  }
+
+  public Mode getIOMode(){
+    return (Utils.isSimulation()?Mode.SIM:Constants.currentMode);
+  }
+
+  public Command getSysIdCommand(){
+    return sysIdChooser.get();
+  }
+
+  public void setUpSysIds(){
+    // Set up SysId routines
+    sysIdChooser.addOption(
+        "Test SysId (Quasistatic Forward)",
+        test.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    sysIdChooser.addOption(
+        "Test SysId (Quasistatic Reverse)",
+        test.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    sysIdChooser.addOption(
+        "Test SysId (Dynamic Forward)", test.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    sysIdChooser.addOption(
+        "Test SysId (Dynamic Reverse)", test.sysIdDynamic(SysIdRoutine.Direction.kReverse));
   }
 
   //#region controller buttons

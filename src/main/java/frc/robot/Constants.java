@@ -6,6 +6,14 @@ import frc.robot.util.Interpolable.InterpolatingTreeMap;
 
 public class Constants {
 
+    public enum Mode{
+        REAL,
+        REPLAY,
+        SIM;
+    }
+
+    public static Mode currentMode = Mode.REAL;
+
     public static final boolean debug = false;
 
     public static final double RAMP_POWER = 3.0;
